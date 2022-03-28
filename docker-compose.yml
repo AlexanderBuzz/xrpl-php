@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  fpm:
+    build:
+      context: containers/php
+    volumes:
+      - .:/app

@@ -1,0 +1,6 @@
+/.idea
+
+/composer.lock
+/docker-compose.override.yml
+
+/vendor/

@@ -1,0 +1,18 @@
+# Use this as docker-compose.override.yml if you use Mac
+version: '3.7'
+
+services:
+  fpm:
+    volumes:
+      - nfsmount:/app
+      - ~/.composer/cache:/.composer/cache
+    user: "501:20"
+    environment:
+      PHP_IDE_CONFIG: "serverName=docker"
+
+volumes:
+  nfsmount:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3

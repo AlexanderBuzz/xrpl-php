@@ -1,0 +1,11 @@
+# Use this as docker-compose.override.yml if you use Linux
+version: '3.7'
+
+services:
+  fpm:
+    volumes:
+      - .:/app
+      - ~/.composer/cache:/.composer/cache
+    tmpfs:
+      - /tmp:mode=1777
+    user: "1000:1000"

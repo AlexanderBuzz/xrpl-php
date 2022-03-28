@@ -1,0 +1,26 @@
+{
+  "name": "gndlf/xrpl_php",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "ISC",
+  "authors": [
+    {
+      "name": "Alexander Busse",
+      "email": "alexander.busse@posteo.net"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "8.1"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "XRPL_PHP\\": "src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "7.4.2"
+  }
+}
