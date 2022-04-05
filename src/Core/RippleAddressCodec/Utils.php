@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace XRPL_PHP\RippleAddressCodec;
+namespace XRPL_PHP\Core\RippleAddressCodec;
 
 class Utils
 {

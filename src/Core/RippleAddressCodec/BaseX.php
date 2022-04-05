@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\RippleAddressCodec;
+namespace XRPL_PHP\Core\RippleAddressCodec;
 
 use Lessmore92\Buffer\Buffer;
 use SplFixedArray;
@@ -40,7 +40,7 @@ class BaseX
             if ($this->baseMap[$charCode] !== 255) {
                 throw new \Exception($this->alphabet[$i] . ' is ambiguious');
             }
-            $baseMap[$charCode] = $i;
+            $this->baseMap[$charCode] = $i;
         }
 
         $this->base = strlen($this->alphabet);
@@ -61,7 +61,7 @@ class BaseX
             $zeroes++;
         }
 
-        $size = $this->unsignedRightShift(($pend - $pbegin) * $this->inverseFactor + 1, 0);
+        $size = $this->unsignedRightShift((int) abs(($pend - $pbegin) * $this->inverseFactor + 1), 0);
         $b58  = array_fill(0, $size, 0);
 
         while ($pbegin !== $pend)
@@ -70,9 +70,9 @@ class BaseX
             $i     = 0;
             for ($it1 = $size - 1; ($carry !== 0 || $i < $length) && ($it1 !== -1); $it1--, $i++)
             {
-                $carry += $this->unsignedRightShift(256 * $b58[$it1], 0);
-                $b58[$it1] = $this->unsignedRightShift($carry % $this->base, 0);
-                $carry = $this->unsignedRightShift($carry / $this->base, 0);
+                $carry += $this->unsignedRightShift((int) abs(256 * $b58[$it1]), 0);
+                $b58[$it1] = $this->unsignedRightShift((int) abs($carry % $this->base), 0);
+                $carry = $this->unsignedRightShift((int) abs($carry / $this->base), 0);
             }
             if ($carry !== 0)
             {
@@ -123,10 +123,11 @@ class BaseX
             $psz++;
         }
 
-        $size = $this->unsignedRightShift(((strlen($source) - $psz) * $this->factor) + 1, 0); // log(58) / log(256), rounded up.
+        $size = $this->unsignedRightShift((int) abs(((strlen($source) - $psz) * $this->factor) + 1), 0); // log(58) / log(256), rounded up.
         $b256 = array_fill(0, $size, 0);
 
-        while ($source[$psz]) {
+        while (isset($source[$psz])) {
+
             $carry = $this->baseMap[ord($source[$psz])];
 
             if ($carry === 255) {
@@ -135,9 +136,9 @@ class BaseX
 
             $i = 0;
             for ($it3 = $size - 1; ($carry !== 0 || $i < $length) && ($it3 !== -1); $it3--, $i++) {
-                $carry += $this->unsignedRightShift($this->base * $b256[$it3], 0);
-                $b256[$it3] = $this->unsignedRightShift($carry % 256, 0);
-                $carry = $this->unsignedRightShift($carry / 256, 0);
+                $carry += $this->unsignedRightShift((int) abs($this->base * $b256[$it3]), 0);
+                $b256[$it3] = $this->unsignedRightShift((int) abs($carry % 256), 0);
+                $carry = $this->unsignedRightShift((int) abs($carry / 256), 0);
             }
 
             if ($carry !== 0) {

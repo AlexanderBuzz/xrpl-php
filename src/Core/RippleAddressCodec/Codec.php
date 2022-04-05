@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace XRPL_PHP\RippleAddressCodec;
+namespace XRPL_PHP\Core\RippleAddressCodec;
 
 use Exception;
 use Lessmore92\Buffer\Buffer;
@@ -17,9 +17,9 @@ class Codec
         $this->baseCodec = new BaseX($alphabet);
     }
 
-    public function encode(Buffer $bytes, array $versions, int $expectedLength): string
+    public function encode(Buffer $bytes, array $options): string
     {
-        return $this->encodeVersioned($bytes, $versions, $expectedLength);
+        return $this->encodeVersioned($bytes, $options['versions'], $options['expectedLength']);
     }
 
     public function decode(string $base58String, array $options): array
@@ -66,9 +66,15 @@ class Codec
     public function encodeChecked(Buffer $buffer): string
     {
         //TODO: uff...
-        $check = $this->sha256($this->sha256($buffer))->slice(0, 4);
+        //$check = $this->sha256($this->sha256($buffer))->slice(0, 4);
 
-        return $this->encodeRaw($check);
+        $check = unpack('C*', substr(hash('sha256', hash('sha256', $buffer->getBinary(), true), true), 0, 4));
+        foreach ($check as $item)
+        {
+            $buffer->append(sprintf('%02X', $item));
+        }
+
+        return $this->encodeRaw($buffer);
     }
 
     public function decodeChecked(string $base58string)
