@@ -11,7 +11,7 @@ class Codec
 
     private BaseX $baseCodec;
 
-    public function __constructor(string $alphabet)
+    public function __construct(string $alphabet)
     {
         $this->alphabet = $alphabet;
         $this->baseCodec = new BaseX($alphabet);
