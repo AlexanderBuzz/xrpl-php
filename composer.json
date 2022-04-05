@@ -17,11 +17,13 @@
   },
   "autoload": {
     "psr-4": {
-      "XRPL_PHP\\": "src/"
+      "XRPL_PHP\\": "src/",
+      "Tuupola\\": "src/Core/Base58"
     }
   },
   "require": {
     "guzzlehttp/guzzle": "7.4.2",
+    "lessmore92/buffer": "1.0.0",
     "vlucas/phpdotenv": "^5.4"
   },
   "require-dev": {
