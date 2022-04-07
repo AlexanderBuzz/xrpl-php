@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
+use XRPL_PHP\Core\RippleAddressCodec\RippleAddressCodec;
 use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
 
 class Wallet
