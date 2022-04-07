@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 use function PHPUnit\Framework\throwException;
 
 /**
@@ -54,12 +55,36 @@ class BinaryParser
         if ($number > 0 && $number <= 4) {
             $stdArray = $this->read($number)->toArray();
             $reducer = function ($carry, $item) {
-
+                //implement correct function
             };
             return array_reduce($stdArray, $reducer);
         }
 
         throw new \Exception('Invalid number');
     }
+
+    //lotta functions to add...
+
+    public function end(?int $customEnd = null): bool
+    {
+        $length = $this->bytes->getLength();
+
+        if ($length === 0) {
+            return true;
+        }
+
+        if(($customEnd && $length <= $customEnd)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function readType(SerializedType $type): SerializedType
+    {
+        return $type::fromParser($this);
+    }
+
+    //lotta functions to add..
 
 }

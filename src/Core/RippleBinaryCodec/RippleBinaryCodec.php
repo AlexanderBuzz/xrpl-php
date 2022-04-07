@@ -12,12 +12,19 @@ class RippleBinaryCodec extends Binary
 
     public function encode(array $object): string
     {
+        //assert.ok(typeof json === 'object')
 
     }
 
-    public function decode(string $binary): array
+    /**
+     * @param string $binaryString
+     * @return array
+     */
+    public function decode(string $binaryString): array
     {
-
+        //assert.ok(typeof binary === 'string', 'binary must be a hex string')
+        //hex string expected
+        return $this->binaryToJson($binaryString);
     }
 
     public function encodeForSigning(array $object): string

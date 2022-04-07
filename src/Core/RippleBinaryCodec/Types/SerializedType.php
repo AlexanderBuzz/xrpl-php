@@ -6,7 +6,7 @@ use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
-class SerializedType
+abstract class SerializedType
 {
     private Buffer $buffer;
 
@@ -18,15 +18,9 @@ class SerializedType
         $this->buffer = $bytes;
     }
 
-    public static function fromParser(BinaryParser $parser, ?int $hint): SerializedType
-    {
-        //Seems to be "work in progress", is not implemented
-    }
+    abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
-    public static function from(SerializedType $value, ?int $number): SerializedType
-    {
-        //Seems to be "work in progress", is not implemented
-    }
+    abstract static function from(SerializedType $value, ?int $number): SerializedType;
 
     public function toByteSink(BytesList $list): void
     {

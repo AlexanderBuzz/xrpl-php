@@ -29,9 +29,15 @@ class Binary
 
     }
 
-    public function readJson(BinaryParser $parser): JsonObject
+    /**
+     *
+     *
+     * @param BinaryParser $parser
+     * @return array
+     */
+    public function readJson(BinaryParser $parser): array //xrpl.js: JsonObject, defined in serialized-type.js
     {
-
+        //$parser->readType() currently implementing this
     }
 
     public function multiSigningData()
@@ -49,7 +55,7 @@ class Binary
 
     }
 
-    public function binaryToJson(string $bytes): JsonObject
+    public function binaryToJson(string $bytes): array
     {
         $parser = $this->makeParser($bytes);
 

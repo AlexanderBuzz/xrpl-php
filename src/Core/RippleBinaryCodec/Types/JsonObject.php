@@ -2,7 +2,9 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-class JsonObject
+use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+
+class JsonObject extends  StArray
 {
 
 }
