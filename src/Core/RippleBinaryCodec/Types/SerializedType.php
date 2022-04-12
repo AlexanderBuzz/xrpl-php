@@ -10,7 +10,7 @@ abstract class SerializedType
 {
     private Buffer $buffer;
 
-    public function __construct(?Buffer $bytes)
+    public function __construct(?Buffer $bytes = null)
     {
         if (!$bytes) {
             $bytes = Buffer::alloc(0);
@@ -26,6 +26,12 @@ abstract class SerializedType
     {
         $list->push($this->buffer);
         //do we need a return?
+    }
+
+    public function fromHex(string $hex): SerializedType
+    {
+        $parser = new BinaryParser($hex);
+        return $this->fromParser($parser);
     }
 
     public function toHex(): string

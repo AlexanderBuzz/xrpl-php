@@ -6,6 +6,9 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class StArray extends  SerializedType
 {
+    public const ARRAY_END_MARKER_HEX = "F1";
+
+    public const ARRAY_END_MARKER_NAME = "ArrayEndMarker";
 
     static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
