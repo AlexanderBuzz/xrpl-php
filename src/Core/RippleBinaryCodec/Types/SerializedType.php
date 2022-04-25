@@ -8,6 +8,8 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
 abstract class SerializedType
 {
+    public const OBJECT_END_MARKER = "ObjectEndMarker";
+
     private Buffer $buffer;
 
     public function __construct(?Buffer $bytes = null)

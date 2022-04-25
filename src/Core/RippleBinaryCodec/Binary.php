@@ -4,6 +4,7 @@ namespace XRPL_PHP\Core\RippleBinaryCodec;
 
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\JsonObject;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 class Binary
 {
@@ -37,7 +38,9 @@ class Binary
      */
     public function readJson(BinaryParser $parser): array //xrpl.js: JsonObject, defined in serialized-type.js
     {
-        //$parser->readType() currently implementing this
+        $type = new StArray();
+
+        return $parser->readType($type)->toJson(); // currently implementing this
     }
 
     public function multiSigningData()

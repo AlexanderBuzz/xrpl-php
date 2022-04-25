@@ -4,12 +4,15 @@ version: '3.7'
 services:
   fpm:
     volumes:
+      #- .:/app #uses docker native FS bridge
       - nfsmount:/app
       - ~/.composer/cache:/.composer/cache
+      - ./containers/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     user: "501:20"
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
 
+#May cause trouble in newer MacOS versions, if so use native FS bridge
 volumes:
   nfsmount:
     driver: local

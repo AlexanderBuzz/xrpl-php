@@ -35,7 +35,7 @@ class Buffer
         return $buffer;
     }
 
-    public static function concat(array $bufferList, ?int $totalLength): Buffer
+    public static function concat(array $bufferList, ?int $totalLength = null): Buffer
     {
         if (empty($bufferList) || $totalLength === 0) {
             return self::from([]);
@@ -47,7 +47,14 @@ class Buffer
             $tempArray = array_merge($tempArray, $buffer);
         }
 
-        if($totalLength && count($tempArray) > $totalLength) {
+        if ($totalLength === null) {
+            $totalLength = 0;
+            for ($i = 0; $i < count($bufferList); ++$i) {
+                $totalLength += count($bufferList[$i]);
+            }
+        }
+
+        if ($totalLength && count($tempArray) > $totalLength) {
             $tempArray = array_slice($tempArray, 0, $totalLength);
         }
 
@@ -83,6 +90,8 @@ class Buffer
             $singleByteHexStr = str_pad(dechex($byte), 2, "0", STR_PAD_LEFT);
             $str .= $singleByteHexStr;
         }
+
+        return $str;
     }
 
     public function toArray(): array
@@ -97,7 +106,7 @@ class Buffer
             $singleByteHexStr = str_pad(dechex($byte), 2, "0", STR_PAD_LEFT);
             $str .= $singleByteHexStr;
         }
-        $str = ">";
+        $str .= ">";
 
         return $str;
     }
