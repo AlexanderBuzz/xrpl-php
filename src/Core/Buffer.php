@@ -72,7 +72,8 @@ class Buffer
             $length = $end - $start;
             $tempArray = array_slice($this->bytesArray->toArray(), $start, $length);
         } else {
-            $tempArray = array_slice($this->bytesArray->toArray(), 0);
+            //account for differences in array slicing behavior in PHP and JavaScrip
+            $tempArray = array_slice($this->bytesArray->toArray(), $start);
         }
 
         return self::from($tempArray);

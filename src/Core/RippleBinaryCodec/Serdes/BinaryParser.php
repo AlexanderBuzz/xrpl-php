@@ -47,17 +47,17 @@ class BinaryParser
     {
         if ($this->bytes->getLength() >= $number) {
             $this->bytes = $this->bytes->slice($number);
+        } else {
+            throw new \Exception('Trying to skip more elements than the buffer has');
         }
-
-        throw new \Exception('Trying to skip more elements than the buffer has');
     }
 
     public function read(int $number): Buffer
     {
         if ($this->bytes->getLength() >= $number) {
             $slice = $this->bytes->slice(0, $number);
-            echo "num: " .print_r($slice->debug(), true) ." " ;
             $this->skip($number);
+
             return $slice;
         }
 
@@ -70,8 +70,10 @@ class BinaryParser
             $stdArray = $this->read($number)->toArray();
             $reducer = function ($carry, $item) {
                 //implement correct function
+                $carry = ($carry << 8) | $item;
+                return $carry;
             };
-            return array_reduce($stdArray, $reducer);
+            return array_reduce($stdArray, $reducer, 0);
         }
 
         throw new \Exception('Invalid number');

@@ -4,7 +4,7 @@ namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 class Definitions
 {
-    public static Definitions $self;
+    public static ?Definitions $instance = null;
 
     public array $definitionsMap = [];
 
@@ -15,11 +15,11 @@ class Definitions
 
     public static function getInstance(): Definitions
     {
-        if(!self::$self) {
-            self::$self = new Definitions();
+        if(static::$instance === null) {
+            static::$instance = new Definitions();
         }
 
-        return self::$self;
+        return static::$instance;
     }
 
     public function getFieldHeaderFromName(string $fieldName): FieldHeader
