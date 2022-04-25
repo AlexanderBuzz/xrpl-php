@@ -12,7 +12,10 @@ composer install
 ```
 
 ### Run Examples 
-`php bin/address-codec.php`
+```
+cd /app
+php bin/address-codec.php
+```
 
 ### Run Tests
 `./vendor/bin/phpunit tests`
