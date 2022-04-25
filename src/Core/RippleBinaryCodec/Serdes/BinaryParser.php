@@ -32,6 +32,7 @@ class BinaryParser
     public function __construct(string $hexBytes)
     {
         $this->bytes = Buffer::from($hexBytes, 'hex');
+        //print_r($this->bytes);
     }
 
     public function peek(): int
@@ -68,13 +69,17 @@ class BinaryParser
     {
         if ($number > 0 && $number <= 4) {
             $stdArray = $this->read($number)->toArray();
+            //return pack("C*", ...$stdArray);
+            //return (int) dechex(implode($stdArray));
+
             $reducer = function ($carry, $item) {
                 //implement correct function
-                $carry = ($carry << 8) | $item;
-                return $carry;
+                return $carry * 256 + $item;
             };
+
             return array_reduce($stdArray, $reducer, 0);
-        }
+
+            }
 
         throw new \Exception('Invalid number');
     }
@@ -117,23 +122,24 @@ class BinaryParser
     public function readFieldHeader(): FieldHeader
     {
         $typeCode = $this->readUInt8();
-        $fieldCode = $typeCode & 15;
+        $nth = $typeCode & 15;
+        $typeCode = $typeCode >> 4;
 
         if ($typeCode === 0) {
             $typeCode = $this->readUInt8();
-            if ($typeCode == 0 || $typeCode < 16) {
+            if ($typeCode === 0 || $typeCode < 16) {
                 throw new \Exception("Cannot read FieldOrdinal, type_code out of range");
             }
         }
 
-        if ($fieldCode === 0) {
-            $fieldCode = $this->readUInt8();
-            if ($fieldCode == 0 || $fieldCode < 16) {
+        if ($nth === 0) {
+            $nth = $this->readUInt8();
+            if ($nth == 0 || $nth < 16) {
                 throw new \Exception("Cannot read FieldOrdinal, field_code out of range");
             }
         }
 
-        return new FieldHeader($typeCode, $fieldCode);
+        return new FieldHeader($typeCode, $nth);
     }
 
     public function readField(): FieldInstance

@@ -31,7 +31,7 @@ class StArray extends  SerializedType
 
             //TODO: Handle constants from expression
             $bytesArray[] = Buffer::from([0xe1]); //ARRAY_END_MARKER
-
+//print_r($bytesArray);
             return new StArray(Buffer::concat($bytesArray));
 
         }

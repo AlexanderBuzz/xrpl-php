@@ -2,7 +2,9 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
-class FieldHeader
+use Ds\Hashable;
+
+class FieldHeader implements Hashable
 {
     private int $typeCode;
 
@@ -12,11 +14,6 @@ class FieldHeader
     {
         $this->typeCode = $typeCode;
         $this->fieldCode = $fieldCode;
-    }
-
-    public function equals(FieldHeader $toCompare): bool
-    {
-        return ($this->typeCode === $toCompare->getTypeCode() && $this->fieldCode === $toCompare->getFieldCode());
     }
 
     public function getBytes(): Buffer
@@ -72,5 +69,20 @@ class FieldHeader
         $this->fieldCode = $fieldCode;
     }
 
+    /*
+    public function equals(FieldHeader $toCompare): bool
+    {
+        return ($this->typeCode === $toCompare->getTypeCode() && $this->fieldCode === $toCompare->getFieldCode());
+    }
+    */
 
+    public function hash()
+    {
+        return $this->typeCode . $this->fieldCode;
+    }
+
+    public function equals($obj): bool
+    {
+        return ($this->typeCode === $obj->getTypeCode() && $this->fieldCode === $obj->getFieldCode());
+    }
 }
