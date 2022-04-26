@@ -38,31 +38,21 @@ class FieldInstance
         $this->name = $fieldName;
         $this->fieldHeader = $fieldHeader;
         $this->ordinal = $this->fieldHeader->getTypeCode() << 16 | $this->nth;
-        $this->associatedType = $this->getTypeByName($this->type);
+        $this->associatedType = SerializedType::getTypeByName($this->type)::class;
     }
 
-    private function getTypeByName(string $name): string
+    public function getName(): string
     {
-        $typeMap = [
-            //"AccountID" => AccountID,
-            //"Amount" => Amount,
-            //"Blob" => Blob,
-            //"Currency" => Currency,
-            //"Hash128" => Hash128,
-            //"Hash160" => Hash160,
-            //"Hash256" => Hash256,
-            //"PathSet" => PathSet,
-            "STArray" => StArray::class,
-            //"STObject" => SerializedDict,
-            //"UInt8" => UInt8,
-            //"UInt16" => UInt16,
-            //"UInt32" => UInt32,
-            //"UInt64" => UInt64,
-            //"Vector256" => Vector256,
-        ];
-
-        return $typeMap[$name];
+        return $this->type;
     }
 
+    public function getHeader(): FieldHeader
+    {
+        return $this->fieldHeader;
+    }
 
+    public function isVariableLengthEncoded(): bool
+    {
+        return $this->isVariableLengthEncoded;
+    }
 }

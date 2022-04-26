@@ -8,7 +8,17 @@ class BinarySerializer
 {
     private Buffer $bytes;
 
-    public function __construct(string $bytes)
+    public function __construct(Buffer $bytes)
+    {
+        $this->bytes = $bytes;
+    }
+
+    public function put(string $hexBytes)
+    {
+        $this->bytes->append($hexBytes);
+    }
+
+    public function writeFieldAndValue()
     {
 
     }

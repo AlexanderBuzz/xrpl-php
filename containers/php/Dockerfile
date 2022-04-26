@@ -2,7 +2,9 @@ FROM php:8.1.4-fpm-alpine
 
 RUN apk update  \
     && apk upgrade \
-    && apk add  --no-cache bash $PHPIZE_DEPS \
+    && apk add gmp-dev \
+    && apk add --no-cache bash $PHPIZE_DEPS \
+    && docker-php-ext-install gmp \
     && pecl install xdebug-3.1.3 \
     && pecl install ds
 

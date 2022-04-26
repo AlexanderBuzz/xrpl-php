@@ -6,6 +6,8 @@ services:
     volumes:
       - .:/app
       - ~/.composer/cache:/.composer/cache
+      - ./containers/php/php.ini:/usr/local/etc/php/conf.d/docker-php.ini
+      - ./containers/php/php.ini:/usr/local/etc/php/conf.d/docker-php.ini
     tmpfs:
       - /tmp:mode=1777
     user: "1000:1000"

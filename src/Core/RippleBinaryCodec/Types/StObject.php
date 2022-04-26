@@ -7,9 +7,12 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class StObject extends SerializedType
 {
-    static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public const OBJECT_END_MARKER_HEX = "E1";
+
+    public const ARRAY_END_MARKER_NAME = "ObjectEndMarker";
+
+    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
-        /* WIP
         $bytesArray = array(); // const bytes: Array<Buffer> = []
 
         $OBJECT_END_MARKER_BYTE = Buffer::from([0xe1]);
@@ -23,6 +26,11 @@ class StObject extends SerializedType
             $associatedValue = $parser->readFieldValue($field);
 
         }
-        */
+
+    }
+
+    function fromValue(SerializedType $value, ?int $number): SerializedType
+    {
+        // TODO: Implement fromValue() method.
     }
 }

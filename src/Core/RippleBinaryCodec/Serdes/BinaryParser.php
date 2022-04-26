@@ -79,7 +79,7 @@ class BinaryParser
 
             return array_reduce($stdArray, $reducer, 0);
 
-            }
+        }
 
         throw new \Exception('Invalid number');
     }
@@ -154,20 +154,32 @@ class BinaryParser
     //python self: BinaryParser, field_type: Type[SerializedType]
     public function readType(SerializedType $type): SerializedType
     {
-        return $type::fromParser($this);
+        return $type->fromParser($this);
     }
 
     public function typeForField(FieldInstance $field): SerializedType
     {
-
+        return SerializedType::getTypeByName($field->getName());
     }
 
     public function readFieldValue(FieldInstance $field): SerializedType
     {
+        $type = SerializedType::getTypeByName($field->getName());
 
+        if ($field->isVariableLengthEncoded()) {
+            $sizeHint = $this->readVariableLengthLength();
+            return $type->fromParser($this, $sizeHint);
+        } else {
+            return $type->fromParser($this);
+        }
     }
 
     public function readFieldAndValue(FieldInstance $field): SerializedType
+    {
+
+    }
+
+    public function readVariableLengthLength(): int
     {
 
     }

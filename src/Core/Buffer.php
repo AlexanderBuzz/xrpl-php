@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Core;
 
 use SplFixedArray;
+use TheSeer\Tokenizer\Exception;
 
 class Buffer
 {
@@ -64,6 +65,12 @@ class Buffer
     public function getLength(): int
     {
         return $this->bytesArray->getSize();
+    }
+
+    public function append(string $hexBytes)
+    {
+        $toAttach = array_map('hexdec', str_split($hexBytes, 2));
+        $this->bytesArray = new SplFixedArray(array_merge($this->bytesArray->toArray(), $toAttach));
     }
 
     public function subArray(int $start, ?int $end): Buffer
