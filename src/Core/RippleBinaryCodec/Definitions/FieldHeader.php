@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 use Ds\Hashable;
+use XRPL_PHP\Core\Buffer;
 
 class FieldHeader implements Hashable
 {
@@ -16,10 +17,32 @@ class FieldHeader implements Hashable
         $this->fieldCode = $fieldCode;
     }
 
-    public function getBytes(): Buffer
+    public function toBytes(): Buffer
     {
         $header = [];
 
+        if ($this->typeCode < 16) {
+            if ($this->fieldCode < 16) {
+                // single byte case where high bits contain type code, low bits contain field code
+                $header[] = $this->typeCode << 4 | $this->fieldCode;
+            } else {
+                // 2 byte case where first byte contains type code + filler, second byte contains field code
+                $header[] = $this->typeCode << 4;
+                $header[] = $this->fieldCode;
+            }
+        } else {
+            if ($this->fieldCode < 16) {
+                // 2 byte case where first byte contains filler+field code, second byte contains typeCode
+                $header[] = $this->fieldCode;
+                $header[] = $this->typeCode;
+            } else {
+                // 3 byte case where first byte is filler, 2nd byte is type code, third byte is field code
+                $header[] = 0;
+                $header[] = $this->typeCode;
+                $header[] = $this->fieldCode;
+            }
+        }
+        return Buffer::from($header);
         /*
          *  header = []
         if self.type_code < 16:
@@ -68,13 +91,6 @@ class FieldHeader implements Hashable
     {
         $this->fieldCode = $fieldCode;
     }
-
-    /*
-    public function equals(FieldHeader $toCompare): bool
-    {
-        return ($this->typeCode === $toCompare->getTypeCode() && $this->fieldCode === $toCompare->getFieldCode());
-    }
-    */
 
     public function hash()
     {

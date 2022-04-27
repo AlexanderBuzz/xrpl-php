@@ -7,7 +7,6 @@ use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
-use function PHPUnit\Framework\throwException;
 
 /**
  * BinaryParser is used to compute fields and values from a HexString
@@ -69,8 +68,6 @@ class BinaryParser
     {
         if ($number > 0 && $number <= 4) {
             $stdArray = $this->read($number)->toArray();
-            //return pack("C*", ...$stdArray);
-            //return (int) dechex(implode($stdArray));
 
             $reducer = function ($carry, $item) {
                 //implement correct function
@@ -78,7 +75,6 @@ class BinaryParser
             };
 
             return array_reduce($stdArray, $reducer, 0);
-
         }
 
         throw new \Exception('Invalid number');
@@ -159,12 +155,12 @@ class BinaryParser
 
     public function typeForField(FieldInstance $field): SerializedType
     {
-        return SerializedType::getTypeByName($field->getName());
+        return SerializedType::getTypeByName($field->getType());
     }
 
     public function readFieldValue(FieldInstance $field): SerializedType
     {
-        $type = SerializedType::getTypeByName($field->getName());
+        $type = SerializedType::getTypeByName($field->getType());
 
         if ($field->isVariableLengthEncoded()) {
             $sizeHint = $this->readVariableLengthLength();
@@ -181,7 +177,20 @@ class BinaryParser
 
     public function readVariableLengthLength(): int
     {
+        $firstByte = $this->readUInt8(); //BigInt?
 
+        if($firstByte >= self::MAX_SINGLE_BYTE_LENGTH) {
+            return $firstByte;
+        } else if ($firstByte >= self::MAX_SECOND_BYTE_VALUE) {
+            $secondByte = $this->readUInt8();
+            return self::MAX_SECOND_BYTE_VALUE - 1 + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_BYTE_VALUE + $secondByte;
+        } else if ($firstByte <= 254) {
+            $secondByte = $this->readUInt8();
+            $thirdByte = $this->readUInt8();
+            return self::MAX_DOUBLE_BYTE_LENGTH + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_DOUBLE_BYTE_VALUE + $secondByte * self::MAX_BYTE_VALUE + $thirdByte;
+        }
+
+        throw new \Exception("Invalid variable length indicator");
     }
 
 }

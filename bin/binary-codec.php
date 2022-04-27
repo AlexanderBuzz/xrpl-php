@@ -18,6 +18,7 @@ $taArray = [
 $taArray = ["TransactionType" => "Payment"];
 
 $decodedTa = "1200002280000000240000000181145B812C9D57731E27A2DA8B1830195F88EF32A3B68314B5F762798A53D543A014CAF8B297CFF8F2F937E8";
+$decodedTa = "120000";
 //print_r('source: ' .$decodedTa);
 
 $decoded = $codec->decode($decodedTa);

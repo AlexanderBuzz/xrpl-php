@@ -60,7 +60,7 @@ abstract class SerializedType
         //TODO: get class directly
 
         $typeMap = [
-            //"AccountID" => AccountID,
+            "AccountID" => AccountId::class,
             //"Amount" => Amount,
             //"Blob" => Blob,
             //"Currency" => Currency,

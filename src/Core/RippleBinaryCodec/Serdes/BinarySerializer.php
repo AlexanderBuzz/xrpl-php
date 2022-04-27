@@ -3,6 +3,8 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 class BinarySerializer
 {
@@ -15,11 +17,31 @@ class BinarySerializer
 
     public function put(string $hexBytes)
     {
-        $this->bytes->append($hexBytes);
+        $this->bytes->appendHex($hexBytes);
     }
 
-    public function writeFieldAndValue()
+    public function writeFieldAndValue(FieldInstance $field, SerializedType $value)
+    {
+        $fieldHeaderHex = $field->getHeader()->toBytes()->toString();
+        $this->bytes->appendHex($fieldHeaderHex);
+
+        if ($field->isVariableLengthEncoded()) {
+            $this->writeLengthEncoded($value);
+        } else {
+            $this->bytes->appendHex($value->toBytes()->toString());
+        }
+    }
+
+    public function writeLengthEncoded(SerializedType $value): void
     {
 
+    }
+
+    /**
+     * @return Buffer
+     */
+    public function getBytes(): Buffer
+    {
+        return $this->bytes;
     }
 }

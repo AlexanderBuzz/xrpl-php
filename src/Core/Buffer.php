@@ -67,10 +67,15 @@ class Buffer
         return $this->bytesArray->getSize();
     }
 
-    public function append(string $hexBytes)
+    public function appendBuffer(Buffer $appendix)
+    {
+        return Buffer::concat([$this->bytesArray, $appendix->toArray()]);
+    }
+
+    public function appendHex(string $hexBytes)
     {
         $toAttach = array_map('hexdec', str_split($hexBytes, 2));
-        $this->bytesArray = new SplFixedArray(array_merge($this->bytesArray->toArray(), $toAttach));
+        $this->bytesArray = SplFixedArray::fromArray(array_merge($this->bytesArray->toArray(), $toAttach));
     }
 
     public function subArray(int $start, ?int $end): Buffer

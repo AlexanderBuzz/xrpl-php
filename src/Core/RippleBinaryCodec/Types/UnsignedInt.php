@@ -18,14 +18,12 @@ abstract class UnsignedInt extends  SerializedType
             new BigInteger();
         } else {
             $this->value = new BigInteger($bytes->toString(), 16);
-            $one = $this->value->toString();
-            $test = 1;
         }
     }
 
     public function toBytes(): Buffer
     {
         $hexStr = $this->value->toHex();
-        return Buffer::from($hexStr);
+        return Buffer::from($hexStr, 'hex');
     }
 }
