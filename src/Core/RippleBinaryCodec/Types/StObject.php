@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
 
@@ -54,9 +55,17 @@ class StObject extends SerializedType
                 break;
             }
 
-            $accumulator[$fieldInstance->getName()] = $binaryParser->readFieldValue($fieldInstance)->toJson();
+            $node = $binaryParser->readFieldValue($fieldInstance)->toJson();
+            $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
+
+            $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node;
         }
 
         return $accumulator;
+    }
+
+    private function mapSpecializedValues(string $fieldName, array $fieldNode): array
+    {
+        //TODO: implement mapSpecializedValues() method
     }
 }

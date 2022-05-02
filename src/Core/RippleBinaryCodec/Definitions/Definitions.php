@@ -8,26 +8,36 @@ class Definitions
 {
     public static ?Definitions $instance = null;
 
-    public array $test = [];
+    private array $definitions;
 
-    public array $typeOrdinalMap;
+    private array $typeOrdinals;
 
-    public array $fieldHeaderMap;
+    private array $fieldHeaderMap;
 
-    public Map $fieldInfoMap;
+    private array $ledgerEntryTypes;
 
-    public Map $fieldIdNameMap;
+    private array $transactionResults;
+
+    private array $transactionTypes;
+
+    private Map $fieldInfoMap;
+
+    private Map $fieldIdNameMap;
 
     public function __construct()
     {
         $path = dirname(__FILE__) ."/definitions.json";
-        $this->test = json_decode(file_get_contents($path), true);
+        $this->definitions = json_decode(file_get_contents($path), true);
+
+        $this->typeOrdinals = $this->definitions['TYPES'];
+        $this->ledgerEntryTypes = $this->definitions['LEDGER_ENTRY_TYPES'];
+        $this->transactionResults = $this->definitions['TRANSACTION_RESULTS'];
+        $this->transactionTypes = $this->definitions['TRANSACTION_TYPES'];
 
         $this->fieldInfoMap = new Map();
         $this->fieldIdNameMap = new Map();
-        $this->typeOrdinalMap = $this->test['TYPES'];
 
-        foreach ($this->test['FIELDS'] as $field) {
+        foreach ($this->definitions['FIELDS'] as $field) {
             $fieldName = $field[0];
             $metadata = new FieldInfo(
                 $field[1]["nth"],
@@ -36,7 +46,7 @@ class Definitions
                 $field[1]["isSigningField"],
                 $field[1]["type"],
             );
-            $fieldHeader = new FieldHeader($this->typeOrdinalMap[$metadata->getType()], $metadata->getNth());
+            $fieldHeader = new FieldHeader($this->typeOrdinals[$metadata->getType()], $metadata->getNth());
 
             $this->fieldInfoMap->put($fieldName, $metadata);
             $this->fieldIdNameMap->put($fieldHeader, $fieldName);
@@ -59,7 +69,7 @@ class Definitions
     {
         //Java
         //return typeOrdinalMap.get(typeName);
-        return $this->typeOrdinalMap[$typeName];
+        return $this->typeOrdinals[$typeName];
     }
 
     public function getFieldHeaderFromName(string $fieldName): FieldHeader
@@ -78,5 +88,43 @@ class Definitions
         $fieldHeader = $this->getFieldHeaderFromName($fieldName);
 
         return new FieldInstance($fieldInfo, $fieldName, $fieldHeader);
+    }
+
+    public function mapSpecificFieldFromValue(string $fieldName, string $value): int
+    {
+        switch ($fieldName) {
+            case "LedgerEntryType":
+                $lookup = $this->ledgerEntryTypes;
+                break;
+            case "TransactionResult":
+                $lookup = $this->transactionResults;
+                break;
+            case "TransactionType":
+                $lookup = $this->transactionTypes;
+                break;
+            default:
+                return 0; //TODO: check
+        }
+
+        return (isset($lookup[$value])) ? $lookup[$value] : 0; //TODO: check
+    }
+
+    public function mapValueToSpecificField(string $fieldName, string $value): string
+    {
+        switch ($fieldName) {
+            case "LedgerEntryType":
+                $lookup = array_flip($this->ledgerEntryTypes);
+                break;
+            case "TransactionResult":
+                $lookup = array_flip($this->transactionResults);
+                break;
+            case "TransactionType":
+                $lookup = array_flip($this->transactionTypes);
+                break;
+            default:
+                return "";
+        }
+
+        return (isset($lookup[(int) $value])) ? $lookup[(int) $value] : "";
     }
 }

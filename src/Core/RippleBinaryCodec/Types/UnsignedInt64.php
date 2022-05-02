@@ -27,4 +27,17 @@ class UnsignedInt64 extends  UnsignedInt
     {
         // TODO: Implement fromValue() method.
     }
+
+    public function toBytes(): Buffer
+    {
+        $hexStr = $this->value->toHex();
+        $uint64HexStr = str_pad($hexStr, 16, "0", STR_PAD_LEFT);
+
+        return Buffer::from($uint64HexStr, 'hex');
+    }
+
+    public function toHex(): string
+    {
+        return strtoupper($this->toBytes()->toString());
+    }
 }

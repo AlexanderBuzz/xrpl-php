@@ -6,6 +6,7 @@ use XRPL_PHP\Core\RippleAddressCodec\RippleAddressCodec;
 
 $codec = new RippleAddressCodec();
 
+print_r('ripple-address-codec decode example, HEX string to JSON object' .PHP_EOL);
 
 //Should be: 'XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi'
 $encoded = $codec->classicAddressToXAddress('rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf', 4294967295);
@@ -23,9 +24,8 @@ $decoded = $codec->xAddressToClassicAddress('XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8
 //  "tag" => 4294967295,
 //  "test" => false
 //[
-print_r("Decoded Address:");
-print_r($decoded);
-print_r(PHP_EOL );
+print_r("Decoded Address: " . $decoded . PHP_EOL);
+
 
 $valid = $codec->isValidXAddress('XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi');
 //should be: 1

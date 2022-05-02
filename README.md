@@ -15,6 +15,7 @@ composer install
 ```
 cd /app
 php bin/address-codec.php
+php bin/binary-codec.php
 ```
 
 ### Run Tests
