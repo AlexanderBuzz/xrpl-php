@@ -2,10 +2,12 @@
 
 namespace XRPL_PHP\Core;
 
+use ArrayAccess;
+use Brick\Math\BigInteger;
 use SplFixedArray;
 use TheSeer\Tokenizer\Exception;
 
-class Buffer
+class Buffer implements ArrayAccess
 {
     const DEFAULT_FILL = 0x00;
 
@@ -18,22 +20,32 @@ class Buffer
         return self::from($tempArray);
     }
 
-    public static function from(mixed $source, ?string $encoding = null): Buffer
+    public static function from(mixed $source, ?string $encoding = 'hex'): Buffer
     {
         $buffer = new Buffer();
+
+        if (gettype($source) === Buffer::class ) {
+            Buffer::from($buffer->toArray()); //TODO: likely unnecessary, check node Buffer
+        }
 
         if (gettype($source) === 'array') {
             $bytesArray = SplFixedArray::fromArray($source);
             $buffer->setBytesArray($bytesArray);
+            return $buffer;
         }
 
         if (gettype($source) === 'string' && $encoding == 'hex') {
             $tempArray = array_map('hexdec', str_split($source, 2));
             $bytesArray = SplFixedArray::fromArray($tempArray);
             $buffer->setBytesArray($bytesArray);
+            return $buffer;
         }
 
-        return $buffer;
+        if (get_class($source) === BigInteger::class) {
+            return Buffer::from($source->toBase(16), 'hex');
+        }
+
+        throw new \Exception('Buffer not does not support source type');
     }
 
     public static function concat(array $bufferList, ?int $totalLength = null): Buffer
@@ -60,6 +72,11 @@ class Buffer
         }
 
         return self::from($tempArray);
+    }
+
+    public function clone(): Buffer
+    {
+        return Buffer::from($this->toArray());
     }
 
     public function getLength(): int
@@ -107,10 +124,31 @@ class Buffer
         return $str;
     }
 
+    public function toDecimalString(): string
+    {
+        return hexdec($this->toString());
+    }
+
     public function toArray(): array
     {
         return $this->bytesArray->toArray();
     }
+
+    /*
+    public function writeUInt32BE(BigInteger $value, int $offset, bool $noAssert = false): int
+    {
+        $offset = MathUtilities::unsignedRightShift($offset);
+
+        //if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
+        $this->bytesArray[$offset] = ($value->shiftedRight(24));
+        $this->bytesArray[$offset + 1] = ($value->shiftedRight(16));
+        $this->bytesArray[$offset + 2] = ($value->shiftedRight(8));
+        //$this->bytesArray[$offset + 3] = ($value & 0xff);
+        $this->bytesArray[$offset + 3] = ($value->and(0xff));
+
+        return $offset + 4;
+    }
+    */
 
     public function debug(): string
     {
@@ -138,5 +176,32 @@ class Buffer
     protected function setBytesArray(SplFixedArray $bytesArray): void
     {
         $this->bytesArray = $bytesArray;
+    }
+
+    public function offsetExists($offset): bool
+    {
+        return isset($this->bytesArray[$offset]);
+    }
+
+    public function offsetGet($offset): int //TODO: If this is to replace node buffer, type may be mixed
+    {
+        if (!isset($this->bytesArray[$offset])) {
+            throw new \Exception('Requested Buffer element out of bounds');
+        }
+        return $this->bytesArray[$offset];
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (is_null($offset)) {
+            $this->bytesArray[] = $value;
+        } else {
+            $this->bytesArray[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset): void
+    {
+        unset($this->bytesArray[$offset]);
     }
 }

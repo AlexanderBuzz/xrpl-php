@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
+use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
@@ -64,38 +65,44 @@ class BinaryParser
         throw new \Exception('Trying to read more elements than the buffer has');
     }
 
-    public function readUIntN(int $number): int
+    public function readUIntN(int $number): BigInteger
     {
         if ($number > 0 && $number <= 4) {
             $stdArray = $this->read($number)->toArray();
+            //$buffer = $this->read($number);
+            //$bi =  BigInteger::of($buffer->toDecimalString());
+            //return $bi;
 
             $reducer = function ($carry, $item) {
                 //implement correct function
                 return $carry * 256 + $item;
             };
 
-            return array_reduce($stdArray, $reducer, 0);
+            $reduced = array_reduce($stdArray, $reducer, 0);
+
+            return BigInteger::of((string)$reduced);
+
         }
 
         throw new \Exception('Invalid number');
     }
 
-    public function readUInt8(): int
+    public function readUInt8(): BigInteger
     {
         return $this->readUIntN(1);
     }
 
-    public function readUInt16(): int
+    public function readUInt16(): BigInteger
     {
         return $this->readUIntN(2);
     }
 
-    public function readUInt32(): int
+    public function readUInt32(): BigInteger
     {
         return $this->readUIntN(4);
     }
 
-    public function readUInt64(): int
+    public function readUInt64(): BigInteger
     {
         return $this->readUIntN(8);
     }
@@ -117,19 +124,19 @@ class BinaryParser
 
     public function readFieldHeader(): FieldHeader
     {
-        $typeCode = $this->readUInt8();
+        $typeCode = $this->readUInt8()->toInt();
         $nth = $typeCode & 15;
         $typeCode = $typeCode >> 4;
 
         if ($typeCode === 0) {
-            $typeCode = $this->readUInt8();
+            $typeCode = $this->readUInt8()->toInt();
             if ($typeCode === 0 || $typeCode < 16) {
                 throw new \Exception("Cannot read FieldOrdinal, type_code out of range");
             }
         }
 
         if ($nth === 0) {
-            $nth = $this->readUInt8();
+            $nth = $this->readUInt8()->toInt();
             if ($nth == 0 || $nth < 16) {
                 throw new \Exception("Cannot read FieldOrdinal, field_code out of range");
             }
@@ -177,16 +184,16 @@ class BinaryParser
 
     public function readVariableLengthLength(): int
     {
-        $firstByte = $this->readUInt8(); //BigInt?
+        $firstByte = $this->readUInt8()->toInt(); //BigInt?
 
         if($firstByte >= self::MAX_SINGLE_BYTE_LENGTH) {
             return $firstByte;
         } else if ($firstByte >= self::MAX_SECOND_BYTE_VALUE) {
-            $secondByte = $this->readUInt8();
+            $secondByte = $this->readUInt8()->toInt();
             return self::MAX_SECOND_BYTE_VALUE - 1 + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_BYTE_VALUE + $secondByte;
         } else if ($firstByte <= 254) {
-            $secondByte = $this->readUInt8();
-            $thirdByte = $this->readUInt8();
+            $secondByte = $this->readUInt8()->toInt();
+            $thirdByte = $this->readUInt8()->toInt();
             return self::MAX_DOUBLE_BYTE_LENGTH + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_DOUBLE_BYTE_VALUE + $secondByte * self::MAX_BYTE_VALUE + $thirdByte;
         }
 

@@ -8,36 +8,22 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class UnsignedInt32 extends  UnsignedInt
 {
-    public function __construct(?int $value = null)
-    {
-        if ($value === null) {
-            new BigInteger();
-        } else {
-            $this->value = new BigInteger((string)$value);
-        }
-    }
-
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt32
     {
         $fromParser = $parser->readUInt32();
-        return new UnsignedInt32($fromParser);
+        return new UnsignedInt32(Buffer::from($fromParser));
     }
 
-    public function fromValue(SerializedType $value, ?int $number): SerializedType
+    public function fromSerializedJson(string $serializedJson): SerializedType
     {
         // TODO: Implement fromValue() method.
     }
 
     public function toBytes(): Buffer
     {
-        $hexStr = $this->value->toHex();
+        $hexStr = $this->value->toBase(16);
         $uint32HexStr = str_pad($hexStr, 8, "0", STR_PAD_LEFT);
 
         return Buffer::from($uint32HexStr, 'hex');
-    }
-
-    public function toHex(): string
-    {
-        return strtoupper($this->toBytes()->toString());
     }
 }

@@ -39,7 +39,7 @@ class StObject extends SerializedType
         return new StObject($binarySerializer->getBytes());
     }
 
-    function fromValue(SerializedType $value, ?int $number): SerializedType
+    function fromSerializedJson(string $serializedJson): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

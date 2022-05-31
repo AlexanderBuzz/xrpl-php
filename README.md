@@ -2,6 +2,9 @@
 
 PHP Client Library to access to access the XRP Ledger
 
+![Build Status](https://github.com/shopware/shopware/workflows/PHPUnit/badge.svg)
+[![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
+
 ## How to run
 
 ### Build Container

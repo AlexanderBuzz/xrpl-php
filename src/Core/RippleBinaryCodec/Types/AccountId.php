@@ -22,7 +22,7 @@ class AccountId extends Hash160
         return new AccountId($parser->read(static::$width));
     }
 
-    public function fromValue(SerializedType $value, ?int $number): SerializedType
+    public function fromJson(SerializedType $value, ?int $number): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

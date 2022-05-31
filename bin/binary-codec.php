@@ -23,9 +23,17 @@ $taArray = [
     "Flags" =>  2147483648
 ];
 
-$decodedTa = "12000022800000002400000001";
+$encodedTa2 = "12000022800000002400000001";
+
+$encodedTa3 = "120000"; //TransactionType: Payment
+$encodedTa3 = "120001";//TransactionType: EscrowCreate
+
+
 
 print_r('ripple-binary-codec decode example, HEX string to JSON object' .PHP_EOL);
 
-$decoded = $codec->decode($decodedTa);
+$decoded = $codec->decode($encodedTa2);
+//$decoded = $codec->decode($taArray);
 print_r($decoded);
+
+

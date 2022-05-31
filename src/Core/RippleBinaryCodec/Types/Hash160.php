@@ -20,7 +20,7 @@ class Hash160 extends Hash
         return new Hash160($parser->read(static::$width));
     }
 
-    public function fromValue(SerializedType $value, ?int $number): SerializedType
+    public function fromJson(SerializedType $value, ?int $number): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

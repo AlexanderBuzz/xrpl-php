@@ -6,10 +6,15 @@ use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
+/**
+ * JavaScript:
+ * https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-binary-codec/src/types/serialized-type.ts
+ *
+ * Java:
+ * https://github.com/XRPLF/xrpl4j/blob/main/xrpl4j-binary-codec/src/main/java/org/xrpl/xrpl4j/codec/binary/types/SerializedType.java
+ */
 abstract class SerializedType
 {
-    public const OBJECT_END_MARKER = "ObjectEndMarker";
-
     protected Buffer $buffer;
 
     public function __construct(?Buffer $bytes = null)
@@ -23,18 +28,6 @@ abstract class SerializedType
     public function toByteSink(BytesList $list): void
     {
         $list->push($this->buffer);
-        //do we need a return?
-    }
-
-    public function fromHex(string $hex): SerializedType
-    {
-        $parser = new BinaryParser($hex);
-        return $this->fromParser($parser);
-    }
-
-    public function toHex(): string
-    {
-        return strtoupper($this->buffer->toString());
     }
 
     public function toBytes(): Buffer
@@ -45,23 +38,32 @@ abstract class SerializedType
         return $this->buffer;
     }
 
-    public function toJson(): array|string
+    public function toHex(): string
+    {
+        return strtoupper($this->buffer->toString());
+    }
+
+    public function toJson(): array|string|int
     {
         return $this->toHex();
     }
 
     public function toString(): string
     {
-        return $this->toHex();
+        return $this->toHex(); //TODO: check if this applies in every casel
+    }
+
+    public function fromHex(string $hex): SerializedType
+    {
+        $parser = new BinaryParser($hex);
+        return $this->fromParser($parser);
     }
 
     public static function getTypeByName(string $name): SerializedType
     {
-        //TODO: get class directly
-
         $typeMap = [
             "AccountID" => AccountId::class,
-            //"Amount" => Amount,
+            "Amount" => Amount::class,
             //"Blob" => Blob,
             //"Currency" => Currency,
             //"Hash128" => Hash128,
@@ -69,7 +71,7 @@ abstract class SerializedType
             //"Hash256" => Hash256,
             //"PathSet" => PathSet,
             "STArray" => StArray::class,
-            //"STObject" => SerializedDict,
+            "STObject" => StObject::class,
             "UInt8" => UnsignedInt8::class,
             "UInt16" => UnsignedInt16::class,
             "UInt32" => UnsignedInt32::class,
@@ -81,6 +83,7 @@ abstract class SerializedType
             throw new \Exception("unsupported type " . $name);
         }
 
+        //return class instance
         return new $typeMap[$name]();
     }
 
@@ -91,6 +94,6 @@ abstract class SerializedType
 
     abstract function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
-    abstract function fromValue(SerializedType $value, ?int $number): SerializedType;
+    abstract function fromSerializedJson(string $serializedJson): SerializedType;
 
 }
