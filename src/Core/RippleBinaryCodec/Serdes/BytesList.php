@@ -9,7 +9,7 @@ use XRPL_PHP\Core\Buffer;
  *
  * Bytes list is a collection of buffer objects
  */
-class BytesList
+class BytesList //TODO: let's see if we can get rid of this...
 {
     private array $bytesArray;
 

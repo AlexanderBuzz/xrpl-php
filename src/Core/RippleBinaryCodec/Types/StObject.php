@@ -56,9 +56,10 @@ class StObject extends SerializedType
             }
 
             $node = $binaryParser->readFieldValue($fieldInstance)->toJson();
+            $value = hexdec($node);
             $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
 
-            $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node;
+            $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $value; //TODO: was $node, now it's a bit hacky
         }
 
         return $accumulator;

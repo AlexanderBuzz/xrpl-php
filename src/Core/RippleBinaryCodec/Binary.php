@@ -16,6 +16,7 @@ class Binary
 
     public function serializeObject(JsonObject $object, array $options = [])
     {
+        //TODO: This is old an needs to revamped completely
         [
             'prefix' => $prefix,
             'suffix' => $suffix,
