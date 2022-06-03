@@ -17,23 +17,27 @@ $taArray = [
 ];
 */
 
+print_r('ripple-binary-codec decode example, HEX string to JSON object' . PHP_EOL. PHP_EOL);
+
 $taArray = [
     "TransactionType" => "Payment",
     "Sequence" => 1,
     "Flags" =>  2147483648
 ];
+$encodedTaArray = "12000022800000002400000001";
 
-$encodedTa2 = "12000022800000002400000001";
+$decodedTaArray = $codec->decode($encodedTaArray);
 
-$encodedTa3 = "120000"; //TransactionType: Payment
-$encodedTa3 = "120001";//TransactionType: EscrowCreate
+print_r("Input: " . $encodedTaArray . PHP_EOL . "Expected: " . print_r($taArray, true));
+$decoded = $codec->decode($encodedTaArray);
+print_r("Decoded Transaction: " . print_r($decoded, true) . PHP_EOL . PHP_EOL);
 
 
+//$encodedTa3 = "120000"; //TransactionType: Payment
+//$encodedTa3 = "120001";//TransactionType: EscrowCreate
 
-print_r('ripple-binary-codec decode example, HEX string to JSON object' .PHP_EOL);
-
-$decoded = $codec->decode($encodedTa2);
+//$decoded = $codec->decode($encodedTaArray);
 //$decoded = $codec->decode($taArray);
-print_r($decoded);
+//print_r($decoded);
 
 
