@@ -10,6 +10,13 @@ final class AmountTest extends TestCase
 {
     //private static Amount $codec = new Amount();
 
+    private Amount $amount;
+
+    protected function setUp(): void
+    {
+        $this->amount = new Amount();
+    }
+
     public function testDecodeXrpAmount(): void
     {
         $amount = new Amount();
