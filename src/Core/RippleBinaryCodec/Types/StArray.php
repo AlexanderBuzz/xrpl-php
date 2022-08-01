@@ -43,7 +43,7 @@ class StArray extends  SerializedType
 
     public function toJson(): array|string
     {
-        $binaryParser = new BinaryParser($this->buffer->toString());
+        $binaryParser = new BinaryParser($this->bytes->toString());
         $values = [];
 
         while (!$binaryParser->end()) {

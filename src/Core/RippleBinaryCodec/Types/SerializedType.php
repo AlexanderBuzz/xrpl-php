@@ -15,32 +15,32 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
  */
 abstract class SerializedType
 {
-    protected Buffer $buffer;
+    protected Buffer $bytes;
 
     public function __construct(?Buffer $bytes = null)
     {
         if (!$bytes) {
             $bytes = Buffer::alloc(0);
         }
-        $this->buffer = $bytes;
+        $this->bytes = $bytes;
     }
 
-    public function toByteSink(BytesList $list): void
+    public function toBytesSink(BytesList $list): void
     {
-        $list->push($this->buffer);
+        $list->push($this->bytes);
     }
 
     public function toBytes(): Buffer
     {
-        if (!$this->buffer) {
+        if (!$this->bytes) {
             return Buffer::from([]);
         }
-        return $this->buffer;
+        return $this->bytes;
     }
 
     public function toHex(): string
     {
-        return strtoupper($this->buffer->toString());
+        return strtoupper($this->bytes->toString());
     }
 
     public function toJson(): array|string|int

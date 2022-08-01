@@ -200,4 +200,9 @@ class BinaryParser
         throw new \Exception("Invalid variable length indicator");
     }
 
+    public function getSize()
+    {
+        return $this->bytes->getLength();
+    }
+
 }

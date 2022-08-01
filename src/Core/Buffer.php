@@ -109,7 +109,7 @@ class Buffer implements ArrayAccess
             $length = $end - $start;
             $tempArray = array_slice($this->bytesArray->toArray(), $start, $length);
         } else {
-            //account for differences in array slicing behavior in PHP and JavaScrip
+            //account for differences in array slicing behavior in PHP and JavaScript
             $tempArray = array_slice($this->bytesArray->toArray(), $start);
         }
 

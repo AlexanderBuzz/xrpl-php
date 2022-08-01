@@ -11,22 +11,22 @@ use XRPL_PHP\Core\Buffer;
  */
 class BytesList //TODO: let's see if we can get rid of this...
 {
-    private array $bytesArray;
+    private array $bufferList;
 
     public function __construct()
     {
-        $this->bytesArray = [];
+        $this->bufferList = [];
     }
 
     public function getLength(): int
     {
         //Is this the lengt of the array or of all bytes in the Array?
-        return count($this->bytesArray);
+        return count($this->bufferList);
     }
 
     public function push(Buffer $bytesArg): BytesList
     {
-        $this->bytesArray[] = $bytesArg;
+        $this->bufferList[] = $bytesArg;
 
         return $this;
     }
@@ -38,6 +38,12 @@ class BytesList //TODO: let's see if we can get rid of this...
 
     public function toBytes(): Buffer
     {
-        //return all Buffer bytes as Buffer
+        $tempArray = [];
+
+        foreach ($this->bufferList as $buffer) {
+            $tempArray = array_merge($tempArray, $buffer->toArray());
+        }
+
+        return Buffer::from($tempArray);
     }
 }

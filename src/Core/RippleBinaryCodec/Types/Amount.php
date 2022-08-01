@@ -68,12 +68,12 @@ class Amount extends SerializedType
 
     public function toJson(): string|array
     {
-        $rawBytes = $this->buffer->toArray();
+        $rawBytes = $this->bytes->toArray();
         if ($this->isNative($rawBytes)) {
             $rawBytes[0] &= 0x3f;
 
              $value = BigInteger::of(Buffer::from($rawBytes)->toDecimalString()); //TODO -> correct Input!
-            if (!$this->isPositive($this->buffer->toArray())) {
+            if (!$this->isPositive($this->bytes->toArray())) {
                 $value = $value->negated();
             }
 

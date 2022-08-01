@@ -46,7 +46,7 @@ class StObject extends SerializedType
 
     public function toJson(): array|string
     {
-        $binaryParser = new BinaryParser($this->buffer->toString());
+        $binaryParser = new BinaryParser($this->bytes->toString());
         $accumulator = [];
 
         while (!$binaryParser->end()) {
