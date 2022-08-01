@@ -7,9 +7,9 @@ use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
-class Hash160 extends Hash
+class Hash128 extends Hash
 {
-    protected static int $width = 20;
+    protected static int $width = 16;
 
     public function __construct(?Buffer $bytes = null)
     {
@@ -22,11 +22,11 @@ class Hash160 extends Hash
 
     public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
-        return new Hash160($parser->read(static::$width));
+        return new Hash128($parser->read(static::$width));
     }
 
     public function fromSerializedJson(string $serializedJson): SerializedType
     {
-        return new Hash160(Buffer::from($serializedJson));
+        return new Hash128(Buffer::from($serializedJson));
     }
 }

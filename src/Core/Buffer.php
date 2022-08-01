@@ -95,6 +95,14 @@ class Buffer implements ArrayAccess
         $this->bytesArray = SplFixedArray::fromArray(array_merge($this->bytesArray->toArray(), $toAttach));
     }
 
+    public function set(int $startIdx, array $bytes): void
+    {
+        //TODO: check out of bounds
+        foreach ($bytes as $key => $byte) {
+            $this->bytesArray[$startIdx + $key] = $byte;
+        }
+    }
+
     public function subArray(int $start, ?int $end): Buffer
     {
         if ($end) {

@@ -26,8 +26,9 @@ abstract class Hash extends SerializedType
         $this->toHex();
     }
 
-    public function fromHex(string $hex): SerializedType
+    public function getWidth(): int
     {
-        return parent::fromHex($hex, $this->width); // TODO: re-check SerializedType
+        return static::$width;
     }
+
 }
