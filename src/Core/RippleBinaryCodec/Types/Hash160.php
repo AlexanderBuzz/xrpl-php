@@ -20,12 +20,12 @@ class Hash160 extends Hash
         parent::__construct($bytes, static::$width);
     }
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         return new Hash160($parser->read(static::$width));
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
         return new Hash160(Buffer::from($serializedJson));
     }

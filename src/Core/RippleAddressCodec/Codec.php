@@ -1,9 +1,9 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace XRPL_PHP\Core\RippleAddressCodec;
 
 use Exception;
-use Lessmore92\Buffer\Buffer;
+use XRPL_PHP\Core\Buffer;
 
 class Codec
 {
@@ -43,50 +43,39 @@ class Codec
         }
 
         $versionLengthGuess = is_numeric($versions[0]) ? 1 : sizeof($versions[0]);
-        $payloadLength = $options['expectedLength'] ?: $withoutSum->getSize() - $versionLengthGuess;
+        $payloadLength = $options['expectedLength'] ?: $withoutSum->getLength() - $versionLengthGuess;
 
-        $versionBytes = $withoutSum->slice(0, (-1 * $payloadLength))->getDecimal();
-
-        $payload = $withoutSum->slice((-1 * $payloadLength));
+        $versionBytes = $withoutSum->slice(0, -$payloadLength)->toArray();
+        $payload = $withoutSum->slice(-$payloadLength)->toArray();
 
         foreach ($versions as $key => $version) {
             $version = is_array($versions[$key]) ? $versions[$key] : [$versions[$key]];
-            if ($version === $versionBytes)
-            {
+            if ($version === $versionBytes) {
                 return [
                     'version' => $version,
-                    'bytes'   => $payload,
-                    'type'    => $types ? $types[$key] : null,
+                    'bytes' => $payload,
+                    'type' => $types ? $types[$key] : null,
                 ];
             }
         }
-
     }
 
-    public function encodeChecked(Buffer $buffer): string
+    public function encodeChecked(Buffer $bytes): string
     {
-        //TODO: uff...
-        //$check = $this->sha256($this->sha256($buffer))->slice(0, 4);
-
-        $check = unpack('C*', substr(hash('sha256', hash('sha256', $buffer->getBinary(), true), true), 0, 4));
-        foreach ($check as $item)
-        {
-            $buffer->append(sprintf('%02X', $item));
-        }
-
-        return $this->encodeRaw($buffer);
+        $check = $this->sha256($this->sha256($bytes))->slice(0,4);
+        return $this->encodeRaw(Buffer::concat([$bytes->toArray(), $check->toArray()]));
     }
 
     public function decodeChecked(string $base58string)
     {
         $buffer = $this->decodeRaw($base58string);
 
-        if ($buffer->getSize() < 5) {
+        if ($buffer->getLength() < 5) {
             throw new Exception('invalid_input_size: decoded data must have length >= 5');
         }
 
         if (!$this->verifyCheckSum($buffer)) {
-            throw new Exception('checksum_invalid');
+            throw new Exception('Checksum does not validate');
         }
 
         return $buffer->slice(0, -4);
@@ -94,13 +83,11 @@ class Codec
 
     private function encodeVersioned(Buffer $bytes, array $versions, int $expectedLength): string
     {
-        if ($bytes->getSize() !== $expectedLength) {
+        if ($bytes->getLength() !== $expectedLength) {
             throw new Exception('unexpected_payload_length: bytes.length does not match expectedLength. Ensure that the bytes are a Buffer.');
         }
 
-        foreach ($versions as $version) {
-            $bytes->prepend(sprintf('%02X', $version)); //TOTO: remove const
-        }
+        $bytes->prependBuffer(Buffer::from($versions));
 
         return $this->encodeChecked($bytes);
     }
@@ -115,16 +102,18 @@ class Codec
         return $this->baseCodec->decode($base58string);
     }
 
-    private function verifyCheckSum(Buffer $bytes)
-    {
-        $computed = substr(hash('sha256', hash('sha256', substr($bytes->getBinary(), 0, -4), true), true), 0, 4);
-        $checksum = substr($bytes->getBinary(), -4);
-        return $computed === $checksum;
-    }
-
     private function sha256(Buffer $bytes): Buffer
     {
-        return new Buffer();
-        //return unpack('C*', substr(hash('sha256', hash('sha256', $bytes->getBinary(), true), true), 0, 4));;
+        $binaryValue = hex2bin($bytes->toString());
+        $binaryHash = hash('sha256', $binaryValue, true);
+        $hexValue = bin2hex($binaryHash);
+        return Buffer::from($hexValue);
+    }
+
+    private function verifyCheckSum(Buffer $bytes)
+    {
+        $computed = $this->sha256($this->sha256($bytes->slice(0,-4)))->slice(0,4);
+        $checksum = $bytes->slice(-4);
+        return $computed->toString() === $checksum->toString(); //TODO: Perhaps make Buffer comparable
     }
 }

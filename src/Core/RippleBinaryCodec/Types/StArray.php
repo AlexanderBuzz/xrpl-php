@@ -6,7 +6,7 @@ use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
 
-class StArray extends  SerializedType
+class StArray extends SerializedType
 {
     public const ARRAY_END_MARKER = 0xf1;
 
@@ -14,7 +14,7 @@ class StArray extends  SerializedType
 
     public const ARRAY_END_MARKER_NAME = "ArrayEndMarker";
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $bytesArray = Buffer::alloc(0); // const bytes: Array<Buffer> = []
         $binarySerializer = new BinarySerializer($bytesArray);
@@ -36,7 +36,7 @@ class StArray extends  SerializedType
         return new StArray($binarySerializer->getBytes());
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
         // TODO: Implement from() method.
     }
@@ -52,8 +52,7 @@ class StArray extends  SerializedType
                 break;
             }
 
-            $object = new StObject();
-            $object = $object->fromParser($binaryParser);
+            $object = StObject::fromParser($binaryParser);
         }
 
         return parent::toJson();

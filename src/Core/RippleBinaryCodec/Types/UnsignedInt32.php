@@ -6,15 +6,15 @@ use BI\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
-class UnsignedInt32 extends  UnsignedInt
+class UnsignedInt32 extends UnsignedInt
 {
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt32
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt32
     {
         $fromParser = $parser->readUInt32();
         return new UnsignedInt32(Buffer::from($fromParser));
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

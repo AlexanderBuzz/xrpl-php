@@ -9,7 +9,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class Currency extends Hash160
 {
-    protected static int $width = 20;
+    public static int $width = 20;
 
     private const XRP_HEX_REGEX = "/^0{40}$/";
     private const ISO_REGEX = "/^[A-Z0-9a-z?!@#$%^&*(){}[\]|]{3}$/";
@@ -35,18 +35,18 @@ class Currency extends Hash160
         }
     }
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         return new Currency($parser->read(static::$width));
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
-        if (!$this->isValidRepresentation($serializedJson)) {
+        if (!static::isValidRepresentation($serializedJson)) {
             throw new \Exception('Unsupported Currency representation: ' . $serializedJson);
         }
 
-        $bytes = strlen($serializedJson) === 3 ? $this->isoToBytes($serializedJson) : Buffer::from($serializedJson);
+        $bytes = strlen($serializedJson) === 3 ? static::isoToBytes($serializedJson) : Buffer::from($serializedJson);
 
         return new Currency($bytes);
     }
@@ -60,31 +60,33 @@ class Currency extends Hash160
         return $this->toBytes()->toString();
     }
 
-    private function isValidRepresentation(string $value): bool
+    private static function isValidRepresentation(string $value): bool
     {
-        return $this->isStringRepresentation($value);
+        return static::isStringRepresentation($value);
     }
 
-    private function isStringRepresentation(string $input): bool
+    private static function isStringRepresentation(string $input): bool
     {
-        return $this->isIsoCode($input) || $this->isHex($input);
+        return static::isIsoCode($input) || static::isHex($input);
     }
 
-    private function isIsoCode(string $iso): bool
+    private static function isIsoCode(string $iso): bool
     {
         return preg_match(self::ISO_REGEX, $iso) === 1;
     }
 
-    private function isHex(string $hex): bool
+    private static function isHex(string $hex): bool
     {
         return preg_match(self::HEX_REGEX, $hex) === 1;
     }
 
-    private function isoToBytes(string $iso): Buffer
+    private static function isoToBytes(string $iso): Buffer
     {
         $bytes = Buffer::alloc(20);
-        if($iso !== 'XRP') {
-            $isoBytes = array_map(function($c) {return ord($c);}, str_split($iso));
+        if ($iso !== 'XRP') {
+            $isoBytes = array_map(function ($c) {
+                return ord($c);
+            }, str_split($iso));
             $bytes->set(12, $isoBytes);
         }
 

@@ -26,7 +26,7 @@ class Definitions
 
     public function __construct()
     {
-        $path = dirname(__FILE__) ."/definitions.json";
+        $path = dirname(__FILE__) . "/definitions.json";
         $this->definitions = json_decode(file_get_contents($path), true);
 
         $this->typeOrdinals = $this->definitions['TYPES'];
@@ -58,7 +58,7 @@ class Definitions
 
     public static function getInstance(): Definitions
     {
-        if(static::$instance === null) {
+        if (static::$instance === null) {
             static::$instance = new Definitions();
         }
 
@@ -125,6 +125,6 @@ class Definitions
                 return "";
         }
 
-        return (isset($lookup[(int) $value])) ? $lookup[(int) $value] : "";
+        return (isset($lookup[(int)$value])) ? $lookup[(int)$value] : "";
     }
 }

@@ -2,9 +2,9 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Core\RippleAddressCodec\RippleAddressCodec;
+use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
-$codec = new RippleAddressCodec();
+$codec = new AddressCodec();
 
 print_r('Ripple-address-codec decode example, HEX string to JSON object' .PHP_EOL .PHP_EOL);
 
@@ -27,7 +27,7 @@ $expected = [
     "test" => false
 ];
 print_r("Input: " . $input . PHP_EOL . "Expected: " . print_r($expected, true));
-$decoded = $codec->xAddressToClassicAddress('XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi');
+$decoded = $codec->xAddressToClassicAddress($input);
 print_r("Decoded Address: " . print_r($decoded, true) . PHP_EOL . PHP_EOL);
 
 

@@ -6,7 +6,7 @@ use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
-abstract class UnsignedInt extends  SerializedType
+abstract class UnsignedInt extends SerializedType
 {
     protected BigInteger $value;
 

@@ -21,7 +21,7 @@ class Vector256 extends SerializedType
         parent::__construct($bytes);
     }
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $bytesList = new BytesList();
         $numBytes = (!is_null($lengthHint)) ? $lengthHint : $parser->getSize();
@@ -35,9 +35,8 @@ class Vector256 extends SerializedType
         return new Vector256($bytesList->toBytes());
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
-
         $bytesList = new BytesList();
 
         foreach (json_decode($serializedJson) as $hash) {
@@ -56,7 +55,7 @@ class Vector256 extends SerializedType
 
         $result = [];
 
-        for($i = 0; $i < $this->bytes->getLength(); $i += 32) {
+        for ($i = 0; $i < $this->bytes->getLength(); $i += 32) {
             $result[] = strtoupper($this->bytes->slice($i, $i + 32)->toString());
         }
 

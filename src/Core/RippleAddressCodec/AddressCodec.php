@@ -2,9 +2,9 @@
 
 namespace XRPL_PHP\Core\RippleAddressCodec;
 
-use Lessmore92\Buffer\Buffer;
+use XRPL_PHP\Core\Buffer;
 
-class RippleAddressCodec extends CodecWithXrpAlphabet
+class AddressCodec extends CodecWithXrpAlphabet
 {
     public const PREFIX_BYTES = [
         'main' => [0x05, 0x44], // 5, 68
@@ -35,7 +35,7 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
         }
 
         $bytes = array_merge($test ? self::PREFIX_BYTES['test'] : self::PREFIX_BYTES['main']);
-        $bytes = array_merge($bytes, $accountId->getDecimal());
+        $bytes = array_merge($bytes, $accountId->toArray());
         $bytes = array_merge($bytes, [
             $flag,
             $tag & 0xff,
@@ -45,15 +45,11 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
             0, 0, 0, 0
         ]);
 
-        //print_r('-----');
-        //print_r($bytes);
-        //print_r('-----');
-
         $hex = array_map(function ($item) {
             return sprintf('%02X', $item);
         }, $bytes);
 
-        return $this->encodeChecked(Buffer::hex(join($hex)));
+        return $this->encodeChecked(Buffer::from(join($hex)));
     }
 
     public function xAddressToClassicAddress(string $xAddress): array
@@ -71,7 +67,7 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
     {
         $decoded = $this->decodeChecked($xAddress);
         $test = $this->isBufferForTestAddress($decoded);
-        $accountId = $decoded->slice(2, 20);
+        $accountId = $decoded->slice(2, 22);
         $tag = $this->tagFromBuffer($decoded);
         return [
             'accountId' => $accountId,
@@ -82,12 +78,9 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
 
     public function isValidXAddress(string $xAddress): bool
     {
-        try
-        {
+        try {
             $this->decodeXAddress($xAddress);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             return false;
         }
         return true;
@@ -95,7 +88,7 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
 
     private function isBufferForTestAddress(Buffer $buffer): bool
     {
-        $decodedPrefix = $buffer->slice(0, 2)->getDecimal();
+        $decodedPrefix = $buffer->slice(0, 2)->toArray();
         if (self::PREFIX_BYTES['main'] === $decodedPrefix) {
             return false;
         } else if (self::PREFIX_BYTES['test'] === $decodedPrefix) {
@@ -107,7 +100,7 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
 
     private function tagFromBuffer(Buffer $buffer): int|false
     {
-        $buf = $buffer->getDecimal();
+        $buf = $buffer->toArray();
         $flag = $buf[22];
         if ($flag >= 2) {
             throw new \Exception('Unsupported X-address');
@@ -122,8 +115,7 @@ class RippleAddressCodec extends CodecWithXrpAlphabet
             throw new \Exception('flag must be zero to indicate no tag');
         }
 
-        if ('0000000000000000' !== $buffer->slice(23, 23 + 8)
-                ->getHex()) {
+        if ('0000000000000000' !== $buffer->slice(23, 23 + 8)->toString()) {
             throw new \Exception('remaining bytes must be zero');
         }
 

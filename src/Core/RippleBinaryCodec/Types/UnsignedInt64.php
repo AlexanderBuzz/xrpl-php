@@ -8,13 +8,13 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class UnsignedInt64 extends UnsignedInt
 {
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt64
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt64
     {
         $fromParser = $parser->readUInt64();
         return new UnsignedInt64(Buffer::from($fromParser));
     }
 
-    public function fromSerializedJson(string $serializedJson): UnsignedInt64
+    public static function fromSerializedJson(string $serializedJson): UnsignedInt64
     {
         //TODO: WIP
         return new UnsignedInt64();

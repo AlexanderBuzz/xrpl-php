@@ -12,46 +12,39 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Currency;
  */
 final class CurrencyTest extends TestCase
 {
-    private Currency $currency;
-
-    protected function setUp(): void
+    public function testDecodeIso3()
     {
-        $this->currency = new Currency();
+        $this->assertEquals(
+            "XRP",
+            Currency::fromHex("0000000000000000000000000000000000000000")->toJson()
+        );
+
+        $this->assertEquals(
+            "USD",
+            Currency::fromHex("0000000000000000000000005553440000000000")->toJson()
+        );
+
+        $this->assertEquals(
+            "xSD",
+            Currency::fromHex("0000000000000000000000007853440000000000")->toJson()
+        );
     }
-
-   public function testDecodeIso3()
-   {
-       $this->assertEquals(
-           "XRP",
-           $this->currency->fromHex("0000000000000000000000000000000000000000")->toJson()
-       );
-
-       $this->assertEquals(
-           "USD",
-           $this->currency->fromHex("0000000000000000000000005553440000000000")->toJson()
-       );
-
-       $this->assertEquals(
-           "xSD",
-           $this->currency->fromHex("0000000000000000000000007853440000000000")->toJson()
-       );
-   }
 
     public function testEncodeIso3()
     {
         $this->assertEquals(
             "0000000000000000000000000000000000000000",
-            $this->currency->fromSerializedJson("XRP")->toHex()
+            Currency::fromSerializedJson("XRP")->toHex()
         );
 
         $this->assertEquals(
             "0000000000000000000000005553440000000000",
-            $this->currency->fromSerializedJson("USD")->toHex()
+            Currency::fromSerializedJson("USD")->toHex()
         );
 
         $this->assertEquals(
             "0000000000000000000000007853440000000000",
-            $this->currency->fromSerializedJson("xSD")->toHex()
+            Currency::fromSerializedJson("xSD")->toHex()
         );
     }
 }

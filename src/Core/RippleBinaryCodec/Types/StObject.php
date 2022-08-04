@@ -17,7 +17,7 @@ class StObject extends SerializedType
 
     public const ST_OBJECT = "STObject";
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $bytesArray = Buffer::alloc(0); // const bytes: Array<Buffer> = []
         $binarySerializer = new BinarySerializer($bytesArray);
@@ -39,7 +39,7 @@ class StObject extends SerializedType
         return new StObject($binarySerializer->getBytes());
     }
 
-    function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace XRPL_PHP\Models\Transactions;
 
@@ -31,11 +31,13 @@ class Payment extends BaseTransaction
         // TODO: Implement getPayload() method.
     }
 
-    public function validatPayment(): void {
+    public function validatPayment(): void
+    {
 
     }
 
-    public function checkPartialPayment(): void {
+    public function checkPartialPayment(): void
+    {
 
     }
 

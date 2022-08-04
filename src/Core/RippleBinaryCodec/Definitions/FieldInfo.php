@@ -5,7 +5,6 @@ namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 /**
  * Model object for field info from the "fields" section of definitions.json.
  */
-
 class FieldInfo
 {
     private int $nth;
@@ -19,12 +18,13 @@ class FieldInfo
     private string $type;
 
     public function __construct(
-        int $nth,
-        bool $isVariableLengthEncoded,
-        bool $isSerialized,
-        bool $isSigningField,
+        int    $nth,
+        bool   $isVariableLengthEncoded,
+        bool   $isSerialized,
+        bool   $isSigningField,
         string $typeName
-    ) {
+    )
+    {
         $this->nth = $nth;
         $this->isVariableLengthEncoded = $isVariableLengthEncoded;
         $this->isSerialized = $isSerialized;

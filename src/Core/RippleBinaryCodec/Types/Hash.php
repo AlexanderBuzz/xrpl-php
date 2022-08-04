@@ -14,7 +14,7 @@ abstract class Hash extends SerializedType
     {
         parent::__construct($bytes);
 
-        if($bytes->getLength() !== $width) {
+        if ($bytes->getLength() !== $width) {
             throw new \Exception("Invalid hash length " . $bytes->getLength());
         }
 

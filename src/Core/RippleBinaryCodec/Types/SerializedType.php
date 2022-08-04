@@ -53,10 +53,10 @@ abstract class SerializedType
         return $this->toHex(); //TODO: check if this applies in every casel
     }
 
-    public function fromHex(string $hex): SerializedType
+    public static function fromHex(string $hex): SerializedType
     {
         $parser = new BinaryParser($hex);
-        return $this->fromParser($parser);
+        return static::fromParser($parser);
     }
 
     public static function getTypeByName(string $name): SerializedType
@@ -92,8 +92,8 @@ abstract class SerializedType
 
     }
 
-    abstract function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
+    abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
-    abstract function fromSerializedJson(string $serializedJson): SerializedType;
+    abstract static function fromSerializedJson(string $serializedJson): SerializedType;
 
 }

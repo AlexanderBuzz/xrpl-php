@@ -1,0 +1,40 @@
+<?php declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+
+/**
+ * XRPL4J:
+ * https://github.com/XRPLF/xrpl4j/blob/main/xrpl4j-binary-codec/src/test/java/org/xrpl/xrpl4j/codec/binary/types/AccountIdTypeTest.java
+ *
+ * XRPL.JS
+ *
+ */
+final class AccountIdTest extends TestCase
+{
+    private string $json;
+
+    private string $hex;
+
+    protected function setUp(): void
+    {
+        $this->json = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59";
+        $this->hex = "5E7B112523F68D2F5E879DB4EAC51C6698A69304";
+    }
+
+   public function testDecode()
+   {
+       $this->assertEquals(
+           $this->json,
+           AccountId::fromHex($this->hex)->toJson()
+       );
+   }
+
+    public function testEncode()
+    {
+        $this->assertEquals(
+            $this->hex,
+            AccountId::fromSerializedJson($this->json)->toHex()
+        );
+    }
+}

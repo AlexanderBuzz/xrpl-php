@@ -24,7 +24,7 @@ class Buffer implements ArrayAccess
     {
         $buffer = new Buffer();
 
-        if (gettype($source) === Buffer::class ) {
+        if (gettype($source) === Buffer::class) {
             Buffer::from($buffer->toArray()); //TODO: likely unnecessary, check node Buffer
         }
 
@@ -86,13 +86,24 @@ class Buffer implements ArrayAccess
 
     public function appendBuffer(Buffer $appendix)
     {
-        return Buffer::concat([$this->bytesArray, $appendix->toArray()]);
+        $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix->toArray()));
     }
 
     public function appendHex(string $hexBytes)
     {
-        $toAttach = array_map('hexdec', str_split($hexBytes, 2));
-        $this->bytesArray = SplFixedArray::fromArray(array_merge($this->bytesArray->toArray(), $toAttach));
+        $appendix = array_map('hexdec', str_split($hexBytes, 2));
+        $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix));
+    }
+
+    public function prependBuffer(Buffer $prefix)
+    {
+        $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix->toArray(), $this->toArray()));
+    }
+
+    public function prependHex(string $hexBytes)
+    {
+        $prefix = array_map('hexdec', str_split($hexBytes, 2));
+        $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix, $this->toArray()));
     }
 
     public function set(int $startIdx, array $bytes): void
@@ -141,22 +152,6 @@ class Buffer implements ArrayAccess
     {
         return $this->bytesArray->toArray();
     }
-
-    /*
-    public function writeUInt32BE(BigInteger $value, int $offset, bool $noAssert = false): int
-    {
-        $offset = MathUtilities::unsignedRightShift($offset);
-
-        //if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
-        $this->bytesArray[$offset] = ($value->shiftedRight(24));
-        $this->bytesArray[$offset + 1] = ($value->shiftedRight(16));
-        $this->bytesArray[$offset + 2] = ($value->shiftedRight(8));
-        //$this->bytesArray[$offset + 3] = ($value & 0xff);
-        $this->bytesArray[$offset + 3] = ($value->and(0xff));
-
-        return $offset + 4;
-    }
-    */
 
     public function debug(): string
     {

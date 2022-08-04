@@ -6,27 +6,30 @@ use BI\BigInteger;
 use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
+use function MongoDB\BSON\fromJSON;
 
-class Hash256 extends Hash
+class Blob extends SerializedType
 {
-    protected static int $width = 32;
-
     public function __construct(?Buffer $bytes = null)
     {
         if (is_null($bytes)) {
-            $bytes = Buffer::alloc(static::$width);
+            $bytes = Buffer::alloc();
         }
 
-        parent::__construct($bytes, static::$width);
+        parent::__construct($bytes);
     }
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
-        return new Hash256($parser->read(static::$width));
+        if (is_null($lengthHint)) {
+            $lengthHint = $parser->getSize();
+        }
+        return new Blob($parser->read($lengthHint));
     }
 
     public static function fromSerializedJson(string $serializedJson): SerializedType
     {
-        return new Hash256(Buffer::from($serializedJson));
+        return new Blob(Buffer::from($serializedJson));
     }
 }

@@ -3,7 +3,7 @@
 namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
-use XRPL_PHP\Core\RippleAddressCodec\RippleAddressCodec;
+use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
 
 class Wallet
@@ -71,7 +71,7 @@ class Wallet
 
         $txPayload[Transaction::JSON_PROPERTY_SIGNING_PUBLIC_KEY] = $this->publicKey;
 
-        if($multisignAddress) {
+        if ($multisignAddress) {
 
         } else {
             $txPayload[Transaction::JSON_PROPERTY_TRANSACTION_SIGNATURE] = $this->computeSignature($txPayload);
@@ -91,7 +91,7 @@ class Wallet
      *
      * @return array
      */
-    public function returnHardcodedSignature() :array
+    public function returnHardcodedSignature(): array
     {
         $serializedTx = "120000220000000024019251F2201B0193D2ED6140000000014FB18068400000000000000C7321039543A0D3004CDA0904A09FB3710251C652D69EA338589279BC849D47A7B019A174473045022100DA2A60B79CB19107892F7A73F74A7B5F4C4AFFF77294F8EBFA5A52BF1BA4F27E0220046910CF91CE1324ED108E66251C9B0DCDC7570F6EEA0626127C1495BD96B1078114E2AFBD269D7DA5E2B9931CCBD62FAB5118A366188314F667B0CA50CC7709A220B0561B85E53A48461FA8";
         $hash = "FF8EEB399F00034CC498CFFFB75DCFFCFB6DBEE0D61FE2D36E7CFF9E3B38674E";
@@ -112,7 +112,7 @@ class Wallet
         $encoded = $this->encodeForSigning($txPayload);
 
         //where?
-       //return $this->sign($encoded, $this->privateKey);
+        //return $this->sign($encoded, $this->privateKey);
     }
 
     /**

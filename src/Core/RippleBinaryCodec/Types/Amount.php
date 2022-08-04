@@ -37,7 +37,7 @@ class Amount extends SerializedType
         parent::__construct($bytes);
     }
 
-    public function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $isXRP = $parser->peek() & 0x80;
         $numBytes = $isXRP ? 48 : 8; //NATIVE_AMOUNT_BYTE_LENGTH : CURRENCY_AMOUNT_BYTE_LENGTH;
@@ -45,10 +45,10 @@ class Amount extends SerializedType
         return new Amount($parser->read($numBytes));
     }
 
-    public function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromSerializedJson(string $serializedJson): SerializedType
     {
-       $isScalar = preg_match('/^\d+$/', $serializedJson);
-        if($isScalar) {
+        $isScalar = preg_match('/^\d+$/', $serializedJson);
+        if ($isScalar) {
             self::assertXrpIsValid($serializedJson);
             $padded = str_pad(dechex($serializedJson), 16, 0, STR_PAD_LEFT);
             $bytes = Buffer::from($padded, 'hex'); //padding!
@@ -72,24 +72,24 @@ class Amount extends SerializedType
         if ($this->isNative($rawBytes)) {
             $rawBytes[0] &= 0x3f;
 
-             $value = BigInteger::of(Buffer::from($rawBytes)->toDecimalString()); //TODO -> correct Input!
+            $value = BigInteger::of(Buffer::from($rawBytes)->toDecimalString()); //TODO -> correct Input!
             if (!$this->isPositive($this->bytes->toArray())) {
                 $value = $value->negated();
             }
 
-            return (string) $value;
+            return (string)$value;
         }
     }
 
     private static function assertXrpIsValid(string $amount): void
     {
-        if(str_contains($amount, ".")) {
+        if (str_contains($amount, ".")) {
             throw new \Exeption($amount . ' is an illegal amount');
         }
 
         $value = BigDecimal::of($amount);
         if (!$value->isZero()) {
-            if($value->compareTo(MIN_XRP) < 0 || $value->compareTo(MAX_DROPS) > 0) {
+            if ($value->compareTo(MIN_XRP) < 0 || $value->compareTo(MAX_DROPS) > 0) {
                 throw new \Exeption($amount . ' is an illegal amount');
             }
         }

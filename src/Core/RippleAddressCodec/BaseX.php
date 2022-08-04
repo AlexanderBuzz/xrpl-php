@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleAddressCodec;
 
-use Lessmore92\Buffer\Buffer;
+use XRPL_PHP\Core\Buffer;
 use SplFixedArray;
 
 class BaseX
@@ -54,28 +54,25 @@ class BaseX
         $zeroes = 0;
         $length = 0;
         $pbegin = 0;
-        $pend   = $bytes->getSize();
-        $_bytes = $bytes->getDecimal();
+        $pend = $bytes->getLength();
+        $_bytes = $bytes->toArray();
         while ($pbegin !== $pend && $_bytes[$pbegin] == 0) {
             $pbegin++;
             $zeroes++;
         }
 
-        $size = $this->unsignedRightShift((int) abs(($pend - $pbegin) * $this->inverseFactor + 1), 0);
-        $b58  = array_fill(0, $size, 0);
+        $size = $this->unsignedRightShift((int)abs(($pend - $pbegin) * $this->inverseFactor + 1), 0);
+        $b58 = array_fill(0, $size, 0);
 
-        while ($pbegin !== $pend)
-        {
+        while ($pbegin !== $pend) {
             $carry = $_bytes[$pbegin];
-            $i     = 0;
-            for ($it1 = $size - 1; ($carry !== 0 || $i < $length) && ($it1 !== -1); $it1--, $i++)
-            {
-                $carry += $this->unsignedRightShift((int) abs(256 * $b58[$it1]), 0);
-                $b58[$it1] = $this->unsignedRightShift((int) abs($carry % $this->base), 0);
-                $carry = $this->unsignedRightShift((int) abs($carry / $this->base), 0);
+            $i = 0;
+            for ($it1 = $size - 1; ($carry !== 0 || $i < $length) && ($it1 !== -1); $it1--, $i++) {
+                $carry += $this->unsignedRightShift((int)abs(256 * $b58[$it1]), 0);
+                $b58[$it1] = $this->unsignedRightShift((int)abs($carry % $this->base), 0);
+                $carry = $this->unsignedRightShift((int)abs($carry / $this->base), 0);
             }
-            if ($carry !== 0)
-            {
+            if ($carry !== 0) {
                 throw new \Exception('Non-zero carry');
             }
             $length = $i;
@@ -123,7 +120,7 @@ class BaseX
             $psz++;
         }
 
-        $size = $this->unsignedRightShift((int) abs(((strlen($source) - $psz) * $this->factor) + 1), 0); // log(58) / log(256), rounded up.
+        $size = $this->unsignedRightShift((int)abs(((strlen($source) - $psz) * $this->factor) + 1), 0); // log(58) / log(256), rounded up.
         $b256 = array_fill(0, $size, 0);
 
         while (isset($source[$psz])) {
@@ -136,9 +133,9 @@ class BaseX
 
             $i = 0;
             for ($it3 = $size - 1; ($carry !== 0 || $i < $length) && ($it3 !== -1); $it3--, $i++) {
-                $carry += $this->unsignedRightShift((int) abs($this->base * $b256[$it3]), 0);
-                $b256[$it3] = $this->unsignedRightShift((int) abs($carry % 256), 0);
-                $carry = $this->unsignedRightShift((int) abs($carry / 256), 0);
+                $carry += $this->unsignedRightShift((int)abs($this->base * $b256[$it3]), 0);
+                $b256[$it3] = $this->unsignedRightShift((int)abs($carry % 256), 0);
+                $carry = $this->unsignedRightShift((int)abs($carry / 256), 0);
             }
 
             if ($carry !== 0) {
@@ -157,9 +154,9 @@ class BaseX
             $it4++;
         }
 
-        $vch = Buffer::hex(str_repeat('00', $zeroes + ($size - $it4)));
-        $vch = $vch->getDecimal();
-        $j   = $zeroes;
+        $vch = Buffer::from(str_repeat('00', $zeroes + ($size - $it4)));
+        $vch = $vch->toArray();
+        $j = $zeroes;
 
         while ($it4 !== $size) {
             $vch[$j++] = $b256[$it4++];
@@ -170,7 +167,7 @@ class BaseX
         }, $vch));
 
         //decimalArrayToHexStr
-        return Buffer::hex($hexStr);
+        return Buffer::from($hexStr);
     }
 
     /**

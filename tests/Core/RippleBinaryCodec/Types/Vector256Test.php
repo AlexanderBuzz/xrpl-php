@@ -21,20 +21,17 @@ final class Vector256Test extends TestCase
 
     private string $hex;
 
-    private Vector256 $vector256;
-
     protected function setUp(): void
     {
         $this->json = json_encode([self::VALUE1, self::VALUE2]);
         $this->hex = self::VALUE1 . self::VALUE2;
-        $this->vector256 = new Vector256();
     }
 
    public function testDecode()
    {
        $this->assertEquals(
            $this->json,
-           $this->vector256->fromHex($this->hex)->toJson()
+           Vector256::fromHex($this->hex)->toJson()
        );
    }
 
@@ -42,7 +39,7 @@ final class Vector256Test extends TestCase
     {
         $this->assertEquals(
             $this->hex,
-            $this->vector256->fromSerializedJson($this->json)->toHex()
+            Vector256::fromSerializedJson($this->json)->toHex()
         );
     }
 }

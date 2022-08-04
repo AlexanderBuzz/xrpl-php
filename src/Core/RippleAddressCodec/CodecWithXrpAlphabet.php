@@ -1,9 +1,8 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace XRPL_PHP\Core\RippleAddressCodec;
 
-use Lessmore92\Buffer\Buffer;
-use phpDocumentor\Reflection\Types\Callable_;
+use XRPL_PHP\Core\Buffer;
 
 class CodecWithXrpAlphabet extends Codec
 {
@@ -24,15 +23,14 @@ class CodecWithXrpAlphabet extends Codec
 
     public function encodeSeed(Buffer $entropy, string $type): string
     {
-        if ($entropy->getSize() !== 16)
-        {
+        if ($entropy->getLength() !== 16) {
             throw new \Exception('entropy must have length 16');
         }
 
         $options = [
             'expectedLength' => 16,
             // for secp256k1, use `FAMILY_SEED`
-            'versions'       => $type === 'ed25519' ? self::ED25519_SEED : [self::FAMILY_SEED],
+            'versions' => $type === 'ed25519' ? self::ED25519_SEED : [self::FAMILY_SEED],
         ];
 
         return $this->encode($entropy, $options);
@@ -41,8 +39,8 @@ class CodecWithXrpAlphabet extends Codec
     public function decodeSeed(string $seed, array $options = []): array
     {
         $options = array_replace([
-            'versionTypes'   => ['ed25519', 'secp256k1'],
-            "versions"       => [self::ED25519_SEED, self::FAMILY_SEED],
+            'versionTypes' => ['ed25519', 'secp256k1'],
+            "versions" => [self::ED25519_SEED, self::FAMILY_SEED],
             "expectedLength" => 16,
         ], $options);
 
@@ -64,16 +62,7 @@ class CodecWithXrpAlphabet extends Codec
             'versions' => [self::ACCOUNT_ID],
             'expectedLength' => 20
         ];
-        return $this->decode($accountId, $options)['bytes'];
-    }
-
-    public function decodeNodePublic(string $base58string): Buffer
-    {
-        $options = [
-            'versions' => [self::NODE_PUBLIC],
-            'expectedLength' => 33
-        ];
-        return $this->decode($base58string, $options)['bytes'];
+        return Buffer::from($this->decode($accountId, $options)['bytes']);
     }
 
     public function encodeNodePublic(Buffer $bytes): string
@@ -85,10 +74,10 @@ class CodecWithXrpAlphabet extends Codec
         return $this->encode($bytes, $options);
     }
 
-    public function decodeAccountPublic (string $base58string): Buffer
+    public function decodeNodePublic(string $base58string): Buffer
     {
         $options = [
-            'versions' => [self::ACCOUNT_PUBLIC_KEY],
+            'versions' => [self::NODE_PUBLIC],
             'expectedLength' => 33
         ];
         return $this->decode($base58string, $options)['bytes'];
@@ -101,6 +90,15 @@ class CodecWithXrpAlphabet extends Codec
             'expectedLength' => 33
         ];
         return $this->encode($bytes, $options);
+    }
+
+    public function decodeAccountPublic(string $base58string): Buffer
+    {
+        $options = [
+            'versions' => [self::ACCOUNT_PUBLIC_KEY],
+            'expectedLength' => 33
+        ];
+        return $this->decode($base58string, $options)['bytes'];
     }
 
     public function isValidClassicAddress(string $address): bool

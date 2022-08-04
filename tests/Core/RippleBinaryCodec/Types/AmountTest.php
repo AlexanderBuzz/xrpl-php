@@ -8,40 +8,27 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
  */
 final class AmountTest extends TestCase
 {
-    //private static Amount $codec = new Amount();
-
-    private Amount $amount;
-
-    protected function setUp(): void
-    {
-        $this->amount = new Amount();
-    }
-
     public function testDecodeXrpAmount(): void
     {
-        $amount = new Amount();
-
         $this->assertEquals(
             "100",
-            $amount->fromHex("4000000000000064")->toJson()
+            Amount::fromHex("4000000000000064")->toJson()
         );
         $this->assertEquals(
             "100000000000000000",
-            $amount->fromHex("416345785D8A0000")->toJson()
+            Amount::fromHex("416345785D8A0000")->toJson()
         );
     }
 
     public function testEncodeXrpAmount(): void
     {
-        $amount = new Amount();
-
         $this->assertEquals(
             "4000000000000064",
-            $amount->fromSerializedJson("100")->toHex()
+            Amount::fromSerializedJson("100")->toHex()
         );
         $this->assertEquals(
             "416345785D8A0000",
-            $amount->fromSerializedJson("100000000000000000")->toHex()
+            Amount::fromSerializedJson("100000000000000000")->toHex()
         );
     }
 
