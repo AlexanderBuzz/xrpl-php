@@ -32,7 +32,7 @@ class PathStep extends SerializedType
         $bytesList->push(Buffer::from([$type]));
 
         if ($type & self::TYPE_ACCOUNT) {
-            $bytesList->push($parser->read(20)); //TODO: AccountID::width
+            $bytesList->push($parser->read(AccountId::$width));
         }
 
         if ($type & self::TYPE_CURRENCY) {
@@ -40,7 +40,7 @@ class PathStep extends SerializedType
         }
 
         if ($type & self::TYPE_ISSUER) {
-            $bytesList->push($parser->read(20)); //TODO: AccountID::width
+            $bytesList->push($parser->read(AccountId::$width));
         }
 
         return new PathStep($bytesList->toBytes());
@@ -51,28 +51,55 @@ class PathStep extends SerializedType
         $json = json_decode($serializedJson, true);
 
         $bytesList = new BytesList();
-        $bytesList->push(Buffer::from([0]));
+        $type = [0];
 
         if (isset($json["account"])) {
-            $bytesList[] = AccountId::fromSerializedJson($serializedJson);
+            $bytesList->push(AccountId::fromSerializedJson($json["account"])->toBytes());
+            $type[0] |= self::TYPE_ACCOUNT;
         }
 
         if (isset($json["currency"])) {
-
+            $bytesList->push(Currency::fromSerializedJson($json["currency"])->toBytes());
+            $type[0] |= self::TYPE_CURRENCY;
         }
 
         if (isset($json["issuer"])) {
-
+            $bytesList->push(AccountId::fromSerializedJson($json["issuer"])->toBytes());
+            $type[0] |= self::TYPE_ISSUER;
         }
+
+        $bytesList->prepend(Buffer::from($type));
 
         return new PathStep($bytesList->toBytes());
     }
 
     public function toJson(): array|string|int
     {
+        $result = [];
         $parser = new BinaryParser($this->bytes->toString());
         $type = $parser->readUInt8()->toInt();
 
-        return '';
+        if (($type & self::TYPE_ACCOUNT) > 0) {
+            $result['account'] = AccountId::fromParser($parser)->toJson();
+        }
+
+        if (($type & self::TYPE_CURRENCY) > 0) {
+            $result['currency'] = Currency::fromParser($parser)->toJson();
+        }
+
+        if (($type & self::TYPE_ISSUER) > 0) {
+            $result['issuer'] = AccountId::fromParser($parser)->toJson();
+        }
+
+        return $result;
+    }
+
+    public static function isPathStep(array $testSubject):  bool
+    {
+        return (
+            isset($testSubject['account']) ||
+            isset($testSubject['currency']) ||
+            isset($testSubject['issuer'])
+        );
     }
 }

@@ -13,7 +13,7 @@ class AccountId extends Hash160
     public function __construct(?Buffer $bytes = null)
     {
         if ($bytes === null) {
-            $bytes = Buffer::alloc(20);
+            $bytes = Buffer::alloc(static::$width);
         }
 
         parent::__construct($bytes);
@@ -46,10 +46,5 @@ class AccountId extends Hash160
         $addressCodec = new AddressCodec();
 
         return $addressCodec->encodeAccountId($this->bytes);
-    }
-
-    private static function fromBase58(string $value): AccountId
-    {
-
     }
 }

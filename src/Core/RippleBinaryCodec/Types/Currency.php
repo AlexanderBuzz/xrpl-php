@@ -9,8 +9,6 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class Currency extends Hash160
 {
-    public static int $width = 20;
-
     private const XRP_HEX_REGEX = "/^0{40}$/";
     private const ISO_REGEX = "/^[A-Z0-9a-z?!@#$%^&*(){}[\]|]{3}$/";
     private const HEX_REGEX = "/^[A-F0-9]{40}$/";

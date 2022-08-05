@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
+use ArrayAccess;
 use XRPL_PHP\Core\Buffer;
 
 /**
@@ -9,41 +10,64 @@ use XRPL_PHP\Core\Buffer;
  *
  * Bytes list is a collection of buffer objects
  */
-class BytesList //TODO: let's see if we can get rid of this...
+class BytesList
 {
-    private array $bufferList;
+    private array $bufferArray;
 
     public function __construct()
     {
-        $this->bufferList = [];
+        $this->bufferArray = [];
     }
 
     public function getLength(): int
     {
-        //Is this the lengt of the array or of all bytes in the Array?
-        return count($this->bufferList);
+        return count($this->bufferArray);
     }
 
-    public function push(Buffer $bytesArg): BytesList
+    public function grab(int $index): Buffer
     {
-        $this->bufferList[] = $bytesArg;
+        return $this->bufferArray[$index]; //TODO: This is optimistic :)
+    }
+
+    public function deepGrab(int $bufferIndex, $byteIndex): int
+    {
+        return $this->bufferArray[$bufferIndex][$byteIndex];  //TODO: This is very optimistic :)
+    }
+
+    public function prepend(Buffer $prefix): BytesList
+    {
+        $this->bufferArray = array_merge([$prefix], $this->bufferArray);
 
         return $this;
     }
 
+    public function push(Buffer $bytesArg): BytesList
+    {
+        $this->bufferArray[] = $bytesArg;
+
+        return $this;
+    }
+
+    public function replace(int $index, Buffer $newElement)
+    {
+        $this->bufferArray[$index] =$newElement;
+    }
+
     public function toBytesSink(BytesList $list): Buffer
     {
-        $list->toBytesSink($list); //TODO: retrun type?
+        $list->toBytesSink($list); //TODO: Is this necessary?
     }
 
     public function toBytes(): Buffer
     {
         $tempArray = [];
 
-        foreach ($this->bufferList as $buffer) {
+        foreach ($this->bufferArray as $buffer) {
             $tempArray = array_merge($tempArray, $buffer->toArray());
         }
 
         return Buffer::from($tempArray);
     }
+
+
 }

@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\PathStep;
 
 /**
@@ -13,34 +12,36 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\PathStep;
  */
 final class PathStepTest extends TestCase
 {
-    private string $json;
+    private array $json;
 
     private string $hex;
 
     protected function setUp(): void
     {
-        $this->json = json_encode([
+        $this->json = [
             "account" => "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
             "currency" => "BTC",
             "issuer" => "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
-        ]);
+        ];
 
-        $this->hex = "31585e1f3bd02a15d6185f8bb9b57cc60deddb37c10000000000000000000000004254430000000000585e1f3bd02a15d6185f8bb9b57cc60deddb37c1";
+        $this->hex = "31585E1F3BD02A15D6185F8BB9B57CC60DEDDB37C10000000000000000000000004254430000000000585E1F3BD02A15D6185F8BB9B57CC60DEDDB37C1";
     }
 
-    /*
+
     public function testDecode()
     {
-
+        $this->assertEquals(
+            $this->json,
+            PathStep::fromHex($this->hex)->toJson()
+        );
     }
-
 
     public function testEncode()
     {
+        $serializedJson = json_encode($this->json);
         $this->assertEquals(
             $this->hex,
-            PathStep::fromSerializedJson($this->json)->toHex()
+            PathStep::fromSerializedJson($serializedJson)->toHex()
         );
     }
-    */
 }

@@ -9,7 +9,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class Hash160 extends Hash
 {
-    protected static int $width = 20;
+    public static int $width = 20;
 
     public function __construct(?Buffer $bytes = null)
     {

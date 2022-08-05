@@ -21,11 +21,6 @@ abstract class Hash extends SerializedType
         static::$width = $width;
     }
 
-    public function toString(): string
-    {
-        $this->toHex();
-    }
-
     public function getWidth(): int
     {
         return static::$width;

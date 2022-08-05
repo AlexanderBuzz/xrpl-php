@@ -50,7 +50,7 @@ abstract class SerializedType
 
     public function toString(): string
     {
-        return $this->toHex(); //TODO: check if this applies in every casel
+        return $this->toHex();
     }
 
     public static function fromHex(string $hex): SerializedType
