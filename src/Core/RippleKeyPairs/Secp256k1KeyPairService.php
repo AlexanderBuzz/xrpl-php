@@ -34,14 +34,14 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return $this->addressCodec->encodeSeed($entropy, 'secp256k1');
     }
 
-    public function deriveKeyPair(Buffer|string $seed): KeyPair
+    public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int  $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
             $decoded = $this->addressCodec->decodeSeed($seed);
             $seed = Buffer::from($decoded['bytes']);
         }
 
-        $privateKey = $this->derivePrivateKey($seed);
+        $privateKey = $this->derivePrivateKey($seed, $validator, $accountIndex);
         $publicKey = $this->derivePublicKey(new BN($privateKey, 16));
 
         return new KeyPair(
@@ -52,12 +52,30 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     public function sign(Buffer|string $message, string $privateKey): string
     {
-        // TODO: Implement sign() method.
+        if (!is_string($message)) {
+            $message = $message->toString();
+        }
+
+        $hash = MathUtilities::sha512Half($message);
+        $signed = $this->elliptic->sign(
+            $hash->toString(),
+            substr($privateKey, 2),
+            'hex',
+            ['canonical' => true]
+        )->toDER('hex');
+
+        return Buffer::from($signed)->toString();
     }
 
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
-        // TODO: Implement verify() method.
+        if (!is_string($message)) {
+            $message = $message->toString();
+        }
+
+        $hash = MathUtilities::sha512Half($message);
+
+        return $this->elliptic->verify($hash->toString(), $signature, $publicKey, 'hex');
     }
 
     public function deriveAddress(Buffer|string $publicKey): string
@@ -73,7 +91,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
      * @param Buffer $seed
      * @param bool $validator
      * @param int $accountIndex
-     * @return Buffer 32 bit Private / secret key
+     * @return string 32 bit Private / secret key
      * @throws \Exception
      */
     private function derivePrivateKey(Buffer $seed, bool $validator = false, int  $accountIndex = 0): string

@@ -33,7 +33,7 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return $this->addressCodec->encodeSeed($entropy, 'ed25519');
     }
 
-    public function deriveKeyPair(Buffer|string $seed): KeyPair
+    public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int  $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
             $decoded = $this->addressCodec->decodeSeed($seed);

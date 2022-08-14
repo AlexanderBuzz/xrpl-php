@@ -29,6 +29,8 @@ class AbstractKeyPairService
     }
     */
 
+    //TODO: put all abstractions back
+
     public function hash(string $value): Buffer
     {
         return MathUtilities::sha512Half($value);

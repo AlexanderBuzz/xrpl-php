@@ -51,6 +51,14 @@ class KeyPairTest extends TestCase
         $this->assertEquals($keypair, $this->ed25519->deriveKeyPair($seed)->toArray());
     }
 
+    public function testDeriveEd25519ValidatorKeypairFromSeed(): void
+    {
+        $seed = $this->fixtures['ed25519']['seed'];
+        $keypair = $this->fixtures['ed25519']['validatorKeypair'];
+
+        $this->assertEquals($keypair, $this->ed25519->deriveKeyPair($seed, true)->toArray());
+    }
+
     public function testSignWithEd25519Key(): void
     {
         $privateKey = $this->fixtures['ed25519']['keypair']['privateKey'];
@@ -95,5 +103,37 @@ class KeyPairTest extends TestCase
         $keypair = $this->fixtures['secp256k1']['keypair'];
 
         $this->assertEquals($keypair, $this->secp256k1->deriveKeyPair($seed)->toArray());
+    }
+
+    public function testDeriveSecp256k1ValidatorKeypairFromSeed(): void //TODO: with validator
+    {
+        $seed = $this->fixtures['secp256k1']['seed'];
+        $keypair = $this->fixtures['secp256k1']['validatorKeypair'];
+
+        $this->assertEquals($keypair, $this->secp256k1->deriveKeyPair($seed, true)->toArray());
+    }
+
+    public function testSignWithSecp256k1Key(): void
+    {
+        $privateKey = $this->fixtures['secp256k1']['keypair']['privateKey'];
+        $message = $this->fixtures['secp256k1']['message'];
+        $signature = $this->fixtures['secp256k1']['signature'];
+
+        $this->assertEquals(
+            $signature,
+            $this->secp256k1->sign(Buffer::from($message, 'utf-8'), $privateKey)
+        );
+    }
+
+    public function testVerifyWithSecp256k1Key(): void
+    {
+        $signature = $this->fixtures['secp256k1']['signature'];
+        $message = $this->fixtures['secp256k1']['message'];
+        $publicKey = $this->fixtures['secp256k1']['keypair']['publicKey'];
+
+        $this->assertEquals(
+            true,
+            $this->secp256k1->verify(Buffer::from($message, 'utf-8'), $signature, $publicKey)
+        );
     }
 }
