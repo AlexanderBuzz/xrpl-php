@@ -22,10 +22,9 @@
   },
   "require": {
     "guzzlehttp/guzzle": "7.4.2",
-    "lessmore92/buffer": "1.0.0",
     "php-ds/php-ds": "^1.4",
-    "simplito/bigint-wrapper-php": "^1.0",
-    "brick/money": "^0.5.3"
+    "brick/money": "^0.5.3",
+    "simplito/elliptic-php": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",

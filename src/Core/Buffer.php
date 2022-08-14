@@ -20,20 +20,29 @@ class Buffer implements ArrayAccess
         return self::from($tempArray);
     }
 
+    public function addUInt32($integerToAdd): Buffer
+    {
+
+
+    }
+
     public static function from(mixed $source, ?string $encoding = 'hex'): Buffer
     {
         $buffer = new Buffer();
 
-        if (gettype($source) === Buffer::class) {
-            Buffer::from($buffer->toArray()); //TODO: likely unnecessary, check node Buffer
+        //Duplicate buffer
+        if (gettype($source) === Buffer::class) { //TODO: Wird nie aufgerufen
+            Buffer::from($buffer->toArray());
         }
 
+        //Buffer from byte array [12, 108, 0, 230]
         if (gettype($source) === 'array') {
             $bytesArray = SplFixedArray::fromArray($source);
             $buffer->setBytesArray($bytesArray);
             return $buffer;
         }
 
+        //Buffer from hex string 'ff03a5ed'
         if (gettype($source) === 'string' && $encoding == 'hex') {
             $tempArray = array_map('hexdec', str_split($source, 2));
             $bytesArray = SplFixedArray::fromArray($tempArray);
@@ -41,13 +50,23 @@ class Buffer implements ArrayAccess
             return $buffer;
         }
 
-        if (get_class($source) === BigInteger::class) {
+        //buffer from string 'hello world'
+        if (gettype($source) === 'string' && $encoding == 'utf-8') {
+            $tempArray = array_values(unpack('C*', $source));
+            $bytesArray = SplFixedArray::fromArray($tempArray);
+            $buffer->setBytesArray($bytesArray);
+            return $buffer;
+        }
+
+        //buffer from Bricks/BigInteger
+        if (get_class($source) === BigInteger::class) { //TODO: Wird nie aufgerufen
             return Buffer::from($source->toBase(16), 'hex');
         }
 
         throw new \Exception('Buffer not does not support source type');
     }
 
+    //TODO: Naming bufferList / bbytesList
     public static function concat(array $bufferList, ?int $totalLength = null): Buffer
     {
         if (empty($bufferList) || $totalLength === 0) {
@@ -72,6 +91,12 @@ class Buffer implements ArrayAccess
         }
 
         return self::from($tempArray);
+    }
+
+    public static function random(int $size): Buffer
+    {
+        $hexBytes = bin2hex(random_bytes($size));
+        return Buffer::from($hexBytes);
     }
 
     public function clone(): Buffer
@@ -140,7 +165,7 @@ class Buffer implements ArrayAccess
             $str .= $singleByteHexStr;
         }
 
-        return $str;
+        return strtoupper($str);
     }
 
     public function toDecimalString(): string

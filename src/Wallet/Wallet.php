@@ -1,26 +1,29 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
 
 class Wallet
 {
-    private string $address;
-
-    private string $classicAddress;
-
     private string $publicKey;
 
     private string $privateKey;
 
-    private string $seed;
+    private string $address;
 
-    public function __construct()
+    private ?string $classicAddress;
+
+    private ?string $seed;
+
+    public function __construct(string $publicKey, string $privateKey, array $options)
     {
-        $this->initHardcodedWallet();
+        $this->publicKey = $publicKey;
+        $this->privateKey = $privateKey;
+        $this->classicAddress = (isset($options['masterAddress'])) ? Utilities::ensureClassicAddress($options['masterAddress']) : Utilities::deriveAddress($options['masterAddress']);
     }
 
     public function initHardcodedWallet(): Wallet
@@ -39,7 +42,7 @@ class Wallet
 
     }
 
-    public static function deriveWallet(sting $seed): Wallet
+    public static function deriveWallet(string $seed): Wallet
     {
 
     }

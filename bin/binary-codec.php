@@ -2,10 +2,10 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Core\RippleBinaryCodec\RippleBinaryCodec;
+use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
-$codec = new RippleBinaryCodec();
+$codec = new BinaryCodec();
 
 /*
 $taArray = [

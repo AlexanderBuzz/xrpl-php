@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
-class RippleBinaryCodec extends Binary
+class BinaryCodec extends Binary
 {
 
     public function __construct()
