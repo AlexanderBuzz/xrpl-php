@@ -29,8 +29,12 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return self::$instance;
     }
 
-    public function generateSeed(?Buffer $entropy): string
+    public function generateSeed(?Buffer $entropy = null): string
     {
+        if (is_null($entropy)) {
+            $entropy = Buffer::random(16);
+        }
+
         return $this->addressCodec->encodeSeed($entropy, 'secp256k1');
     }
 

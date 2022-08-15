@@ -28,8 +28,12 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return self::$instance;
     }
 
-    public function generateSeed(?Buffer $entropy): string
+    public function generateSeed(?Buffer $entropy = null): string
     {
+        if (is_null($entropy)) {
+            $entropy = Buffer::random(16);
+        }
+
         return $this->addressCodec->encodeSeed($entropy, 'ed25519');
     }
 

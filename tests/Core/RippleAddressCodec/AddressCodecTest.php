@@ -22,12 +22,29 @@ class AddressCodecTest extends TestCase
         $this->addressCodec = new AddressCodec();
     }
 
+    public function testIsValidClassicAddress(): void
+    {
+        //'isValidClassicAddress - secp256k1 address valid'
+        $this->assertTrue($this->addressCodec->isValidClassicAddress('rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw1'));
+
+        //'isValidClassicAddress - ed25519 address valid'
+        $this->assertTrue($this->addressCodec->isValidClassicAddress('rLUEXYuLiQptky37CqLcm9USQpPiz5rkpD'));
+
+        //'isValidClassicAddress - invalid'
+        $this->assertFalse($this->addressCodec->isValidClassicAddress('rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw2'));
+
+        //'isValidClassicAddress - empty'
+        $this->assertFalse($this->addressCodec->isValidClassicAddress(''));
+    }
+
     /*
     public function testEncodeXAddress(): void
     {
 
     }
     */
+
+    //Ed25519 section
 
     public function testEncodeEd25519Seed(): void
     {
@@ -42,26 +59,53 @@ class AddressCodecTest extends TestCase
         );
     }
 
-    public function testClassicAddressToXAddress(): void
-    {
-        $input = 'rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf';
-        $expected = 'XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi';
-
-        $this->assertEquals(
-            $expected,
-            $this->addressCodec->classicAddressToXAddress($input, 4294967295)
-        );
-    }
-
-
     public function testDecodeEd25519Seed(): void
     {
-        $expected = "4C3A1D213FBDFB14C7C28D609469B341";
-
         $seed = "sEdTM1uX8pu2do5XvTnutH6HsouMaM2";
         $decodedSeed = $this->addressCodec->decodeSeed($seed);
         $testValue = strtoupper(Buffer::from($decodedSeed['bytes'])->toString());
 
-        $this->assertEquals($expected, $testValue);
+        $this->assertEquals(
+            "4C3A1D213FBDFB14C7C28D609469B341",
+            $testValue
+        );
+    }
+
+    //Secp256k1 section
+
+    public function testEncodeSecp256k1Seed(): void
+    {
+        $encoded = $this->addressCodec->encodeSeed(
+            Buffer::from('CF2DE378FBDD7E2EE87D486DFB5A7BFF'),
+            'secp256k1'
+        );
+
+        $this->assertEquals(
+            'sn259rEFXrQrWyx3Q7XneWcwV6dfL',
+            $encoded
+        );
+    }
+
+    public function testDecodeSecp256k1Seed(): void
+    {
+        $seed = 'sn259rEFXrQrWyx3Q7XneWcwV6dfL';
+        $decodedSeed = $this->addressCodec->decodeSeed($seed);
+        $testValue = strtoupper(Buffer::from($decodedSeed['bytes'])->toString());
+
+        $this->assertEquals(
+            'CF2DE378FBDD7E2EE87D486DFB5A7BFF',
+            $testValue
+        );
+    }
+
+
+    public function testClassicAddressToXAddress(): void
+    {
+        $classicAddress = 'rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf';
+
+        $this->assertEquals(
+            'XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi',
+            $this->addressCodec->classicAddressToXAddress($classicAddress, 4294967295)
+        );
     }
 }
