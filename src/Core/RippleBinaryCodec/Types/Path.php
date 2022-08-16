@@ -36,7 +36,7 @@ class Path extends SerializedType
         return new Path($bytesList->toBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         $json = json_decode($serializedJson, true);
 
@@ -44,7 +44,7 @@ class Path extends SerializedType
 
         foreach ($json as $step) {
             $serializedJson = json_encode($step);
-            $bytesList->push(PathStep::fromSerializedJson($serializedJson)->toBytes());
+            $bytesList->push(PathStep::fromJson($serializedJson)->toBytes());
         }
 
         return new Path($bytesList->toBytes());

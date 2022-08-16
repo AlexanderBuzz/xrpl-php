@@ -38,7 +38,7 @@ class Currency extends Hash160
         return new Currency($parser->read(static::$width));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         if (!static::isValidRepresentation($serializedJson)) {
             throw new \Exception('Unsupported Currency representation: ' . $serializedJson);

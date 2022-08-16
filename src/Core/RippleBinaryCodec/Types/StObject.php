@@ -2,14 +2,17 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
+use XRPL_PHP\Models\Transactions\Address;
 
 class StObject extends SerializedType
 {
-    public const OBJECT_END_MARKER = 0xe1;
+    //public const OBJECT_END_MARKER = 0xe1;
 
     public const OBJECT_END_MARKER_HEX = "E1";
 
@@ -19,12 +22,11 @@ class StObject extends SerializedType
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
-        $bytesArray = Buffer::alloc(0); // const bytes: Array<Buffer> = []
-        $binarySerializer = new BinarySerializer($bytesArray);
+        $binarySerializer = new BinarySerializer(Buffer::alloc(0));
 
         while (!$parser->end()) {
             $field = $parser->readField();
-            if ($field->getType() === self::OBJECT_END_MARKER_NAME) {
+            if ($field->getName() === self::OBJECT_END_MARKER_NAME) {
                 break;
             }
 
@@ -39,9 +41,28 @@ class StObject extends SerializedType
         return new StObject($binarySerializer->getBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
-        // TODO: Implement fromValue() method.
+        $json = json_decode($serializedJson, true);
+        $binarySerializer = new BinarySerializer(Buffer::alloc(0));
+        $addressCodec = new AddressCodec();
+        $definitions = Definitions::getInstance();
+
+        $isUnlModify = false;
+
+        foreach ($json as $key => $value) {
+            $fieldInstance = $definitions->getFieldInstance($key);
+            $fieldJson = (is_array($value)) ? json_encode($value) : $value;
+            $serializedTypeInstance = SerializedType::getTypeByName($fieldInstance->getType());
+            $fieldValue = $serializedTypeInstance::fromJson($fieldJson);
+            $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
+        }
+
+        if ($fieldInstance->getType() === self::ST_OBJECT) {
+            $binarySerializer->put(self::OBJECT_END_MARKER_HEX);
+        }
+
+        return new StObject($binarySerializer->getBytes());
     }
 
     public function toJson(): array|string
@@ -51,15 +72,18 @@ class StObject extends SerializedType
 
         while (!$binaryParser->end()) {
             $fieldInstance = $binaryParser->readField();
-            if ($fieldInstance->getType() === self::OBJECT_END_MARKER_NAME) {
+            if ($fieldInstance->getName() === self::OBJECT_END_MARKER_NAME) {
                 break;
             }
 
             $node = $binaryParser->readFieldValue($fieldInstance)->toJson();
-            $value = hexdec($node);
-            $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
-
-            $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $value; //TODO: was $node, now it's a bit hacky
+            if(is_array($node)) {
+                $accumulator[$fieldInstance->getName()] = $node;
+            } else {
+                $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
+                //$value = hexdec($node);
+                $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node; //TODO: was $node, now it's a bit hacky
+            }
         }
 
         return $accumulator;

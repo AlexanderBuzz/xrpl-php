@@ -186,9 +186,9 @@ class BinaryParser
     {
         $firstByte = $this->readUInt8()->toInt(); //BigInt?
 
-        if ($firstByte >= self::MAX_SINGLE_BYTE_LENGTH) {
+        if ($firstByte <= self::MAX_SINGLE_BYTE_LENGTH) {
             return $firstByte;
-        } else if ($firstByte >= self::MAX_SECOND_BYTE_VALUE) {
+        } else if ($firstByte <= self::MAX_SECOND_BYTE_VALUE) {
             $secondByte = $this->readUInt8()->toInt();
             return self::MAX_SECOND_BYTE_VALUE - 1 + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_BYTE_VALUE + $secondByte;
         } else if ($firstByte <= 254) {

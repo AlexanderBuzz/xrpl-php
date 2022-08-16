@@ -14,7 +14,7 @@ class UnsignedInt32 extends UnsignedInt
         return new UnsignedInt32(Buffer::from($fromParser));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         // TODO: Implement fromValue() method.
     }

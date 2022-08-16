@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
+use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\JsonObject;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
@@ -23,7 +24,7 @@ class Binary
             'signingFieldsOnly' => $signingFieldsOnly //default false!
         ] = $object;
 
-        $bytesList = [];
+        $bytesList = Buffer::from([]);
 
         if ($prefix) {
             $bytesList[] = $prefix->getHex();

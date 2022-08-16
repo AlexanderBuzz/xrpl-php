@@ -28,7 +28,7 @@ class Blob extends SerializedType
         return new Blob($parser->read($lengthHint));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         return new Blob(Buffer::from($serializedJson));
     }

@@ -25,7 +25,7 @@ class Hash160 extends Hash
         return new Hash160($parser->read(static::$width));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         return new Hash160(Buffer::from($serializedJson));
     }

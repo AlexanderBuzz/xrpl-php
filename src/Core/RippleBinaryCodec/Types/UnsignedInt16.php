@@ -14,9 +14,13 @@ class UnsignedInt16 extends UnsignedInt
         return new UnsignedInt16(Buffer::from($fromParser));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
-        // TODO: Implement fromValue() method.
+        if (is_string($serializedJson)) {
+            $serializedJson = (int) json_decode($serializedJson);
+        }
+
+        return new UnsignedInt8(Buffer::from(dechex($serializedJson)));
     }
 
     public function toBytes(): Buffer

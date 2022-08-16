@@ -39,7 +39,7 @@ class PathSet extends SerializedType
         return new PathSet($bytesList->toBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         $json = json_decode($serializedJson, true);
 
@@ -48,7 +48,7 @@ class PathSet extends SerializedType
         if (self::isPathSet($json)) {
             foreach ($json as $path) {
                 $serializedJson = json_encode($path);
-                $bytesList->push(Path::fromSerializedJson($serializedJson)->toBytes());
+                $bytesList->push(Path::fromJson($serializedJson)->toBytes());
                 $bytesList->push(Buffer::from([self::PATH_SEPARATOR_BYTE]));
             }
         }

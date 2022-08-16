@@ -2,6 +2,8 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
+use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
+
 class BinaryCodec extends Binary
 {
 
@@ -10,10 +12,13 @@ class BinaryCodec extends Binary
 
     }
 
-    public function encode(array $object): string
+    public function encode(string|array $jsonObject): string
     {
-        //assert.ok(typeof json === 'object')
+        if (is_array($jsonObject)) {
+            $jsonObject = json_encode($jsonObject);
+        }
 
+        return StObject::fromJson($jsonObject)->toString();
     }
 
     /**

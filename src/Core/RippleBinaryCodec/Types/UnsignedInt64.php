@@ -14,7 +14,7 @@ class UnsignedInt64 extends UnsignedInt
         return new UnsignedInt64(Buffer::from($fromParser));
     }
 
-    public static function fromSerializedJson(string $serializedJson): UnsignedInt64
+    public static function fromJson(string $serializedJson): UnsignedInt64
     {
         //TODO: WIP
         return new UnsignedInt64();

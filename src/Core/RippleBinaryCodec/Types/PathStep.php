@@ -46,7 +46,7 @@ class PathStep extends SerializedType
         return new PathStep($bytesList->toBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         $json = json_decode($serializedJson, true);
 
@@ -54,17 +54,17 @@ class PathStep extends SerializedType
         $type = [0];
 
         if (isset($json["account"])) {
-            $bytesList->push(AccountId::fromSerializedJson($json["account"])->toBytes());
+            $bytesList->push(AccountId::fromJson($json["account"])->toBytes());
             $type[0] |= self::TYPE_ACCOUNT;
         }
 
         if (isset($json["currency"])) {
-            $bytesList->push(Currency::fromSerializedJson($json["currency"])->toBytes());
+            $bytesList->push(Currency::fromJson($json["currency"])->toBytes());
             $type[0] |= self::TYPE_CURRENCY;
         }
 
         if (isset($json["issuer"])) {
-            $bytesList->push(AccountId::fromSerializedJson($json["issuer"])->toBytes());
+            $bytesList->push(AccountId::fromJson($json["issuer"])->toBytes());
             $type[0] |= self::TYPE_ISSUER;
         }
 

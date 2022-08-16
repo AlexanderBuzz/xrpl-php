@@ -64,19 +64,19 @@ abstract class SerializedType
         $typeMap = [
             "AccountID" => AccountId::class,
             "Amount" => Amount::class,
-            //"Blob" => Blob,
+            "Blob" => Blob::class,
             "Currency" => Currency::class,
             "Hash128" => Hash128::class,
             "Hash160" => Hash160::class,
             "Hash256" => Hash256::class,
-            //"PathSet" => PathSet,
+            "PathSet" => PathSet::class,
             "STArray" => StArray::class,
             "STObject" => StObject::class,
             "UInt8" => UnsignedInt8::class,
             "UInt16" => UnsignedInt16::class,
             "UInt32" => UnsignedInt32::class,
             "UInt64" => UnsignedInt64::class,
-            //"Vector256" => Vector256,
+            "Vector256" => Vector256::class,
         ];
 
         if (!isset($typeMap[$name])) {
@@ -94,6 +94,6 @@ abstract class SerializedType
 
     abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
-    abstract static function fromSerializedJson(string $serializedJson): SerializedType;
+    abstract static function fromJson(string $serializedJson): SerializedType;
 
 }

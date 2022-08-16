@@ -45,7 +45,7 @@ class Amount extends SerializedType
         return new Amount($parser->read($numBytes));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         $isScalar = preg_match('/^\d+$/', $serializedJson);
         if ($isScalar) {

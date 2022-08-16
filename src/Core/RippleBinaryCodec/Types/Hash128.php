@@ -25,7 +25,7 @@ class Hash128 extends Hash
         return new Hash128($parser->read(static::$width));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         return new Hash128(Buffer::from($serializedJson));
     }

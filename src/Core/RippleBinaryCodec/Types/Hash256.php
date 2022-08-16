@@ -25,7 +25,7 @@ class Hash256 extends Hash
         return new Hash256($parser->read(static::$width));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         return new Hash256(Buffer::from($serializedJson));
     }

@@ -23,9 +23,6 @@ abstract class UnsignedInt extends SerializedType
 
     public function toBytes(): Buffer
     {
-        //$hexStr = $this->value->toHex();
-        //$hexStr = dechex($this->value->toHex());
-        //return Buffer::from($hexStr, 'hex');
         return $this->bytes;
     }
 

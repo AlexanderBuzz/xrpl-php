@@ -24,7 +24,7 @@ class AccountId extends Hash160
         return new AccountId($parser->read(static::$width));
     }
 
-    public static function fromSerializedJson(string $serializedJson): AccountId
+    public static function fromJson(string $serializedJson): AccountId
     {
         if ($serializedJson === '') {
             return new AccountId();

@@ -35,7 +35,7 @@ class Vector256 extends SerializedType
         return new Vector256($bytesList->toBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
         $bytesList = new BytesList();
 

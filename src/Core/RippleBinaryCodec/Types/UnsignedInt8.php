@@ -16,8 +16,12 @@ class UnsignedInt8 extends UnsignedInt
         return new UnsignedInt8(Buffer::from($fromParser));
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string|int $serializedJson): SerializedType
     {
-        // TODO: Implement fromValue() method.
+        if (is_string($serializedJson)) {
+            $serializedJson = (int) json_decode($serializedJson);
+        }
+
+        return new UnsignedInt8(Buffer::from(dechex($serializedJson)));
     }
 }

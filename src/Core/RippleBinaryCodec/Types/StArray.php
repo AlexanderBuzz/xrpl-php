@@ -21,7 +21,7 @@ class StArray extends SerializedType
 
         while (!$parser->end()) {
             $fieldInstance = $parser->readField();
-            if ($fieldInstance->getType() === self::ARRAY_END_MARKER_NAME) {
+            if ($fieldInstance->getName() === self::ARRAY_END_MARKER_NAME) {
                 break;
             }
 
@@ -36,25 +36,36 @@ class StArray extends SerializedType
         return new StArray($binarySerializer->getBytes());
     }
 
-    public static function fromSerializedJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson): SerializedType
     {
-        // TODO: Implement from() method.
+        $json = json_decode($serializedJson);
+        $bytes = Buffer::alloc(0);
+
+        foreach($json as $item) {
+            $object = StObject::fromJson(json_encode($item));
+            $bytes->appendBuffer($object->toBytes());
+        }
+
+        $bytes->appendHex(self::ARRAY_END_MARKER_HEX);
+
+        return new StArray($bytes);
     }
 
     public function toJson(): array|string
     {
         $binaryParser = new BinaryParser($this->bytes->toString());
-        $values = [];
+        $array = [];
 
         while (!$binaryParser->end()) {
             $fieldInstance = $binaryParser->readField();
-            if ($fieldInstance->getType() === self::ARRAY_END_MARKER_NAME) {
+            if ($fieldInstance->getName() === self::ARRAY_END_MARKER_NAME) {
                 break;
             }
 
             $object = StObject::fromParser($binaryParser);
+            $array[] = [$fieldInstance->getName() => $object->toJson()]; //TODO:
         }
 
-        return parent::toJson();
+        return $array;
     }
 }
