@@ -27,7 +27,7 @@ final class StObjectTest extends TestCase
         parent::setUp();
     }
 
-    public function testDecode()
+    public function testDecodeStObject()
     {
         $this->assertEquals(
             $this->json,
@@ -36,7 +36,7 @@ final class StObjectTest extends TestCase
 
     }
 
-    public function testEncode()
+    public function testEncodeStObject()
     {
         $this->assertEquals(
             $this->hex,

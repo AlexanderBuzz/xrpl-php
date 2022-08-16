@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-use BI\BigInteger;
+use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
@@ -23,5 +23,10 @@ class UnsignedInt8 extends UnsignedInt
         }
 
         return new UnsignedInt8(Buffer::from(dechex($serializedJson)));
+    }
+
+    public function valueOf(): int|string
+    {
+        return $this->value->toInt();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-use BI\BigInteger;
+use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
@@ -14,13 +14,13 @@ class UnsignedInt16 extends UnsignedInt
         return new UnsignedInt16(Buffer::from($fromParser));
     }
 
-    public static function fromJson(string $serializedJson): SerializedType
+    public static function fromJson(string|int $serializedJson): SerializedType
     {
         if (is_string($serializedJson)) {
             $serializedJson = (int) json_decode($serializedJson);
         }
 
-        return new UnsignedInt8(Buffer::from(dechex($serializedJson)));
+        return new UnsignedInt16(Buffer::from(dechex($serializedJson)));
     }
 
     public function toBytes(): Buffer
@@ -31,8 +31,8 @@ class UnsignedInt16 extends UnsignedInt
         return Buffer::from($uint16HexStr, 'hex');
     }
 
-    public function toHex(): string
+    public function valueOf(): int|string
     {
-        return strtoupper($this->toBytes()->toString());
+        return $this->value->toInt();
     }
 }

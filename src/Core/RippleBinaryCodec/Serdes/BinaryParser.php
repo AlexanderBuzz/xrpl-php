@@ -67,21 +67,9 @@ class BinaryParser
 
     public function readUIntN(int $number): BigInteger
     {
-        if ($number > 0 && $number <= 4) {
+        if ($number > 0 && $number <= 8) {
             $stdArray = $this->read($number)->toArray();
-            //$buffer = $this->read($number);
-            //$bi =  BigInteger::of($buffer->toDecimalString());
-            //return $bi;
-
-            $reducer = function ($carry, $item) {
-                //implement correct function
-                return $carry * 256 + $item;
-            };
-
-            $reduced = array_reduce($stdArray, $reducer, 0);
-
-            return BigInteger::of((string)$reduced);
-
+            return BigInteger::fromBase(Buffer::from($stdArray)->toString(), 16);
         }
 
         throw new \Exception('Invalid number');

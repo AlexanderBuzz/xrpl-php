@@ -59,8 +59,8 @@ class Buffer implements ArrayAccess
         }
 
         //buffer from Bricks/BigInteger
-        if (get_class($source) === BigInteger::class) { //TODO: Wird nie aufgerufen
-            return Buffer::from($source->toBase(16), 'hex');
+        if (get_class($source) === BigInteger::class) {
+            return Buffer::from($source->toBase(16));
         }
 
         throw new \Exception('Buffer not does not support source type');

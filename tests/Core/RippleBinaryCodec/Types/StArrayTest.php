@@ -30,7 +30,7 @@ final class StArrayTest extends TestCase
         parent::setUp();
     }
 
-    public function testDecode(): void
+    public function testDecodeStArray(): void
     {
         $this->assertEquals(
             $this->json,
@@ -39,7 +39,7 @@ final class StArrayTest extends TestCase
 
     }
 
-    public function testEncode(): void
+    public function testEncodeStArray(): void
     {
         $this->assertEquals(
             $this->hex,
