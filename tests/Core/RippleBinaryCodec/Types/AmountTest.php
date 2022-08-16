@@ -24,11 +24,11 @@ final class AmountTest extends TestCase
     {
         $this->assertEquals(
             "4000000000000064",
-            Amount::fromSerializedJson("100")->toHex()
+            Amount::fromJson("100")->toHex()
         );
         $this->assertEquals(
             "416345785D8A0000",
-            Amount::fromSerializedJson("100000000000000000")->toHex()
+            Amount::fromJson("100000000000000000")->toHex()
         );
     }
 

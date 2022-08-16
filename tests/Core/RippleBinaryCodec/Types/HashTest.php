@@ -36,17 +36,17 @@ final class HashTest extends TestCase
     {
         $this->assertEquals(
             $this->getBytes(16),
-            Hash128::fromSerializedJson($this->getBytes(16))->toHex()
+            Hash128::fromJson($this->getBytes(16))->toHex()
         );
 
         $this->assertEquals(
             $this->getBytes(20),
-            Hash160::fromSerializedJson($this->getBytes(20))->toHex()
+            Hash160::fromJson($this->getBytes(20))->toHex()
         );
 
         $this->assertEquals(
             $this->getBytes(32),
-            Hash256::fromSerializedJson($this->getBytes(32))->toHex()
+            Hash256::fromJson($this->getBytes(32))->toHex()
         );
     }
 

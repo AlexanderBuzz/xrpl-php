@@ -48,7 +48,7 @@ final class PathTest extends TestCase
         $serializedJson = json_encode($this->json);
         $this->assertEquals(
             $this->hex,
-            Path::fromSerializedJson($serializedJson)->toHex()
+            Path::fromJson($serializedJson)->toHex()
         );
     }
 }

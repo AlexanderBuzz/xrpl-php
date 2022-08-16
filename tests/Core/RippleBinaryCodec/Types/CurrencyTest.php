@@ -34,17 +34,17 @@ final class CurrencyTest extends TestCase
     {
         $this->assertEquals(
             "0000000000000000000000000000000000000000",
-            Currency::fromSerializedJson("XRP")->toHex()
+            Currency::fromJson("XRP")->toHex()
         );
 
         $this->assertEquals(
             "0000000000000000000000005553440000000000",
-            Currency::fromSerializedJson("USD")->toHex()
+            Currency::fromJson("USD")->toHex()
         );
 
         $this->assertEquals(
             "0000000000000000000000007853440000000000",
-            Currency::fromSerializedJson("xSD")->toHex()
+            Currency::fromJson("xSD")->toHex()
         );
     }
 }

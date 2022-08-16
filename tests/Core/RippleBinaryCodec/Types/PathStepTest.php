@@ -41,7 +41,7 @@ final class PathStepTest extends TestCase
         $serializedJson = json_encode($this->json);
         $this->assertEquals(
             $this->hex,
-            PathStep::fromSerializedJson($serializedJson)->toHex()
+            PathStep::fromJson($serializedJson)->toHex()
         );
     }
 }

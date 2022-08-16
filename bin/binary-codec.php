@@ -17,6 +17,7 @@ $taArray = [
 ];
 */
 
+/*
 print_r('ripple-binary-codec decode example, HEX string to JSON object' . PHP_EOL. PHP_EOL);
 
 $taArray = [
@@ -31,7 +32,7 @@ $decodedTaArray = $codec->decode($encodedTaArray);
 print_r("Input: " . $encodedTaArray . PHP_EOL . "Expected: " . print_r($taArray, true));
 $decoded = $codec->decode($encodedTaArray);
 print_r("Decoded Transaction: " . print_r($decoded, true) . PHP_EOL . PHP_EOL);
-
+*/
 
 //$encodedTa3 = "120000"; //TransactionType: Payment
 //$encodedTa3 = "120001";//TransactionType: EscrowCreate
@@ -40,4 +41,12 @@ print_r("Decoded Transaction: " . print_r($decoded, true) . PHP_EOL . PHP_EOL);
 //$decoded = $codec->decode($taArray);
 //print_r($decoded);
 
+$memoArray = [
+    "MemoType" => "687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E65726963",
+    "MemoData" => "72656E74"
+];
+
+$encoded = $codec->encode($memoArray);
+
+print_r($encoded);
 

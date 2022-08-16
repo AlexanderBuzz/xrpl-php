@@ -32,7 +32,7 @@ final class BlobTest extends TestCase
 
     public function testEncode()
     {
-        $this->assertEquals($this->getBytes(16), Blob::fromSerializedJson($this->getBytes(16))->toHex());
+        $this->assertEquals($this->getBytes(16), Blob::fromJson($this->getBytes(16))->toHex());
     }
 
     private function getBytes(int $size): string

@@ -34,7 +34,7 @@ final class AccountIdTest extends TestCase
     {
         $this->assertEquals(
             $this->hex,
-            AccountId::fromSerializedJson($this->json)->toHex()
+            AccountId::fromJson($this->json)->toHex()
         );
     }
 }

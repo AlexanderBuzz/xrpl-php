@@ -39,7 +39,7 @@ final class Vector256Test extends TestCase
     {
         $this->assertEquals(
             $this->hex,
-            Vector256::fromSerializedJson($this->json)->toHex()
+            Vector256::fromJson($this->json)->toHex()
         );
     }
 }
