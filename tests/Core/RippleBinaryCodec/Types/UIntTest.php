@@ -144,7 +144,6 @@ final class UIntTest extends TestCase
 
     public function testDecodeUInt64()
     {
-        /*
         $this->assertEquals(
             "0",
             UnsignedInt64::fromHex('0000000000000000')->valueOf()
@@ -164,12 +163,44 @@ final class UIntTest extends TestCase
             "4294967295",
             UnsignedInt64::fromHex('00000000FFFFFFFF')->valueOf()
         );
-        */
 
         $bigInteger = BigInteger::fromBase('FFFFFFFFFFFFFFFF', 16);
         $this->assertEquals(
             "18446744073709551615",
             UnsignedInt64::fromHex('FFFFFFFFFFFFFFFF')->valueOf()
+        );
+    }
+
+    public function testEncodeUInt64()
+    {
+        $this->assertEquals(
+            '0000000000000000',
+            UnsignedInt64::fromJson("0")->toString()
+        );
+
+        $this->assertEquals(
+            '000000000000000F',
+            UnsignedInt64::fromJson("15")->toString()
+        );
+
+        $this->assertEquals(
+            '000000000000FFFF',
+            UnsignedInt64::fromJson("65535")->toString()
+        );
+
+        $this->assertEquals(
+            '00000000FFFFFFFF',
+            UnsignedInt64::fromJson("4294967295")->toString()
+        );
+
+        $this->assertEquals(
+            '00000000000000FF',
+            UnsignedInt64::fromJson("255")->toString()
+        );
+
+        $this->assertEquals(
+            'FFFFFFFFFFFFFFFF',
+            UnsignedInt64::fromJson("18446744073709551615")->toString()
         );
     }
 }

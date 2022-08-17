@@ -65,32 +65,32 @@ class BinaryParser
         throw new \Exception('Trying to read more elements than the buffer has');
     }
 
-    public function readUIntN(int $number): BigInteger
+    public function readUIntN(int $number): Buffer //BigInteger
     {
         if ($number > 0 && $number <= 8) {
             $stdArray = $this->read($number)->toArray();
-            return BigInteger::fromBase(Buffer::from($stdArray)->toString(), 16);
+            return Buffer::from($stdArray);
         }
 
         throw new \Exception('Invalid number');
     }
 
-    public function readUInt8(): BigInteger
+    public function readUInt8(): Buffer
     {
         return $this->readUIntN(1);
     }
 
-    public function readUInt16(): BigInteger
+    public function readUInt16(): Buffer
     {
         return $this->readUIntN(2);
     }
 
-    public function readUInt32(): BigInteger
+    public function readUInt32(): Buffer
     {
         return $this->readUIntN(4);
     }
 
-    public function readUInt64(): BigInteger
+    public function readUInt64(): Buffer
     {
         return $this->readUIntN(8);
     }

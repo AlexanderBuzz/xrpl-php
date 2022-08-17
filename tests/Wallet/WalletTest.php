@@ -1,18 +1,14 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Wallet\Wallet;
 
-/**
- * XRPL4J:
- *
- *
- * XRPL.JS
- * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/wallet/index.ts
- */
 class WalletTest extends TestCase
 {
-    //section constructor
+    private const CLASSIC_ADDRESS_PREFIX = 'r';
+    private const ED25519_KEY_PRERFIX = 'ED';
+    private const SECP256K1_PRIVATE_KEY_PREFIX = '00';
 
     public function testConstructor(): void
     {
@@ -24,43 +20,76 @@ class WalletTest extends TestCase
         ];
 
         $wallet = new Wallet(
-            $regularKeyPair['publicKey'],
-            $regularKeyPair['privateKey'],
-            ['masterAddress' => 'rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93']
+            publicKey: $regularKeyPair['publicKey'],
+            privateKey: $regularKeyPair['privateKey'],
+            masterAddress: $masterAddress
+        );
+
+        $this->assertEquals($regularKeyPair['publicKey'], $wallet->getPublicKey());
+        $this->assertEquals($regularKeyPair['privateKey'], $wallet->getPrivateKey());
+        $this->assertEquals($masterAddress, $wallet->getClassicAddress());
+    }
+
+    public function testGenerate(): void
+    {
+        $wallet = Wallet::generate();
+
+        $this->assertNotEmpty($wallet->getPublicKey());
+        $this->assertNotEmpty($wallet->getPrivateKey());
+        $this->assertNotEmpty($wallet->getClassicAddress());
+    }
+
+    public function testGenerateDefaultAlgorithm(): void
+    {
+        $wallet = Wallet::generate();
+
+        $this->assertTrue(str_starts_with($wallet->getPublicKey(), self::ED25519_KEY_PRERFIX));
+        $this->assertTrue(str_starts_with($wallet->getPrivateKey(), self::ED25519_KEY_PRERFIX));
+        $this->assertTrue(str_starts_with($wallet->getClassicAddress(), self::CLASSIC_ADDRESS_PREFIX));
+
+        $this->assertEquals(
+            $wallet->getClassicAddress(),
+            $wallet->getAddress()
         );
     }
 
-    /*
-
-    //Section generate
-
-    public function testDefaultAlgorithm(): void
+    public function testGenerateSecp256k1(): void
     {
+        $wallet = Wallet::generate(KeyPair::EC);
 
-    }
-
-    public function testGenerateEcsdaSecp256k(): void
-    {
-
+        $this->assertTrue(str_starts_with($wallet->getPrivateKey(), self::SECP256K1_PRIVATE_KEY_PREFIX));
+        $this->assertTrue(str_starts_with($wallet->getClassicAddress(), self::CLASSIC_ADDRESS_PREFIX));
     }
 
     public function testGenerateEd25519(): void
     {
+        $wallet = Wallet::generate(KeyPair::EDDSA);
 
+        $this->assertTrue(str_starts_with($wallet->getPublicKey(), self::ED25519_KEY_PRERFIX));
+        $this->assertTrue(str_starts_with($wallet->getPrivateKey(), self::ED25519_KEY_PRERFIX));
+        $this->assertTrue(str_starts_with($wallet->getClassicAddress(), self::CLASSIC_ADDRESS_PREFIX));
     }
+    /*
+        public function testSignSuccessfully(): void
+        {
+            $wallet = Wallet::fromSeed('ss1x3KLrSvfg7irFc1D929WXZ7z9H');
 
-    //section fromSeed
 
-    public function testSeedDeriveEcsdaSecp256k(): void
-    {
+        }
 
-    }
 
-    public function testSeedDeriveEd25519(): void
-    {
+        public function testSeedDerivSecp256k1(): void
+        {
 
-    }
+        }
 
+        public function testSeedDeriveEd25519(): void
+        {
+
+        }
+        */
+
+    /*
     public function testSeedDeriveFromMnemonicEcsdaSecp256k(): void
     {
 

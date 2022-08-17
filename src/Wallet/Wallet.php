@@ -4,11 +4,14 @@ namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
 
-class Wallet
-{
+class Wallet {
+
+    public const DEFAULT_ALGORITHM = KeyPair::EDDSA;
+
     private string $publicKey;
 
     private string $privateKey;
@@ -19,32 +22,69 @@ class Wallet
 
     private ?string $seed;
 
-    public function __construct(string $publicKey, string $privateKey, array $options)
+    public function __construct(
+        string $publicKey,
+        string $privateKey,
+        ?string $masterAddress = null,
+        ?string $seed = null
+    )
     {
         $this->publicKey = $publicKey;
+
         $this->privateKey = $privateKey;
-        $this->classicAddress = (isset($options['masterAddress'])) ? Utilities::ensureClassicAddress($options['masterAddress']) : Utilities::deriveAddress($options['masterAddress']);
+
+        if (is_string($masterAddress)) {
+            $this->classicAddress = Utilities::ensureClassicAddress($masterAddress);
+        } else {
+            $this->classicAddress = Utilities::deriveAddress($publicKey);
+        }
+
+        $this->seed = $seed;
     }
 
-    public function initHardcodedWallet(): Wallet
+    public static function generate(string $type = self::DEFAULT_ALGORITHM): Wallet
     {
-        $this->address = "rMCcNuTcajgw7YTgBy1sys3b89QqjUrMpH";
-        $this->classicAddress = "rMCcNuTcajgw7YTgBy1sys3b89QqjUrMpH";
-        $this->privateKey = "009A8559713F87414EEB019C2BDFF98EA9FB85039661E30D06415C2E4C9E086DED";
-        $this->publicKey = "039543A0D3004CDA0904A09FB3710251C652D69EA338589279BC849D47A7B019A1";
-        $this->seed = "sn3nxiW7v8KXzPzAqzyHXbSSKNuN9";
+        $kps = KeyPair::getKeyPairServiceByType($type);
+        $seed = $kps->generateSeed();
 
-        return $this;
+        return Wallet::fromSeed(
+            seed:$seed,
+            type: $type
+        );
     }
 
-    public static function fromSeed(string $seed): Wallet
+    public static function fromSeed(string $seed, ?string $masterAddress = null, $type = self::DEFAULT_ALGORITHM): Wallet
     {
-
+        return self::deriveWallet($seed, $masterAddress, $type);
     }
 
-    public static function deriveWallet(string $seed): Wallet
-    {
+    /*
+     *   private static deriveWallet(
+    seed: string,
+    opts: { masterAddress?: string; algorithm?: ECDSA } = {},
+  ): Wallet {
+    const { publicKey, privateKey } = deriveKeypair(seed, {
+      algorithm: opts.algorithm ?? DEFAULT_ALGORITHM,
+    })
+    return new Wallet(publicKey, privateKey, {
+      seed,
+      masterAddress: opts.masterAddress,
+    })
+  }
+     */
 
+    private static function deriveWallet(string $seed, ?string $masterAddress = null, $type = self::DEFAULT_ALGORITHM): Wallet
+    {
+        $kps = KeyPair::getKeyPairServiceByType($type);
+        $keyPair = $kps->deriveKeyPair($seed);
+
+        return new Wallet(
+            $keyPair->getPublicKey(),
+            $keyPair->getPrivateKey(),
+            $masterAddress,
+            $seed
+
+        );
     }
 
     public function checkSerialisation()
@@ -65,9 +105,6 @@ class Wallet
      */
     public function sign(Transaction $transaction): array
     {
-        //Whoops, some serious work to do...
-        return $this->returnHardcodedSignature();
-
         $multisignAddress = false;
 
         $txPayload = $transaction->getPayload();
@@ -114,8 +151,7 @@ class Wallet
     {
         $encoded = $this->encodeForSigning($txPayload);
 
-        //where?
-        //return $this->sign($encoded, $this->privateKey);
+        return [];
     }
 
     /**
@@ -126,11 +162,15 @@ class Wallet
      */
     private function encodeForSigning(array $data): string
     {
+        /*
         $signed = $this->signingData($data);
         $hex = bin2hex($signed);
         $upper = strtoupper($hex);
 
         return $upper;
+        */
+
+        return '';
     }
 
     /**
@@ -153,15 +193,7 @@ class Wallet
      */
     public function getAddress(): string
     {
-        return $this->address;
-    }
-
-    /**
-     * @param string $address
-     */
-    public function setAddress(string $address): void
-    {
-        $this->address = $address;
+        return $this->classicAddress;
     }
 
     /**
@@ -235,22 +267,8 @@ class Wallet
 
     private function hashSignedTx(string $serializedTx): string
     {
-        //$prefix = HashPrefix::TRANSACTION_ID.toString(16).toUpperCase()
-        $prefix = strtoupper(HashPrefix::TRANSACTION_ID);
-        $hashed = $this->sha512Half($prefix . $serializedTx);
-
-        return $hashed;
+        return '';
     }
 
-    private function sha512Half(string $string): string
-    {
-        $hashSize = 64;
-        $hex = bin2hex($string);
-        $sha512Hash = hash('sha512', $hex);
-        $upper = strtoupper($sha512Hash);
-        $reduced = substr($upper, 0, $hashSize);
-
-        return $reduced;
-    }
 
 }

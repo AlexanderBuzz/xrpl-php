@@ -113,22 +113,4 @@ class Amount extends SerializedType
         // 2nd bit in 1st byte is set to 1 for positive amounts
         return ($bytes[0] & 0x40) > 0;
     }
-
-    /*
-    private static function assertIouIsValid(BigDecimal $decimal): void
-    {
-        if (!$decimal->isZero()) {
-            $precision = $decimal->
-            $exponent = $decimal->
-
-        }
-    }
-    */
-
-    /*
-    private static function verifyNonDecimal(BigDecimal $decimal): void
-    {
-       $exponent = new BigDecimal("1e" . -(MathUtilities.getExponent(decimal) - 15));
-    }
-    */
 }

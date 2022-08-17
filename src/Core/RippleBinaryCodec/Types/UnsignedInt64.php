@@ -10,14 +10,14 @@ class UnsignedInt64 extends UnsignedInt
 {
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt64
     {
-        $fromParser = $parser->readUInt64()->toBase(16);
-        return new UnsignedInt64(Buffer::from($fromParser, 'hex'));
+        $hexValue = $parser->readUInt64()->toString();
+        return new UnsignedInt64(Buffer::from($hexValue, 'hex'));
     }
 
     public static function fromJson(string $serializedJson): UnsignedInt64
     {
-        //TODO: WIP
-        return new UnsignedInt64();
+        $bigInteger = BigInteger::fromBase($serializedJson, 10);
+        return new UnsignedInt64(Buffer::from($bigInteger->toBase(16)));
     }
 
     public function toBytes(): Buffer

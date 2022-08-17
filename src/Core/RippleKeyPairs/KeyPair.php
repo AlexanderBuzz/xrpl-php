@@ -4,6 +4,10 @@ namespace XRPL_PHP\Core\RippleKeyPairs;
 
 class KeyPair
 {
+    public const EDDSA = 'ed25519';
+
+    public const EC = 'secp256k1';
+
     private string $publicKey;
 
     private string $privateKey;
@@ -52,5 +56,18 @@ class KeyPair
             'publicKey' => $this->getPublicKey(),
             'privateKey' => $this->getPrivateKey(),
         ];
+    }
+
+    public static function getKeyPairServiceByType($type = self::EDDSA): KeyPairServiceInterface
+    {
+        if ($type === self::EDDSA) {
+            return Ed25519KeyPairService::getInstance();
+        }
+
+        if ($type === self::EC) {
+            return Secp256k1KeyPairService::getInstance();
+        }
+
+        throw new \Exception('No KeyPairService for type: ' . $type);
     }
 }

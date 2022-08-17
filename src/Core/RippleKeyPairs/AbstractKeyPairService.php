@@ -5,6 +5,7 @@ namespace XRPL_PHP\Core\RippleKeyPairs;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use XRPL_PHP\Core\Utilities;
 
 class AbstractKeyPairService
 {
@@ -19,6 +20,11 @@ class AbstractKeyPairService
         $this->addressCodec = new AddressCodec();
     }
 
+    public function deriveAddress(Buffer|string $publicKey): string
+    {
+        return Utilities::deriveAddress($publicKey);
+    }
+
     /*
     public function generateSeed(?Buffer $entropy, ?string $type): string
     {
@@ -29,10 +35,4 @@ class AbstractKeyPairService
     }
     */
 
-    //TODO: put all abstractions back
-
-    public function hash(string $value): Buffer
-    {
-        return MathUtilities::sha512Half($value);
-    }
 }

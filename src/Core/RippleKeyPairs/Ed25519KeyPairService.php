@@ -14,7 +14,7 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 
     public function __construct()
     {
-        $this->elliptic = new EdDSA('ed25519');
+        $this->elliptic = new EdDSA(KeyPair::EDDSA);
 
         parent::__construct();
     }
@@ -71,17 +71,6 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         }
 
         return $this->elliptic->verify($message, $signature, substr($publicKey, 2));
-    }
-
-    public function deriveAddress(Buffer|string $publicKey): string
-    {
-        if (is_string($publicKey)) {
-            $publicKey = Buffer::from($publicKey);
-        }
-
-        $publicKeyHash = MathUtilities::computePublicKeyHash($publicKey);
-
-        return $this->addressCodec->encodeAccountId($publicKeyHash);
     }
 
     /*

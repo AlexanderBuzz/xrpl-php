@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Core;
 
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 
 class Utilities
 {
@@ -43,9 +44,21 @@ class Utilities
         return $account;
     }
 
-    public static function deriveAddress(string $account): string
+    /**
+     * @param Buffer|string $address Account
+     * @return string
+     */
+    public static function deriveAddress(Buffer|string $publicKey): string
     {
-        return '';
+        $_this = self::getInstance();
+
+        if (is_string($publicKey)) {
+            $publicKey = Buffer::from($publicKey);
+        }
+
+        $publicKeyHash = MathUtilities::computePublicKeyHash($publicKey);
+
+        return $_this->addressCodec->encodeAccountId($publicKeyHash);
     }
 
     public static function encodeSeed(Buffer $entropy, string $type): string

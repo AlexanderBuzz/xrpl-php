@@ -23,7 +23,7 @@ interface KeyPairServiceInterface
      * @param string $seed
      * @return KeyPair
      */
-    public function deriveKeyPair(Buffer|string $seed): KeyPair; //TODO: class or inrerface?
+    public function deriveKeyPair(Buffer|string $seed): KeyPair;
 
     /**
      * Sign a message using the given private key.
@@ -50,5 +50,5 @@ interface KeyPairServiceInterface
      * @param Buffer|string $publicKey
      * @return string
      */
-    public function deriveAddress(Buffer|string $publicKey): string; //TODO wrapped Immutable "Address" in  java
+    public function deriveAddress(Buffer|string $publicKey): string;
 }

@@ -12,8 +12,8 @@ class UnsignedInt8 extends UnsignedInt
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt8
     {
-        $fromParser = $parser->readUInt8();
-        return new UnsignedInt8(Buffer::from($fromParser));
+        $bytes = $parser->readUInt8();
+        return new UnsignedInt8($bytes );
     }
 
     public static function fromJson(string|int $serializedJson): SerializedType

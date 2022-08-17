@@ -31,7 +31,7 @@ class Buffer implements ArrayAccess
         $buffer = new Buffer();
 
         //Duplicate buffer
-        if (gettype($source) === Buffer::class) { //TODO: Wird nie aufgerufen
+        if (gettype($source) === Buffer::class) {
             Buffer::from($buffer->toArray());
         }
 
@@ -66,7 +66,6 @@ class Buffer implements ArrayAccess
         throw new \Exception('Buffer not does not support source type');
     }
 
-    //TODO: Naming bufferList / bbytesList
     public static function concat(array $bufferList, ?int $totalLength = null): Buffer
     {
         if (empty($bufferList) || $totalLength === 0) {
@@ -133,10 +132,13 @@ class Buffer implements ArrayAccess
 
     public function set(int $startIdx, array $bytes): void
     {
-        //TODO: check out of bounds
+        $tempArray = $this->bytesArray->toArray();
+
         foreach ($bytes as $key => $byte) {
-            $this->bytesArray[$startIdx + $key] = $byte;
+            $tempArray[$startIdx + $key] = $byte;
         }
+
+        $this->bytesArray = SplFixedArray::fromArray($tempArray);
     }
 
     public function subArray(int $start, ?int $end): Buffer
@@ -168,14 +170,19 @@ class Buffer implements ArrayAccess
         return strtoupper($str);
     }
 
-    public function toDecimalString(): string
+    public function toArray(): array
+    {
+        return $this->bytesArray->toArray();
+    }
+
+    public function toInt():int
     {
         return hexdec($this->toString());
     }
 
-    public function toArray(): array
+    public function toDecimalString(): string
     {
-        return $this->bytesArray->toArray();
+        return hexdec($this->toString());
     }
 
     public function debug(): string

@@ -10,8 +10,8 @@ class UnsignedInt32 extends UnsignedInt
 {
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt32
     {
-        $fromParser = $parser->readUInt32();
-        return new UnsignedInt32(Buffer::from($fromParser));
+        $bytes  = $parser->readUInt32();
+        return new UnsignedInt32($bytes );
     }
 
     public static function fromJson(string|int $serializedJson): SerializedType

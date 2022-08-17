@@ -15,7 +15,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     public function __construct()
     {
-        $this->elliptic = new EC('secp256k1');
+        $this->elliptic = new EC(KeyPair::EC);
 
         parent::__construct();
     }
@@ -80,11 +80,6 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         $hash = MathUtilities::sha512Half($message);
 
         return $this->elliptic->verify($hash->toString(), $signature, $publicKey, 'hex');
-    }
-
-    public function deriveAddress(Buffer|string $publicKey): string
-    {
-        // TODO: Implement deriveAddress() method.
     }
 
     /**
