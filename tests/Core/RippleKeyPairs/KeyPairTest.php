@@ -126,7 +126,7 @@ class KeyPairTest extends TestCase
     }
     */
 
-    //Ed25519 section
+    //Secp256k1 section
 
     public function testGenerateSecp256k1Seed(): void
     {

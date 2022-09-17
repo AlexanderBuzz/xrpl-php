@@ -16,9 +16,9 @@ class Wallet {
 
     private string $privateKey;
 
-    private string $address;
+    //private string $address; //TODO: implement correctly
 
-    private ?string $classicAddress;
+    private string $classicAddress;
 
     private ?string $seed;
 
@@ -53,27 +53,12 @@ class Wallet {
         );
     }
 
-    public static function fromSeed(string $seed, ?string $masterAddress = null, $type = self::DEFAULT_ALGORITHM): Wallet
+    public static function fromSeed(string $seed, ?string $masterAddress = null, string $type = self::DEFAULT_ALGORITHM): Wallet
     {
         return self::deriveWallet($seed, $masterAddress, $type);
     }
 
-    /*
-     *   private static deriveWallet(
-    seed: string,
-    opts: { masterAddress?: string; algorithm?: ECDSA } = {},
-  ): Wallet {
-    const { publicKey, privateKey } = deriveKeypair(seed, {
-      algorithm: opts.algorithm ?? DEFAULT_ALGORITHM,
-    })
-    return new Wallet(publicKey, privateKey, {
-      seed,
-      masterAddress: opts.masterAddress,
-    })
-  }
-     */
-
-    private static function deriveWallet(string $seed, ?string $masterAddress = null, $type = self::DEFAULT_ALGORITHM): Wallet
+    private static function deriveWallet(string $seed, ?string $masterAddress = null, string $type = self::DEFAULT_ALGORITHM): Wallet
     {
         $kps = KeyPair::getKeyPairServiceByType($type);
         $keyPair = $kps->deriveKeyPair($seed);
@@ -87,15 +72,17 @@ class Wallet {
         );
     }
 
+    /*
     public function checkSerialisation()
     {
-
+        //TODO: implement function
     }
 
     public function getXAddress()
     {
-
+        //TODO: implement function
     }
+    */
 
     /**
      * No Multisign for now...
@@ -103,9 +90,15 @@ class Wallet {
      * @param Transaction $transaction
      * @return string[]
      */
-    public function sign(Transaction $transaction): array
+    public function sign(Transaction $transaction, string|bool $multisign = false): array
     {
         $multisignAddress = false;
+
+        if (is_string($multisign) && str_starts_with($multisign, 'X')) {
+            $multisignAddress = $multisign;
+        } else if ($multisign) {
+            $multisignAddress = $this->getClassicAddress();
+        }
 
         $txPayload = $transaction->getPayload();
 
@@ -126,31 +119,16 @@ class Wallet {
         ];
     }
 
-    /**
-     * Some humble shortcut...
-     *
-     * @return array
-     */
-    public function returnHardcodedSignature(): array
-    {
-        $serializedTx = "120000220000000024019251F2201B0193D2ED6140000000014FB18068400000000000000C7321039543A0D3004CDA0904A09FB3710251C652D69EA338589279BC849D47A7B019A174473045022100DA2A60B79CB19107892F7A73F74A7B5F4C4AFFF77294F8EBFA5A52BF1BA4F27E0220046910CF91CE1324ED108E66251C9B0DCDC7570F6EEA0626127C1495BD96B1078114E2AFBD269D7DA5E2B9931CCBD62FAB5118A366188314F667B0CA50CC7709A220B0561B85E53A48461FA8";
-        $hash = "FF8EEB399F00034CC498CFFFB75DCFFCFB6DBEE0D61FE2D36E7CFF9E3B38674E";
-
-        return [
-            "tx_blob" => $serializedTx,
-            "hash" => $hash,
-        ];
-    }
-
+    /*
     public function verifyTransaction()
     {
-
+        //TODO: implement function
     }
+    */
 
     private function computeSignature(array $txPayload): array
     {
-        $encoded = $this->encodeForSigning($txPayload);
-
+        //TODO: implement function
         return [];
     }
 
@@ -173,33 +151,23 @@ class Wallet {
         return '';
     }
 
-    /**
-     * Move to separate package
-     *
-     * @param array $transactionData
-     * @param string $prefix
-     * @return mixed
-     */
-    private function signingData(array $transactionData, string $prefix = HashPrefix::TRANSACTION_SIGN)
+    /*
+    private function signingData(array $transactionData, string $prefix = HashPrefix::TRANSACTION_SIGN): string
     {
         $transactionData['prefix'] = $prefix;
         $transactionData['signingFieldsOnly'] = true;
 
         //return $this->serializeObject($transactionData, { prefix, signingFieldsOnly: true })
+        //TODO: implement function
     }
+    */
 
-    /**
-     * @return string
-     */
-    public function getAddress(): string
+    public function getAddress(): string|null
     {
         return $this->classicAddress;
     }
 
-    /**
-     * @return string
-     */
-    public function getClassicAddress(): string
+    public function getClassicAddress(): string|null
     {
         return $this->classicAddress;
     }
@@ -245,9 +213,9 @@ class Wallet {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSeed(): string
+    public function getSeed(): string|null
     {
         return $this->seed;
     }
@@ -260,15 +228,19 @@ class Wallet {
         $this->seed = $seed;
     }
 
-    private function serializeObject()
+    /*
+    private function serializeObject(): string
     {
-
+        //TODO: implement function
     }
+    */
 
     private function hashSignedTx(string $serializedTx): string
     {
+        //TODO: implement function
         return '';
     }
+
 
 
 }

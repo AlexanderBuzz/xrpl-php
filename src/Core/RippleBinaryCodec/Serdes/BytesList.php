@@ -48,15 +48,17 @@ class BytesList
         return $this;
     }
 
-    public function replace(int $index, Buffer $newElement)
+    public function replace(int $index, Buffer $newElement): void
     {
         $this->bufferArray[$index] =$newElement;
     }
 
+    /*
     public function toBytesSink(BytesList $list): Buffer
     {
         $list->toBytesSink($list); //TODO: Is this necessary?
     }
+    */
 
     public function toBytes(): Buffer
     {

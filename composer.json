@@ -1,6 +1,6 @@
 {
   "name": "gndlf/xrpl_php",
-  "description": "description",
+  "description": "PHP Client for the XRP Ledger",
   "minimum-stability": "stable",
   "license": "ISC",
   "authors": [

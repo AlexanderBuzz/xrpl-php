@@ -2,8 +2,8 @@
 
 namespace XRPL_PHP\Core;
 
+use Exception;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 
 class Utilities
 {
@@ -32,7 +32,7 @@ class Utilities
              * `tag` should be `false`.
              */
             if ($tag !== false) {
-                throw new \Exception(
+                throw new Exception(
                     'This command does not support the use of a tag. Use an address without a tag.',
                 );
             }
@@ -45,8 +45,9 @@ class Utilities
     }
 
     /**
-     * @param Buffer|string $address Account
+     * @param Buffer|string $publicKey
      * @return string
+     * @throws Exception Error
      */
     public static function deriveAddress(Buffer|string $publicKey): string
     {
@@ -61,6 +62,9 @@ class Utilities
         return $_this->addressCodec->encodeAccountId($publicKeyHash);
     }
 
+    /**
+     * @throws Exception Error
+     */
     public static function encodeSeed(Buffer $entropy, string $type): string
     {
         $_this = self::getInstance();

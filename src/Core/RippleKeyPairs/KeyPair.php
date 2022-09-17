@@ -2,6 +2,8 @@
 
 namespace XRPL_PHP\Core\RippleKeyPairs;
 
+use Exception;
+
 class KeyPair
 {
     public const EDDSA = 'ed25519';
@@ -58,7 +60,10 @@ class KeyPair
         ];
     }
 
-    public static function getKeyPairServiceByType($type = self::EDDSA): KeyPairServiceInterface
+    /**
+     * @throws Exception Error
+     */
+    public static function getKeyPairServiceByType(string $type = self::EDDSA): KeyPairServiceInterface
     {
         if ($type === self::EDDSA) {
             return Ed25519KeyPairService::getInstance();
@@ -68,6 +73,6 @@ class KeyPair
             return Secp256k1KeyPairService::getInstance();
         }
 
-        throw new \Exception('No KeyPairService for type: ' . $type);
+        throw new Exception('No KeyPairService for type: ' . $type);
     }
 }

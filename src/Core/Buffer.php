@@ -13,17 +13,16 @@ class Buffer implements ArrayAccess
 
     private SplFixedArray $bytesArray;
 
+    public function __construct()
+    {
+        $this->bytesArray = SplFixedArray::fromArray([]);
+    }
+
     public static function alloc(int $size = 0): Buffer
     {
         $tempArray = array_fill(0, $size, self::DEFAULT_FILL);
 
         return self::from($tempArray);
-    }
-
-    public function addUInt32($integerToAdd): Buffer
-    {
-
-
     }
 
     public static function from(mixed $source, ?string $encoding = 'hex'): Buffer
@@ -43,7 +42,7 @@ class Buffer implements ArrayAccess
         }
 
         //Buffer from hex string 'ff03a5ed'
-        if (gettype($source) === 'string' && $encoding == 'hex') {
+        if (gettype($source) === 'string' && $encoding === 'hex') {
             $tempArray = array_map('hexdec', str_split($source, 2));
             $bytesArray = SplFixedArray::fromArray($tempArray);
             $buffer->setBytesArray($bytesArray);
@@ -108,23 +107,23 @@ class Buffer implements ArrayAccess
         return $this->bytesArray->getSize();
     }
 
-    public function appendBuffer(Buffer $appendix)
+    public function appendBuffer(Buffer $appendix): void
     {
         $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix->toArray()));
     }
 
-    public function appendHex(string $hexBytes)
+    public function appendHex(string $hexBytes): void
     {
         $appendix = array_map('hexdec', str_split($hexBytes, 2));
         $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix));
     }
 
-    public function prependBuffer(Buffer $prefix)
+    public function prependBuffer(Buffer $prefix): void
     {
         $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix->toArray(), $this->toArray()));
     }
 
-    public function prependHex(string $hexBytes)
+    public function prependHex(string $hexBytes): void
     {
         $prefix = array_map('hexdec', str_split($hexBytes, 2));
         $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix, $this->toArray()));
@@ -135,7 +134,7 @@ class Buffer implements ArrayAccess
         $tempArray = $this->bytesArray->toArray();
 
         foreach ($bytes as $key => $byte) {
-            $tempArray[$startIdx + $key] = $byte;
+            $tempArray[$startIdx + (int) $key] = $byte;
         }
 
         $this->bytesArray = SplFixedArray::fromArray($tempArray);
@@ -182,7 +181,7 @@ class Buffer implements ArrayAccess
 
     public function toDecimalString(): string
     {
-        return hexdec($this->toString());
+        return (string) hexdec($this->toString());
     }
 
     public function debug(): string

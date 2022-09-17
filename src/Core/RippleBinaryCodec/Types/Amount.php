@@ -4,6 +4,7 @@ namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
+use Exception;
 use phpDocumentor\Reflection\Types\String_;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
@@ -37,6 +38,9 @@ class Amount extends SerializedType
         parent::__construct($bytes);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $isXRP = $parser->peek() & 0x80;
@@ -45,6 +49,9 @@ class Amount extends SerializedType
         return new Amount($parser->read($numBytes));
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fromJson(string $serializedJson): SerializedType
     {
         $isScalar = preg_match('/^\d+$/', $serializedJson);
@@ -63,7 +70,7 @@ class Amount extends SerializedType
             //TODO: implement non-XRP amount Object
         }
 
-        throw new \Exception('Invalid type to construct an Amount');
+        throw new Exception('Invalid type to construct an Amount');
     }
 
     public function toJson(): string|array
@@ -81,16 +88,19 @@ class Amount extends SerializedType
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private static function assertXrpIsValid(string $amount): void
     {
         if (str_contains($amount, ".")) {
-            throw new \Exeption($amount . ' is an illegal amount');
+            throw new Exception($amount . ' is an illegal amount');
         }
 
         $value = BigDecimal::of($amount);
         if (!$value->isZero()) {
             if ($value->compareTo(MIN_XRP) < 0 || $value->compareTo(MAX_DROPS) > 0) {
-                throw new \Exeption($amount . ' is an illegal amount');
+                throw new Exception($amount . ' is an illegal amount');
             }
         }
     }

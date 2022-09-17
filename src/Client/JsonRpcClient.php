@@ -44,65 +44,67 @@ class JsonRpcClient
 
         //TODO: Handle exceptions properly, handle Promise properly;
         $response = $this->restClient->send($request);
-
         //$response = $this->restClient->sendAsync($request, ['handler' => null]);
 
         return $response;
 
     }
 
+    /*
     public function autofill()
     {
-
+        //TODO: implement function
     }
 
     public function connect()
     {
-
+        //TODO: implement function
     }
 
     public function disconnect()
     {
-
+        //TODO: implement function
     }
 
     public function fundWallet()
     {
-
+        //TODO: implement function
     }
 
     public function getBalances()
     {
-
+        //TODO: implement function
     }
 
     public function getLedgerIndex()
     {
-
+        //TODO: implement function
     }
 
-    public function getOrderbook()
+    public function getOrderBook()
     {
-
+        //TODO: implement function
     }
 
     public function getXrpBalance()
     {
-
+        //TODO: implement function
     }
 
     public function prepareTransaction()
     {
-
+        //TODO: implement function
     }
 
     public function submit()
     {
-
+        //TODO: implement function
     }
 
     public function submitAndWait()
     {
-
+           //TODO: implement function
     }
+
+    */
 }

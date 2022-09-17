@@ -15,7 +15,7 @@ interface KeyPairServiceInterface
      * @param string|null $type
      * @return string
      */
-    public function generateSeed(?Buffer $entropy): string;
+    public function generateSeed(?Buffer $entropy = null): string;
 
     /**
      * Sign a message using the given private key.

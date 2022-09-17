@@ -4,6 +4,7 @@ namespace XRPL_PHP\Core\RippleKeyPairs;
 
 use BN\BN;
 use Elliptic\EC;
+use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
 
@@ -38,7 +39,10 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return $this->addressCodec->encodeSeed($entropy, 'secp256k1');
     }
 
-    public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int  $accountIndex = 0): KeyPair
+    /**
+     * @throws Exception Error
+     */
+    public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
             $decoded = $this->addressCodec->decodeSeed($seed);
@@ -91,7 +95,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
      * @param bool $validator
      * @param int $accountIndex
      * @return string 32 bit Private / secret key
-     * @throws \Exception
+     * @throws Exception
      */
     private function derivePrivateKey(Buffer $seed, bool $validator = false, int  $accountIndex = 0): string
     {

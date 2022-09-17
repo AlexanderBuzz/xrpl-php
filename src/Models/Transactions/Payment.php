@@ -2,6 +2,8 @@
 
 namespace XRPL_PHP\Models\Transactions;
 
+use XRPL_PHP\Models\Common\Amount;
+
 class Payment extends BaseTransaction
 {
     public const PAYMENT_FLAG_TF_NO_DIRECT_RIPPLE = 0x00010000;
@@ -10,25 +12,21 @@ class Payment extends BaseTransaction
 
     public const PAYMENT_FLAG_TF_LIMIT_QUALITY = 0x00040000;
 
-    private string $transactionType = self::TRANSACTION_TYPE_PAYMENT;
+    private string $transactionType = 'Payment';
 
-    private string $amount; //TODO: check type -> Amount
-
-    private string $destination;
-
-    private ?string $destinationTag;
-
-    private ?string $invoiceId;
-
-    private ?string $paths; //TODO: check type -> Path
-
-    private ?string $sendMax; //TODO: check type -> Amount
-
-    private ?string $deliverMin; //TODO: check type -> Amount
+    public function __construct(
+        protected Amount|string $amount,
+        protected string $destination,
+        protected ?string $destinationTag,
+        protected ?string $invoiceId,
+        protected ?string $paths, //TODO: check type -> Path
+        protected ?string $sendMax, //TODO: check type -> Amount
+        protected ?string $deliverMin //TODO: check type -> Amount
+    ) {}
 
     public function getPayload(): array
     {
-        // TODO: Implement getPayload() method.
+        return $this->autofill();
     }
 
     public function validatPayment(): void

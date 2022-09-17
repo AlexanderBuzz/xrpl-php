@@ -15,8 +15,6 @@ abstract class BaseTransaction
     public const JSON_PROPERTY_SIGNING_PUBLIC_KEY = "SigningPubKey";
     public const JSON_PROPERTY_TRANSACTION_SIGNATURE = "TxnSignature";
 
-    public const TRANSACTION_TYPE_PAYMENT = "Payment";
-
     private string $transactionType;
 
     private string $account;

@@ -32,9 +32,11 @@ abstract class SerializedType
 
     public function toBytes(): Buffer
     {
+        /*
         if (!$this->bytes) {
             return Buffer::from([]);
         }
+        */
         return $this->bytes;
     }
 
