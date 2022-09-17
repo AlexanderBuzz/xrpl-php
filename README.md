@@ -1,9 +1,20 @@
 # PHP XRPL [WIP]
 
-PHP Client Library to access to access the XRP Ledger
+PHP Client Library to develop XRP Ledger. It offers all the functionality available in the JavaScript 
+and Java Versions emphasizing robustness and code readability for those interested in looking under the 
+hood and getting into the nitty-gritty of XRPL development.
+
+It is currently work in progress nearing the finishing line, with intended use in PHP ecommerce platforms 
+in mind when it comes to feature priority. The fully featured and tested Version will be available somewhere 
+around late September / middle of October.
 
 ![Build Status](https://github.com/shopware/shopware/workflows/PHPUnit/badge.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
+
+## How to install
+
+[WIP] 
+`composer require gndlf/xrpl_php`
 
 ## How to run
 
