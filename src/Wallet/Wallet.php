@@ -4,13 +4,22 @@ namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use XRPL_PHP\Core\RippleKeyPairs\AbstractKeyPairService;
+use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
+use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
+use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
 
 class Wallet {
 
     public const DEFAULT_ALGORITHM = KeyPair::EDDSA;
+
+    private BinaryCodec $binaryCodec; //TODO static instance?
+
+    private KeyPairServiceInterface $keyPairService;
 
     private string $publicKey;
 
@@ -29,8 +38,17 @@ class Wallet {
         ?string $seed = null
     )
     {
-        $this->publicKey = $publicKey;
+        $this->binaryCodec = new BinaryCodec();
 
+        if (str_starts_with($publicKey, 'ED')) {
+            $this->keyPairService = Ed25519KeyPairService::getInstance();
+        } else if (str_starts_with($publicKey, '00')) {
+            $this->keyPairService = Secp256k1KeyPairService::getInstance();
+        } else {
+            //error
+        }
+
+        $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
 
         if (is_string($masterAddress)) {
@@ -44,8 +62,8 @@ class Wallet {
 
     public static function generate(string $type = self::DEFAULT_ALGORITHM): Wallet
     {
-        $kps = KeyPair::getKeyPairServiceByType($type);
-        $seed = $kps->generateSeed();
+        $keyPairService = KeyPair::getKeyPairServiceByType($type);
+        $seed = $keyPairService->generateSeed();
 
         return Wallet::fromSeed(
             seed:$seed,
@@ -60,8 +78,8 @@ class Wallet {
 
     private static function deriveWallet(string $seed, ?string $masterAddress = null, string $type = self::DEFAULT_ALGORITHM): Wallet
     {
-        $kps = KeyPair::getKeyPairServiceByType($type);
-        $keyPair = $kps->deriveKeyPair($seed);
+        $keyPairService = KeyPair::getKeyPairServiceByType($type);
+        $keyPair = $keyPairService->deriveKeyPair($seed);
 
         return new Wallet(
             $keyPair->getPublicKey(),
@@ -126,10 +144,25 @@ class Wallet {
     }
     */
 
-    private function computeSignature(array $txPayload): array
+    private function computeSignature(array $txPayload, string $privateKey, ?string $signAs): string
     {
-        //TODO: implement function
-        return [];
+        /*
+        if (signAs) {
+            const classicAddress = isValidXAddress(signAs)
+                ? xAddressToClassicAddress(signAs).classicAddress
+                : signAs
+
+    return sign(encodeForMultisigning(tx, classicAddress), privateKey)
+  }
+        return sign(encodeForSigning(tx), privateKey)
+        */
+        if($signAs) {
+            //$classicAddress
+            $encodedTx = ''; //encodeForMultisigning
+            return $this->keyPairService->sign($encodedTx, $this->privateKey);
+        }
+        $encodedTx = ''; //encodeForSigning
+        return $this->keyPairService->sign($encodedTx, $this->privateKey);
     }
 
     /**

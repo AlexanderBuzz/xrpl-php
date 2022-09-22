@@ -3,7 +3,9 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\JsonObject;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
@@ -15,23 +17,33 @@ class Binary
         return new BinaryParser($bytes);
     }
 
-    public function serializeObject(JsonObject $object, array $options = [])
+    /*
+    public function serializeObject(string $jsonObject, array $options = [])
     {
         //TODO: This is old an needs to revamped completely
         [
             'prefix' => $prefix,
             'suffix' => $suffix,
             'signingFieldsOnly' => $signingFieldsOnly //default false!
-        ] = $object;
+        ] = $options;
 
-        $bytesList = Buffer::from([]);
+        $bytesList = new BytesList();
 
         if ($prefix) {
-            $bytesList[] = $prefix->getHex();
+            $bytesList->push($prefix);
         }
 
 
+        $bytesList->push(STObject::fromJson($jsonObject)->toBytes());
+
+        if ($prefix) {
+            $bytesList->push($suffix);
+        }
+
+      return $bytesList->toBytes();
+
     }
+    */
 
     /**
      *
@@ -46,20 +58,25 @@ class Binary
         return $parser->readType($type)->toJson(); // currently implementing this
     }
 
-    public function multiSigningData()
+    /*
+    public function signingData(array $jsonObject): Buffer
     {
-
+        $paddedPrefix = str_pad((string)HashPrefix::TRANSACTION_SIGN, 8, '00', STR_PAD_LEFT);
+        return $this->serializeObject(
+            $jsonObject,
+        )
     }
 
-    public function signingData()
+    public function multiSigningData()
     {
-
+        //TODO: implement function
     }
 
     public function signingClaimData()
     {
-
+        //TODO: implement function
     }
+    */
 
     public function binaryToJson(string $bytes): array
     {

@@ -16,6 +16,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     public function __construct()
     {
+        $this->type = AbstractKeyPairService::PREFIX_SECP156K1;
         $this->elliptic = new EC(KeyPair::EC);
 
         parent::__construct();

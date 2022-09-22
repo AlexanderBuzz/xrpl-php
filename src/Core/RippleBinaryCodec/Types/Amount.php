@@ -4,6 +4,7 @@ namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
+use Brick\Math\BigNumber;
 use Exception;
 use phpDocumentor\Reflection\Types\String_;
 use XRPL_PHP\Core\Buffer;
@@ -65,10 +66,17 @@ class Amount extends SerializedType
             return new Amount(Buffer::from($rawBytes));
         }
 
-        $isAmountObject = false;
-        if ($isAmountObject) {
-            //TODO: implement non-XRP amount Object
-        }
+        [
+            'value' => $rawValue,
+            'currency' => $rawCurrency,
+            'issuer' => $rawIssuer
+        ] = json_decode($serializedJson, true);
+
+        $value = BigNumber::of($rawValue);
+        $currency = Currency::fromJson($rawCurrency);
+        $issuer = AccountId::fromJson($rawIssuer);
+
+        //$result =
 
         throw new Exception('Invalid type to construct an Amount');
     }
@@ -102,6 +110,13 @@ class Amount extends SerializedType
             if ($value->compareTo(MIN_XRP) < 0 || $value->compareTo(MAX_DROPS) > 0) {
                 throw new Exception($amount . ' is an illegal amount');
             }
+        }
+    }
+
+    private function assertIouIsValid(BigDecimal $decimal): void
+    {
+        if(!$decimal->isZero()) {
+            //$precision = $decimal->
         }
     }
 

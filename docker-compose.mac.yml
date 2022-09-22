@@ -1,6 +1,5 @@
 # Use this as docker-compose.override.yml if you use Mac
 version: '3.7'
-
 services:
   fpm:
     volumes:

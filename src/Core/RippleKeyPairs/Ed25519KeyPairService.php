@@ -14,6 +14,7 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 
     public function __construct()
     {
+        $this->type = AbstractKeyPairService::PREFIX_ED25519;
         $this->elliptic = new EdDSA(KeyPair::EDDSA);
 
         parent::__construct();

@@ -60,4 +60,9 @@ class FieldInstance
     {
         return $this->isVariableLengthEncoded;
     }
+
+    public function isSigningField(): bool
+    {
+        return $this->isSigningField();
+    }
 }

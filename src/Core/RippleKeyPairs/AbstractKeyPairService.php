@@ -15,6 +15,8 @@ class AbstractKeyPairService
 
     protected AddressCodec $addressCodec;
 
+    protected string $type;
+
     public function __construct()
     {
         $this->addressCodec = new AddressCodec();
@@ -22,17 +24,12 @@ class AbstractKeyPairService
 
     public function deriveAddress(Buffer|string $publicKey): string
     {
+        //TODO: Check if this works properly
         return Utilities::deriveAddress($publicKey);
     }
 
-    /*
-    public function generateSeed(?Buffer $entropy, ?string $type): string
+    public function getType(): string
     {
-        $entropyBuffer = (isset($options['entropy'])) ? $options['entropy']->slice(0, 16) : Buffer::random(16);
-        $type = ($type === 'ed25519') ? 'ed25519' : 'secp256k1';
-
-        return Utilities::encodeSeed($entropyBuffer, $type);
+        return $this->type;
     }
-    */
-
 }

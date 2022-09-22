@@ -44,17 +44,18 @@ final class AmountTest extends TestCase
         $amount->fromSerializedJson("416345785D8A0001");
     }
 
+    */
+
     public function testEncodeCurrencyAmount(): void
     {
-        $amount = $this->createMock(Amount::class);
-
-        $var = \XRPL_PHP\Core\RippleBinaryCodec\Types\JsonObject::
+        $json = "{\"value\":\"0\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
         $this->assertEquals(
             "800000000000000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
-            $amount->fromJson()->toHex()
+            Amount::fromJson($json)->toHex()
         );
     }
 
+    /*
     public function testDecodeCurrencyAmount(): void
     {
 

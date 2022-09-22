@@ -56,6 +56,7 @@ class StObject extends SerializedType
             $serializedTypeInstance = SerializedType::getTypeByName($fieldInstance->getType());
             $fieldValue = $serializedTypeInstance::fromJson($fieldJson);
             $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
+            //TODO: add filter f.ex. serialize
         }
 
         if ($fieldInstance->getType() === self::ST_OBJECT) {

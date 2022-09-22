@@ -40,4 +40,33 @@ class BinaryCodecTest extends TestCase
         );
     }
 
+    public function testEncodeForSigning(): void
+    {
+        $json =
+        "{\"Account\":\"r45dBj4S3VvMMYXxr9vHX4Z4Ma6ifPMCkK\",\"TransactionType\":\"Payment\",\"Fee\":\"789\"," .
+        "\"Sequence\":1,\"Flags\":2147614720,\"SourceTag\":1," .
+        "\"Amount\":{\"value\":\"1234567890123456\",\"currency\":\"USD\"," .
+        "\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}," .
+        "\"Destination\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\",\"DestinationTag\":2," .
+        "\"SigningPubKey\":\"ED5F5AC8B98974A3CA843326D9B88CEBD0560177B973EE0B149F782CFAA06DC66A\"," .
+        "\"TxnSignature\": \"12345678\"}";
+
+    // expected value obtained by calling encodeForSigning(json) from ripple-binary-codec
+    $expected =
+        "535458001200002280020000230000000124000000012E0000000261D84462D53C8ABAC00000000000000000000000005553440000000" .
+        "0008B1CE810C13D6F337DAC85863B3D70265A24DF446840000000000003157321ED5F5AC8B98974A3CA843326D9B88CEB" .
+        "D0560177B973EE0B149F782CFAA06DC66A8114EE39E6D05CFD6A90DAB700A1D70149ECEE29DFEC83140000000000000000" .
+        "000000000000000000000001";
+
+        $this->assertNotEquals(
+            $this->binaryCodec->encode($json),
+            $this->binaryCodec->encodeForSigning($json)
+        );
+
+        $this->assertEquals(
+            $expected,
+            $this->binaryCodec->encodeForSigning($json)
+        );
+    }
+
 }

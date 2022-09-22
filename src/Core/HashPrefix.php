@@ -4,7 +4,6 @@ namespace XRPL_PHP\Core;
 
 class HashPrefix
 {
-
     // transaction plus signature to give transaction ID 'TXN'
     const TRANSACTION_ID = 0x54584e00;
 

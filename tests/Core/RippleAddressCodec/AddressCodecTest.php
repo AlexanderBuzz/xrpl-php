@@ -17,9 +17,15 @@ class AddressCodecTest extends TestCase
 {
     private AddressCodec $addressCodec;
 
+    private array $fixtures;
+
     public function setUp(): void
     {
         $this->addressCodec = new AddressCodec();
+
+        //TODO: use relative file path
+        $raw = file_get_contents("/app/tests/Core/RippleAddressCodec/fixtures.json"); //TODO: use proper path
+        $this->fixtures = json_decode($raw, true);
     }
 
     public function testIsValidClassicAddress(): void
