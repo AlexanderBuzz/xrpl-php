@@ -53,6 +53,48 @@ final class AmountTest extends TestCase
             "800000000000000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
             Amount::fromJson($json)->toHex()
         );
+
+        $json = "{\"value\":\"1\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D4838D7EA4C6800000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"200\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D5071AFD498D000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"-2\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "94871AFD498D000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"-200\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "95071AFD498D000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"2.1\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D48775F05A07400000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"123.456\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D50462D36641000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"-12.34567\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "94C462D5077C860000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
     }
 
     /*

@@ -8,6 +8,7 @@ use Brick\Math\BigNumber;
 use Exception;
 use phpDocumentor\Reflection\Types\String_;
 use XRPL_PHP\Core\Buffer;
+use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use function MongoDB\BSON\fromJSON;
 
@@ -72,13 +73,37 @@ class Amount extends SerializedType
             'issuer' => $rawIssuer
         ] = json_decode($serializedJson, true);
 
-        $value = BigNumber::of($rawValue);
-        $currency = Currency::fromJson($rawCurrency);
-        $issuer = AccountId::fromJson($rawIssuer);
+        $amount = Buffer::alloc(8);
 
-        //$result =
+        $number = BigDecimal::of($rawValue);
+        //self::assertIouIsValid($number);
 
-        throw new Exception('Invalid type to construct an Amount');
+        if($number->isZero()) {
+            $amount[0] |= 0x80;
+        } else {
+            $intString = str_pad($number->getUnscaledValue()->abs(), 16, 0);
+            $bigInteger = BigInteger::of($intString);
+
+            $hex1 = str_pad($bigInteger->shiftedRight(32)->toBase(16), 8, 0, STR_PAD_LEFT);
+            $hex2 = str_pad($bigInteger->and(0x00000000ffffffff)->toBase(16), 8, 0, STR_PAD_LEFT);
+            $amount = Buffer::from($hex1 . $hex2);
+
+            $amount[0] |= 0x80;
+
+            if ($number->compareTo(BigDecimal::zero()) > 0) {
+                $amount[0] |= 0x40;
+            }
+
+            $exponent = MathUtilities::getBigDecimalExponent($number)  - 15;
+            $exponentByte = 97 + $exponent;
+            $amount[0] |= MathUtilities::unsignedRightShift($exponentByte, 2);
+            $amount[1] |= ($exponentByte & 0x03) << 6;
+        }
+
+        $currency = Currency::fromJson($rawCurrency)->toBytes();
+        $issuer = AccountId::fromJson($rawIssuer)->toBytes();
+
+        return new Amount(Buffer::from(array_merge($amount->toArray(), $currency->toArray(), $issuer->toArray())));
     }
 
     public function toJson(): string|array
@@ -113,11 +138,40 @@ class Amount extends SerializedType
         }
     }
 
-    private function assertIouIsValid(BigDecimal $decimal): void
+    /**
+     * @param BigDecimal $number
+     * @return void
+     * @throws Exception
+     */
+    private function assertIouIsValid(BigDecimal $number): void
     {
-        if(!$decimal->isZero()) {
-            //$precision = $decimal->
+        if(!$number->isZero()) {
+            $precision = MathUtilities::getBigDecimalPrecision($number);
+            $exponent = MathUtilities::getBigDecimalExponent($number);
+
+            if ($precision > self::MAX_IOU_EXPONENT ||
+                $exponent > self::MAX_IOU_EXPONENT ||
+                $exponent < self::MIN_IOU_EXPONENT
+            ) {
+                throw new Exception("Decimal precision out of range");
+            }
+
+            $this->verifyNoDecimal($number);
         }
+    }
+
+    private function verifyNoDecimal(BigDecimal $decimal): void
+    {
+        $intString = str_pad($decimal->getUnscaledValue()->abs(), 16, 0);
+
+        if (str_contains($intString, '.')) {
+            throw new Exception("Decimal place found in integerNumberString");
+        }
+    }
+
+    private function getAmountBytes(BigDecimal $number): Buffer
+    {
+
     }
 
 

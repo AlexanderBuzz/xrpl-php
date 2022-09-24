@@ -42,4 +42,26 @@ class MathUtilities
 
         return Buffer::from($hexValue)->slice(0, 32);
     }
+
+    /**
+     * returns the "Stellen / precision"
+     * @param BigDecimal $number
+     * @return int
+     */
+    public static function getBigDecimalPrecision(BigDecimal $number): int
+    {
+        $ip = $number->getIntegralPart();
+        $fp = $number->getFractionalPart();
+
+        return strlen($ip) + strlen($fp);
+    }
+
+    /**
+     * @param BigDecimal $number
+     * @return int
+     */
+    public static function getBigDecimalExponent(BigDecimal $number):int
+    {
+        return strlen($number->abs()->getIntegralPart()) - 1;
+    }
 }
