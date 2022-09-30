@@ -63,6 +63,11 @@ class FieldInstance
 
     public function isSigningField(): bool
     {
-        return $this->isSigningField();
+        return $this->isSigningField;
+    }
+
+    public function getOrdinal(): int
+    {
+        return $this->ordinal;
     }
 }

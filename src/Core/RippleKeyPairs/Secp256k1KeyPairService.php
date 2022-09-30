@@ -68,7 +68,8 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         $hash = MathUtilities::sha512Half($message);
         $signed = $this->elliptic->sign(
             $hash->toString(),
-            substr($privateKey, 2),
+            //substr($privateKey, 2),
+            $privateKey,//substr($privateKey, 2),
             'hex',
             ['canonical' => true]
         )->toDER('hex');

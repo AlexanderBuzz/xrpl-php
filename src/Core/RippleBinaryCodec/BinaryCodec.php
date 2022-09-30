@@ -2,12 +2,14 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
+use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
 class BinaryCodec extends Binary
 {
-    const TRANSACTION_SIGN = '0x53545800';
+    const TRANSACTION_SIGN = '53545800';
 
     public function __construct()
     {
@@ -32,10 +34,12 @@ class BinaryCodec extends Binary
         return $this->binaryToJson($binaryString);
     }
 
-    public function encodeForSigning(string $json): string
+    public function encodeForSigning(string|array $tx): string
     {
-        $jsonObject = json_decode($json);
-        $filtered = $this->encode($this->removeNonSigningFields($jsonObject));
+        if (is_string($tx)) {
+            $tx = json_decode($tx, true);
+        }
+        $filtered = $this->removeNonSigningFields($tx);
 
         return self::TRANSACTION_SIGN . $this->encode($filtered);
     }
@@ -48,16 +52,26 @@ class BinaryCodec extends Binary
     .toString('hex')
     .toUpperCase()
     }
-
-    public function encodeForMultisigning(array $object, string $signer): string
-    {
-        assert.ok(typeof json === 'object')
-  assert.equal(json['SigningPubKey'], '')
-  return multiSigningData(json as JsonObject, signer)
-    .toString('hex')
-    .toUpperCase()
-    }
     */
+
+    public function encodeForMultisigning(array $tx, string $signAs): string
+    {
+        if (is_string($tx)) {
+            $tx = json_decode($tx, true);
+        }
+
+        if ($tx['SigningPubKey'] !== '') {
+            //TODO: correct error
+            throw new  \Exception('Error');
+        }
+
+        $filtered = $this->removeNonSigningFields($tx);
+
+        $prefix = dechex(HashPrefix::TRANSACTION_MULTISIGN);
+        $suffix = AccountId::fromJson($signAs)->toString();
+
+        return $prefix . $this->encode($filtered) . $suffix;
+    }
 
     /*
     public function encodeQuality(string $value): string

@@ -50,13 +50,30 @@ class StObject extends SerializedType
 
         $isUnlModify = false;
 
+        //xAddressDecoded ->
+
+        //sort
+        uksort($json, function ($a, $b) use ($definitions) {
+            $fieldInstanceA = $definitions->getFieldInstance($a);
+            $fieldInstanceB = $definitions->getFieldInstance($b);
+
+            return $fieldInstanceA->getOrdinal() - $fieldInstanceB->getOrdinal();
+        });
+
+        //filter
+
         foreach ($json as $key => $value) {
             $fieldInstance = $definitions->getFieldInstance($key);
-            $fieldJson = (is_array($value)) ? json_encode($value) : $value;
+
+            if (is_array($value)) {
+                json_encode($value);
+            } else if (is_string($value)) {
+                $value = $definitions->mapSpecificFieldFromValue($key, $value);
+            }
+
             $serializedTypeInstance = SerializedType::getTypeByName($fieldInstance->getType());
-            $fieldValue = $serializedTypeInstance::fromJson($fieldJson);
+            $fieldValue = $serializedTypeInstance::fromJson($value);
             $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
-            //TODO: add filter f.ex. serialize
         }
 
         if ($fieldInstance->getType() === self::ST_OBJECT) {

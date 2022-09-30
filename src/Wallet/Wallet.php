@@ -3,6 +3,7 @@
 namespace XRPL_PHP\Wallet;
 
 use XRPL_PHP\Core\HashPrefix;
+use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Core\RippleKeyPairs\AbstractKeyPairService;
@@ -42,7 +43,7 @@ class Wallet {
 
         if (str_starts_with($publicKey, 'ED')) {
             $this->keyPairService = Ed25519KeyPairService::getInstance();
-        } else if (str_starts_with($publicKey, '00')) {
+        } else if (str_starts_with($publicKey, '0')) {
             $this->keyPairService = Secp256k1KeyPairService::getInstance();
         } else {
             //error
@@ -108,8 +109,9 @@ class Wallet {
      * @param Transaction $transaction
      * @return string[]
      */
-    public function sign(Transaction $transaction, string|bool $multisign = false): array
+    public function sign(Transaction|array $transaction, string|bool $multisign = false): array
     {
+        //TODO: remove array as possbile parameter
         $multisignAddress = false;
 
         if (is_string($multisign) && str_starts_with($multisign, 'X')) {
@@ -118,17 +120,27 @@ class Wallet {
             $multisignAddress = $this->getClassicAddress();
         }
 
-        $txPayload = $transaction->getPayload();
+        //TODO: remove array as possible parameter, use Transaction
+        if (!is_array($transaction)) {
+            $txPayload = $transaction->getPayload();
+        } else {
+            $txPayload = $transaction;
+        }
+
+        if (isset($txPayload['TxnSignature']) || isset($txPayload['Signers'])) {
+            throw new \Exception( 'txJSON must not contain "TxnSignature" or "Signers" properties',);
+        }
 
         $txPayload[Transaction::JSON_PROPERTY_SIGNING_PUBLIC_KEY] = $this->publicKey;
 
         if ($multisignAddress) {
 
         } else {
-            $txPayload[Transaction::JSON_PROPERTY_TRANSACTION_SIGNATURE] = $this->computeSignature($txPayload);
+            $signature = $this->computeSignature($txPayload);
+            $txPayload[Transaction::JSON_PROPERTY_TRANSACTION_SIGNATURE] = $signature;
         }
 
-        $serializedTx = json_encode($txPayload);
+        $serializedTx = $this->binaryCodec->encode($txPayload);
         $hash = $this->hashSignedTx($serializedTx);
 
         return [
@@ -144,7 +156,7 @@ class Wallet {
     }
     */
 
-    private function computeSignature(array $txPayload, string $privateKey, ?string $signAs): string
+    private function computeSignature(array $tx, ?string $signAs = null): string
     {
         /*
         if (signAs) {
@@ -157,31 +169,14 @@ class Wallet {
         return sign(encodeForSigning(tx), privateKey)
         */
         if($signAs) {
-            //$classicAddress
-            $encodedTx = ''; //encodeForMultisigning
-            return $this->keyPairService->sign($encodedTx, $this->privateKey);
+            if (Utilities::isValidXAddress($signAs)) {
+                $signAs = Utilities::xAddressToClassicAddress($signAs)['classicAddress'];
+            }
+            $encodedTx = $this->binaryCodec->encodeForMultisigning($tx, $signAs);
         }
-        $encodedTx = ''; //encodeForSigning
+        $encodedTx = $this->binaryCodec->encodeForSigning($tx);
+
         return $this->keyPairService->sign($encodedTx, $this->privateKey);
-    }
-
-    /**
-     * Move to separate package
-     *
-     * @param array $data
-     * @return string
-     */
-    private function encodeForSigning(array $data): string
-    {
-        /*
-        $signed = $this->signingData($data);
-        $hex = bin2hex($signed);
-        $upper = strtoupper($hex);
-
-        return $upper;
-        */
-
-        return '';
     }
 
     /*
@@ -206,14 +201,6 @@ class Wallet {
     }
 
     /**
-     * @param string $classicAddress
-     */
-    public function setClassicAddress(string $classicAddress): void
-    {
-        $this->classicAddress = $classicAddress;
-    }
-
-    /**
      * @return string
      */
     public function getPublicKey(): string
@@ -222,27 +209,11 @@ class Wallet {
     }
 
     /**
-     * @param string $publicKey
-     */
-    public function setPublicKey(string $publicKey): void
-    {
-        $this->publicKey = $publicKey;
-    }
-
-    /**
      * @return string
      */
     public function getPrivateKey(): string
     {
         return $this->privateKey;
-    }
-
-    /**
-     * @param string $privateKey
-     */
-    public function setPrivateKey(string $privateKey): void
-    {
-        $this->privateKey = $privateKey;
     }
 
     /**
@@ -261,17 +232,23 @@ class Wallet {
         $this->seed = $seed;
     }
 
-    /*
-    private function serializeObject(): string
+    private function hashSignedTx(Transaction|string $tx): string
     {
-        //TODO: implement function
-    }
-    */
+        if (is_string($tx)) {
+            $txBlob = $tx;
+            $txObject = $this->binaryCodec->decode($tx);
+        } else {
+            $txBlob = $this->binaryCodec->encode($tx->getPayload());
+            $txObject = $tx;
+        }
 
-    private function hashSignedTx(string $serializedTx): string
-    {
-        //TODO: implement function
-        return '';
+        if (!isset($txObject['TxnSignature']) && !isset($txObject['Signers'])) {
+            throw new \Exception( 'The transaction must be signed to hash it.');
+        }
+
+        $prefix = strtoupper(dechex(HashPrefix::TRANSACTION_ID));
+
+        return MathUtilities::sha512Half($prefix . $txBlob)->toString();
     }
 
 

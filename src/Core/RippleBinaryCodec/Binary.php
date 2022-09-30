@@ -84,9 +84,4 @@ class Binary
 
         return $this->readJson($parser);
     }
-
-    public function sha512Half()
-    {
-
-    }
 }

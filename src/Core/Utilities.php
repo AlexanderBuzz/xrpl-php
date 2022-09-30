@@ -44,6 +44,20 @@ class Utilities
         return $account;
     }
 
+    public static function isValidXAddress($address): bool
+    {
+        $_this = self::getInstance();
+
+        return $_this->addressCodec->isValidXAddress($address);
+    }
+
+    public static function xAddressToClassicAddress(string $xAddress): array
+    {
+        $_this = self::getInstance();
+
+        return $_this->addressCodec->xAddressToClassicAddress($xAddress);
+    }
+
     /**
      * @param Buffer|string $publicKey
      * @return string

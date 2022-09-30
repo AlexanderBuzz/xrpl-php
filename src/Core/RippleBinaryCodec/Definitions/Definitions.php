@@ -65,13 +65,6 @@ class Definitions
         return static::$instance;
     }
 
-    public function getTypeOrdinal(string $typeName): int
-    {
-        //Java
-        //return typeOrdinalMap.get(typeName);
-        return $this->typeOrdinals[$typeName];
-    }
-
     public function getFieldHeaderFromName(string $fieldName): FieldHeader
     {
         return $this->fieldHeaderMap[$fieldName];
@@ -90,7 +83,7 @@ class Definitions
         return new FieldInstance($fieldInfo, $fieldName, $fieldHeader);
     }
 
-    public function mapSpecificFieldFromValue(string $fieldName, string $value): int
+    public function mapSpecificFieldFromValue(string $fieldName, string $value): int|string
     {
         switch ($fieldName) {
             case "LedgerEntryType":
@@ -103,10 +96,11 @@ class Definitions
                 $lookup = $this->transactionTypes;
                 break;
             default:
-                return 0; //TODO: check
+                return $value;
         }
 
-        return (isset($lookup[$value])) ? $lookup[$value] : 0; //TODO: check
+        //TODO: In case the value is not found, should an exception be thrown?
+        return (isset($lookup[$value])) ? $lookup[$value] : $value;
     }
 
     public function mapValueToSpecificField(string $fieldName, string $value): string
