@@ -51,6 +51,13 @@ class Utilities
         return $_this->addressCodec->isValidXAddress($address);
     }
 
+    public static function classicAddressToXAddress(string $xAddress, mixed $tag, bool $isTestnet = false): string
+    {
+        $_this = self::getInstance();
+
+        return $_this->addressCodec->classicAddressToXAddress($xAddress, $tag, $isTestnet);
+    }
+
     public static function xAddressToClassicAddress(string $xAddress): array
     {
         $_this = self::getInstance();

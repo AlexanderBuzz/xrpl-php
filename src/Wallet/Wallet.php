@@ -149,46 +149,40 @@ class Wallet {
         ];
     }
 
-    /*
-    public function verifyTransaction()
+    /**
+     * Verifies a signed transaction offline.
+     *
+     * @param string $signedTransaction A signed transaction (hex string of signTransaction result) to be verified offline.
+     * @return bool Returns true if a signedTransaction is valid.
+     */
+    public function verifyTransaction(string $signedTransaction)
     {
-        //TODO: implement function
+        $tx = $this->binaryCodec->decode($signedTransaction);
+        $messageHex = $this->binaryCodec->encodeForSigning($tx);
+        $signature = $tx['TxnSignature'];
+        return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
+    }
+
+    /*
+    public function getXAddress(mixed $number, mixed $tag, bool $isTestnet = false): string
+    {
+
     }
     */
 
     private function computeSignature(array $tx, ?string $signAs = null): string
     {
-        /*
-        if (signAs) {
-            const classicAddress = isValidXAddress(signAs)
-                ? xAddressToClassicAddress(signAs).classicAddress
-                : signAs
-
-    return sign(encodeForMultisigning(tx, classicAddress), privateKey)
-  }
-        return sign(encodeForSigning(tx), privateKey)
-        */
         if($signAs) {
             if (Utilities::isValidXAddress($signAs)) {
                 $signAs = Utilities::xAddressToClassicAddress($signAs)['classicAddress'];
             }
             $encodedTx = $this->binaryCodec->encodeForMultisigning($tx, $signAs);
+        } else {
+            $encodedTx = $this->binaryCodec->encodeForSigning($tx);
         }
-        $encodedTx = $this->binaryCodec->encodeForSigning($tx);
 
         return $this->keyPairService->sign($encodedTx, $this->privateKey);
     }
-
-    /*
-    private function signingData(array $transactionData, string $prefix = HashPrefix::TRANSACTION_SIGN): string
-    {
-        $transactionData['prefix'] = $prefix;
-        $transactionData['signingFieldsOnly'] = true;
-
-        //return $this->serializeObject($transactionData, { prefix, signingFieldsOnly: true })
-        //TODO: implement function
-    }
-    */
 
     public function getAddress(): string|null
     {
@@ -224,14 +218,6 @@ class Wallet {
         return $this->seed;
     }
 
-    /**
-     * @param string $seed
-     */
-    public function setSeed(string $seed): void
-    {
-        $this->seed = $seed;
-    }
-
     private function hashSignedTx(Transaction|string $tx): string
     {
         if (is_string($tx)) {
@@ -251,6 +237,21 @@ class Wallet {
         return MathUtilities::sha512Half($prefix . $txBlob)->toString();
     }
 
-
+    /*
+    private function removeTrailingZeros(Transaction|array $tx): void
+    {
+        if (
+            $tx.TransactionType === 'Payment' &&
+            typeof tx.Amount !== 'string' &&
+        tx.Amount.value.includes('.') &&
+        tx.Amount.value.endsWith('0')
+  ) {
+        // eslint-disable-next-line no-param-reassign -- Required to update Transaction.Amount.value
+        tx.Amount = { ...tx.Amount }
+    // eslint-disable-next-line no-param-reassign -- Required to update Transaction.Amount.value
+    tx.Amount.value = new BigNumber(tx.Amount.value).toString()
+  }
+    }
+    */
 
 }
