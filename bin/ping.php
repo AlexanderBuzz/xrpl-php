@@ -4,7 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
 
-$client = new JsonRpcClient("http://s.altnet.rippletest.net:51233");
+$client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 $body = json_encode([
     "method" => "server_info",
