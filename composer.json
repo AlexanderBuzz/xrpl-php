@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "XRPL_PHP\\": "src/"
-    }
+    },
+    "files": [
+      "src/Utils/XrpConversion.php"
+    ]
   },
   "require": {
     "guzzlehttp/guzzle": "^7.4",
