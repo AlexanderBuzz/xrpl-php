@@ -16,10 +16,10 @@ class AccountObjectsRequest extends BaseRequest
     public function __construct(
         protected string $account,
         protected ?string $type = null,
-        protected ?bool $deletionBlockersOnly = null,
         protected ?string $ledgerHash = null,
         protected ?string $ledgerIndex = null,
         protected ?int $limit = null,
+        protected ?bool $deletionBlockersOnly = null,
         //TODO: Marker https://xrpl.org/markers-and-pagination.html
     ) {}
 }

@@ -20,7 +20,9 @@
       "XRPL_PHP\\": "src/"
     },
     "files": [
-      "src/Utils/XrpConversion.php"
+      "src/Sugar/autofill.php",
+      "src/Sugar/balances.php",
+      "src/Sugar/xrpConversion.php"
     ]
   },
   "require": {

@@ -13,7 +13,7 @@ $body = json_encode([
     ]
 ]);
 
-$response = $client->request('GET', '', $body);
+$response = $client->rawSyncRequest('GET', '', $body);
 
 $content = $response->getBody()->getContents();
 

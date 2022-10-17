@@ -17,11 +17,11 @@ class Payment extends BaseTransaction
     public function __construct(
         protected Amount|string $amount,
         protected string $destination,
-        protected ?string $destinationTag,
-        protected ?string $invoiceId,
-        protected ?string $paths, //TODO: check type -> Path
-        protected ?string $sendMax, //TODO: check type -> Amount
-        protected ?string $deliverMin //TODO: check type -> Amount
+        protected ?string $destinationTag = null,
+        protected ?string $invoiceId = null,
+        protected ?string $paths = null, //TODO: check type -> Path
+        protected ?string $sendMax = null, //TODO: check type -> Amount
+        protected ?string $deliverMin = null //TODO: check type -> Amount
     ) {}
 
     public function getPayload(): array

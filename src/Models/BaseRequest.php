@@ -32,6 +32,11 @@ abstract class BaseRequest
         ];
     }
 
+    public function getJson(): string
+    {
+        return json_encode($this->getBody());
+    }
+
     public function fromArray(array $body): void
     {
         //Perhaps we want to create this thing from an array

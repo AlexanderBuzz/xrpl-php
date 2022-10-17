@@ -66,7 +66,7 @@ class StObject extends SerializedType
             $fieldInstance = $definitions->getFieldInstance($key);
 
             if (is_array($value)) {
-                json_encode($value);
+                $value = json_encode($value);
             } else if (is_string($value)) {
                 $value = $definitions->mapSpecificFieldFromValue($key, $value);
             }

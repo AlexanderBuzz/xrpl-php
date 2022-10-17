@@ -9,7 +9,6 @@ use XRPL_PHP\Models\Transactions\Hash256;
 use XRPL_PHP\Models\Transactions\Payment;
 use XRPL_PHP\Wallet\Wallet;
 
-//$client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 $wallet = Wallet::generate(); //Mostly hardcoded so far
@@ -21,7 +20,7 @@ $body = json_encode($pingRequest->getBody());
 print_r(PHP_EOL . PHP_EOL . "--- Ping Request: ---" . PHP_EOL);
 print_r($body);
 
-$response = $client->request('POST', '', $body);
+$response = $client->rawSyncRequest('POST', '', $body);
 $content = $response->getBody()->getContents();
 
 print_r(PHP_EOL . PHP_EOL . "--- Ping Response: ---" . PHP_EOL);
@@ -34,7 +33,7 @@ $body = json_encode($ledgerRequest->getBody());
 print_r(PHP_EOL . PHP_EOL . "--- Ledger Request: ---" . PHP_EOL);
 print_r($body);
 
-$response = $client->request('POST', '', $body);
+$response = $client->rawSyncRequest('POST', '', $body);
 $content = $response->getBody()->getContents();
 
 print_r(PHP_EOL . PHP_EOL . "--- Ledger Response: ---" . PHP_EOL);

@@ -44,6 +44,13 @@ class Utilities
         return $account;
     }
 
+    public static function isValidClassicAddress($address): bool
+    {
+        $_this = self::getInstance();
+
+        return $_this->addressCodec->isValidClassicAddress($address);
+    }
+
     public static function isValidXAddress($address): bool
     {
         $_this = self::getInstance();
