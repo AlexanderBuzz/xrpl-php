@@ -4,7 +4,7 @@ namespace XRPL_PHP\Models\Transactions;
 
 use XRPL_PHP\Models\Common\Amount;
 
-class Payment extends BaseTransaction
+class Payment extends Transaction
 {
     public const PAYMENT_FLAG_TF_NO_DIRECT_RIPPLE = 0x00010000;
 
@@ -42,14 +42,14 @@ class Payment extends BaseTransaction
     public function autofill(): array
     {
         return [
-            BaseTransaction::JSON_PROPERTY_NAME_TRANSACTION_TYPE => $this->transactionType,
-            BaseTransaction::JSON_PROPERTY_NAME_ACCOUNT => $this->getAccount(),
-            BaseTransaction::JSON_PROPERTY_NAME_AMOUNT => $this->getAmount(),
-            BaseTransaction::JSON_PROPERTY_NAME_DESTINATION => $this->getDestination(),
-            BaseTransaction::JSON_PROPERTY_NAME_FEE => "12",
-            BaseTransaction::JSON_PROPERTY_NAME_FLAGS => 0,
-            BaseTransaction::JSON_PROPERTY_NAME_LAST_LEDGER_SEQUENCE => 26465005,
-            BaseTransaction::JSON_PROPERTY_NAME_SEQUENCE => 26366450,
+            Transaction::JSON_PROPERTY_NAME_TRANSACTION_TYPE => $this->transactionType,
+            Transaction::JSON_PROPERTY_NAME_ACCOUNT => $this->getAccount(),
+            Transaction::JSON_PROPERTY_NAME_AMOUNT => $this->getAmount(),
+            Transaction::JSON_PROPERTY_NAME_DESTINATION => $this->getDestination(),
+            Transaction::JSON_PROPERTY_NAME_FEE => "12",
+            Transaction::JSON_PROPERTY_NAME_FLAGS => 0,
+            Transaction::JSON_PROPERTY_NAME_LAST_LEDGER_SEQUENCE => 26465005,
+            Transaction::JSON_PROPERTY_NAME_SEQUENCE => 26366450,
         ];
     }
 

@@ -12,7 +12,7 @@ use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Core\Utilities;
-use XRPL_PHP\Models\Transactions\BaseTransaction as Transaction;
+use XRPL_PHP\Models\Transactions\Transaction as Transaction;
 
 class Wallet {
 

@@ -13,9 +13,10 @@ use Psr\Http\Message\ResponseInterface;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\Methods\BaseResponse;
-use XRPL_PHP\Models\Transactions\BaseTransaction;
+use XRPL_PHP\Models\Transactions\Transaction;
 use XRPL_PHP\Wallet\Wallet;
 
+use function XRPL_PHP\Sugar\autofill;
 use function XRPL_PHP\Sugar\getXrpBalance;
 
 class JsonRpcClient
@@ -122,41 +123,41 @@ class JsonRpcClient
         $startingBalance = 0;
     }
 
+    public function autofill(Transaction $transaction): PromiseInterface
+    {
+        return autofill($this, $transaction);
+    }
+
     /*
-    public function autofill()
-    {
-        //TODO: implement function
-    }
+        public function getBalances()
+        {
+            //TODO: implement function
+        }
 
-    public function getBalances()
-    {
-        //TODO: implement function
-    }
+        public function getLedgerIndex()
+        {
+            //TODO: implement function
+        }
 
-    public function getLedgerIndex()
-    {
-        //TODO: implement function
-    }
+        public function getOrderBook()
+        {
+            //TODO: implement function
+        }
 
-    public function getOrderBook()
-    {
-        //TODO: implement function
-    }
+        public function prepareTransaction()
+        {
+            //TODO: implement function
+        }
 
-    public function prepareTransaction()
-    {
-        //TODO: implement function
-    }
+        public function submit()
+        {
+            //TODO: implement function
+        }
 
-    public function submit()
-    {
-        //TODO: implement function
-    }
+        public function submitAndWait()
+        {
+               //TODO: implement function
+        }
 
-    public function submitAndWait()
-    {
-           //TODO: implement function
-    }
-
-    */
+        */
 }

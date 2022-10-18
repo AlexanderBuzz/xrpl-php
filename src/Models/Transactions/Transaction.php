@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Models\Transactions;
 
-abstract class BaseTransaction
+abstract class Transaction
 {
     public const JSON_PROPERTY_NAME_TRANSACTION_TYPE = "TransactionType";
     public const JSON_PROPERTY_NAME_ACCOUNT = "Account";
@@ -15,25 +15,7 @@ abstract class BaseTransaction
     public const JSON_PROPERTY_SIGNING_PUBLIC_KEY = "SigningPubKey";
     public const JSON_PROPERTY_TRANSACTION_SIGNATURE = "TxnSignature";
 
-    private string $transactionType;
-
-    private string $account;
-
     public abstract function getPayload(): array;
 
-    /**
-     * @return string
-     */
-    public function getAccount(): string
-    {
-        return $this->account;
-    }
-
-    /**
-     * @param string $account
-     */
-    public function setAccount(string $account): void
-    {
-        $this->account = $account;
-    }
+    public abstract function toArray(): array;
 }
