@@ -14,15 +14,14 @@ class LedgerRequest extends BaseRequest //JsonSerializable https://www.php.net/m
     protected string $command = "ledger";
 
     public function __construct(
-        protected string|int $id,
-        protected Hash256 $ledgerHash,
-        protected ?int $apiVersion = null,
+        protected ?string $ledgerHash = null,
+        protected ?string $ledgerIndex = null,
         protected ?bool $full = false,
         protected ?bool $accounts = false,
         protected ?bool $transactions = false,
         protected ?bool $expand = false,
         protected ?bool $ownerFunds = false,
-        //binary
-        //queue
+        protected ?bool $binary = false,
+        protected ?bool $queue = false
     ) {}
 }

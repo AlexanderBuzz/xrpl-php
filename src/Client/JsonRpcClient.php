@@ -12,24 +12,45 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\BaseRequest;
+use XRPL_PHP\Models\Ledger\LedgerRequest;
 use XRPL_PHP\Models\Methods\BaseResponse;
 use XRPL_PHP\Models\Transactions\Transaction;
 use XRPL_PHP\Wallet\Wallet;
 
 use function XRPL_PHP\Sugar\autofill;
+use function XRPL_PHP\Sugar\getLedgerIndex;
 use function XRPL_PHP\Sugar\getXrpBalance;
 
 class JsonRpcClient
 {
+    private const DEFAULT_FEE_CUSHION = 1.2;
+    private const DEFAULT_MAX_FEE_XRP = '2';
+
+    private const MIN_LIMIT = 10;
+    private const MAX_LIMIT = 400;
+
+    private const NORMAL_DISCONNECT_CODE = 1000;
+
     private Client $restClient;
 
     private string $connectionUrl;
 
+    private float $feeCushion;
+
+    private string $maxFeeXrp;
+
     private float $timeout = 3.0;
 
-    public function __construct(string $connectionUrl)
-    {
+    public function __construct(
+        string $connectionUrl,
+        ?float $feeCushion = null,
+        ?string $maxFeeXrp  =null
+    ) {
         $this->connectionUrl = $connectionUrl;
+
+        $this->feeCushion = $feeCushion ?? self::DEFAULT_FEE_CUSHION;
+
+        $this->maxFeeXrp = $maxFeeXrp ?? self::DEFAULT_MAX_FEE_XRP;
 
         $stack = HandlerStack::create(new CurlHandler());
 
@@ -89,6 +110,32 @@ class JsonRpcClient
         ///TODO: implement function
     }
 
+    /**
+     * @return float
+     */
+    public function getFeeCushion(): float
+    {
+        return $this->feeCushion;
+    }
+
+    public function getLedgerIndex(): int
+    {
+        $ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
+
+        $response = $this->request($ledgerRequest)->wait();
+        $json = json_decode($response->getBody());
+
+        return $json['result']['ledger_index'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getMaxFeeXrp(): string
+    {
+        return $this->maxFeeXrp;
+    }
+
     private function getCollectKeyFromCommand(string $command): string|null
     {
         return match ($command) {
@@ -123,18 +170,13 @@ class JsonRpcClient
         $startingBalance = 0;
     }
 
-    public function autofill(Transaction $transaction): PromiseInterface
+    public function autofill(Transaction|array &$tx): array
     {
-        return autofill($this, $transaction);
+        return autofill($this, $tx);
     }
 
     /*
         public function getBalances()
-        {
-            //TODO: implement function
-        }
-
-        public function getLedgerIndex()
         {
             //TODO: implement function
         }

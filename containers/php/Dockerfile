@@ -5,6 +5,7 @@ RUN apk update  \
     && apk add gmp-dev \
     && apk add --no-cache bash $PHPIZE_DEPS \
     && docker-php-ext-install gmp \
+    && docker-php-ext-install sockets \
     && pecl install xdebug-3.1.3 \
     && pecl install ds
 

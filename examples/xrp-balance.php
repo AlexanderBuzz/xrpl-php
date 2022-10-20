@@ -26,5 +26,7 @@ $response = $client->syncRequest($xrpBalanceRequest);
 $content = $response->getBody()->getContents();
 $json = json_decode($content, true);
 
+print_r(PHP_EOL);
 print_r("XRP Balance for Wallet {$testnetOperationalAccountAddress} is {$json['result']['account_data']['Balance']} XRP");
+print_r(PHP_EOL);
 

@@ -2,6 +2,8 @@
 
 namespace Sugar;
 
+use donatj\MockWebServer\MockWebServer;
+use donatj\MockWebServer\Response;
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Client\JsonRpcClient;
 use function XRPL_PHP\Sugar\dropsToXrp;
@@ -13,8 +15,10 @@ use function XRPL_PHP\Sugar\xrpToDrops;
 
 class AutofillTest  extends TestCase
 {
+    protected static MockWebServer $server;
+
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";
-    private const LOCAL_URL = "http://host.docker.internal";
+    private const LOCAL_URL = "http://host.docker.internal:5005";
 
     private const Fee = '10';
     private const Sequence = 1432;
@@ -22,9 +26,15 @@ class AutofillTest  extends TestCase
 
     private JsonRpcClient $client;
 
+    public static function setUpBeforeClass(): void {
+        self::$server = new MockWebServer();
+        self::$server->start();
+    }
+
     public function setUp(): void
     {
-        $this->client = new JsonRpcClient(self::TESTNET_URL);
+        $mockRippledUrl = self::$server->getServerRoot();
+        $this->client = new JsonRpcClient($mockRippledUrl);
     }
     public function testAutofill(): void
     {
@@ -38,6 +48,10 @@ class AutofillTest  extends TestCase
             "LastLedgerSequence" => self::LastLedgerSequence,
         ];
 
-        $result = $this->client->autofill()->wait();
+        $autofillTx = $this->client->autofill($tx);
+
+        $this->assertEquals(self::Fee, $autofillTx['Fee']);
+        $this->assertEquals(self::Sequence, $autofillTx['Sequence']);
+        $this->assertEquals(self::LastLedgerSequence, $autofillTx['LastLedgerSequence']);
     }
 }

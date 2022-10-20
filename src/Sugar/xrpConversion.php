@@ -38,7 +38,7 @@ if (! function_exists('XRPL_PHP\Sugar\xrpToDrops')) {
     /**
      * Create a new queued Closure event listener.
      *
-     * @param  string $xrpToconvert
+     * @param  string $xrpToConvert
      * @return string
      */
     function xrpToDrops(string $xrpToConvert): string
@@ -58,6 +58,6 @@ if (! function_exists('XRPL_PHP\Sugar\xrpToDrops')) {
             throw new Exception("xrpToDrops: value  \"{$xrp}\" has too many decimal places.");
         }
 
-        return BigDecimal::of($xrp)->multipliedBy(DROPS_PER_XRP)->toBigInteger();
+        return BigDecimal::of($xrp)->multipliedBy(DROPS_PER_XRP)->toBigInteger()->toBase(10);
     }
 }
