@@ -47,4 +47,21 @@ final class CurrencyTest extends TestCase
             Currency::fromJson("xSD")->toHex()
         );
     }
+
+    public function testDecodeCustom(): void
+    {
+        $customCode = str_pad("00", 40,"11", STR_PAD_RIGHT);
+        $this->assertEquals(
+            $customCode,
+            Currency::fromHex($customCode)->toHex()
+        );
+    }
+
+    public function testEncodeCustom() {
+        $customCode = str_pad("00", 40,"11", STR_PAD_RIGHT);
+        $this->assertEquals(
+            $customCode,
+            Currency::fromJson("\"" . $customCode . "\"")->toHex()
+        );
+  }
 }
