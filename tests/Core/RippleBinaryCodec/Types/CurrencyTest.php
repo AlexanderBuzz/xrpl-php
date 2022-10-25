@@ -57,11 +57,21 @@ final class CurrencyTest extends TestCase
         );
     }
 
-    public function testEncodeCustom() {
+    public function testEncodeCustom(): void
+    {
         $customCode = str_pad("", 40,"11", STR_PAD_RIGHT);
         $this->assertEquals(
             $customCode,
-            Currency::fromJson("\"" . $customCode . "\"")->toHex()
+            Currency::fromJson($customCode)->toHex()
         );
-  }
+    }
+
+    public function testInvalidCurrencyType(): void
+    {
+        $customCode = str_pad("00", 40,"11", STR_PAD_RIGHT);
+
+        $this->expectExceptionMessage('Unsupported Currency representation: ' . $customCode);
+
+        Currency::fromJson($customCode)->toHex();
+    }
 }
