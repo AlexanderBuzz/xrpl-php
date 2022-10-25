@@ -10,3 +10,5 @@ RUN apk update  \
     && pecl install ds
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app

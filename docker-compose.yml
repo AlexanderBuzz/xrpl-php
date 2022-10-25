@@ -1,8 +1,15 @@
 version: '3.7'
 
 services:
-  fpm:
+  php:
     build:
       context: containers/php
     volumes:
       - .:/app
+
+  rippled:
+    container_name: rippled
+    image: natenichols/rippled-standalone:latest
+    ports:
+      - "5005:5005"
+      - "6006:6006"

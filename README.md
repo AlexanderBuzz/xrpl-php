@@ -22,7 +22,7 @@ around late September / middle of October.
 In the host directory:
 ```
 docker-compose up  -d
-docker-compose exec -u 0 fpm bash
+docker-compose exec -u 0 php bash
 ```
 In the container shell:
 ```
@@ -31,7 +31,6 @@ composer install
 
 ### Run Examples 
 ```
-cd /app
 php examples/address-codec.php
 php examples/binary-codec.php
 php examples/client.php
