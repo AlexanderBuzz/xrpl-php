@@ -15,9 +15,9 @@ jobs:
           tools: composer, phpunit
           extensions: ds, gmp, sockets
           coverage: none
-        env:
-          runner: self-hosted
-          fail-fast: true
+#        env:
+#          runner: self-hosted
+#          fail-fast: true
 
       - name: Install composer dependencies
         uses: php-actions/composer@v6
