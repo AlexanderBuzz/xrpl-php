@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Client;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
@@ -136,6 +137,14 @@ class JsonRpcClient
         return $this->maxFeeXrp;
     }
 
+    /**
+     * @return string
+     */
+    public function getConnectionUrl(): string
+    {
+        return $this->connectionUrl;
+    }
+
     private function getCollectKeyFromCommand(string $command): string|null
     {
         return match ($command) {
@@ -156,18 +165,27 @@ class JsonRpcClient
 
     public function fundWallet(Wallet $wallet = null): Wallet
     {
-
+        // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
         if ($wallet && Utilities::isValidClassicAddress($wallet->getClassicAddress())) {
             $walletToFund = $wallet;
         } else {
             $walletToFund = Wallet::generate();
         }
 
+        // Create the POST request body
         $body = [
             'destination' => $walletToFund->getClassicAddress()
         ];
 
         $startingBalance = 0;
+
+        try {
+            $this->getXrpBalance($walletToFund->getClassicAddress());
+        } catch (Exception $e) {
+            // startingBalance remains '0'
+        }
+
+        // Options to pass to https.request
     }
 
     public function autofill(Transaction|array &$tx): array

@@ -7,16 +7,7 @@ use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\Transactions\TxRequest;
 use XRPL_PHP\Models\Utility\PingRequest;
 
-/**
- * Let's test against a real ledger, for now the Testnet. Inspiration from xrpl.py:
- *
- * Integration Tests
- * To run integration tests, you'll need a standalone rippled node running with WS port 6006
- * and JSON RPC port 5005. You can run a docker container for this:
- *
- * docker run -p 5005:5005 -p 6006:6006 -it natenichols/rippled-standalone:latest
- */
-class BasicIntegrationTest extends TestCase
+class FundWalletTest extends TestCase
 {
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";
 
@@ -27,7 +18,7 @@ class BasicIntegrationTest extends TestCase
         $this->client = new JsonRpcClient(self::TESTNET_URL);
     }
 
-    public function testPing(): void
+    public function testGenerateTestnetWallet(): void
     {
         $pingRequest = new PingRequest();
 

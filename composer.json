@@ -23,6 +23,7 @@
     "files": [
       "src/Sugar/autofill.php",
       "src/Sugar/balances.php",
+      "src/Sugar/fundWallet.php",
       "src/Sugar/getFeeXrp.php",
       "src/Sugar/xrpConversion.php"
     ]
