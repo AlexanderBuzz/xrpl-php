@@ -37,6 +37,7 @@
     "phpunit/phpunit": "^9",
     "vimeo/psalm": "^4.23",
     "donatj/mock-webserver": "^2.5",
+    "ext-gmp": "*",
     "ext-sockets": "*"
   }
 }
