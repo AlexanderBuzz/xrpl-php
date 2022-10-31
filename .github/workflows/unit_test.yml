@@ -13,7 +13,7 @@ jobs:
         with:
           php-version: '8.1'
           tools: composer, phpunit
-          extensions: gmp, sockets, ds
+          extensions: gmp, ds
           coverage: none
         env:
           runner: self-hosted
