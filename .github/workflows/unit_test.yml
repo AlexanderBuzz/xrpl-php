@@ -1,0 +1,45 @@
+name: Unit Test
+on: push
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer, phpunit
+          extensions: gmp, sockets, ds
+          coverage: none
+        env:
+          runner: self-hosted
+          fail-fast: true
+
+      - name: Install composer dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.1"
+          version: latest
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit ./tests
+
+  #    - name: Run PHPUnit
+  #      run: vendor/bin/phpunit --fail-on-skipped
+  #      if: ${{ matrix.php-version != '8.1' }}
+  #
+  #    - name: Run PHPUnit with coverage
+  #      run: |
+  #        mkdir -p build/logs
+  #        vendor/bin/phpunit --fail-on-skipped --coverage-clover build/logs/clover.xml
+  #      if: ${{ matrix.php-version == '8.1' }}
+  #
+  #    - name: Upload coverage report to Coveralls
+  #      run: vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
+  #      env:
+  #        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #      if: ${{ matrix.php-version == '8.1' }}
