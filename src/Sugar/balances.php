@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Sugar;
 
+use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
 use GuzzleHttp\Promise\Promise;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
@@ -21,6 +22,9 @@ function formatBalances(array $trustlines): array
 
 if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
 
+    /**
+     * @throws Exception
+     */
     function getXrpBalance(
         JsonRpcClient $client,
         string $address,
@@ -28,7 +32,8 @@ if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
         ?string $ledgerIndex = null,
     ): string
     {
-        $xrpRequest = new AccountInfoRequest($address, $ledgerIndex, $ledgerIndex || 'validated', );
+        //$xrpRequest = new AccountInfoRequest($address, $ledgerIndex, $ledgerIndex || 'validated');
+        $xrpRequest = new AccountInfoRequest($address);
         $body = json_encode($xrpRequest->getBody());
         $response = $client->rawSyncRequest('POST', '', $body);
 
@@ -50,6 +55,8 @@ if (! function_exists('XRPL_PHP\Sugar\getBalances')) {
         ?int $limit = null
     ): array
     {
+        //TODO: Complete this function!
+
         $balances = [];
 
         $xrp = '';

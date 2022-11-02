@@ -14,12 +14,13 @@ use XRPL_PHP\Models\Account\AccountInfoRequest;
  * by using the above link
  */
 
-$testnetStandbyAccountAddress = 'raKXrkYfbh4Uzqc481jTXbaKsWnW5XRMjp'; //Address, not seed!
-$testnetOperationalAccountAddress = 'rBfXsGX5V8jcyKaPMCTcPvfVQzb4nEQymz'; //Address, not seed!
+//$testnetStandbyAccountAddress = 'raKXrkYfbh4Uzqc481jTXbaKsWnW5XRMjp'; //Address, not seed!
+//$testnetOperationalAccountAddress = 'rBfXsGX5V8jcyKaPMCTcPvfVQzb4nEQymz'; //Address, not seed!
+$testnetOperationalAccountAddress = 'rN7T1bzCHSwQu6adkqPJAtvF4mdf1FMuG6'; //Address, not seed!
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
-$xrpBalanceRequest = new AccountInfoRequest($testnetStandbyAccountAddress);
+$xrpBalanceRequest = new AccountInfoRequest($testnetOperationalAccountAddress);
 $body = json_encode($xrpBalanceRequest->getBody());
 $response = $client->syncRequest($xrpBalanceRequest);
 

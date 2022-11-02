@@ -49,13 +49,32 @@ use XRPL_PHP\Wallet\Wallet;
         throw new Exception('Faucet URL is not defined or inferrable.');
     }
 
+    function getUpdatedBalance(JsonRpcClient $client, string $address, float $originalBalance): float
+    {
+        $newBalance = null;
+        try {
+            $newBalance = (float) $client->getXrpBalance($address);
+        } catch (Exception $e) {
+            //new Balance remains undefined
+        }
+
+        if ($newBalance > $originalBalance) {
+
+        }
+
+        //resolve: (response: { wallet: Wallet; balance: number }) => void,
+        //reject: (err: ErrorConstructor | Error | unknown) => void,
+
+        return 0;
+    }
+
     if (! function_exists('XRPL_PHP\Sugar\fundWallet')) {
 
         function fundWallet(
             JsonRpcClient $client,
             ?Wallet $wallet = null,
             ?string $faucetHost = null
-        ): PromiseInterface
+        ): array
         {
             // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
             if ($wallet && Utilities::isValidClassicAddress($wallet->getClassicAddress())) {
@@ -66,20 +85,13 @@ use XRPL_PHP\Wallet\Wallet;
 
             // Create the POST request body
             $jsonData = json_encode(['destination' => $walletToFund->getClassicAddress()]);
-            //$postBody = Buffer::from($jsonData);
 
             $startingBalance = 0;
-
             try {
                 $startingBalance = getXrpBalance($client, $walletToFund->getClassicAddress());
             } catch (Exception $e) {
-                $test =1;
                 // startingBalance remains '0'
             }
-
-            // Options to pass to https.request
-
-            //$httpOptions = getHttpOptions($client, $postBody, $faucetHost);
 
             if (!is_null($faucetHost)) {
                 $faucetClient = new JsonRpcClient($faucetHost);
@@ -91,8 +103,38 @@ use XRPL_PHP\Wallet\Wallet;
                 method: 'POST',
                 resource: '/accounts',
                 body: $jsonData
-            );
+            )->wait();
 
-            return $response;
+            //TODO: check status code and content type
+            $faucetWallet = json_decode($response->getBody(), true);
+
+            if (!isset($faucetWallet['account']['address'])) {
+
+            }
+
+            $classicAddress = $faucetWallet['account']['address'];
+
+            $updatedBalance = $startingBalance;
+
+            $intervalSeconds = 1;
+            $attempts = 20;
+            while ($attempts > 0) {
+                try {
+                    $updatedBalance = (float) getXrpBalance($client, $classicAddress);
+                    if ($updatedBalance > $startingBalance) {
+                        break;
+                    }
+                } catch (Exception $e) {
+                    sleep($intervalSeconds);
+                    echo $attempts . PHP_EOL;
+                    $attempts--;
+                }
+            }
+
+            return [
+                'wallet' => $walletToFund,
+                'balance' => $updatedBalance,
+                'fundWalletResponse' => json_decode($response->getBody(), true)
+            ];
         }
     }

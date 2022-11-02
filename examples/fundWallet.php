@@ -12,9 +12,9 @@ $testnetStandbyAccountAddress = 'raKXrkYfbh4Uzqc481jTXbaKsWnW5XRMjp';
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
-$fundWalletResponse = fundWallet($client)->wait();
+$fundWalletResponse = fundWallet($client);
 
-$json = json_decode($fundWalletResponse->getBody());
-
-print_r($json);
+print_r(PHP_EOL);
+print_r('New wallet address: ' . $fundWalletResponse['wallet']->getAddress() . PHP_EOL);
+print_r('New wallet balance: ' . $fundWalletResponse['balance']  . ' XRP' .  PHP_EOL);
 
