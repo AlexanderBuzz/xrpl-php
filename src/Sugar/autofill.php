@@ -2,24 +2,14 @@
 
 namespace XRPL_PHP\Sugar;
 
-use BI\BigInteger;
 use Brick\Math\BigDecimal;
-use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
 use XRPL_PHP\Client\JsonRpcClient;
-use GuzzleHttp\Promise\Promise;
-use GuzzleHttp\Promise\Utils as PromiseUtilities;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
-use XRPL_PHP\Models\Account\AccountLinesRequest;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
 use XRPL_PHP\Models\Methods\ServerStateRequest;
-use XRPL_PHP\Models\Transactions\Transaction;
-
-use function XRPL_PHP\Sugar\getFeeXrp;
-use function XRPL_PHP\Sugar\xrpToDrops;
 
 function setValidAddresses (array &$tx): void
 {
@@ -91,7 +81,7 @@ function convertToClassicAddress (array &$tx, string $fieldName): void
     }
 }
 
-function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): string
+function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
 {
     $accountInfoRequest = new AccountInfoRequest(
             account: $tx['Account'],
@@ -99,7 +89,7 @@ function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): string
     );
 
     $response = $client->request($accountInfoRequest)->wait();
-    $json = json_decode($response->getBody());
+    $json = json_decode($response->getBody(), true);
 
     $tx['Sequence'] = $json['result']['account_data']['Sequence'];
 }
@@ -120,7 +110,7 @@ function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
     return BigDecimal::of($fee);
 }
 
-function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, int $signersCount = 0): void
+function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int $signersCount = 0): void
 {
     $netFeeXrp = getFeeXrp($client);
     $netFeeDrops = xrpToDrops($netFeeXrp);
@@ -149,7 +139,7 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, int 
     $totalFee = ($tx['TransactionType'] === 'AccountDelete') ? $baseFee : BigDecimal::min($baseFee, $maxFeeDrops);
 
     // Round up baseFee and return it as a string
-    $tx['Fee'] = $totalFee->toScale(0, RoundingMode::CEILING)->toBase(10);
+    $tx['Fee'] = (string) $totalFee->toScale(0, RoundingMode::CEILING);
 }
 
 function scaleValue ($value, $multiplier): string
@@ -164,7 +154,7 @@ function setLatestValidatedLedgerSequence (JsonRpcClient $client, array &$tx): v
     $tx['LastLedgerSequence'] = $ledgerSequence + $ledgerOffset;
 }
 
-function checkAccountDeleteBlockers (JsonRpcClient $client, array $tx): void
+function checkAccountDeleteBlockers (JsonRpcClient $client, array &$tx): void
 {
     $request = new AccountObjectsRequest(
         account: $tx['Account'],
@@ -194,34 +184,25 @@ if (! function_exists('XRPL_PHP\Sugar\autofill')) {
         //TODO: check function
         //setTransactionFlagsToNumber($tx);
 
-        $promises = [];
-
-        //TODO: check call by reference
-
-        if ($tx['Sequence'] === null) {
-            $promises[] = new Promise(function() use ($client, &$tx) {
-                setLatestValidatedLedgerSequence($client, $tx);
-            });
+        if (!isset($tx['Sequence'])) {
+            setNextValidSequenceNumber($client, $tx);
         }
 
-        if ($tx['Fee'] === null) {
-            $promises[] =  new Promise(function() use ($client, &$tx, $signersCount) {
-                calculateFeePerTransactionType($client, $tx, $signersCount);
-            });
+        if (!isset($tx['Fee'])) {
+            calculateFeePerTransactionType($client, $tx, $signersCount);
         }
 
-        if ($tx['LastLedgerSequence'] === null) {
-            $promises[] = new Promise(function() use ($client, &$tx) {
-                setLatestValidatedLedgerSequence($client, $tx);
-            });
+        if (!isset($tx['LastLedgerSequence'])) {
+            setLatestValidatedLedgerSequence($client, $tx);
         }
 
-        if ($tx['TransactionType'] === 'AccountDelete') {
-            $promises[] = new Promise(function() use ($client, &$tx) {
-                checkAccountDeleteBlockers($client, $tx);
-            });
+        if (!isset($tx['TransactionType'])) {
+            checkAccountDeleteBlockers($client, $tx);
         }
 
-        return PromiseUtilities::all($promises)->then(fn() => $tx)->wait();
+        unset($tx['SourceTag']);      //TODO: Clean this out
+        unset($tx['DestinationTag']); //TODO: Clean this out
+
+        return $tx;
     }
 }

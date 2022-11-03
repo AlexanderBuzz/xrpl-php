@@ -19,7 +19,7 @@ if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
        $serverInfoRequest = new ServerInfoRequest();
 
        $response = $client->request($serverInfoRequest)->wait();
-       $json = json_decode($response->getBody());
+       $json = json_decode($response->getBody(), true);
 
        $serverInfo = $json['result']['info'];
 

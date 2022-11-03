@@ -121,10 +121,11 @@ class JsonRpcClient
 
     public function getLedgerIndex(): int
     {
+        //$ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
         $ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
 
         $response = $this->request($ledgerRequest)->wait();
-        $json = json_decode($response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         return $json['result']['ledger_index'];
     }

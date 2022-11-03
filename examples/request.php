@@ -26,7 +26,7 @@ $content = $response->getBody()->getContents();
 print_r(PHP_EOL . PHP_EOL . "--- Ping Response: ---" . PHP_EOL);
 print_r($content);
 
-$ledgerRequest = new LedgerRequest(id:1, ledgerHash: new Hash256('1234'));
+$ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
 
 $body = json_encode($ledgerRequest->getBody());
 

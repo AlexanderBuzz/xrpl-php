@@ -20,7 +20,7 @@ $body = json_encode([
     ]
 ]);
 
-$response = $client->rawSyncRequest('GET', '', $body);
+$response = $client->rawSyncRequest('POST', '', $body);
 
 $content = $response->getBody()->getContents();
 

@@ -27,4 +27,18 @@ $tx = [
 
 $autofilledTx = $client->autofill($tx);
 
-print_r($autofilledTx);
+$signedTx = $standbyWallet->sign($autofilledTx);
+
+//https://xrpl.org/submit.html
+
+$body = json_encode([
+    "method" => "submit",
+    "params" => [
+        ["tx_blob" => $signedTx['tx_blob']]
+    ]
+]);
+
+$response = $client->rawSyncRequest('POST', '', $body);
+$content = $response->getBody()->getContents();
+
+print_r(json_decode($content, true));

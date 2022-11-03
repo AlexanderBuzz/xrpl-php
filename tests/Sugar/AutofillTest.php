@@ -36,9 +36,10 @@ class AutofillTest  extends TestCase
         $mockRippledUrl = self::$server->getServerRoot();
         $this->client = new JsonRpcClient($mockRippledUrl);
     }
-    public function testAutofill(): void
+    public function testPresentFields(): void
     {
         //should not autofill if fields are present
+
         $tx = [
             "TransactionType" => 'DepositPreauth',
             "Account" => 'rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf',
@@ -53,5 +54,21 @@ class AutofillTest  extends TestCase
         $this->assertEquals(self::Fee, $autofillTx['Fee']);
         $this->assertEquals(self::Sequence, $autofillTx['Sequence']);
         $this->assertEquals(self::LastLedgerSequence, $autofillTx['LastLedgerSequence']);
+    }
+
+    public function testConvertAddresses(): void
+    {
+        //converts Account & Destination X-address to their classic address
+
+        $tx = [
+            'TransactionType' => 'Payment',
+            'Account' => 'XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi',
+            'Amount' => '1234',
+            'Destination' => 'X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ',
+        ];
+
+        $autofillTx = $this->client->autofill($tx);
+
+        $this->assertEquals(true, false);
     }
 }
