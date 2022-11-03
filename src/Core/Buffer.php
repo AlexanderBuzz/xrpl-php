@@ -43,6 +43,9 @@ class Buffer implements ArrayAccess
 
         //Buffer from hex string 'ff03a5ed'
         if (gettype($source) === 'string' && $encoding === 'hex') {
+            if(strlen($source)%2) {
+                $source = '0' . $source;
+            }
             $tempArray = array_map('hexdec', str_split($source, 2));
             $bytesArray = SplFixedArray::fromArray($tempArray);
             $buffer->setBytesArray($bytesArray);
