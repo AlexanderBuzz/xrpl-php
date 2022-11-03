@@ -18,7 +18,7 @@ class MathUtilities
     public static function computePublicKeyHash(Buffer $bytes): Buffer
     {
         $binaryValue = hex2bin($bytes->toString());
-        $hash256 = hash('sha512', $binaryValue, true);
+        $hash256 = hash('sha256', $binaryValue, true);
         $hash160 = hash('ripemd160', $hash256, true);
         $hexValue = bin2hex($hash160);
 
