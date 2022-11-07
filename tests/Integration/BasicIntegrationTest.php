@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Integration;
+namespace XRPL_PHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Client\JsonRpcClient;
@@ -16,7 +16,7 @@ use XRPL_PHP\Models\Utility\PingRequest;
  *
  * docker run -p 5005:5005 -p 6006:6006 -it natenichols/rippled-standalone:latest
  */
-class BasicIntegrationTest extends TestCase
+final class BasicIntegrationTest extends TestCase
 {
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";
 

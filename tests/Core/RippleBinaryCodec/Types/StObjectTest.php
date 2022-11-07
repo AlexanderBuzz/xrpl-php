@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;

@@ -19,7 +19,8 @@ use XRPL_PHP\Models\Transactions\Transaction;
 use XRPL_PHP\Wallet\Wallet;
 
 use function XRPL_PHP\Sugar\autofill;
-use function XRPL_PHP\Sugar\getLedgerIndex;
+use function XRPL_PHP\Sugar\fundWallet;
+//use function XRPL_PHP\Sugar\getLedgerIndex;
 use function XRPL_PHP\Sugar\getXrpBalance;
 
 class JsonRpcClient
@@ -164,29 +165,9 @@ class JsonRpcClient
         return getXrpBalance($this, $address);
     }
 
-    public function fundWallet(Wallet $wallet = null): Wallet
+    public function fundWallet(JsonRpcClient $client, ?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
-        // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
-        if ($wallet && Utilities::isValidClassicAddress($wallet->getClassicAddress())) {
-            $walletToFund = $wallet;
-        } else {
-            $walletToFund = Wallet::generate();
-        }
-
-        // Create the POST request body
-        $body = [
-            'destination' => $walletToFund->getClassicAddress()
-        ];
-
-        $startingBalance = 0;
-
-        try {
-            $this->getXrpBalance($walletToFund->getClassicAddress());
-        } catch (Exception $e) {
-            // startingBalance remains '0'
-        }
-
-        // Options to pass to https.request
+        return fundWallet($client, $wallet, $faucetHost)['wallet'];
     }
 
     public function autofill(Transaction|array &$tx): array

@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Core\RippleBinaryCodec;
+
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
-class BinaryParserTest extends TestCase
+final class BinaryParserTest extends TestCase
 {
     public const SIMPLE_JSON = "{\"CloseResolution\":1,\"Method\":2}";
     public const SINGLE_LEVEL_OBJECT_JSON = "{\"Memo\":{\"Memo\":{\"Method\":2}}}";

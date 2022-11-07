@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Wallet;
+
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
@@ -7,7 +9,7 @@ use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Wallet\Wallet;
 
-class WalletTest extends TestCase
+final class WalletTest extends TestCase
 {
     private const CLASSIC_ADDRESS_PREFIX = 'r';
     private const ED25519_KEY_PRERFIX = 'ED';

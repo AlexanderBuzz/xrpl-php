@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Core;
+
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\Utilities;
 
-class UtilitiesTest extends TestCase
+final class UtilitiesTest extends TestCase
 {
     public function testSingletonUniqueness()
     {

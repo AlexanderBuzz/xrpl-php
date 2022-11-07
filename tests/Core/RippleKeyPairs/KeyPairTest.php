@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Core\RippleKeyPairs;
+
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
@@ -11,7 +13,7 @@ use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 /**
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-keypairs/test/api-test.js
  */
-class KeyPairTest extends TestCase
+final class KeyPairTest extends TestCase
 {
     private array $fixtures;
 

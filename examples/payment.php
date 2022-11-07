@@ -8,12 +8,12 @@ use XRPL_PHP\Wallet\Wallet;
 use function XRPL_PHP\Sugar\autofill;
 use function XRPL_PHP\Sugar\xrpToDrops;
 
-$testnetStandbyAccountSeed = 'sEd7FjgfnVmTnjvtQBe9qy2SYydiRqz';
-$testnetStandbyAccountAddress = 'r9yqc2rDs43YLX6uAy6fhdZs8FKykNS6zC';
+$testnetStandbyAccountSeed = 'sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k';
+$testnetStandbyAccountAddress = 'raJNboPDvjLrYZropPFrxvz2Qm7A9guEVd';
 $standbyWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
 
-$testnetOperationalAccountSeed = 'sEdSgEUuDQXSCH9Z1FuUezSW2zdkuFH';
-$testnetOperationalAccountAddress = 'rBfWDieu16DVYFKzS4FvCbCKXP9LCG2tVH';
+$testnetOperationalAccountSeed = 'sEdVHf8rNEaRveJw4NdVKxm3iYWFuRb';
+$testnetOperationalAccountAddress = 'rEQ3ik2kmAvajqpFweKgDghJFZQGpXxuRN';
 $operationalWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");

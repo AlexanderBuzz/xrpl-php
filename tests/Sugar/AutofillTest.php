@@ -1,6 +1,6 @@
 <?php
 
-namespace Sugar;
+namespace XRPL_PHP\Test\Sugar;
 
 use donatj\MockWebServer\MockWebServer;
 use donatj\MockWebServer\Response;
@@ -13,7 +13,7 @@ use function XRPL_PHP\Sugar\xrpToDrops;
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/autofill.ts
  */
 
-class AutofillTest  extends TestCase
+final class AutofillTest  extends TestCase
 {
     protected static MockWebServer $server;
 

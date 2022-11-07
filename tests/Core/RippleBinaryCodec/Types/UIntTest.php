@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+
 use Brick\Math\BigInteger;
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt8;

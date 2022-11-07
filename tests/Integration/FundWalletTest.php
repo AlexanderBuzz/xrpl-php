@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Integration;
+namespace XRPL_PHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\Transactions\TxRequest;
 use XRPL_PHP\Models\Utility\PingRequest;
 
-class FundWalletTest extends TestCase
+final class FundWalletTest extends TestCase
 {
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";
 
