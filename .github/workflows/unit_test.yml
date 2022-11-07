@@ -23,7 +23,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "8.1"
-          php_extensions: gmp, sockets
+          php_extensions: gmp sockets
           version: latest
 
       - name: Run PHPUnit
