@@ -24,7 +24,7 @@ class KeyPairTest extends TestCase
     protected function setUp(): void
     {
         //TODO: use relative file path
-        $raw = file_get_contents("/app/tests/Core/RippleKeyPairs/fixtures.json"); //TODO: use proper path
+        $raw = file_get_contents(__DIR__ . "/fixtures.json"); //TODO: use proper path
         $this->fixtures = json_decode($raw, true);
 
         $this->ed25519 = Ed25519KeyPairService::getInstance();

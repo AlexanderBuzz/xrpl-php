@@ -18,7 +18,7 @@ final class StObjectTest extends TestCase
 
     protected function setUp(): void
     {
-        $raw = file_get_contents("/app/tests/Core/RippleBinaryCodec/Types/fixtures.json"); //TODO: use proper path
+        $raw = file_get_contents(__DIR__ . "/fixtures.json"); //TODO: use proper path
         $this->fixtures = json_decode($raw, true);
 
         $this->json = ["Memo" => $this->fixtures['Memo']];

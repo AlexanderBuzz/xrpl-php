@@ -18,7 +18,7 @@ class BinaryCodecTest extends TestCase
 
     protected function setUp(): void
     {
-        $raw = file_get_contents("/app/tests/Core/RippleBinaryCodec/fixtures.json"); //TODO: use proper path
+        $raw = file_get_contents(__DIR__ . "/fixtures.json"); //TODO: use proper path
         $this->fixtures = json_decode($raw, true);
 
         $this->binaryCodec = new BinaryCodec();
