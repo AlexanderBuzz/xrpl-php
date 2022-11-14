@@ -21,11 +21,15 @@ $request = new AccountObjectsRequest(
 );
 
 //Test synchronous request
-$response = $client->syncRequest($request, true);
-$json = json_decode($response->getBody());
-print_r($json);
+/* @var $pingResponse \XRPL_PHP\Models\Account\AccountObjectsResponse */
+$accountObjectsResponse = $client->syncRequest($request);
+print_r('AccountObjectResult: ' . PHP_EOL);
+print_r($accountObjectsResponse);
+
+print_r(PHP_EOL . PHP_EOL);
 
 //Test asnychronous request
 $response = $client->request($request)->wait();
 $json = json_decode($response->getBody());
+print_r('raw AccountObjectsRequest response: ' . PHP_EOL);
 print_r($json);
