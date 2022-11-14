@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * Basic example using the client in RequestObject / ResponseObject  request mode
+ */
+
 require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
+use XRPL_PHP\Models\Methods\PingRequest;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
@@ -13,16 +18,12 @@ $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
  * $client = new JsonRpcClient("http://host.docker.internal:5005");
  */
 
-$body = json_encode([
-    "method" => "server_info",
-    "params" => [
-        ["api_version" => 1]
-    ]
-]);
+$pingRequest = new PingRequest();
 
-$response = $client->rawSyncRequest('POST', '', $body);
+/* @var $pingResponse \XRPL_PHP\Models\Methods\PingResponse */
+$pingResponse = $client->syncRequest($pingRequest);
 
-$content = $response->getBody()->getContents();
+$result = $pingResponse->getResult();
 
-print_r($content);
+print_r($result);
 

@@ -1,18 +1,31 @@
 <?php
 
-namespace XRPL_PHP\Models\Methods;
+namespace XRPL_PHP\Models;
 
-class BaseResponse
+abstract class BaseResponse
 {
-    //https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/baseMethod.ts
-    /*
-     *   id: number | string
-  status?: 'success' | string
-  type: 'response' | string
-  result: unknown
-  warning?: 'load'
-  warnings?: Warning[]
-  forwarded?: boolean
-  api_version?: number
-     */
+    protected int|string|null $id = null;
+
+    protected string $status = 'success';
+
+    protected string $type = 'response';
+
+    protected array $result = [];
+
+    protected string $warning = 'load';
+
+    protected bool $forwarded;
+
+    protected float $number;
+
+    public function __construct(
+        int|string|null $id = null,
+    ) {
+        $this->id = $id;
+    }
+
+    public function getResult(): array
+    {
+        return $this->result;
+    }
 }

@@ -21,7 +21,7 @@ $request = new AccountObjectsRequest(
 );
 
 //Test synchronous request
-$response = $client->syncRequest($request);
+$response = $client->syncRequest($request, true);
 $json = json_decode($response->getBody());
 print_r($json);
 

@@ -13,8 +13,8 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\BaseRequest;
+use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
-use XRPL_PHP\Models\Methods\BaseResponse;
 use XRPL_PHP\Models\Transactions\Transaction;
 use XRPL_PHP\Wallet\Wallet;
 
@@ -98,19 +98,33 @@ class JsonRpcClient
         return $this->restClient->send($request);
     }
 
-    public function syncRequest(BaseRequest $request): ResponseInterface
+    public function syncRequest(BaseRequest $request, ?bool $returnRawResponse = false): BaseResponse|ResponseInterface
     {
-        return $this->rawSyncRequest(
+        $response = $this->rawSyncRequest(
             'POST',
             '',
             $request->getJson()
         );
+
+        if ($returnRawResponse) {
+            return $response;
+        }
+
+        $content = $response->getBody()->getContents();
+        $result = json_decode($content, true)['result'];
+
+        $requestClassName = get_class($request);
+        $responseClassName = str_replace('Request', 'Response', $requestClassName);
+
+        return new $responseClassName($result);
     }
 
+    /*
     public function requestAll(): array
     {
         ///TODO: implement function
     }
+    */
 
     /**
      * @return float

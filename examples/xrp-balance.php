@@ -22,7 +22,7 @@ $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 $xrpBalanceRequest = new AccountInfoRequest($testnetOperationalAccountAddress);
 $body = json_encode($xrpBalanceRequest->getBody());
-$response = $client->syncRequest($xrpBalanceRequest);
+$response = $client->syncRequest($xrpBalanceRequest, true);
 
 $content = $response->getBody()->getContents();
 $json = json_decode($content, true);

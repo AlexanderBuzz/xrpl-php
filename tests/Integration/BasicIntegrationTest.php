@@ -4,8 +4,7 @@ namespace XRPL_PHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Transactions\TxRequest;
-use XRPL_PHP\Models\Utility\PingRequest;
+use XRPL_PHP\Models\Methods\PingRequest;
 
 /**
  * Let's test against a real ledger, for now the Testnet. Inspiration from xrpl.py:
