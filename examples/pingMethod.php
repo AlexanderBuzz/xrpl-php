@@ -9,6 +9,10 @@ require __DIR__.'/../vendor/autoload.php';
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\Methods\PingRequest;
 
+/**
+ * Purpose: Show the most basic interaction with the ledger using a method request
+ */
+
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 /*

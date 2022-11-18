@@ -99,13 +99,14 @@ use XRPL_PHP\Wallet\Wallet;
                 $faucetClient = new JsonRpcClient(getFaucetHost($client));
             }
 
+            //TODO: Use method request
             $response = $faucetClient->rawRequest(
                 method: 'POST',
                 resource: '/accounts',
                 body: $jsonData
             )->wait();
 
-            //TODO: check status code and content type
+            //TODO: Use method response
             $faucetWallet = json_decode($response->getBody(), true);
 
             if (!isset($faucetWallet['account']['address'])) {

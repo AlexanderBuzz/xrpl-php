@@ -31,9 +31,25 @@ composer install
 
 ### Run Examples 
 ```
-php examples/address-codec.php
-php examples/binary-codec.php
 php examples/client.php
+php examples/fundWallet.php
+php examples/payment.php
+etc
+```
+
+### Run Quickstart Examples [WIP]
+These examples repoduce the functionality from the [JavaScript 
+quickstart examples](https://learn.xrpl.org/course/intro-to-the-xrpl/)
+```
+php 1.get-accounts-send-xrp.php
+etc [WIP]
+```
+
+### Run Core Examples 
+These examples can be used to explore core functionality
+```
+php examples/internal/address-codec.php
+php examples/internal/binary-codec.php
 etc
 ```
 

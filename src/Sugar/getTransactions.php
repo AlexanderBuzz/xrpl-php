@@ -8,17 +8,6 @@ use GuzzleHttp\Promise\Promise;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountLinesRequest;
 
-function formatBalances(array $trustlines): array
-{
-    /*
-    $fn = function (Trustline $trustline) {
-        return [
-
-        ];
-    };
-    return array_map($fn, $trustlines);
-    */
-}
 
 if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
 
@@ -34,14 +23,13 @@ if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
     {
         //$xrpRequest = new AccountInfoRequest($address, $ledgerIndex, $ledgerIndex || 'validated');
         $xrpRequest = new AccountInfoRequest($address);
+        $body = json_encode($xrpRequest->getBody());
+        $response = $client->rawSyncRequest('POST', '', $body);
 
-        $xrpResponse = $client->request($xrpRequest)->wait();
+        $content = $response->getBody()->getContents();
+        $json = json_decode($content, true);
 
-        if($xrpResponse::class === 'XRPL_PHP\Models\ErrorResponse') {
-            throw new Exception($xrpResponse->getError());
-        }
-
-        return dropsToXrp($xrpResponse->getResult()['account_data']['Balance']);
+        return dropsToXrp($json['result']['account_data']['Balance']);
     }
 }
 

@@ -8,6 +8,10 @@ require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
 
+/**
+ * Purpose: Show the most basic interaction with the ledger using a raw request
+ */
+
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 /*

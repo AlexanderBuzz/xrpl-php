@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use donatj\MockWebServer\MockWebServer;
 use donatj\MockWebServer\Response;

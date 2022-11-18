@@ -4,6 +4,7 @@ namespace XRPL_PHP\Client;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -14,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
+use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
 use XRPL_PHP\Models\Transactions\Transaction;
 use XRPL_PHP\Wallet\Wallet;
@@ -77,15 +79,32 @@ class JsonRpcClient
         return $this->restClient->sendAsync($request);
     }
 
-    public function request(BaseRequest $request): PromiseInterface
+    public function request(BaseRequest $request, ?bool $returnRawResponse = false): PromiseInterface
     {
-        return $this->rawRequest(
+        $promise = $this->rawRequest(
             'POST',
             '',
             $request->getJson()
         );
+
+        $resolve = function(ResponseInterface $response) use(&$promise, $request, $returnRawResponse) {
+            if ($returnRawResponse) {
+                return $response;
+            }
+
+            return $this->handleResponse($request, $response);
+        };
+
+        return $promise->then($resolve);
     }
 
+    /**
+     * @param string $method
+     * @param string $resource
+     * @param string|null $body
+     * @return ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function rawSyncRequest(string $method, string $resource = '', string $body = null): ResponseInterface
     {
         $request = new Request(
@@ -98,35 +117,57 @@ class JsonRpcClient
         return $this->restClient->send($request);
     }
 
-    public function syncRequest(BaseRequest $request, ?bool $returnRawResponse = false): BaseResponse|ResponseInterface
+    public function syncRequest(BaseRequest $request, ?bool $returnRawResponse = false): ResponseInterface|BaseResponse|ErrorResponse
     {
-        $response = $this->rawSyncRequest(
-            'POST',
-            '',
-            $request->getJson()
-        );
+        try {
+            $response = $this->rawSyncRequest(
+                'POST',
+                '',
+                $request->getJson()
+            );
+        } catch (RequestException $exception) {
+            return $this->handleResponse($request, $exception->getResponse());
+        }
 
         if ($returnRawResponse) {
             return $response;
         }
 
-        $content = $response->getBody()->getContents();
-        $result = json_decode($content, true)['result'];
-
-        $requestClassName = get_class($request);
-        $responseClassName = str_replace('Request', 'Response', $requestClassName);
-
-        return new $responseClassName($result);
+        return $this->handleResponse($request, $response);
     }
 
-    /*
-    public function requestAll(): array
+    public function handleResponse(BaseRequest $request, ResponseInterface $response): BaseResponse|ErrorResponse
     {
-        ///TODO: implement function
-    }
-    */
+        $statusCode = $response->getStatusCode();
 
-    /**
+        if ($statusCode === 200) {
+            $rawResponsePayload = $response->getBody()->getContents();
+            $responsePayload = json_decode($rawResponsePayload, true);
+
+            if(isset($responsePayload['result']['error'])) {
+                return new ErrorResponse(
+                    id: null,
+                    statusCode: $statusCode,
+                    error: $responsePayload['result']['error'],
+                    errorCode: $responsePayload['result']['error_code'],
+                    errorMessage: $responsePayload['result']['error_message']
+                );
+            }
+
+            $requestClassName = get_class($request);
+            $responseClassName = str_replace('Request', 'Response', $requestClassName);
+
+            return new $responseClassName($responsePayload);
+        } else {
+            $statusCode = $response->getStatusCode();
+            $reason = $response->getReasonPhrase();
+            $error = trim($response->getBody()->getContents());
+
+            return new ErrorResponse(null, $statusCode, $error);
+        }
+    }
+
+        /**
      * @return float
      */
     public function getFeeCushion(): float
@@ -136,13 +177,11 @@ class JsonRpcClient
 
     public function getLedgerIndex(): int
     {
-        //$ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
         $ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');
 
-        $response = $this->request($ledgerRequest)->wait();
-        $json = json_decode((string) $response->getBody(), true);
+        $ledgerResponse = $this->request($ledgerRequest)->wait();
 
-        return $json['result']['ledger_index'];
+        return $ledgerResponse->getResult()['ledger_index'];
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\Models\Methods;
+namespace XRPL_PHP\Models;
 
 class Warning
 {

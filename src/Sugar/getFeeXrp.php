@@ -18,10 +18,9 @@ if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
 
        $serverInfoRequest = new ServerInfoRequest();
 
-       $response = $client->request($serverInfoRequest)->wait();
-       $json = json_decode($response->getBody(), true);
+       $serverInfoResponse = $client->request($serverInfoRequest)->wait();
 
-       $serverInfo = $json['result']['info'];
+       $serverInfo = $serverInfoResponse->getResult()['info'];
 
        $baseFee = $serverInfo['validated_ledger']['base_fee_xrp'] ?? null;
 

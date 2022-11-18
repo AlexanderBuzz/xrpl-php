@@ -6,9 +6,9 @@ use XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Ledger Methods
- * https://xrpl.org/account_objects.html
+ * https://xrpl.org/account_info.html
  */
-class AccountObjectsResponse extends BaseResponse
+class AccountInfoResponse extends BaseResponse
 {
 
 }

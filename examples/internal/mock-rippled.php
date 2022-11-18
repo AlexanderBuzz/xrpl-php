@@ -2,7 +2,7 @@
 
 use donatj\MockWebServer\MockWebServer;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 $server = new MockWebServer;
 $server->start();

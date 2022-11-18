@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 

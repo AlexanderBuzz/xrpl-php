@@ -88,20 +88,18 @@ function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
             ledgerIndex: 'current'
     );
 
-    $response = $client->request($accountInfoRequest)->wait();
-    $json = json_decode($response->getBody(), true);
+    $acoountInfoResponse = $client->request($accountInfoRequest)->wait();
 
-    $tx['Sequence'] = $json['result']['account_data']['Sequence'];
+    $tx['Sequence'] = $acoountInfoResponse->getResult()['account_data']['Sequence'];
 }
 
 function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
 {
     $serverStateRequest = new ServerStateRequest();
 
-    $response = $client->request($serverStateRequest)->wait();
-    $json = json_decode($response->getBody());
+    $serverStateResponse = $client->request($serverStateRequest)->wait();
 
-    $fee = $json['result']['state']['validated_ledger']['reserve_inc'] ?? null;
+    $fee = $serverStateResponse->getResult()['state']['validated_ledger']['reserve_inc'] ?? null;
 
     if (is_null($fee)) {
         throw new Exception('Address includes a tag that does not match the tag specified in the transaction');
@@ -156,17 +154,15 @@ function setLatestValidatedLedgerSequence (JsonRpcClient $client, array &$tx): v
 
 function checkAccountDeleteBlockers (JsonRpcClient $client, array &$tx): void
 {
-    $request = new AccountObjectsRequest(
+    $accountObjectsRequest = new AccountObjectsRequest(
         account: $tx['Account'],
         ledgerIndex: 'validated',
         deletionBlockersOnly: true
     );
 
-    $response = $client->request($request)->wait();
+    $accountObjectsResponse = $client->request($accountObjectsRequest)->wait();
 
-    $json = json_decode($response->getBody());
-
-    if ($json['result']['account_objects']['length'] > 0) {
+    if ($accountObjectsResponse->getResult()['account_objects']['length'] > 0) {
         throw new Exception("Account {$tx['Account']} cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account.");
     }
 }
