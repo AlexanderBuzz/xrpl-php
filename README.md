@@ -39,7 +39,7 @@ etc
 
 ### Run Quickstart Examples [WIP]
 These examples repoduce the functionality from the [JavaScript 
-quickstart examples](https://learn.xrpl.org/course/intro-to-the-xrpl/)
+quickstart examples](https://learn.xrpl.org/course/code-with-the-xrpl/)
 ```
 php 1.get-accounts-send-xrp.php
 etc [WIP]
