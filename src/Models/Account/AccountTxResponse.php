@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Models\Ledger;
+namespace XRPL_PHP\Models\Account;
 
 use XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Ledger Methods
- * https://xrpl.org/ledger.html
+ * https://xrpl.org/account_tx.html
  */
-class LedgerResponse extends BaseResponse
+class AccountTxResponse extends BaseResponse
 {
 
 }

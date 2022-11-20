@@ -6,9 +6,9 @@ use XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Ledger Methods
- * https://xrpl.org/ledger.html
+ * https://xrpl.org/ledger_closed.html
  */
-class LedgerResponse extends BaseResponse
+class LedgerClosedResponse extends BaseResponse
 {
 
 }
