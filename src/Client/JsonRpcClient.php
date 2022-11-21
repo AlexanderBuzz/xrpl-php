@@ -17,12 +17,16 @@ use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
+use XRPL_PHP\Models\Methods\SubmitResponse;
 use XRPL_PHP\Models\Transactions\Transaction;
+use XRPL_PHP\Models\Transactions\TxResponse;
 use XRPL_PHP\Wallet\Wallet;
 
 use function XRPL_PHP\Sugar\autofill;
 use function XRPL_PHP\Sugar\fundWallet;
 //use function XRPL_PHP\Sugar\getLedgerIndex;
+use function XRPL_PHP\Sugar\submit;
+use function XRPL_PHP\Sugar\submitAndWait;
 use function XRPL_PHP\Sugar\getXrpBalance;
 
 class JsonRpcClient
@@ -228,6 +232,26 @@ class JsonRpcClient
         return autofill($this, $tx);
     }
 
+    public function submit(
+        Transaction|string|array $transaction,
+        ?bool $autofill = false,
+        ?bool $failHard = false,
+        ?Wallet $wallet = null
+    ): SubmitResponse
+    {
+        return submit($this, $transaction, $autofill, $failHard, $wallet);
+    }
+
+    public function submitAndWait(
+        Transaction|string|array $transaction,
+        ?bool $autofill = false,
+        ?bool $failHard = false,
+        ?Wallet $wallet = null
+    ): TxResponse
+    {
+        return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
+    }
+
     /*
         public function getBalances()
         {
@@ -242,16 +266,6 @@ class JsonRpcClient
         public function prepareTransaction()
         {
             //TODO: implement function
-        }
-
-        public function submit()
-        {
-            //TODO: implement function
-        }
-
-        public function submitAndWait()
-        {
-               //TODO: implement function
         }
 
         */

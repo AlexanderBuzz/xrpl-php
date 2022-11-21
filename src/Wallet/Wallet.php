@@ -13,6 +13,7 @@ use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Transactions\Transaction as Transaction;
+use XRPL_PHP\Utils\Hashes\HashLedger;
 
 class Wallet {
 
@@ -134,14 +135,14 @@ class Wallet {
         $txPayload[Transaction::JSON_PROPERTY_SIGNING_PUBLIC_KEY] = $this->publicKey;
 
         if ($multisignAddress) {
-
+            // TODO: Implement multisign
         } else {
             $signature = $this->computeSignature($txPayload);
             $txPayload[Transaction::JSON_PROPERTY_TRANSACTION_SIGNATURE] = $signature;
         }
 
         $serializedTx = $this->binaryCodec->encode($txPayload);
-        $hash = $this->hashSignedTx($serializedTx);
+        $hash = HashLedger::hashSignedTx($serializedTx);
 
         return [
             "tx_blob" => $serializedTx,
@@ -216,25 +217,6 @@ class Wallet {
     public function getSeed(): string|null
     {
         return $this->seed;
-    }
-
-    private function hashSignedTx(Transaction|string $tx): string
-    {
-        if (is_string($tx)) {
-            $txBlob = $tx;
-            $txObject = $this->binaryCodec->decode($tx);
-        } else {
-            $txBlob = $this->binaryCodec->encode($tx->getPayload());
-            $txObject = $tx;
-        }
-
-        if (!isset($txObject['TxnSignature']) && !isset($txObject['Signers'])) {
-            throw new \Exception( 'The transaction must be signed to hash it.');
-        }
-
-        $prefix = strtoupper(dechex(HashPrefix::TRANSACTION_ID));
-
-        return MathUtilities::sha512Half($prefix . $txBlob)->toString();
     }
 
     /*

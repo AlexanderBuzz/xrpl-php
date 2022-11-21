@@ -1,10 +1,10 @@
 <?php
 
 require __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . './_const.php';
+require __DIR__ . '/_const.php';
 
-use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Client\JsonRpcClient;
+use XRPL_PHP\Models\Account\AccountNftsRequest;
 
 function convertStringToHex(string $in): string {
     $hex = '';
@@ -15,12 +15,12 @@ function convertStringToHex(string $in): string {
     return strtoupper($hex);
 }
 
-$client = new JsonRpcClient(RPC_NFT_DEVNET_URL);
+$client = new JsonRpcClient(RPC_TESTNET_URL);
 $standbyWallet = $client->fundWallet($client);
 
-$standbyTokenUrl = '';
-$standbyFlags = '';
-$standbyTransferFee = '';
+$standbyTokenUrl = 'ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi'; // Seems to be hardcoded in the examples
+$standbyFlags = 8; // Sets the tsTransferable flag
+$standbyTransferFee = 1000; // 1% Fee
 
 $transactionBlob = [
     "TransactionType" => "NFTokenMint",
@@ -28,5 +28,19 @@ $transactionBlob = [
     "URI" => convertStringToHex($standbyTokenUrl),
     "Flags" => (int) $standbyFlags,
     "TransferFee" => (int) $standbyTransferFee,
-    "NFTokenTaxon" >= 0 //Required, but if you have no use for it, set to zero.
+    "NFTokenTaxon" => 8 //Required, but if you have no use for it, set to zero.
 ];
+
+$txResult = $client->submitAndWait(
+    transaction: $transactionBlob,
+    autofill: true,
+    wallet: $standbyWallet,
+);
+
+$nftsRequest = new AccountNftsRequest(account: $standbyWallet->getClassicAddress());
+$nftsResponse = $client->request($nftsRequest)->wait();
+
+print_r(PHP_EOL . "--- NFT testnet example for: " . PHP_EOL);
+print_r(PHP_EOL . "Account Address: {$standbyWallet->getAddress()} AccountSeed: {$standbyWallet->getSeed()}" . PHP_EOL);
+print_r($nftsResponse->getResult());
+

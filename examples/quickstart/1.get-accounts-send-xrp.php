@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . './_const.php';
+require __DIR__ . '/_const.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
 use function XRPL_PHP\Sugar\xrpToDrops;
