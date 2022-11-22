@@ -99,20 +99,47 @@ final class AmountTest extends TestCase
         );
     }
 
-    /*
     public function testDecodeCurrencyAmount(): void
     {
+        $hex = "D48775F05A07400000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44";
+        $json = "{\"value\":\"2.1\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
 
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
     }
 
     public function testDecodeNegativeCurrencyAmount(): void
     {
+        $hex = "94C462D5077C860000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44";
+        $json = "{\"value\":\"-12.34567\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
 
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
     }
 
     public function testEncodeZeroCurrencyAmount(): void
     {
+        $hex = "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001";
+        $json = "{\"currency\":\"USD\",\"value\":\"0.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
 
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
     }
-    */
+
+    public function testEncodeLargeCurrencyAmount(): void
+    {
+        $hex = "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001";
+        $json = "{\"currency\":\"USD\",\"value\":\"1111111111111111.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
+
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
+    }
 }

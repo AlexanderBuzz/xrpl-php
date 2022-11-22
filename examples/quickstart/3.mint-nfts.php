@@ -15,6 +15,8 @@ function convertStringToHex(string $in): string {
     return strtoupper($hex);
 }
 
+print_r(PHP_EOL . "--- NFT Testnet example ---" . PHP_EOL);
+
 $client = new JsonRpcClient(RPC_TESTNET_URL);
 $standbyWallet = $client->fundWallet($client);
 
@@ -40,7 +42,7 @@ $txResult = $client->submitAndWait(
 $nftsRequest = new AccountNftsRequest(account: $standbyWallet->getClassicAddress());
 $nftsResponse = $client->request($nftsRequest)->wait();
 
-print_r(PHP_EOL . "--- NFT testnet example for: " . PHP_EOL);
-print_r(PHP_EOL . "Account Address: {$standbyWallet->getAddress()} AccountSeed: {$standbyWallet->getSeed()}" . PHP_EOL);
+print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
+print_r("AccountNftsRequest result:" . PHP_EOL);
 print_r($nftsResponse->getResult());
 

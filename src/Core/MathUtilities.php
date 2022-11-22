@@ -25,11 +25,6 @@ class MathUtilities
         return Buffer::from($hexValue)->slice(0, 32);
     }
 
-    public static function deriveSecp256k1PrivateKey(): string
-    {
-        return '';
-    }
-
     public static function sha512Half(Buffer|string $input): Buffer
     {
         if(!is_string($input)) {
@@ -63,5 +58,15 @@ class MathUtilities
     public static function getBigDecimalExponent(BigDecimal $number):int
     {
         return strlen($number->abs()->getIntegralPart()) - 1;
+    }
+
+    public static function trimAmountZeros(BigDecimal $amount): string
+    {
+        $ip = $amount->getIntegralPart();
+        $fp = $amount->getFractionalPart();
+
+        $trimmed = rtrim($fp, '0');
+
+        return (strlen($trimmed) > 0) ? $ip . '.' . $trimmed  : $ip . '.0';
     }
 }

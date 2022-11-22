@@ -6,7 +6,9 @@ require __DIR__ . '/_const.php';
 use XRPL_PHP\Client\JsonRpcClient;
 use function XRPL_PHP\Sugar\xrpToDrops;
 
-$client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
+print_r(PHP_EOL . "--- Send XRP example ---" . PHP_EOL);
+
+$client = new JsonRpcClient(RPC_TESTNET_URL);
 $standbyWallet = $client->fundWallet($client);
 $operationalWallet = $client->fundWallet($client);
 

@@ -118,6 +118,31 @@ class Amount extends SerializedType
             }
 
             return (string)$value;
+        } else {
+            $binaryParser = new BinaryParser($this->toHex());
+            $mantissa = $binaryParser->read(8);
+            $currency = Currency::fromParser($binaryParser);
+            $issuer = AccountId::fromParser($binaryParser);
+
+            $b1 = $mantissa[0];
+            $b2 = $mantissa[1];
+
+            $isPositive = $b1 & 0x40;
+            $sign = $isPositive ? '' : '-';
+            $exponent = (($b1 & 0x3f) << 2) + (($b2 & 0xff) >> 6) - 97;
+
+            $mantissa[0] = 0;
+            $mantissa[1] &= 0x3f;
+            $decimal = $sign . hexdec($mantissa->toString());
+            $value = BigDecimal::ofUnscaledValue($decimal)->multipliedBy('1e' . $exponent);
+
+            self::assertIouIsValid($value);
+
+            return [
+                'value' => MathUtilities::trimAmountZeros($value),
+                'currency' => $currency->toJson(),
+                'issuer' => $issuer->toJson()
+            ];
         }
     }
 
