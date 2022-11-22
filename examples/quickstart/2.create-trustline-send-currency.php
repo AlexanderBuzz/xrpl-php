@@ -4,22 +4,25 @@ require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/_const.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
+use XRPL_PHP\Wallet\Wallet;
 
 print_r(PHP_EOL . "--- Send currency example ---" . PHP_EOL);
 
 $client = new JsonRpcClient(RPC_TESTNET_URL);
-$standbyWallet = $client->fundWallet($client);
-$operationalWallet = $client->fundWallet($client);
+//$standbyWallet = $client->fundWallet($client);
+//$operationalWallet = $client->fundWallet($client);
+
+$standbyWallet = Wallet::fromSeed('sEdT9FpSc2R7yUypCYYvTP5fCE9dqnc');
+$operationalWallet = Wallet::fromSeed('sEdVKPdy5gkpK7hbCUWqgHP2HrL1oDw');
 
 print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
 print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}" . PHP_EOL);
-print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}");
 
 /*
  * Create a TrustLine
  */
-
-$trustSet_tx = [
+/*
+$trustSetTx = [
     "TransactionType" => "TrustSet",
     "Account" => $operationalWallet->getAddress(),
     "LimitAmount" => [
@@ -29,13 +32,35 @@ $trustSet_tx = [
     ]
 ];
 
-$ts_prepared = $client->autofill($trustSet_tx);
+$trustSetPreparedTx = $client->autofill($trustSetTx);
 
 // operational wallet issues the trustline, so standby wallet can send currency
-$signedTx = $operationalWallet->sign($ts_prepared);
+$signedTx = $operationalWallet->sign($trustSetPreparedTx);
 
 print_r('Creating trust line from operational account to standby account...');
 
-$ts_result = $client->submitAndWait($signedTx['tx_blob']);
+$trustSetResponse = $client->submitAndWait($signedTx['tx_blob']);
 
-print_r($ts_result->getResult());
+print_r($trustSetResponse->getResult());
+*/
+
+// Send IOU
+
+$sendTokenTx = [
+    "TransactionType" => "Payment",
+    "Account" => $standbyWallet->getAddress(),
+    "Amount" => [
+        "currency" => 'USD',
+        "value" => '10',
+        "issuer" => $standbyWallet->getAddress()
+    ],
+    "Destination" => $operationalWallet->getAddress()
+];
+
+$preparedPaymentTx = $client->autofill($sendTokenTx);
+
+$signedPaymentTx = $standbyWallet->sign($preparedPaymentTx);
+
+$paymentResponse = $client->submitAndWait($signedPaymentTx['tx_blob']);
+
+print_r($paymentResponse);

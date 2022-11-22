@@ -13,7 +13,7 @@ $standbyWallet = $client->fundWallet($client);
 $operationalWallet = $client->fundWallet($client);
 
 print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
-print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}");
+print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}" . PHP_EOL);
 
 $xrpAmount = '100';
 
