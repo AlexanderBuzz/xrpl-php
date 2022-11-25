@@ -14,7 +14,7 @@ around late September / middle of October.
 ## How to install
 
 [WIP] 
-`composer require gndlf/xrpl_php`
+`composer require hardcastle/xrpl_php`
 
 ## How to run
 
