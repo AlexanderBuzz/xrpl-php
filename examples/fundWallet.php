@@ -9,7 +9,10 @@ use function XRPL_PHP\Sugar\fundWallet;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
-$fundWalletResponse = fundWallet($client);
+$fundWalletResponse = fundWallet(
+    client: $client,
+    amount: '12000'
+);
 
 $fundedWallet = $fundWalletResponse['wallet']; // Wallet object for further use
 
