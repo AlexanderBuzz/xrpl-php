@@ -18,10 +18,9 @@ function convertStringToHex(string $in): string {
 print_r(PHP_EOL . "--- NFT Testnet example ---" . PHP_EOL);
 
 $client = new JsonRpcClient(RPC_TESTNET_URL);
+
 $standbyWallet = $client->fundWallet($client);
-
-sleep(2); // TODO: Checl for race condition in fundWallet()
-
+sleep(2); // TODO: Check for race condition in fundWallet()
 print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
 
 $standbyTokenUrl = 'ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi'; // Seems to be hardcoded in the examples

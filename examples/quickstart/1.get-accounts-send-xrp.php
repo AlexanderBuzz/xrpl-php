@@ -9,10 +9,13 @@ use function XRPL_PHP\Sugar\xrpToDrops;
 print_r(PHP_EOL . "--- Send XRP example ---" . PHP_EOL);
 
 $client = new JsonRpcClient(RPC_TESTNET_URL);
-$standbyWallet = $client->fundWallet($client);
-$operationalWallet = $client->fundWallet($client);
 
+$standbyWallet = $client->fundWallet($client);
+sleep(2); // TODO: Check for race condition in fundWallet()
 print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
+
+$operationalWallet = $client->fundWallet($client);
+sleep(2); // TODO: Check for race condition in fundWallet()
 print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}" . PHP_EOL);
 
 $xrpAmount = '100';
