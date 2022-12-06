@@ -4,7 +4,7 @@ namespace XRPL_PHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Methods\PingRequest;
+use XRPL_PHP\Models\Utility\PingRequest;
 
 final class FundWalletTest extends TestCase
 {
