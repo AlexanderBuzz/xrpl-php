@@ -50,6 +50,18 @@ final class AmountTest extends TestCase
 
     public function testEncodeCurrencyAmount(): void
     {
+        $json = "{\"value\":\"0.0000123\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D3445EADB112E00000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"0.1\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D4438D7EA4C6800000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
         $json = "{\"value\":\"0\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
         $this->assertEquals(
             "800000000000000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
@@ -89,6 +101,12 @@ final class AmountTest extends TestCase
         $json = "{\"value\":\"123.456\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
         $this->assertEquals(
             "D50462D36641000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
+            Amount::fromJson($json)->toHex()
+        );
+
+        $json = "{\"value\":\"211.0000123\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+        $this->assertEquals(
+            "D5077F08AFCEB4C000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44",
             Amount::fromJson($json)->toHex()
         );
 

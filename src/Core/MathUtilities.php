@@ -57,6 +57,12 @@ class MathUtilities
      */
     public static function getBigDecimalExponent(BigDecimal $number):int
     {
+        if (str_starts_with('0', $number->abs()->getIntegralPart())) {
+            $fractional = $number->abs()->getFractionalPart();
+
+            return -1 * (strlen($number->abs()->getFractionalPart()) - strlen(ltrim($fractional, '0')) + 1);
+        }
+
         return strlen($number->abs()->getIntegralPart()) - 1;
     }
 
