@@ -1,4 +1,4 @@
-# PHP XRPL [WIP]
+# PHP XRPL
 
 PHP Client Library to develop XRP Ledger. It offers all the functionality available in the JavaScript 
 and Java Versions emphasizing robustness and code readability for those interested in looking under the 
@@ -13,7 +13,6 @@ around late September / middle of October.
 
 ## How to install
 
-[WIP] 
 `composer require hardcastle/xrpl_php dev-master`
 
 ## How to run
