@@ -10,7 +10,9 @@ print_r(PHP_EOL . "--- Send currency example ---" . PHP_EOL);
 
 $client = new JsonRpcClient(RPC_TESTNET_URL);
 //$standbyWallet = $client->fundWallet($client);
+//sleep(2); // TODO: Check for race condition in fundWallet()
 //$operationalWallet = $client->fundWallet($client);
+//sleep(2); // TODO: Check for race condition in fundWallet()
 
 $standbyWallet = Wallet::fromSeed('sEdT9FpSc2R7yUypCYYvTP5fCE9dqnc');
 $operationalWallet = Wallet::fromSeed('sEdVKPdy5gkpK7hbCUWqgHP2HrL1oDw');

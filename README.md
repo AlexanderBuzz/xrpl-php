@@ -14,7 +14,7 @@ around late September / middle of October.
 ## How to install
 
 [WIP] 
-`composer require hardcastle/xrpl_php`
+`composer require hardcastle/xrpl_php dev-master`
 
 ## How to run
 
@@ -37,12 +37,13 @@ php examples/payment.php
 etc
 ```
 
-### Run Quickstart Examples [WIP]
+### Run Quickstart Examples
 These examples repoduce the functionality from the [JavaScript 
 quickstart examples](https://learn.xrpl.org/course/code-with-the-xrpl/)
 ```
 php 1.get-accounts-send-xrp.php
-etc [WIP]
+php 2.create-trustline-send-currency.php
+php 2.create-trustline-send-currency.php
 ```
 
 ### Run Core Examples 
