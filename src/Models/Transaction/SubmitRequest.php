@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Models\Methods;
+namespace XRPL_PHP\Models\Transaction;
 
 use XRPL_PHP\Models\BaseRequest;
 
@@ -13,7 +13,9 @@ class SubmitRequest extends BaseRequest
     protected string $command = "submit";
 
     public function __construct(
-        protected string $tx_blob,
-        protected bool $fail_hard = false
+        protected string $txBlob,
+        protected bool $failHard = false
     ) {}
+
+    //TODO: Make informed decision wether to implement Sign-and-Submit Mode
 }

@@ -6,7 +6,7 @@ use Exception;
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\Transactions\Transaction as Transaction;
+use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction as Transaction;
 
 class HashLedger
 {

@@ -8,7 +8,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\ErrorResponse;
-use XRPL_PHP\Models\Methods\PingRequest;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 

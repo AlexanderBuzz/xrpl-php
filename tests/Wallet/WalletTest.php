@@ -4,7 +4,6 @@ namespace XRPL_PHP\Test\Wallet;
 
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Wallet\Wallet;
@@ -77,14 +76,12 @@ final class WalletTest extends TestCase
 
     public function testSignSuccessfully(): void
     {
-        https://github.com/XRPLF/xrpl.js/blob/76b73e16a97e1a371261b462ee1a24f1c01dbb0c/packages/xrpl/test/wallet/index.ts
-
         $wallet = Wallet::fromSeed(
             seed:'ss1x3KLrSvfg7irFc1D929WXZ7z9H',
             type: KeyPair::EC
         );
 
-        //TODO: make from Seed recognize KeyPair type
+        //TODO: make fromSeed() recognize KeyPair type
 
         $expected = [
             'tx_blob' => '12000322800000002400000017201B0086955368400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474463044022025464FA5466B6E28EEAD2E2D289A7A36A11EB9B269D211F9C76AB8E8320694E002205D5F99CB56E5A996E5636A0E86D029977BEFA232B7FB64ABA8F6E29DC87A9E89770B6578616D706C652E636F6D81145E7B112523F68D2F5E879DB4EAC51C6698A69304',

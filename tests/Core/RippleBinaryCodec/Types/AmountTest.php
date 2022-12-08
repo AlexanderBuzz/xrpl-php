@@ -126,6 +126,14 @@ final class AmountTest extends TestCase
             json_decode($json, true),
             Amount::fromHex($hex)->toJson()
         );
+
+        $hex = "D5077F08AFCEB4C000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44";
+        $json = "{\"value\":\"211.0000123\",\"currency\":\"USD\",\"issuer\":\"rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw\"}";
+
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
     }
 
     public function testDecodeNegativeCurrencyAmount(): void

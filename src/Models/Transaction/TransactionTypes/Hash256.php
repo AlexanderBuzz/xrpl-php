@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\Models\Transactions;
+namespace XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;

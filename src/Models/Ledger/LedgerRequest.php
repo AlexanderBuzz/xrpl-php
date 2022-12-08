@@ -3,13 +3,12 @@
 namespace XRPL_PHP\Models\Ledger;
 
 use XRPL_PHP\Models\BaseRequest;
-use XRPL_PHP\Models\Transactions\Hash256;
 
 /**
  * public API Methods / Ledger Methods
  * https://xrpl.org/ledger.html
  */
-class LedgerRequest extends BaseRequest //JsonSerializable https://www.php.net/manual/en/class.jsonserializable.php
+class LedgerRequest extends BaseRequest
 {
     protected string $command = "ledger";
 

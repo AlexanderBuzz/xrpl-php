@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Models\Transactions;
+namespace XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use XRPL_PHP\Models\Common\Amount;
 

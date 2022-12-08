@@ -6,13 +6,13 @@ abstract class BaseResponse
 {
     protected int|string|null $id = null;
 
-    //protected string $status = 'success';
-
-    //protected string $type = 'response';
-
     protected array $result = [];
 
-    //protected string $warning = 'load';
+    protected ?array $warnings = null;
+
+    protected string $status = 'success';
+
+    protected string $type = 'response';
 
     //protected bool $forwarded;
 
@@ -23,6 +23,10 @@ abstract class BaseResponse
         array $responsePayload
     ) {
         $this->result = $responsePayload['result'];
+
+        if (isset($responsePayload['warnings'])) {
+            $this->warnings = $responsePayload['warnings'];
+        }
     }
 
     public function getResult(): array
@@ -33,5 +37,10 @@ abstract class BaseResponse
     public function getStatus(): array
     {
         return $this->result['status'];
+    }
+
+    public function getWarnings(): array|null
+    {
+        return $this->warnings;
     }
 }

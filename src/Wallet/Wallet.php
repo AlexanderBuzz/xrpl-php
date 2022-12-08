@@ -2,17 +2,13 @@
 
 namespace XRPL_PHP\Wallet;
 
-use XRPL_PHP\Core\HashPrefix;
-use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Core\RippleKeyPairs\AbstractKeyPairService;
 use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Core\Utilities;
-use XRPL_PHP\Models\Transactions\Transaction as Transaction;
+use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use XRPL_PHP\Utils\Hashes\HashLedger;
 
 class Wallet {
@@ -123,7 +119,7 @@ class Wallet {
 
         //TODO: remove array as possible parameter, use Transaction
         if (!is_array($transaction)) {
-            $txPayload = $transaction->getPayload();
+            $txPayload = $transaction->toArray();
         } else {
             $txPayload = $transaction;
         }
@@ -132,13 +128,13 @@ class Wallet {
             throw new \Exception( 'txJSON must not contain "TxnSignature" or "Signers" properties',);
         }
 
-        $txPayload[Transaction::JSON_PROPERTY_SIGNING_PUBLIC_KEY] = $this->publicKey;
+        $txPayload['SigningPubKey'] = $this->publicKey;
 
         if ($multisignAddress) {
             // TODO: Implement multisign
         } else {
             $signature = $this->computeSignature($txPayload);
-            $txPayload[Transaction::JSON_PROPERTY_TRANSACTION_SIGNATURE] = $signature;
+            $txPayload['TxnSignature'] = $signature;
         }
 
         $serializedTx = $this->binaryCodec->encode($txPayload);

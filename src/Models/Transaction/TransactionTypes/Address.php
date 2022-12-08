@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\Models\Transactions;
+namespace XRPL_PHP\Models\Transaction\TransactionTypes;
 
 class Address
 {

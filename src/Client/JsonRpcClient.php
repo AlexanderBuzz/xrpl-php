@@ -2,32 +2,28 @@
 
 namespace XRPL_PHP\Client;
 
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
-
 use Psr\Http\Message\ResponseInterface;
-use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
 use XRPL_PHP\Models\Methods\SubmitResponse;
-use XRPL_PHP\Models\Transactions\Transaction;
-use XRPL_PHP\Models\Transactions\TxResponse;
+use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction;
+use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Wallet\Wallet;
-
 use function XRPL_PHP\Sugar\autofill;
 use function XRPL_PHP\Sugar\fundWallet;
-//use function XRPL_PHP\Sugar\getLedgerIndex;
+use function XRPL_PHP\Sugar\getXrpBalance;
 use function XRPL_PHP\Sugar\submit;
 use function XRPL_PHP\Sugar\submitAndWait;
-use function XRPL_PHP\Sugar\getXrpBalance;
+
+//use function XRPL_PHP\Sugar\getLedgerIndex;
 
 class JsonRpcClient
 {

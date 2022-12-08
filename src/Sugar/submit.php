@@ -8,9 +8,9 @@ use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Models\Methods\SubmitRequest;
 use XRPL_PHP\Models\Methods\SubmitResponse;
-use XRPL_PHP\Models\Transactions\Transaction;
-use XRPL_PHP\Models\Transactions\TxRequest;
-use XRPL_PHP\Models\Transactions\TxResponse;
+use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction;
+use XRPL_PHP\Models\Transaction\TxRequest;
+use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Utils\Hashes\HashLedger;
 use XRPL_PHP\Wallet\Wallet;
 

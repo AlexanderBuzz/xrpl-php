@@ -2,13 +2,11 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-use Brick\Math\BigInteger;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
-use XRPL_PHP\Models\Transactions\Address;
 
 class StObject extends SerializedType
 {
