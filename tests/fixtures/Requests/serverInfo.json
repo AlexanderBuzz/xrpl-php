@@ -1,0 +1,8 @@
+{
+  "method": "server_info",
+  "params": [
+    {
+      "api_version": 1
+    }
+  ]
+}
