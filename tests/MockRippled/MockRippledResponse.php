@@ -29,7 +29,7 @@ class MockRippledResponse extends Response {
     /**
      * @inheritdoc
      */
-    public function getRef() {
+    public function getRef(): string {
         $content = json_encode([
             $this->requestJson,
             200,
