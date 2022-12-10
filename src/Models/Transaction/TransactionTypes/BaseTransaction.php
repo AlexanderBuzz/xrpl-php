@@ -7,6 +7,7 @@ use Exception;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
