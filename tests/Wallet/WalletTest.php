@@ -19,8 +19,8 @@ final class WalletTest extends TestCase
         $masterAddress = 'rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93';
 
         $regularKeyPair = [
-            'publicKey' => 'aBRNH5wUurfhZcoyR6nRwDSa95gMBkovBJ8V4cp1C1pM28H7EPL1',
-            'privateKey' => 'sh8i92YRnEjJy3fpFkL8txQSCVo79',
+            'publicKey' => '03AEEFE1E8ED4BBC009DE996AC03A8C6B5713B1554794056C66E5B8D1753C7DD0E',
+            'privateKey' => '004265A28F3E18340A490421D47B2EB8DBC2C0BF2C24CEFEA971B61CED2CABD233',
         ];
 
         $wallet = new Wallet(

@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Wallet;
 
+use Exception;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
@@ -11,19 +12,18 @@ use XRPL_PHP\Core\Utilities;
 use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use XRPL_PHP\Utils\Hashes\HashLedger;
 
-class Wallet {
+class Wallet
+{
 
     public const DEFAULT_ALGORITHM = KeyPair::EDDSA;
 
-    private BinaryCodec $binaryCodec; //TODO static instance?
+    private BinaryCodec $binaryCodec;
 
     private KeyPairServiceInterface $keyPairService;
 
     private string $publicKey;
 
     private string $privateKey;
-
-    //private string $address; //TODO: implement correctly
 
     private string $classicAddress;
 
@@ -43,7 +43,7 @@ class Wallet {
         } else if (str_starts_with($publicKey, '0')) {
             $this->keyPairService = Secp256k1KeyPairService::getInstance();
         } else {
-            //error
+            throw new Exception('Key Type not recognized');
         }
 
         $this->publicKey = $publicKey;
@@ -88,27 +88,16 @@ class Wallet {
         );
     }
 
-    /*
-    public function checkSerialisation()
-    {
-        //TODO: implement function
-    }
-
-    public function getXAddress()
-    {
-        //TODO: implement function
-    }
-    */
-
     /**
-     * No Multisign for now...
      *
-     * @param Transaction $transaction
-     * @return string[]
+     *
+     * @param Transaction|array $transaction
+     * @param string|bool $multisign
+     * @return array
+     * @throws Exception
      */
     public function sign(Transaction|array $transaction, string|bool $multisign = false): array
     {
-        //TODO: remove array as possbile parameter
         $multisignAddress = false;
 
         if (is_string($multisign) && str_starts_with($multisign, 'X')) {
@@ -117,7 +106,6 @@ class Wallet {
             $multisignAddress = $this->getClassicAddress();
         }
 
-        //TODO: remove array as possible parameter, use Transaction
         if (!is_array($transaction)) {
             $txPayload = $transaction->toArray();
         } else {
@@ -152,11 +140,12 @@ class Wallet {
      * @param string $signedTransaction A signed transaction (hex string of signTransaction result) to be verified offline.
      * @return bool Returns true if a signedTransaction is valid.
      */
-    public function verifyTransaction(string $signedTransaction)
+    public function verifyTransaction(string $signedTransaction): bool
     {
         $tx = $this->binaryCodec->decode($signedTransaction);
         $messageHex = $this->binaryCodec->encodeForSigning($tx);
         $signature = $tx['TxnSignature'];
+
         return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
     }
 
@@ -164,6 +153,13 @@ class Wallet {
     public function getXAddress(mixed $number, mixed $tag, bool $isTestnet = false): string
     {
 
+    }
+    */
+
+    /*
+    public function checkSerialisation()
+    {
+        //TODO: implement function
     }
     */
 
@@ -214,22 +210,4 @@ class Wallet {
     {
         return $this->seed;
     }
-
-    /*
-    private function removeTrailingZeros(Transaction|array $tx): void
-    {
-        if (
-            $tx.TransactionType === 'Payment' &&
-            typeof tx.Amount !== 'string' &&
-        tx.Amount.value.includes('.') &&
-        tx.Amount.value.endsWith('0')
-  ) {
-        // eslint-disable-next-line no-param-reassign -- Required to update Transaction.Amount.value
-        tx.Amount = { ...tx.Amount }
-    // eslint-disable-next-line no-param-reassign -- Required to update Transaction.Amount.value
-    tx.Amount.value = new BigNumber(tx.Amount.value).toString()
-  }
-    }
-    */
-
 }
