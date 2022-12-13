@@ -119,9 +119,17 @@ class Wallet
         $txPayload['SigningPubKey'] = $this->publicKey;
 
         if ($multisignAddress) {
-            // TODO: Implement multisign
+            $signer = [
+                'Account' => $this->getPublicKey(),
+                'TxnSignature' => $this->computeSignature(
+                    $txPayload,
+                    $this->getPrivateKey(),
+                    $multisignAddress
+                )
+            ];
+            $txPayload['Signers'] = [['Signer' => $signer]];
         } else {
-            $signature = $this->computeSignature($txPayload);
+            $signature = $this->computeSignature($txPayload, $this->getPrivateKey());
             $txPayload['TxnSignature'] = $signature;
         }
 
@@ -163,7 +171,7 @@ class Wallet
     }
     */
 
-    private function computeSignature(array $tx, ?string $signAs = null): string
+    private function computeSignature(array $tx, string $privateKey, ?string $signAs = null): string
     {
         if($signAs) {
             if (Utilities::isValidXAddress($signAs)) {
@@ -174,7 +182,7 @@ class Wallet
             $encodedTx = $this->binaryCodec->encodeForSigning($tx);
         }
 
-        return $this->keyPairService->sign($encodedTx, $this->privateKey);
+        return $this->keyPairService->sign($encodedTx, $privateKey);
     }
 
     public function getAddress(): string|null

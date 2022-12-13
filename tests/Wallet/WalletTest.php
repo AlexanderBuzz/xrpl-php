@@ -77,7 +77,7 @@ final class WalletTest extends TestCase
     public function testSignSuccessfully(): void
     {
         $wallet = Wallet::fromSeed(
-            seed:'ss1x3KLrSvfg7irFc1D929WXZ7z9H',
+            seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H',
             type: KeyPair::EC
         );
 
@@ -106,6 +106,13 @@ final class WalletTest extends TestCase
 
     }
 
+    /*
+    public function testSignWithMultisignAddress(): void
+    {
+
+    }
+    */
+
     public function testSignEncodedTxWithSecp256k1Key(): void
     {
         $privateKey = "0001080EC4673A7296598091E712B58591065C21294F117F7AD69C104517EC7B64";
@@ -120,78 +127,11 @@ final class WalletTest extends TestCase
         );
     }
 
-        /*
-
-
-        public function testSeedDerivSecp256k1(): void
-        {
-
-        }
-
-        public function testSeedDeriveEd25519(): void
-        {
-
-        }
-        */
-
     /*
-    public function testSeedDeriveFromMnemonicEcsdaSecp256k(): void
-    {
 
-    }
+    // Test for Errors
 
-    public function testSeedDeriveFromMnemonicEd25519(): void
-    {
-
-    }
-
-    public function testSeedDeriveFromLowercaseMnemonicEd25519(): void
-    {
-
-    }
-
-    public function testSeedDeriveFromRegularKeypair(): void
-    {
-
-    }
-
-    //Test for Errors
-
-    //section FromSecret
-
-    public function testSecretDeriveUseDefaultAlgorithm(): void
-    {
-
-    }
-
-    public function testSecretDeriveEcsdaSecp256k(): void
-    {
-
-    }
-
-    public function testSecretDeriveEd25519(): void
-    {
-
-    }
-
-    public function testSecretDeriveFromRegularKeypair(): void
-    {
-
-    }
-
-    //section from Mnemonic
-
-    public function testDeriveInputDerivation(): void
-    {
-
-    }
-
-    public function testDeriveRegularKeypair(): void
-    {
-
-    }
-
-    //section sign
+    // TODO: Check for those edge tests
 
     public function testSignSuccessfully(): void
     {
@@ -204,11 +144,6 @@ final class WalletTest extends TestCase
     }
 
     public function testSignWithEscrowFinish(): void
-    {
-
-    }
-
-    public function testSignWithMultisignAddress(): void
     {
 
     }
