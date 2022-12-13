@@ -5,8 +5,7 @@ and Java Versions emphasizing robustness and code readability for those interest
 hood and getting into the nitty-gritty of XRPL development.
 
 It is currently work in progress nearing the finishing line, with intended use in PHP ecommerce platforms 
-in mind when it comes to feature priority. The fully featured and tested Version will be available somewhere 
-around late September / middle of October.
+in mind when it comes to feature priority.
 
 ![Build Status](https://github.com/shopware/shopware/workflows/PHPUnit/badge.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
@@ -28,16 +27,8 @@ In the container shell:
 composer install
 ```
 
-### Run Examples 
-```
-php examples/client.php
-php examples/fundWallet.php
-php examples/payment.php
-etc
-```
-
 ### Run Quickstart Examples
-These examples repoduce the functionality from the [JavaScript 
+These examples reproduce the functionality from the [JavaScript 
 quickstart examples](https://learn.xrpl.org/course/code-with-the-xrpl/)
 ```
 php 1.get-accounts-send-xrp.php
@@ -53,6 +44,15 @@ php examples/internal/binary-codec.php
 etc
 ```
 
+### Run Examples
+These examples can be used to play around with isolated features
+```
+php examples/client.php
+php examples/fundWallet.php
+php examples/payment.php
+etc
+```
+
 ### Run Tests
 `./vendor/bin/phpunit tests`
 
@@ -63,6 +63,8 @@ require __DIR__.'/../vendor/autoload.php';
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
 
+//Those will be purged from the Testnet in regular intervals, you can use fundWallet()
+// to generate prefunden Wallets on Testnet
 $testnetStandbyAccountSeed = 'sEd7r9n11TmibXPBNL3zEGE3aNcof9R';
 $testnetStandbyAccountAddress = 'raKXrkYfbh4Uzqc481jTXbaKsWnW5XRMjp';
 
