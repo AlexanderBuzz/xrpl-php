@@ -103,7 +103,7 @@ class Definitions
         return (isset($lookup[$value])) ? $lookup[$value] : $value;
     }
 
-    public function mapValueToSpecificField(string $fieldName, string $value): string
+    public function mapValueToSpecificField(string $fieldName, string|int $value): string
     {
         switch ($fieldName) {
             case "LedgerEntryType":

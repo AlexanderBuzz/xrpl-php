@@ -30,5 +30,10 @@ abstract class UnsignedInt extends SerializedType
         return strtoupper($this->toBytes()->toString());
     }
 
+    public function toJson(): array|string|int
+    {
+        return $this->valueOf();
+    }
+
     public abstract function valueOf(): int|string;
 }

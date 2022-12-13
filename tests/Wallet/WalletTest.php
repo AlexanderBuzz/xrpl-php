@@ -111,6 +111,16 @@ final class WalletTest extends TestCase
     {
 
     }
+
+    public function testSignWithXAddressAndNoGivenTagForMultisignAddress(): void
+    {
+
+    }
+
+    public function testSignWithXAddressAndTagForMultisignAddress(): void
+    {
+
+    }
     */
 
     public function testSignEncodedTxWithSecp256k1Key(): void
@@ -125,6 +135,25 @@ final class WalletTest extends TestCase
             $expectedSignature,
             $secp256k1->sign(Buffer::from($encodedTx), $privateKey)
         );
+    }
+
+    public function testVerifyTransaction(): void
+    {
+        $publicKey = '030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D';
+        $privateKey = '00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F';
+        $preparedTx = [
+            'signedTransaction' => '1200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D74473045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648',
+            'id' => '30D9ECA2A7FB568C5A8607E5850D9567572A9E7C6094C26BEFD4DC4C2CF2657A'
+        ];
+
+        $wallet = new Wallet(
+            publicKey: $publicKey,
+            privateKey: $privateKey
+        );
+
+        $this->assertTrue($wallet->verifyTransaction($preparedTx['signedTransaction']));
+
+
     }
 
     /*
