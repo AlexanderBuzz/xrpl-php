@@ -8,7 +8,7 @@ use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Models\Methods\SubmitRequest;
 use XRPL_PHP\Models\Methods\SubmitResponse;
-use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction;
+use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use XRPL_PHP\Models\Transaction\TxRequest;
 use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Utils\Hashes\HashLedger;
@@ -67,7 +67,7 @@ function waitForFinalTransactionOutcome(
 
     $latestLedger = $client->getLedgerIndex();
 
-    if ($lastLedger > $latestLedger) {
+    if ($lastLedger < $latestLedger) {
         throw new Exception("The latest ledger sequence {$latestLedger} is greater than the transaction's LastLedgerSequence ({$lastLedger})."
             . PHP_EOL ."Preliminary result: {$submissionResult}");
     }
