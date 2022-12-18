@@ -116,11 +116,12 @@ class Wallet
             throw new \Exception( 'txJSON must not contain "TxnSignature" or "Signers" properties',);
         }
 
-        $txPayload['SigningPubKey'] = $this->publicKey;
+        $txPayload['SigningPubKey'] = ($multisignAddress) ? '' : $this->publicKey;
 
         if ($multisignAddress) {
             $signer = [
-                'Account' => $this->getPublicKey(),
+                'Account' => $multisignAddress,
+                'SigningPubKey' => $this->getPublicKey(),
                 'TxnSignature' => $this->computeSignature(
                     $txPayload,
                     $this->getPrivateKey(),
@@ -157,17 +158,20 @@ class Wallet
         return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
     }
 
-    /*
-    public function getXAddress(mixed $number, mixed $tag, bool $isTestnet = false): string
+    public function getXAddress(mixed $tag, bool $isTestnet = false): string
     {
-
+        return Utilities::classicAddressToXAddress($this->classicAddress, $tag, $isTestnet);
     }
-    */
 
     /*
     public function checkSerialisation()
     {
         //TODO: implement function
+    }
+
+    private function removeTraiingZeros(Transaction|array $transaction): void
+    {
+        //TODO: Test if this is really necessary. Edge case: Amount value 123.4000
     }
     */
 

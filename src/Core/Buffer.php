@@ -41,6 +41,11 @@ class Buffer implements ArrayAccess
             return $buffer;
         }
 
+        //Buffer from empty string ''
+        if (gettype($source) === 'string' && strlen($source) === 0) {
+            return $buffer;
+        }
+
         //Buffer from hex string 'ff03a5ed'
         if (gettype($source) === 'string' && $encoding === 'hex') {
             if(strlen($source)%2) {

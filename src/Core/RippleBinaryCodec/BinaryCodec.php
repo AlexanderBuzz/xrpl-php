@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
+use Exception;
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
@@ -34,6 +35,12 @@ class BinaryCodec extends Binary
         return $this->binaryToJson($binaryString);
     }
 
+    /**
+     * Encode a transaction and prepare for signing
+     *
+     * @param string|array $tx
+     * @return string
+     */
     public function encodeForSigning(string|array $tx): string
     {
         if (is_string($tx)) {
@@ -54,15 +61,22 @@ class BinaryCodec extends Binary
     }
     */
 
-    public function encodeForMultisigning(array $tx, string $signAs): string
+    /**
+     * Encode a transaction and prepare for multi-signing
+     *
+     * @param string|array $tx
+     * @param string $signAs
+     * @return string
+     * @throws Exception
+     */
+    public function encodeForMultisigning(string|array $tx, string $signAs): string
     {
         if (is_string($tx)) {
             $tx = json_decode($tx, true);
         }
 
         if ($tx['SigningPubKey'] !== '') {
-            //TODO: correct error
-            throw new  \Exception('Error');
+            throw new Exception('Error trying to encode transaction for multisignign');
         }
 
         $filtered = $this->removeNonSigningFields($tx);

@@ -7,6 +7,7 @@ use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
+use XRPL_PHP\Core\Utilities;
 
 class StObject extends SerializedType
 {
@@ -58,7 +59,7 @@ class StObject extends SerializedType
             return $fieldInstanceA->getOrdinal() - $fieldInstanceB->getOrdinal();
         });
 
-        //filter
+        //TODO: xrpl.js uses filters here, do we need them?
 
         foreach ($json as $key => $value) {
             $fieldInstance = $definitions->getFieldInstance($key);
@@ -97,16 +98,18 @@ class StObject extends SerializedType
                 $accumulator[$fieldInstance->getName()] = $node;
             } else {
                 $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
-                //$value = hexdec($node);
-                $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node; //TODO: was $node, now it's a bit hacky
+                $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node;
             }
         }
 
         return $accumulator;
     }
 
-    private function mapSpecializedValues(string $fieldName, array $fieldNode): array
+    private function handleXAddress(string $field, string $xAddress): array
     {
-        //TODO: implement mapSpecializedValues() method
+        $decoded = Utilities::xAddressToClassicAddress($xAddress);
+
+
     }
+
 }

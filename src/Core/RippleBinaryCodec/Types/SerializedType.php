@@ -20,7 +20,7 @@ abstract class SerializedType
     public function __construct(?Buffer $bytes = null)
     {
         if (!$bytes) {
-            $bytes = Buffer::alloc(0);
+            $bytes = Buffer::alloc();
         }
         $this->bytes = $bytes;
     }

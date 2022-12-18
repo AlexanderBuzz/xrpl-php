@@ -76,18 +76,15 @@ final class WalletTest extends TestCase
 
     public function testSignSuccessfully(): void
     {
-        $wallet = Wallet::fromSeed(
-            seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H',
-            type: KeyPair::EC
-        );
+        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H', type: KeyPair::EC);
 
-        //TODO: make fromSeed() recognize KeyPair type
-
+        // TODO: Pull this from fixtures
         $expected = [
             'tx_blob' => '12000322800000002400000017201B0086955368400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474463044022025464FA5466B6E28EEAD2E2D289A7A36A11EB9B269D211F9C76AB8E8320694E002205D5F99CB56E5A996E5636A0E86D029977BEFA232B7FB64ABA8F6E29DC87A9E89770B6578616D706C652E636F6D81145E7B112523F68D2F5E879DB4EAC51C6698A69304',
             'hash' => '93F6C6CE73C092AA005103223F3A1F557F4C097A2943D96760F6490F04379917',
         ];
 
+        // TODO: Pull this from fixtures
         $tx = [
             "TransactionType" => "AccountSet",
             "Flags" => 2147483648,
@@ -99,19 +96,33 @@ final class WalletTest extends TestCase
             "Account" => "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
         ];
 
-        $this->assertEquals(
-            $expected,
-            $wallet->sign($tx)
-        );
+        $this->assertEquals($expected, $wallet->sign($tx));
+    }
 
+    public function testSignWithMultisignAddress(): void
+    {
+        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H', type: KeyPair::EC);
+
+        // TODO: Pull this from fixtures
+        $expected = [
+            'tx_blob' => '120000240000000261400000003B9ACA00684000000000000032730081142E244E6F20104E57C0C60BD823CB312BF10928C78314B5F762798A53D543A014CAF8B297CFF8F2F937E8F3E010732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474473045022100B3F8205578C6A68D3BBD27650F5D2E983718D502C250C5147F07B7EDD8E8583E02207B892818BD58E328C2797F15694A505937861586D527849065B582523E390B128114B3263BD0A9BF9DFDBBBBD07F536355FF477BF0E9E1F1',
+            'hash' => 'D8CF5FC93CFE5E131A34599AFB7CE186A5B8D1B9F069E35F4634AD3B27837E35',
+        ];
+
+        // TODO: Pull this from fixtures
+        $tx = [
+            "Account" => "rnUy2SHTrB9DubsPmkJZUXTf5FcNDGrYEA",
+            "Amount" => "1000000000",
+            "Destination" => "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+            "Fee" => "50",
+            "Sequence" => 2,
+            "TransactionType" => "Payment"
+        ];
+
+        $this->assertEquals($expected, $wallet->sign($tx, true));
     }
 
     /*
-    public function testSignWithMultisignAddress(): void
-    {
-
-    }
-
     public function testSignWithXAddressAndNoGivenTagForMultisignAddress(): void
     {
 
@@ -146,14 +157,29 @@ final class WalletTest extends TestCase
             'id' => '30D9ECA2A7FB568C5A8607E5850D9567572A9E7C6094C26BEFD4DC4C2CF2657A'
         ];
 
-        $wallet = new Wallet(
-            publicKey: $publicKey,
-            privateKey: $privateKey
-        );
+        $wallet = new Wallet(publicKey: $publicKey, privateKey: $privateKey);
 
         $this->assertTrue($wallet->verifyTransaction($preparedTx['signedTransaction']));
+    }
 
+    public function testGetXAddress(): void
+    {
+        $publicKey = '030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D';
+        $privateKey = '00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F';
 
+        $wallet = new Wallet( publicKey: $publicKey, privateKey: $privateKey);
+
+        $tag = 1337;
+        $mainnetXAddress = 'X7gJ5YK8abHf2eTPWPFHAAot8Knck11QGqmQ7a6a3Z8PJvk';
+        $testnetXAddress = 'T7bq3e7kxYq9pwDz8UZhqAZoEkcRGTXSNr5immvcj3DYRaV';
+
+        // Check: Returns a Mainnet X-address when test is false
+        $result = $wallet->getXAddress($tag, false);
+        $this->assertEquals($mainnetXAddress, $result);
+
+        // Check: returns a Mainnet X-address when test is false
+        $result = $wallet->getXAddress($tag, true);
+        $this->assertEquals($testnetXAddress, $result);
     }
 
     /*
@@ -161,11 +187,6 @@ final class WalletTest extends TestCase
     // Test for Errors
 
     // TODO: Check for those edge tests
-
-    public function testSignSuccessfully(): void
-    {
-
-    }
 
     public function testSignWithLowercaseInHex(): void
     {
@@ -177,24 +198,9 @@ final class WalletTest extends TestCase
 
     }
 
-    public function testSignWithXAddressAndNoTagForMultisignAddress(): void
-    {
-
-    }
-
-    public function testSignWithXAddressAndTagForMultisignAddress(): void
-    {
-
-    }
-
-    //test already signed error
-
     public function testSignWithXAnEscrowExecutionTransaction(): void
     {
 
     }
-
     */
-
-    //449 ff.
 }

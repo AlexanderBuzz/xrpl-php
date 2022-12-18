@@ -73,8 +73,8 @@ class JsonRpcClientTest extends TestCase
         }
 
         //TODO: Check if files exist, otherwise throw "fixture not found error"
-        $requestJson = file_get_contents(__DIR__ . "/../fixtures/Requests/{$method}.json");
-        $responseJson = file_get_contents(__DIR__ . "/../fixtures/Responses/{$method}.json");
+        $requestJson = file_get_contents(__DIR__ . "/../MockRippled/Fixtures/Requests/{$method}.json");
+        $responseJson = file_get_contents(__DIR__ . "/../MockRippled/Fixtures/Responses/{$method}.json");
 
         return [
             'method' => $method,

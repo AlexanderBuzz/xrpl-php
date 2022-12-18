@@ -14,7 +14,7 @@ class Blob extends SerializedType
     public function __construct(?Buffer $bytes = null)
     {
         if (is_null($bytes)) {
-            $bytes = Buffer::alloc();
+            $bytes = Buffer::alloc(0);
         }
 
         parent::__construct($bytes);
