@@ -166,6 +166,11 @@ class Buffer implements ArrayAccess
         return $this->subArray($start, $end);
     }
 
+    /**
+     * Returns buffer content as hex string
+     *
+     * @return string
+     */
     public function toString(): string
     {
         $str = "";

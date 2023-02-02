@@ -24,7 +24,7 @@ class AddressCodecTest extends TestCase
         $this->addressCodec = new AddressCodec();
 
         //TODO: use relative file path
-        $raw = file_get_contents(__DIR__ . "/fixtures.json"); //TODO: use proper path
+        $raw = file_get_contents(__DIR__ . "/fixtures.json");
         $this->fixtures = json_decode($raw, true);
     }
 
