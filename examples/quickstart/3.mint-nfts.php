@@ -1,9 +1,9 @@
 <?php
 
 require __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . '/_const.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
+use XRPL_PHP\Core\Networks;
 use XRPL_PHP\Models\Account\AccountNftsRequest;
 
 function convertStringToHex(string $in): string {
@@ -17,7 +17,8 @@ function convertStringToHex(string $in): string {
 
 print_r(PHP_EOL . "--- NFT Testnet example ---" . PHP_EOL);
 
-$client = new JsonRpcClient(RPC_TESTNET_URL);
+$testnetUrl = Networks::getNetwork('testnet')['jsonRpcUrl'];
+$client = new JsonRpcClient($testnetUrl);
 
 $standbyWallet = $client->fundWallet($client);
 sleep(2); // TODO: Check for race condition in fundWallet()
