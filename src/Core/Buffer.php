@@ -1,12 +1,24 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core;
 
 use ArrayAccess;
 use Brick\Math\BigInteger;
+use Exception;
 use SplFixedArray;
-use TheSeer\Tokenizer\Exception;
 
+/**
+ * Re-implements the functionality of node.js Buffer (https://nodejs.org/api/buffer.html) for
+ * serialization and deserialization
+ */
 class Buffer implements ArrayAccess
 {
     const DEFAULT_FILL = 0x00;
@@ -18,6 +30,13 @@ class Buffer implements ArrayAccess
         $this->bytesArray = SplFixedArray::fromArray([]);
     }
 
+    /**
+     * Creates a new buffer of given size
+     *
+     * @param int $size
+     * @return Buffer
+     * @throws Exception
+     */
     public static function alloc(int $size = 0): Buffer
     {
         $tempArray = array_fill(0, $size, self::DEFAULT_FILL);
@@ -25,6 +44,14 @@ class Buffer implements ArrayAccess
         return self::from($tempArray);
     }
 
+    /**
+     * Creates a new Buffer from different sources
+     *
+     * @param mixed $source
+     * @param string|null $encoding
+     * @return Buffer
+     * @throws Exception
+     */
     public static function from(mixed $source, ?string $encoding = 'hex'): Buffer
     {
         $buffer = new Buffer();
@@ -70,9 +97,17 @@ class Buffer implements ArrayAccess
             return Buffer::from($source->toBase(16));
         }
 
-        throw new \Exception('Buffer not does not support source type');
+        throw new Exception('Buffer not does not support source type');
     }
 
+    /**
+     * Creates a single buffer from an array of Buffers by concatenating them
+     *
+     * @param array $bufferList
+     * @param int|null $totalLength
+     * @return Buffer
+     * @throws Exception
+     */
     public static function concat(array $bufferList, ?int $totalLength = null): Buffer
     {
         if (empty($bufferList) || $totalLength === 0) {
@@ -99,45 +134,94 @@ class Buffer implements ArrayAccess
         return self::from($tempArray);
     }
 
+    /**
+     * Creates a random bytes filled Buffer of given size
+     *
+     * @param int $size
+     * @return Buffer
+     * @throws Exception
+     */
     public static function random(int $size): Buffer
     {
         $hexBytes = bin2hex(random_bytes($size));
         return Buffer::from($hexBytes);
     }
 
+    /**
+     * Duplicates the Buffer
+     *
+     * @return Buffer
+     * @throws Exception
+     */
     public function clone(): Buffer
     {
         return Buffer::from($this->toArray());
     }
 
+    /**
+     * Returns Buffer size (number of bytes)
+     *
+     * @return int
+     */
     public function getLength(): int
     {
         return $this->bytesArray->getSize();
     }
 
+    /**
+     * Concatenates given Buffer content
+     *
+     * @param Buffer $appendix
+     * @return void
+     */
     public function appendBuffer(Buffer $appendix): void
     {
         $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix->toArray()));
     }
 
+    /**
+     * Concatenates a given hex string as bytes
+     *
+     * @param string $hexBytes
+     * @return void
+     */
     public function appendHex(string $hexBytes): void
     {
         $appendix = array_map('hexdec', str_split($hexBytes, 2));
         $this->bytesArray = SplFixedArray::fromArray(array_merge($this->toArray(), $appendix));
     }
 
+    /**
+     * Prepends the contents of a given Buffer
+     *
+     * @param Buffer $prefix
+     * @return void
+     */
     public function prependBuffer(Buffer $prefix): void
     {
         $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix->toArray(), $this->toArray()));
     }
 
+    /**
+     * Prepends a given hex string as bytes
+     *
+     * @param string $hexBytes
+     * @return void
+     */
     public function prependHex(string $hexBytes): void
     {
         $prefix = array_map('hexdec', str_split($hexBytes, 2));
         $this->bytesArray = SplFixedArray::fromArray(array_merge($prefix, $this->toArray()));
     }
 
-    public function set(int $startIdx, array $bytes): void
+    /**
+     * Overwrites the Buffer with a given sequence starting at given index. May increase the length of the Buffer.
+     *
+     * @param int $startIdx
+     * @param array $bytes
+     * @return void
+     */
+    public function set(int $startIdx = 0, array $bytes = []): void
     {
         $tempArray = $this->bytesArray->toArray();
 
@@ -148,7 +232,15 @@ class Buffer implements ArrayAccess
         $this->bytesArray = SplFixedArray::fromArray($tempArray);
     }
 
-    public function subArray(int $start, ?int $end): Buffer
+    /**
+     * Performs slicing of the Buffer, returns the subset of bytes for given range
+     *
+     * @param int $start
+     * @param int|null $end
+     * @return Buffer
+     * @throws Exception
+     */
+    public function subArray(int $start, ?int $end = null): Buffer
     {
         if ($end) {
             $length = $end - $start;
@@ -161,13 +253,21 @@ class Buffer implements ArrayAccess
         return self::from($tempArray);
     }
 
+    /**
+     * Synonym for subArray function
+     *
+     * @param int $start
+     * @param int|null $end
+     * @return Buffer
+     * @throws Exception
+     */
     public function slice(int $start, ?int $end = null): Buffer
     {
         return $this->subArray($start, $end);
     }
 
     /**
-     * Returns buffer content as hex string
+     * Returns buffer content formatted as hex string
      *
      * @return string
      */
@@ -182,21 +282,41 @@ class Buffer implements ArrayAccess
         return strtoupper($str);
     }
 
+    /**
+     * Returns Buffer content as array of bytes
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->bytesArray->toArray();
     }
 
+    /**
+     * Transforms Buffer content to Integer, assumed byte content can be interpreted as UInt
+     *
+     * @return int
+     */
     public function toInt():int
     {
         return hexdec($this->toString());
     }
 
+    /**
+     * Returns numerical value of byte content, e.g. "ff,ff" -> "65535"
+     *
+     * @return string
+     */
     public function toDecimalString(): string
     {
         return (string) hexdec($this->toString());
     }
 
+    /**
+     * Outputs byte content similar to console.log(Buffer) in node.js
+     *
+     * @return string
+     */
     public function debug(): string
     {
         $str = "Buffer <";
@@ -210,6 +330,8 @@ class Buffer implements ArrayAccess
     }
 
     /**
+     * Return byte content as fixed length array
+     *
      * @return SplFixedArray
      */
     protected function getBytesArray(): SplFixedArray
@@ -218,6 +340,8 @@ class Buffer implements ArrayAccess
     }
 
     /**
+     * Replace byte content
+     *
      * @param SplFixedArray $bytesArray
      */
     protected function setBytesArray(SplFixedArray $bytesArray): void
@@ -225,19 +349,39 @@ class Buffer implements ArrayAccess
         $this->bytesArray = $bytesArray;
     }
 
+    /**
+     * Whether an offset exists
+     *
+     * @param $offset
+     * @return bool
+     */
     public function offsetExists($offset): bool
     {
         return isset($this->bytesArray[$offset]);
     }
 
+    /**
+     * Offset to retrieve
+     *
+     * @param $offset
+     * @return int
+     * @throws Exception
+     */
     public function offsetGet($offset): int //TODO: If this is to replace node buffer, type may be mixed
     {
         if (!isset($this->bytesArray[$offset])) {
-            throw new \Exception('Requested Buffer element out of bounds');
+            throw new Exception('Requested Buffer element out of bounds');
         }
         return $this->bytesArray[$offset];
     }
 
+    /**
+     * Offset to set
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
@@ -247,6 +391,12 @@ class Buffer implements ArrayAccess
         }
     }
 
+    /**
+     * Offset to unset
+     *
+     * @param $offset
+     * @return void
+     */
     public function offsetUnset($offset): void
     {
         unset($this->bytesArray[$offset]);
