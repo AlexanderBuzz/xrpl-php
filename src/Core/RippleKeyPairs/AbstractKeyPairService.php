@@ -5,7 +5,7 @@ namespace XRPL_PHP\Core\RippleKeyPairs;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 
 class AbstractKeyPairService
 {
@@ -25,7 +25,7 @@ class AbstractKeyPairService
     public function deriveAddress(Buffer|string $publicKey): string
     {
         //TODO: Check if this works properly
-        return Utilities::deriveAddress($publicKey);
+        return CoreUtilities::deriveAddress($publicKey);
     }
 
     public function getType(): string

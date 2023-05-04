@@ -5,13 +5,13 @@ namespace XRPL_PHP\Core;
 use Exception;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
-class Utilities
+class CoreUtilities
 {
-    private static ?Utilities $instance = null;
+    private static ?CoreUtilities $instance = null;
 
     private AddressCodec $addressCodec;
 
-    public static function getInstance(): Utilities
+    public static function getInstance(): CoreUtilities
     {
         if (self::$instance === null) {
             self::$instance = new self();

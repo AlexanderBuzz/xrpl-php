@@ -6,7 +6,7 @@ use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 use XRPL_PHP\Wallet\DefaultFaucets;
 use XRPL_PHP\Wallet\Wallet;
 
@@ -54,7 +54,7 @@ if (!function_exists('XRPL_PHP\Sugar\fundWallet')) {
     ): array
     {
         // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
-        if ($wallet && Utilities::isValidClassicAddress($wallet->getClassicAddress())) {
+        if ($wallet && CoreUtilities::isValidClassicAddress($wallet->getClassicAddress())) {
             $walletToFund = $wallet;
         } else {
             $walletToFund = Wallet::generate();

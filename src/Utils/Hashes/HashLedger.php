@@ -6,8 +6,11 @@ use Exception;
 use XRPL_PHP\Core\HashPrefix;
 use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction as Transaction;
+use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
+/**
+ *
+ */
 class HashLedger
 {
     private static ?HashLedger $instance = null;
@@ -36,7 +39,7 @@ class HashLedger
             $txBlob = $tx;
             $txObject = $_this->binaryCodec->decode($tx);
         } else {
-            $txBlob = $_this->binaryCodec->encode($tx->getPayload());
+            $txBlob = $_this->binaryCodec->encode($tx->toArray());
             $txObject = $tx;
         }
 

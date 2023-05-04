@@ -6,7 +6,7 @@ use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
 use XRPL_PHP\Models\Methods\ServerStateRequest;
@@ -53,8 +53,8 @@ function validateAccountAddress (array &$tx, string $accountField, string $tagFi
  */
 function getClassicAccountAndTag (string $account, ?int $expectedTag = null): array
 {
-    if (Utilities::isValidXAddress($account)) {
-        $classicAddress = Utilities::xAddressToClassicAddress($account);
+    if (CoreUtilities::isValidXAddress($account)) {
+        $classicAddress = CoreUtilities::xAddressToClassicAddress($account);
         if (!is_null($expectedTag) && $expectedTag !== $classicAddress['tag']) {
             throw new Exception('Address includes a tag that does not match the tag specified in the transaction');
         }

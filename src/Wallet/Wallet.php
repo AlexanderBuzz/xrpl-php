@@ -8,7 +8,7 @@ use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
-use XRPL_PHP\Core\Utilities as CoreUtilities;
+use XRPL_PHP\Core\CoreUtilities as CoreUtilities;
 use XRPL_PHP\Utils\Utilities as XrplUtilities;
 use XRPL_PHP\Exceptions\ValidationException;
 use XRPL_PHP\Exceptions\XrplException;

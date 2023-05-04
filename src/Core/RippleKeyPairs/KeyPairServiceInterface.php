@@ -4,7 +4,7 @@ namespace XRPL_PHP\Core\RippleKeyPairs;
 
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 
 interface KeyPairServiceInterface
 {

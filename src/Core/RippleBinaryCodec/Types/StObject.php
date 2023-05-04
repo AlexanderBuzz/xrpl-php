@@ -2,22 +2,30 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 
 class StObject extends SerializedType
 {
-    //public const OBJECT_END_MARKER = 0xe1;
-
     public const OBJECT_END_MARKER_HEX = "E1";
 
-    public const OBJECT_END_MARKER_NAME = "ObjectEndMarker";
+    public const OBJECT_END_MARKER = "ObjectEndMarker";
 
     public const ST_OBJECT = "STObject";
+
+    public const DESTINATION = 'Destination';
+
+    public const ACCOUNT = 'ACCOUNT';
+
+    public const SOURCE_TAG = 'SourceTag';
+
+    public const DESTINATION_TAG = 'DestinationTag';
+
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
@@ -25,7 +33,7 @@ class StObject extends SerializedType
 
         while (!$parser->end()) {
             $field = $parser->readField();
-            if ($field->getName() === self::OBJECT_END_MARKER_NAME) {
+            if ($field->getName() === self::OBJECT_END_MARKER) {
                 break;
             }
 
@@ -44,12 +52,18 @@ class StObject extends SerializedType
     {
         $json = json_decode($serializedJson, true);
         $binarySerializer = new BinarySerializer(Buffer::alloc(0));
-        $addressCodec = new AddressCodec();
         $definitions = Definitions::getInstance();
 
         $isUnlModify = false;
 
         //xAddressDecoded ->
+        $xAddressDecoded = [];
+        foreach ($json as $key => $value) {
+            if ($value && CoreUtilities::isValidXAddress($value)) {
+                $handled = self::handleXAddress($key, $value);
+                // checkForDuplicateTags
+            }
+        }
 
         //sort
         uksort($json, function ($a, $b) use ($definitions) {
@@ -89,7 +103,7 @@ class StObject extends SerializedType
 
         while (!$binaryParser->end()) {
             $fieldInstance = $binaryParser->readField();
-            if ($fieldInstance->getName() === self::OBJECT_END_MARKER_NAME) {
+            if ($fieldInstance->getName() === self::OBJECT_END_MARKER) {
                 break;
             }
 
@@ -105,11 +119,32 @@ class StObject extends SerializedType
         return $accumulator;
     }
 
-    private function handleXAddress(string $field, string $xAddress): array
+    /**
+     * Break down an X-Address into an account and a tag
+     *
+     * @param string $field
+     * @param string $xAddress
+     * @return array
+     * @throws Exception
+     */
+    private static function handleXAddress(string $field, string $xAddress): array
     {
-        $decoded = Utilities::xAddressToClassicAddress($xAddress);
+        $decoded = CoreUtilities::xAddressToClassicAddress($xAddress);
 
+        if ($field === self::DESTINATION) {
+            $tagName = self::DESTINATION_TAG;
+        } else if ($field === self::ACCOUNT) {
+            $tagName = self::SOURCE_TAG;
+        } else if (isset($decoded['tag'])) {
+            throw new Exception($field . ' cannot have an associated tag');
+        }
 
+        return (isset($decoded['tag'])) ? [
+            $field => $decoded['classicAddress'],
+            $tagName => $decoded['tag']
+        ] : [
+            $field => $decoded['classicAddress']
+        ];
     }
 
 }

@@ -3,16 +3,16 @@
 namespace XRPL_PHP\Test\Core;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\Utilities;
+use XRPL_PHP\Core\CoreUtilities;
 
 final class UtilitiesTest extends TestCase
 {
     public function testSingletonUniqueness()
     {
-        $firstCall = Utilities::getInstance();
-        $secondCall = Utilities::getInstance();
+        $firstCall = CoreUtilities::getInstance();
+        $secondCall = CoreUtilities::getInstance();
 
-        $this->assertInstanceOf(Utilities::class, $firstCall);
+        $this->assertInstanceOf(CoreUtilities::class, $firstCall);
         $this->assertSame($firstCall, $secondCall);
     }
 }
