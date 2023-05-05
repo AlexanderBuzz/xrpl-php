@@ -59,10 +59,10 @@ class StObject extends SerializedType
         //xAddressDecoded ->
         $xAddressDecoded = [];
         foreach ($json as $key => $value) {
-            if ($value && CoreUtilities::isValidXAddress($value)) {
-                $handled = self::handleXAddress($key, $value);
-                // checkForDuplicateTags
-            }
+            //if ($value && CoreUtilities::isValidXAddress($value)) {
+            //    $handled = self::handleXAddress($key, $value);
+            //    //checkForDuplicateTags
+            //}
         }
 
         //sort
