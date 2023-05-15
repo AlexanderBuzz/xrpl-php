@@ -3,31 +3,38 @@
 namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
  * A collection of serialization information about a specific field type.
  */
 class FieldInstance
 {
-    private int $nth;
+    private readonly int $nth;
 
-    private bool $isVariableLengthEncoded;
+    private readonly bool $isVariableLengthEncoded;
 
-    private bool $isSerialized;
+    private readonly bool $isSerialized;
 
-    private bool $isSigningField;
+    private readonly bool $isSigningField;
 
-    private string $type;
+    private readonly string $type;
 
-    private string $name;
+    private readonly int $ordinal;
+
+    private readonly string $name;
 
     private FieldHeader $fieldHeader;
 
-    private int $ordinal;
+    private readonly string $associatedType;
 
-    private string $associatedType;
-
+    /**
+     *
+     *
+     * @param FieldInfo $fieldInfo
+     * @param string $fieldName
+     * @param FieldHeader $fieldHeader
+     * @throws \Exception
+     */
     public function __construct(FieldInfo $fieldInfo, string $fieldName, FieldHeader $fieldHeader)
     {
         $this->nth = $fieldInfo->getNth();
@@ -69,5 +76,10 @@ class FieldInstance
     public function getOrdinal(): int
     {
         return $this->ordinal;
+    }
+
+    public function buildField(string $name, FieldInfo $fieldInfo, int $typeOrdinal): FieldInstance
+    {
+
     }
 }

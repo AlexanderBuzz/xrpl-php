@@ -2,7 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
-use Brick\Math\BigInteger;
+use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
@@ -29,12 +29,23 @@ class BinaryParser
 
     private Buffer $bytes;
 
+    /**
+     *
+     *
+     * @param string $hexBytes
+     * @throws Exception
+     */
     public function __construct(string $hexBytes)
     {
         $this->bytes = Buffer::from($hexBytes, 'hex');
-        //print_r($this->bytes);
     }
 
+    /**
+     *
+     *
+     * @return int
+     * @throws Exception
+     */
     public function peek(): int
     {
         if ($this->bytes->getLength() > 0) {
@@ -44,6 +55,13 @@ class BinaryParser
         throw new \Exception('Buffer is empty');
     }
 
+    /**
+     *
+     *
+     * @param int $number
+     * @return void
+     * @throws Exception
+     */
     public function skip(int $number): void
     {
         if ($this->bytes->getLength() >= $number) {
@@ -53,6 +71,13 @@ class BinaryParser
         }
     }
 
+    /**
+     *
+     *
+     * @param int $number
+     * @return Buffer
+     * @throws Exception
+     */
     public function read(int $number): Buffer
     {
         if ($this->bytes->getLength() >= $number) {
@@ -65,6 +90,13 @@ class BinaryParser
         throw new \Exception('Trying to read more elements than the buffer has');
     }
 
+    /**
+     *
+     *
+     * @param int $number
+     * @return Buffer
+     * @throws Exception
+     */
     public function readUIntN(int $number): Buffer //BigInteger
     {
         if ($number > 0 && $number <= 8) {
@@ -80,21 +112,45 @@ class BinaryParser
         return $this->readUIntN(1);
     }
 
+    /**
+     *
+     *
+     * @return Buffer
+     * @throws Exception
+     */
     public function readUInt16(): Buffer
     {
         return $this->readUIntN(2);
     }
 
+    /**
+     *
+     *
+     * @return Buffer
+     * @throws Exception
+     */
     public function readUInt32(): Buffer
     {
         return $this->readUIntN(4);
     }
 
+    /**
+     *
+     *
+     * @return Buffer
+     * @throws Exception
+     */
     public function readUInt64(): Buffer
     {
         return $this->readUIntN(8);
     }
 
+    /**
+     *
+     *
+     * @param int|null $customEnd
+     * @return bool
+     */
     public function end(?int $customEnd = null): bool
     {
         $length = $this->bytes->getLength();
@@ -110,6 +166,12 @@ class BinaryParser
         return false;
     }
 
+    /**
+     *
+     *
+     * @return FieldHeader
+     * @throws Exception
+     */
     public function readFieldHeader(): FieldHeader
     {
         $typeCode = $this->readUInt8()->toInt();
@@ -118,21 +180,27 @@ class BinaryParser
 
         if ($typeCode === 0) {
             $typeCode = $this->readUInt8()->toInt();
-            if ($typeCode === 0 || $typeCode < 16) {
-                throw new \Exception("Cannot read FieldOrdinal, type_code out of range");
+            if ($typeCode < 16) {
+                throw new Exception("Cannot read FieldOrdinal, type_code out of range");
             }
         }
 
         if ($nth === 0) {
             $nth = $this->readUInt8()->toInt();
             if ($nth == 0 || $nth < 16) {
-                throw new \Exception("Cannot read FieldOrdinal, field_code out of range");
+                throw new Exception("Cannot read FieldOrdinal, field_code out of range");
             }
         }
 
         return new FieldHeader($typeCode, $nth);
     }
 
+    /**
+     *
+     *
+     * @return FieldInstance
+     * @throws Exception
+     */
     public function readField(): FieldInstance
     {
         $fieldHeader = $this->readFieldHeader();
@@ -141,8 +209,12 @@ class BinaryParser
         return Definitions::getInstance()->getFieldInstance($fieldName);
     }
 
-    //java readType(Class<T> type)
-    //python self: BinaryParser, field_type: Type[SerializedType]
+    /**
+     *
+     *
+     * @param SerializedType $type
+     * @return SerializedType
+     */
     public function readType(SerializedType $type): SerializedType
     {
         return $type->fromParser($this);
@@ -165,11 +237,12 @@ class BinaryParser
         }
     }
 
-    public function readFieldAndValue(FieldInstance $field): SerializedType
-    {
-
-    }
-
+    /**
+     *
+     *
+     * @return int
+     * @throws \Exception
+     */
     public function readVariableLengthLength(): int
     {
         $firstByte = $this->readUInt8()->toInt(); //BigInt?
@@ -188,7 +261,12 @@ class BinaryParser
         throw new \Exception("Invalid variable length indicator");
     }
 
-    public function getSize()
+    /**
+     * Returns internal Buffer length
+     *
+     * @return int
+     */
+    public function getSize(): int
     {
         return $this->bytes->getLength();
     }
