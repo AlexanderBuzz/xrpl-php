@@ -2,27 +2,25 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
-use Ds\Map;
-
 class Definitions
 {
     public static ?Definitions $instance = null;
 
-    private array $definitions;
+    private array $definitions = [];
 
-    private array $typeOrdinals;
+    private array $typeOrdinals = [];
 
-    private array $fieldHeaderMap;
+    private array $fieldHeaderMap = [];
 
-    private array $ledgerEntryTypes;
+    private array $ledgerEntryTypes = [];
 
-    private array $transactionResults;
+    private array $transactionResults = [];
 
-    private array $transactionTypes;
+    private array $transactionTypes = [];
 
-    private Map $fieldInfoMap;
+    private array $fieldInfoMap = [];
 
-    private Map $fieldIdNameMap;
+    private array $fieldIdNameMap = [];
 
     public function __construct()
     {
@@ -34,25 +32,20 @@ class Definitions
         $this->transactionResults = $this->definitions['TRANSACTION_RESULTS'];
         $this->transactionTypes = $this->definitions['TRANSACTION_TYPES'];
 
-        $this->fieldInfoMap = new Map();
-        $this->fieldIdNameMap = new Map();
-
         foreach ($this->definitions['FIELDS'] as $field) {
             $fieldName = $field[0];
-            $metadata = new FieldInfo(
+            $fieldInfo = new FieldInfo(
                 $field[1]["nth"],
                 $field[1]["isVLEncoded"],
                 $field[1]["isSerialized"],
                 $field[1]["isSigningField"],
                 $field[1]["type"],
             );
-            $fieldHeader = new FieldHeader($this->typeOrdinals[$metadata->getType()], $metadata->getNth());
+            $fieldHeader = new FieldHeader($this->typeOrdinals[$fieldInfo->getType()], $fieldInfo->getNth());
 
-            $this->fieldInfoMap->put($fieldName, $metadata);
-            $this->fieldIdNameMap->put($fieldHeader, $fieldName);
-            //TODO: make array and map mix more concise
+            $this->fieldInfoMap[$fieldName] = $fieldInfo;
+            $this->fieldIdNameMap[md5(serialize($fieldHeader))] = $fieldName;
             $this->fieldHeaderMap[$fieldName] = $fieldHeader;
-
         }
     }
 
@@ -72,12 +65,12 @@ class Definitions
 
     public function getFieldNameFromHeader(FieldHeader $fieldHeader): string
     {
-        return $this->fieldIdNameMap->get($fieldHeader);
+        return $this->fieldIdNameMap[md5(serialize($fieldHeader))];
     }
 
     public function getFieldInstance(string $fieldName): FieldInstance
     {
-        $fieldInfo = $this->fieldInfoMap->get($fieldName);
+        $fieldInfo = $this->fieldInfoMap[$fieldName];
         $fieldHeader = $this->getFieldHeaderFromName($fieldName);
 
         return new FieldInstance($fieldInfo, $fieldName, $fieldHeader);
