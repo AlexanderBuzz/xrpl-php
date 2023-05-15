@@ -31,7 +31,6 @@
   },
   "require": {
     "guzzlehttp/guzzle": "^7.4",
-    "php-ds/php-ds": "^1.4",
     "brick/money": "^0.7.0",
     "simplito/elliptic-php": "^1.0"
   },
