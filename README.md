@@ -4,9 +4,6 @@ PHP Client Library to develop XRP Ledger. It offers all the functionality availa
 and Java Versions emphasizing robustness and code readability for those interested in looking under the 
 hood and getting into the nitty-gritty of XRPL development.
 
-It is currently work in progress nearing the finishing line, with intended use in PHP ecommerce platforms 
-in mind when it comes to feature priority.
-
 ![Build Status](https://github.com/shopware/shopware/workflows/PHPUnit/badge.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
 
