@@ -21,7 +21,7 @@ class AccountTxRequest extends BaseRequest
         protected ?bool $binary = null,
         protected ?bool $forward = null,
         protected ?int $limit = null,
-        //TODO: Marker https://xrpl.org/markers-and-pagination.html
+        protected mixed $marker = null,
         protected ?bool $strict = null
     ) {}
 }

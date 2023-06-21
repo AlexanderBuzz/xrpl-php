@@ -18,6 +18,6 @@ class AccountLinesRequest extends BaseRequest
         protected ?string $ledgerIndex = null,
         protected ?string $peer = null,
         protected ?int $limit = null,
-        //TODO: Marker https://xrpl.org/markers-and-pagination.html
+        protected mixed $marker = null
     ) {}
 }

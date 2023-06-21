@@ -18,6 +18,6 @@ class AccountChannelsRequest extends BaseRequest
         protected ?string $ledgerHash = null,
         protected ?string $ledgerIndex = null,
         protected ?int $limit = null,
-        //TODO: Marker https://xrpl.org/markers-and-pagination.html
+        protected mixed $marker = null
     ) {}
 }

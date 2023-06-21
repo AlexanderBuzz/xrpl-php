@@ -13,7 +13,7 @@ use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
-use XRPL_PHP\Models\Methods\SubmitResponse;
+use XRPL_PHP\Models\ServerInfo\SubmitResponse;
 use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction;
 use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Wallet\Wallet;

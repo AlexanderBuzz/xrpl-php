@@ -5,7 +5,7 @@ namespace XRPL_PHP\Sugar;
 use Brick\Math\BigDecimal;
 use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Methods\ServerInfoRequest;
+use XRPL_PHP\Models\ServerInfo\ServerInfoRequest;
 
 if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
 

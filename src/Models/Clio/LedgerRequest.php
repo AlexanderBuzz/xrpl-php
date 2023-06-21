@@ -9,7 +9,7 @@ use XRPL_PHP\Models\BaseRequest;
  * https://xrpl.org/ledger-clio.html
  */
 
-final class LedgerRequest extends BaseRequest
+class LedgerRequest extends BaseRequest
 {
     protected string $command = "ledger";
 

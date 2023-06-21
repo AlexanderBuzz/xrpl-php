@@ -9,7 +9,7 @@ use XRPL_PHP\Models\BaseRequest;
  * https://xrpl.org/nft_info.html
  */
 
-final class NftInfoRequest extends BaseRequest
+class NftInfoRequest extends BaseRequest
 {
     protected string $command = "nft_info";
 

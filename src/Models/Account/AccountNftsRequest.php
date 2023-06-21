@@ -16,7 +16,7 @@ class AccountNftsRequest extends BaseRequest
         protected string $account,
         protected ?string $ledgerHash = null,
         protected ?string $ledgerIndex = null,
-        protected ?int $limit = null
-        //TODO: Marker https://xrpl.org/markers-and-pagination.html
+        protected ?int $limit = null,
+        protected mixed $marker = null
     ) {}
 }

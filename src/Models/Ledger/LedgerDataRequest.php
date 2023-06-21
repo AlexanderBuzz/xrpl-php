@@ -16,7 +16,7 @@ class LedgerDataRequest extends BaseRequest
         protected ?string $ledgerHash = null,
         protected ?string $ledgerIndex = null, //is an Object in https://github.com/XRPLF/xrpl.js/blob/develop/packages/xrpl/src/models/methods/ledgerData.ts
         protected ?bool $binary = null,
-        protected ?int $limit = null
-        //marker
+        protected ?int $limit = null,
+        protected mixed $marker = null
     ) {}
 }

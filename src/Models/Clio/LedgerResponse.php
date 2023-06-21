@@ -9,7 +9,7 @@ use XRPL_PHP\Models\BaseResponse;
  * https://xrpl.org/ledger-clio.html
  */
 
-final class LedgerResponse extends BaseResponse
+class LedgerResponse extends BaseResponse
 {
 
 }

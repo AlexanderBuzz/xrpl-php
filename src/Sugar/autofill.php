@@ -9,7 +9,7 @@ use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\CoreUtilities;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
-use XRPL_PHP\Models\Methods\ServerStateRequest;
+use XRPL_PHP\Models\ServerInfo\ServerStateRequest;
 
 function setValidAddresses (array &$tx): void
 {

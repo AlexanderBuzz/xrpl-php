@@ -6,10 +6,10 @@ use XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Clio Methods
- * https://xrpl.org/nft_info.html
+ * https://xrpl.org/nft_history.html
  */
 
-class NftInfoResponse extends BaseResponse
+class NftHistoryResponse extends BaseResponse
 {
 
 }
