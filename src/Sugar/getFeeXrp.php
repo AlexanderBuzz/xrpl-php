@@ -3,12 +3,23 @@
 namespace XRPL_PHP\Sugar;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\ServerInfo\ServerInfoRequest;
 
 if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
 
+    /**
+     *  Calculates the current transaction fee for the ledger.
+     * Note: This is a public API that can be called directly.
+     *
+     * @param JsonRpcClient $client
+     * @param int|null $cushion
+     * @return string
+     * @throws \Brick\Math\Exception\MathException
+     * @throws \Brick\Math\Exception\RoundingNecessaryException
+     */
     function getFeeXrp(
         JsonRpcClient $client,
         ?int $cushion = null
@@ -37,7 +48,7 @@ if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
 
        $fee = BigDecimal::min($fee, $client->getMaxFeeXrp());
 
-       //TODO: constant NUM_DECIMAL_PLACES
-       return $fee->toScale(6);
+       //Round fee to 6 decimal places
+       return $fee->toScale(6, RoundingMode::UP);
     }
 }
