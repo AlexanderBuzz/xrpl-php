@@ -9,8 +9,12 @@ use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\CoreUtilities;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
+use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\ServerInfo\ServerStateRequest;
 
+/**
+ * @throws Exception
+ */
 function setValidAddresses (array &$tx): void
 {
     validateAccountAddress($tx, 'Account', 'SourceTag');
@@ -71,6 +75,9 @@ function getClassicAccountAndTag (string $account, ?int $expectedTag = null): ar
     ];
 }
 
+/**
+ * @throws Exception
+ */
 function convertToClassicAddress (array &$tx, string $fieldName): void
 {
     $account = $tx[$fieldName] ?? null;
@@ -81,16 +88,22 @@ function convertToClassicAddress (array &$tx, string $fieldName): void
     }
 }
 
+/**
+ * @throws Exception
+ */
 function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
 {
     $accountInfoRequest = new AccountInfoRequest(
-            account: $tx['Account'],
-            ledgerIndex: 'current'
+        account: $tx['Account'],
+        ledgerIndex: 'current'
     );
 
-    $acoountInfoResponse = $client->request($accountInfoRequest)->wait();
+    $accountInfoResponse = $client->syncRequest(($accountInfoRequest));
+    if(get_class($accountInfoResponse) === ErrorResponse::class) {
+        throw new Exception($accountInfoResponse->getError());
+    }
 
-    $tx['Sequence'] = $acoountInfoResponse->getResult()['account_data']['Sequence'];
+    $tx['Sequence'] = $accountInfoResponse->getResult()['account_data']['Sequence'];
 }
 
 function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
