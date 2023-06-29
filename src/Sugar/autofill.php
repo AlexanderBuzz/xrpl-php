@@ -114,7 +114,7 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int
     $netFeeDrops = xrpToDrops($netFeeXrp);
     $baseFee = BigDecimal::of($netFeeDrops);
 
-    if ($tx['TransactionType'] === 'EscrowFinish' && !is_null($tx['Fulfillment'])) {
+    if ($tx['TransactionType'] === 'EscrowFinish' && isset($tx['Fulfillment']) && !is_null($tx['Fulfillment'])) {
         // 10 drops × (33 + (Fulfillment size in bytes / 16))
         $fulfillmentBytesSize = ceil(strlen($tx['Fulfillment'] / 2));
         $product = BigDecimal::of(scaleValue($netFeeDrops, 33 + $fulfillmentBytesSize / 16));
