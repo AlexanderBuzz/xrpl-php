@@ -74,6 +74,34 @@ final class WalletTest extends TestCase
         $this->assertTrue(str_starts_with($wallet->getClassicAddress(), self::CLASSIC_ADDRESS_PREFIX));
     }
 
+    public function testDeriveWallet(): void
+    {
+        $ed25519_fixture = [
+            'seed' => 'sEdVUQjtZodxPWQRNsYpxs4tfEXkgAD',
+            'publicKey' => 'ED78955DAFE798B8575256974856386EE2DF08E10739667F49A6D21C1BB62B9737',
+            'privateKey' => 'EDA45F83DADC737B905C57C34E6B061E2BC7963BA4C6C86C55CF9F3B5193C977FC',
+            'classicAddress' => 'rDmtBkGk5P1BnX4h8KAsZ8rZhNb9uGjmTi'
+        ];
+        $ed25519_wallet = Wallet::fromSeed($ed25519_fixture['seed']);
+        $this->assertEquals($ed25519_fixture['publicKey'], $ed25519_wallet->getPublicKey());
+        $this->assertEquals($ed25519_fixture['privateKey'], $ed25519_wallet->getPrivateKey());
+        $this->assertEquals($ed25519_fixture['classicAddress'], $ed25519_wallet->getClassicAddress());
+
+
+        $secp256k1_fixture = [
+            'seed' => 'ssNYVX6qYzKNu48FBBs4LuvgfivEJ',
+            'publicKey' => '03D818927E512DD16BB3177007837620C47E00CCEB394B241B56551FBB41C6E898',
+            'privateKey' => '002982031E3AB068FF214042E23DAC34103ECD5179DDA2FD46EF4C83063B2BB9C0',
+            'classicAddress' => 'rNWgYiADKLCJDfZX3oAdPcsRHe9vtJdCVD'
+        ];
+        $secp256k1_wallet = Wallet::fromSeed($secp256k1_fixture['seed']);
+        $this->assertEquals($secp256k1_fixture['publicKey'], $secp256k1_wallet->getPublicKey());
+        $this->assertEquals($secp256k1_fixture['privateKey'], $secp256k1_wallet->getPrivateKey());
+        $this->assertEquals($secp256k1_fixture['classicAddress'], $secp256k1_wallet->getClassicAddress());
+
+
+    }
+
     public function testSignSuccessfully(): void
     {
         $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H', type: KeyPair::EC);

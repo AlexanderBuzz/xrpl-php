@@ -77,17 +77,24 @@ class Wallet
         return self::deriveWallet($seed, $masterAddress, $type);
     }
 
-    private static function deriveWallet(string $seed, ?string $masterAddress = null, string $type = self::DEFAULT_ALGORITHM): Wallet
+    /**
+     *
+     *
+     * @param string $seed
+     * @param string|null $masterAddress
+     * @param string $type
+     * @return Wallet
+     * @throws Exception
+     */
+    private static function deriveWallet(string $seed): Wallet
     {
-        $keyPairService = KeyPair::getKeyPairServiceByType($type);
+        $decoded = CoreUtilities::decodeSeed($seed);
+        $keyPairService = KeyPair::getKeyPairServiceByType($decoded['type']);
         $keyPair = $keyPairService->deriveKeyPair($seed);
 
         return new Wallet(
             $keyPair->getPublicKey(),
-            $keyPair->getPrivateKey(),
-            $masterAddress,
-            $seed
-
+            $keyPair->getPrivateKey()
         );
     }
 

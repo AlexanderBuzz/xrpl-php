@@ -100,6 +100,15 @@ class CoreUtilities
     }
 
     /**
+     * @throws Exception Error
+     */
+    public static function decodeSeed(string $seed): array
+    {
+        $_this = self::getInstance();
+        return $_this->addressCodec->decodeSeed($seed);
+    }
+
+    /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      */
