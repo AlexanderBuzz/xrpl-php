@@ -1,6 +1,6 @@
 <?php
 
-namespace Client;
+namespace XRPL_PHP\Test\Client;
 
 use donatj\MockWebServer\MockWebServer;
 use Exception;
