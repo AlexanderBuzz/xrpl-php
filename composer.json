@@ -17,8 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "XRPL_PHP\\": "src/",
-      "XRPL_PHP\\Test\\": "tests/"
+      "XRPL_PHP\\": "src/"
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "XRPL_PHP\\Test\\": "tests/"
+      }
     },
     "files": [
       "src/Sugar/autofill.php",

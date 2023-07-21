@@ -9,14 +9,14 @@ hood and getting into the nitty-gritty of XRPL development.
 
 ## How to install
 
-`composer require hardcastle/xrpl_php dev-master`
+`composer require hardcastle/xrpl_php`
 
 ## How to run
 
 ### Build Container
 In the host directory:
 ```
-docker-compose up  -d
+docker-compose up -d
 docker-compose exec -u 0 php bash
 ```
 In the container shell:
