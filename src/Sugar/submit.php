@@ -6,8 +6,8 @@ use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\ServerInfo\SubmitRequest;
-use XRPL_PHP\Models\ServerInfo\SubmitResponse;
+use XRPL_PHP\Models\Transaction\SubmitRequest;
+use XRPL_PHP\Models\Transaction\SubmitResponse;
 use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use XRPL_PHP\Models\Transaction\TxRequest;
 use XRPL_PHP\Models\Transaction\TxResponse;
@@ -36,8 +36,8 @@ function submitRequest(
     }
 
     $submitRequest = new SubmitRequest(
-        tx_blob: $signedTxEncoded,
-        fail_hard: isAccountDelete($signedTransaction) || $failHard
+        txBlob: $signedTxEncoded,
+        failHard: isAccountDelete($signedTransaction) || $failHard
     );
 
     return $client->request($submitRequest);
