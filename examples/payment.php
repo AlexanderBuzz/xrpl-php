@@ -3,9 +3,8 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
-
+use XRPL_PHP\Models\Transaction\SubmitRequest;
 use XRPL_PHP\Wallet\Wallet;
-use function XRPL_PHP\Sugar\autofill;
 use function XRPL_PHP\Sugar\xrpToDrops;
 
 /**
@@ -43,16 +42,20 @@ $autofilledTx = $client->autofill($tx);
 
 $signedTx = $standbyWallet->sign($autofilledTx);
 
-//https://xrpl.org/submit.html
-
+// Using raw (array) request:
 $body = json_encode([
     "method" => "submit",
     "params" => [
         ["tx_blob" => $signedTx['tx_blob']]
     ]
 ]);
-
 $response = $client->rawSyncRequest('POST', '', $body);
 $content = $response->getBody()->getContents();
-
 print_r(json_decode($content, true));
+
+// Using method (object) request:
+//
+// $submitRequest = new SubmitRequest($signedTx['tx_blob']);
+// $response = $client->syncRequest($submitRequest);
+// $content = $response->getBody()->getContents();
+// print_r(json_decode($content, true));

@@ -17,5 +17,5 @@ class SubmitRequest extends BaseRequest
         protected bool $failHard = false
     ) {}
 
-    //TODO: Make informed decision wether to implement Sign-and-Submit Mode
+    //TODO: Make informed decision whether to implement Sign-and-Submit Mode
 }
