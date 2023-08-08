@@ -29,7 +29,10 @@ class BytesList
         return $this->bufferArray[$index]; //TODO: This is optimistic :)
     }
 
-    public function deepGrab(int $bufferIndex, $byteIndex): int
+    /**
+     * @psalm-param 0 $byteIndex
+     */
+    public function deepGrab(int $bufferIndex, int $byteIndex): int
     {
         return $this->bufferArray[$bufferIndex][$byteIndex];  //TODO: This is very optimistic :)
     }

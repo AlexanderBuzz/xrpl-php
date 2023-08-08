@@ -46,12 +46,9 @@ class Binary
     */
 
     /**
-     *
-     *
      * @param BinaryParser $parser
-     * @return array
      */
-    public function readJson(BinaryParser $parser): array //xrpl.js: JsonObject, defined in serialized-type.js
+    public function readJson(BinaryParser $parser): array|int|string //xrpl.js: JsonObject, defined in serialized-type.js
     {
         $type = new StObject();
 

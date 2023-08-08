@@ -44,14 +44,17 @@ class CoreUtilities
         return $account;
     }
 
-    public static function isValidClassicAddress($address): bool
+    /**
+     * @param null|string $address
+     */
+    public static function isValidClassicAddress(string|null $address): bool
     {
         $_this = self::getInstance();
 
         return $_this->addressCodec->isValidClassicAddress($address);
     }
 
-    public static function isValidXAddress($address): bool
+    public static function isValidXAddress(string $address): bool
     {
         $_this = self::getInstance();
 

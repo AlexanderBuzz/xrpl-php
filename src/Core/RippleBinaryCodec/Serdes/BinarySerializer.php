@@ -26,7 +26,7 @@ class BinarySerializer
         $this->bytes->appendBuffer($bytes);
     }
 
-    public function writeFieldAndValue(FieldInstance $field, SerializedType $value)
+    public function writeFieldAndValue(FieldInstance $field, SerializedType $value): void
     {
         $fieldHeaderHex = $field->getHeader()->toBytes()->toString();
         $this->put($fieldHeaderHex);

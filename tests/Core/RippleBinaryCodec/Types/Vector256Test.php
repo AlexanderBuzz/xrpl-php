@@ -29,7 +29,7 @@ final class Vector256Test extends TestCase
         $this->hex = self::VALUE1 . self::VALUE2;
     }
 
-   public function testDecode()
+   public function testDecode(): void
    {
        $this->assertEquals(
            $this->json,
@@ -37,7 +37,7 @@ final class Vector256Test extends TestCase
        );
    }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $this->assertEquals(
             $this->hex,

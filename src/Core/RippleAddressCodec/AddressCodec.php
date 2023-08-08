@@ -18,7 +18,10 @@ class AddressCodec extends CodecWithXrpAlphabet
         parent::__construct(Utils::XRPL_ALPHABET);
     }
 
-    public function classicAddressToXAddress(string $classicAddress, mixed $tag, bool $isTestnet = false): string
+    /**
+     * @psalm-param 4294967295 $tag
+     */
+    public function classicAddressToXAddress(string $classicAddress, int $tag, bool $isTestnet = false): string
     {
         $accountBuffer = $this->decodeAccountId($classicAddress);
         return $this->encodeXAddress($accountBuffer, $tag, $isTestnet);

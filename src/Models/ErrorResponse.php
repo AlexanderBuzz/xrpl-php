@@ -35,7 +35,7 @@ class ErrorResponse
         return 'error';
     }
 
-    public function getStatusCode(): string
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }

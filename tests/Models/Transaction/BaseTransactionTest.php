@@ -9,7 +9,7 @@ use XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
 
 final class BaseTransactionTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $properties = [
             'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
@@ -27,7 +27,7 @@ final class BaseTransactionTest extends TestCase
         $this->assertTrue($paymentTransaction->offsetExists('TxnSignature'));
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $tx = [
             'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',

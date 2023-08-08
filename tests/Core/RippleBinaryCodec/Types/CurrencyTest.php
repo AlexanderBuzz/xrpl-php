@@ -14,7 +14,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Currency;
  */
 final class CurrencyTest extends TestCase
 {
-    public function testDecodeIso3()
+    public function testDecodeIso3(): void
     {
         $this->assertEquals(
             "XRP",
@@ -32,7 +32,7 @@ final class CurrencyTest extends TestCase
         );
     }
 
-    public function testEncodeIso3()
+    public function testEncodeIso3(): void
     {
         $this->assertEquals(
             "0000000000000000000000000000000000000000",

@@ -176,7 +176,10 @@ class Wallet
         return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
     }
 
-    public function getXAddress(mixed $tag, bool $isTestnet = false): string
+    /**
+     * @psalm-param 1337 $tag
+     */
+    public function getXAddress(int $tag, bool $isTestnet = false): string
     {
         return CoreUtilities::classicAddressToXAddress($this->classicAddress, $tag, $isTestnet);
     }

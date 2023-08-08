@@ -374,10 +374,12 @@ class Buffer implements ArrayAccess
      * Offset to retrieve
      *
      * @param $offset
+     *
      * @return int
+     *
      * @throws Exception
      */
-    public function offsetGet($offset): int //TODO: If this is to replace node buffer, type may be mixed
+    public function offsetGet(mixed $offset): int //TODO: If this is to replace node buffer, type may be mixed
     {
         if (!isset($this->bytesArray[$offset])) {
             throw new Exception('Requested Buffer element out of bounds');

@@ -16,7 +16,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
  */
 final class HashTest extends TestCase
 {
-    public function testDecode()
+    public function testDecode(): void
     {
         $this->assertEquals(
             $this->getBytes(16),
@@ -34,7 +34,7 @@ final class HashTest extends TestCase
         );
     }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $this->assertEquals(
             $this->getBytes(16),

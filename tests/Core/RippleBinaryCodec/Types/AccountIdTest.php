@@ -24,7 +24,7 @@ final class AccountIdTest extends TestCase
         $this->hex = "5E7B112523F68D2F5E879DB4EAC51C6698A69304";
     }
 
-   public function testDecode()
+   public function testDecode(): void
    {
        $this->assertEquals(
            $this->json,
@@ -32,7 +32,7 @@ final class AccountIdTest extends TestCase
        );
    }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $this->assertEquals(
             $this->hex,

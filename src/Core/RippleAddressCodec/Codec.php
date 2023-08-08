@@ -66,7 +66,7 @@ class Codec
         return $this->encodeRaw(Buffer::concat([$bytes->toArray(), $check->toArray()]));
     }
 
-    public function decodeChecked(string $base58string)
+    public function decodeChecked(string $base58string): Buffer
     {
         $buffer = $this->decodeRaw($base58string);
 
@@ -110,7 +110,7 @@ class Codec
         return Buffer::from($hexValue);
     }
 
-    private function verifyCheckSum(Buffer $bytes)
+    private function verifyCheckSum(Buffer $bytes): bool
     {
         $computed = $this->sha256($this->sha256($bytes->slice(0,-4)))->slice(0,4);
         $checksum = $bytes->slice(-4);

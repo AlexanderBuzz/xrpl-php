@@ -11,7 +11,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 
 final class UIntTest extends TestCase
 {
-    public function testDecodeUInt8()
+    public function testDecodeUInt8(): void
     {
         $this->assertEquals(
             0,
@@ -29,7 +29,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testEncodeUInt8()
+    public function testEncodeUInt8(): void
     {
         $this->assertEquals(
             '00',
@@ -52,7 +52,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testDecodeUInt16()
+    public function testDecodeUInt16(): void
     {
         $this->assertEquals(
             0,
@@ -70,7 +70,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testEncodeUInt16()
+    public function testEncodeUInt16(): void
     {
         $this->assertEquals(
             '0000',
@@ -93,7 +93,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testDecodeUInt32()
+    public function testDecodeUInt32(): void
     {
         $this->assertEquals(
             0,
@@ -116,7 +116,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testEncodeUInt32()
+    public function testEncodeUInt32(): void
     {
         $this->assertEquals(
             '00000000',
@@ -144,7 +144,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testDecodeUInt64()
+    public function testDecodeUInt64(): void
     {
         $this->assertEquals(
             "0",
@@ -173,7 +173,7 @@ final class UIntTest extends TestCase
         );
     }
 
-    public function testEncodeUInt64()
+    public function testEncodeUInt64(): void
     {
         $this->assertEquals(
             '0000000000000000',

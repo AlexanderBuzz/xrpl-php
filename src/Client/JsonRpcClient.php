@@ -87,7 +87,7 @@ class JsonRpcClient
             $request->getJson()
         );
 
-        $resolve = function(ResponseInterface $response) use(&$promise, $request, $returnRawResponse) {
+        $resolve = function(ResponseInterface $response) use(&$promise, $request, $returnRawResponse): \XRPL_PHP\Models\ErrorResponse|\XRPL_PHP\Models\BaseResponse|\Psr\Http\Message\ResponseInterface {
             if ($returnRawResponse) {
                 return $response;
             }
@@ -235,13 +235,11 @@ class JsonRpcClient
     }
 
     /**
-     *
-     *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     * @return SubmitResponse
+     *
      * @throws \Exception
      */
     public function submit(
@@ -249,19 +247,17 @@ class JsonRpcClient
         ?bool                    $autofill = false,
         ?bool                    $failHard = false,
         ?Wallet                  $wallet = null
-    ): SubmitResponse
+    ): array
     {
         return submit($this, $transaction, $autofill, $failHard, $wallet);
     }
 
     /**
-     *
-     *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     * @return TxResponse
+     *
      * @throws \Exception
      */
     public function submitAndWait(
@@ -269,7 +265,7 @@ class JsonRpcClient
         ?bool                    $autofill = false,
         ?bool                    $failHard = false,
         ?Wallet                  $wallet = null
-    ): TxResponse
+    ): array
     {
         return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
     }

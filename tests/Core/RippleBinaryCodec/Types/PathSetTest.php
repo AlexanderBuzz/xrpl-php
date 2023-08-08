@@ -79,7 +79,7 @@ final class PathSetTest extends TestCase
     }
 
 
-    public function testDecode()
+    public function testDecode(): void
     {
         $this->assertEquals(
             $this->json,
@@ -87,7 +87,7 @@ final class PathSetTest extends TestCase
         );
     }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $serializedJson = json_encode($this->json);
         $this->assertEquals(

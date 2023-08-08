@@ -11,12 +11,12 @@ class Utils
         return empty(array_diff_assoc($a1, $a2));
     }
 
-    public function concatArgs()
+    public function concatArgs(): void
     {
 
     }
 
-    private function isSequence()
+    private function isSequence(): void
     {
 
     }

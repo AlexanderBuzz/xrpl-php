@@ -7,7 +7,7 @@ use XRPL_PHP\Core\CoreUtilities;
 
 final class UtilitiesTest extends TestCase
 {
-    public function testSingletonUniqueness()
+    public function testSingletonUniqueness(): void
     {
         $firstCall = CoreUtilities::getInstance();
         $secondCall = CoreUtilities::getInstance();

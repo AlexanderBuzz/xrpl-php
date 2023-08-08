@@ -225,7 +225,7 @@ if (! function_exists('XRPL_PHP\Sugar\submit')) {
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     * @return array
+     *
      * @throws Exception
      */
     function submit(
@@ -250,7 +250,7 @@ if (! function_exists('XRPL_PHP\Sugar\submitAndWait')) {
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     * @return array
+     *
      * @throws Exception
      */
     function submitAndWait(

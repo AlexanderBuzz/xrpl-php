@@ -14,7 +14,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
  */
 final class BlobTest extends TestCase
 {
-    public function testDecode()
+    public function testDecode(): void
     {
         $width = 1;
         $this->assertEquals($this->getBytes($width), Blob::fromHex($this->getBytes($width))->toString());
@@ -32,7 +32,7 @@ final class BlobTest extends TestCase
         $this->assertEquals($this->getBytes($width), Blob::fromHex($this->getBytes($width))->toString());
     }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $this->assertEquals($this->getBytes(16), Blob::fromJson($this->getBytes(16))->toHex());
     }
