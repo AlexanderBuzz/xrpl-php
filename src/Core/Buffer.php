@@ -143,6 +143,10 @@ class Buffer implements ArrayAccess
      */
     public static function random(int $size): Buffer
     {
+        if ($size < 1) {
+            return Buffer::alloc();
+        }
+
         $hexBytes = bin2hex(random_bytes($size));
         return Buffer::from($hexBytes);
     }
@@ -362,10 +366,10 @@ class Buffer implements ArrayAccess
     /**
      * Whether an offset exists
      *
-     * @param $offset
+     * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->bytesArray[$offset]);
     }
@@ -409,7 +413,7 @@ class Buffer implements ArrayAccess
      * @param $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->bytesArray[$offset]);
     }

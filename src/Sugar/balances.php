@@ -7,6 +7,7 @@ use XRPL_PHP\Client\JsonRpcClient;
 use GuzzleHttp\Promise\Promise;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountLinesRequest;
+use XRPL_PHP\Models\ErrorResponse;
 
 function formatBalances(array $trustlines): array
 {
@@ -37,7 +38,7 @@ if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
 
         $xrpResponse = $client->request($xrpRequest)->wait();
 
-        if($xrpResponse::class === 'XRPL_PHP\Models\ErrorResponse') {
+        if(get_class($xrpResponse) === ErrorResponse::class) {
             throw new Exception($xrpResponse->getError());
         }
 

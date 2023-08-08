@@ -16,6 +16,10 @@ final class BinaryCodecTest extends TestCase
     public const SINGLE_OBJECT_HEX = "EAEA021002E1E1";
     public const MULTI_LEVEL_OBJECT_HEX = "EAEA011001021002E1E1";
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
+    private array $fixtures;
+
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private BinaryCodec $binaryCodec;
 
     protected function setUp(): void

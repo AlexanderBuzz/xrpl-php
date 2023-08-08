@@ -11,6 +11,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 
 final class UIntTest extends TestCase
 {
+    /** @psalm-suppress UndefinedMethod */
     public function testDecodeUInt8(): void
     {
         $this->assertEquals(
@@ -52,6 +53,7 @@ final class UIntTest extends TestCase
         );
     }
 
+    /** @psalm-suppress UndefinedMethod */
     public function testDecodeUInt16(): void
     {
         $this->assertEquals(
@@ -93,6 +95,7 @@ final class UIntTest extends TestCase
         );
     }
 
+    /** @psalm-suppress UndefinedMethod */
     public function testDecodeUInt32(): void
     {
         $this->assertEquals(
@@ -144,6 +147,7 @@ final class UIntTest extends TestCase
         );
     }
 
+    /** @psalm-suppress UndefinedMethod */
     public function testDecodeUInt64(): void
     {
         $this->assertEquals(

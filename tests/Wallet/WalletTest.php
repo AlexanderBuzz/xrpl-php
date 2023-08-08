@@ -107,7 +107,7 @@ final class WalletTest extends TestCase
 
     public function testSignSuccessfully(): void
     {
-        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H', type: KeyPair::EC);
+        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H');
 
         // TODO: Pull this from fixtures
         $expected = [
@@ -132,7 +132,7 @@ final class WalletTest extends TestCase
 
     public function testSignWithMultisignAddress(): void
     {
-        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H', type: KeyPair::EC);
+        $wallet = Wallet::fromSeed(seed: 'ss1x3KLrSvfg7irFc1D929WXZ7z9H');
 
         // TODO: Pull this from fixtures
         $expected = [

@@ -15,8 +15,10 @@ use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
  */
 class AddressCodecTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private AddressCodec $addressCodec;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $fixtures;
 
     public function setUp(): void

@@ -65,19 +65,12 @@ class Wallet
         $keyPairService = KeyPair::getKeyPairServiceByType($type);
         $seed = $keyPairService->generateSeed();
 
-        return Wallet::fromSeed(
-            seed:$seed,
-            type: $type
-        );
+        return Wallet::fromSeed($seed);
     }
 
-    public static function fromSeed(
-        string $seed,
-        ?string $masterAddress = null,
-        string $type = self::DEFAULT_ALGORITHM
-    ): Wallet
+    public static function fromSeed(string $seed): Wallet
     {
-        return self::deriveWallet($seed, $masterAddress, $type);
+        return self::deriveWallet($seed);
     }
 
     /**
@@ -226,7 +219,7 @@ class Wallet
          *   Since decode goes to upper case, we set all tx memos to be uppercase for the comparison.
          */
         if (isset($tx['Memos'])) {
-            $tx['Memos'] = array_map(function ($memo) {
+            $tx['Memos'] = array_map(function (array $memo): array {
                 if (isset($memo['Memo']['MemoData'])) {
                     if(!XrplUtilities::isHex($memo['Memo']['MemoData'])) {
                         throw new ValidationException('MemoData field must be a hex value');
@@ -283,7 +276,7 @@ class Wallet
 
     /*
 
-    private function removeTraiingZeros(Transaction|array $transaction): void
+    private function removeTrailingZeros(Transaction|array $transaction): void
     {
         //TODO: Test if this is really necessary. Edge case: Amount value 123.4000
     }

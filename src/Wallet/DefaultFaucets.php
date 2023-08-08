@@ -44,7 +44,7 @@ class DefaultFaucets
         }
 
         if (str_contains($connectionUrl, 'amm')) {
-            return self::FAUCET_NETWORK['AMMDevent'];
+            return self::FAUCET_NETWORK['AMMDevnet'];
         }
 
         if (str_contains($connectionUrl, 'devnet')) {

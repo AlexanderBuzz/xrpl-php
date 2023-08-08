@@ -27,11 +27,11 @@ class HashLedger
     }
 
     /**
-     * @param Transaction|string $tx
+     * @param Transaction|array|string $tx
      * @return string
      * @throws Exception
      */
-    public static function hashSignedTx(Transaction|string $tx): string
+    public static function hashSignedTx(Transaction|array|string $tx): string
     {
         $_this = self::getInstance();
 

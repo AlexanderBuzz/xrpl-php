@@ -7,8 +7,10 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Path;
 
 final class PathTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $json;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private string $hex;
 
     protected function setUp(): void

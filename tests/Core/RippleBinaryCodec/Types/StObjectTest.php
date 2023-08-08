@@ -12,10 +12,13 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
  */
 final class StObjectTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $fixtures;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $json;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private string $hex;
 
     protected function setUp(): void

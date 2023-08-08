@@ -16,6 +16,7 @@ use XRPL_PHP\Core\RippleAddressCodec\Utils;
  */
 class BaseXTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private BaseX $base58Codec;
 
     public function setUp(): void

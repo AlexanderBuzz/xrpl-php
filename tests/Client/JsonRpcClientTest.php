@@ -12,8 +12,10 @@ class JsonRpcClientTest extends TestCase
 {
     private const PORT = 50267;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private MockWebServer $server;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private JsonRpcClient $client;
 
     public function setUp(): void

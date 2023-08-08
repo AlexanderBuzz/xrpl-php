@@ -7,15 +7,15 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
-/**
- *
- */
 final class StArrayTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $fixtures;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $json;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private string $hex;
 
     protected function setUp(): void
