@@ -5,6 +5,7 @@ namespace XRPL_PHP\Test\Wallet;
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
+use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
 use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 use XRPL_PHP\Wallet\Wallet;
 
@@ -19,14 +20,16 @@ final class WalletTest extends TestCase
         $masterAddress = 'rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93';
 
         $regularKeyPair = [
+            'seed' => 'sh8i92YRnEjJy3fpFkL8txQSCVo79',
             'publicKey' => '03AEEFE1E8ED4BBC009DE996AC03A8C6B5713B1554794056C66E5B8D1753C7DD0E',
             'privateKey' => '004265A28F3E18340A490421D47B2EB8DBC2C0BF2C24CEFEA971B61CED2CABD233',
         ];
 
         $wallet = new Wallet(
-            publicKey: $regularKeyPair['publicKey'],
-            privateKey: $regularKeyPair['privateKey'],
-            masterAddress: $masterAddress
+            $regularKeyPair['publicKey'],
+            $regularKeyPair['privateKey'],
+            $regularKeyPair['seed'],
+            $masterAddress
         );
 
         $this->assertEquals($regularKeyPair['publicKey'], $wallet->getPublicKey());
@@ -178,6 +181,7 @@ final class WalletTest extends TestCase
 
     public function testVerifyTransaction(): void
     {
+        $seed = 'ssL9dv2W5RK8L3tuzQxYY6EaZhSxW';
         $publicKey = '030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D';
         $privateKey = '00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F';
         $preparedTx = [
@@ -185,17 +189,18 @@ final class WalletTest extends TestCase
             'id' => '30D9ECA2A7FB568C5A8607E5850D9567572A9E7C6094C26BEFD4DC4C2CF2657A'
         ];
 
-        $wallet = new Wallet(publicKey: $publicKey, privateKey: $privateKey);
+        $wallet = new Wallet($publicKey, $privateKey, $seed);
 
         $this->assertTrue($wallet->verifyTransaction($preparedTx['signedTransaction']));
     }
 
     public function testGetXAddress(): void
     {
+        $seed = 'ssL9dv2W5RK8L3tuzQxYY6EaZhSxW';
         $publicKey = '030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D';
         $privateKey = '00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F';
 
-        $wallet = new Wallet( publicKey: $publicKey, privateKey: $privateKey);
+        $wallet = new Wallet($publicKey, $privateKey, $seed);
 
         $tag = 1337;
         $mainnetXAddress = 'X7gJ5YK8abHf2eTPWPFHAAot8Knck11QGqmQ7a6a3Z8PJvk';

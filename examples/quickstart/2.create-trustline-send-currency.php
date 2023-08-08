@@ -5,65 +5,78 @@ require __DIR__ . '/../../vendor/autoload.php';
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\Networks;
 use XRPL_PHP\Wallet\Wallet;
+use XRPL_PHP\Models\Transaction\SubmitRequest;
+use XRPL_PHP\Models\Transaction\TransactionTypes\AccountSet;
 
 print_r(PHP_EOL . "--- Send currency example ---" . PHP_EOL);
 
 $testnetUrl = Networks::getNetwork('testnet')['jsonRpcUrl'];
 $client = new JsonRpcClient($testnetUrl);
-//$standbyWallet = $client->fundWallet($client);
-//sleep(2); // TODO: Check for race condition in fundWallet()
-//$operationalWallet = $client->fundWallet($client);
-//sleep(2); // TODO: Check for race condition in fundWallet()
 
-$standbyWallet = Wallet::fromSeed('sEdT9FpSc2R7yUypCYYvTP5fCE9dqnc');
-$operationalWallet = Wallet::fromSeed('sEdVKPdy5gkpK7hbCUWqgHP2HrL1oDw');
-
-print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
-print_r("Created operational wallet - address: {$operationalWallet->getAddress()} seed: {$operationalWallet->getSeed()}" . PHP_EOL);
+print_r("Funding cold wallet, please wait...", PHP_EOL);
+$coldWallet = $client->fundWallet();
+print_r("Created cold wallet - address: {$coldWallet->getAddress()} seed: {$coldWallet->getSeed()}" . PHP_EOL);
 
 /*
- * Create a TrustLine
- */
+print_r("Configuring cold wallet, please wait...", PHP_EOL);
+$coldWalletConfigTx = [
+    "TransactionType" => "AccountSet",
+    "Account" => $coldWallet->getAddress(),
+    "TransferRate" => 0,
+    "TickSize" => 5
+];
+$coldConfigTxPrepared = $client->autofill($coldWalletConfigTx);
+print_r($coldConfigTxPrepared);
+$coldConfigTxSigned = $coldWallet->sign($coldConfigTxPrepared);
+$accountSetResponse = $client->submitAndWait($coldConfigTxSigned['tx_blob']);
+*/
+print_r("Funding hot wallet, please wait...", PHP_EOL);
+$hotWallet = $client->fundWallet();
+print_r("Created hot wallet - address: {$hotWallet->getAddress()} seed: {$hotWallet->getSeed()}" . PHP_EOL);
+
 /*
+$hotWalletConfigTx = new AccountSet([
+    "Account" => $hotWallet->getAddress(),
+    "TransferRate" => 0,
+    "TickSize" => 5,
+]);
+$hotConfigTxPrepared = $client->autofill($hotWalletConfigTx);
+$hotConfigTxSigned = $coldWallet->sign($hotConfigTxPrepared);
+$accountSetResponse = $client->submitAndWait($hotConfigTxSigned['tx_blob']);
+*/
+
+print_r('Creating trust line from cold wallet to hot wallet...');
 $trustSetTx = [
     "TransactionType" => "TrustSet",
-    "Account" => $operationalWallet->getAddress(),
+    "Account" => $hotWallet->getAddress(),
     "LimitAmount" => [
         "currency" => 'USD',
-        "issuer" => $standbyWallet->getAddress(),
-        "value" => 100
+        "issuer" => $coldWallet->getAddress(),
+        "value" => '10000'
     ]
 ];
 
 $trustSetPreparedTx = $client->autofill($trustSetTx);
-
-// operational wallet issues the trustline, so standby wallet can send currency
-$signedTx = $operationalWallet->sign($trustSetPreparedTx);
-
-print_r('Creating trust line from operational account to standby account...');
-
+$signedTx = $hotWallet->sign($trustSetPreparedTx);
 $trustSetResponse = $client->submitAndWait($signedTx['tx_blob']);
 
 print_r($trustSetResponse->getResult());
-*/
 
-// Send IOU
+
+// Send Token
 
 $sendTokenTx = [
     "TransactionType" => "Payment",
-    "Account" => $standbyWallet->getAddress(),
+    "Account" => $coldWallet->getAddress(),
     "Amount" => [
         "currency" => 'USD',
         "value" => '10',
-        "issuer" => $standbyWallet->getAddress()
+        "issuer" => $coldWallet->getAddress()
     ],
-    "Destination" => $operationalWallet->getAddress()
+    "Destination" => $hotWallet->getAddress()
 ];
-
 $preparedPaymentTx = $client->autofill($sendTokenTx);
-
-$signedPaymentTx = $standbyWallet->sign($preparedPaymentTx);
-
+$signedPaymentTx = $coldWallet->sign($preparedPaymentTx);
 $paymentResponse = $client->submitAndWait($signedPaymentTx['tx_blob']);
 
 print_r($paymentResponse);

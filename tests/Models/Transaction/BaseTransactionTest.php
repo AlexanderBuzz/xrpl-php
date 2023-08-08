@@ -5,46 +5,26 @@ namespace XRPL_PHP\Test\Models\Transaction;
 use PHPUnit\Framework\TestCase;
 use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction;
+use XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
 
 final class BaseTransactionTest extends TestCase
 {
     public function testConstructor()
     {
-        $mock = $this->getMockForAbstractClass(
-            BaseTransaction::class,
-            ['fields' => [
-                'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
-                'TransactionType' => 'Payment',
-                'TxnSignature' => 'some-filler-string'
-            ]]
-        );
-
-        $this->assertTrue($mock->offsetExists('baseProperties'));
-        $this->assertTrue($mock->offsetExists('transactionTypeProperties'));
-
-        $this->assertTrue($mock->offsetExists('Account'));
-        $this->assertTrue($mock->offsetExists('TransactionType'));
-        $this->assertTrue($mock->offsetExists('TxnSignature'));
-    }
-
-    public function testFromArray()
-    {
-        $mock = $this->getMockForAbstractClass(
-            BaseTransaction::class,
-            ['fields' => []]
-        );
-
-        $tx = [
+        $properties = [
             'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
             'TransactionType' => 'Payment',
             'TxnSignature' => 'some-filler-string'
         ];
 
-        $mock->fromArray($tx);
+        $paymentTransaction = new Payment($properties);
 
-        $this->assertEquals('rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe', $mock['Account']);
-        $this->assertEquals('Payment', $mock['TransactionType']);
-        $this->assertEquals('some-filler-string', $mock['TxnSignature']);
+        $this->assertTrue($paymentTransaction->offsetExists('baseProperties'));
+        $this->assertTrue($paymentTransaction->offsetExists('transactionTypeProperties'));
+
+        $this->assertTrue($paymentTransaction->offsetExists('Account'));
+        $this->assertTrue($paymentTransaction->offsetExists('TransactionType'));
+        $this->assertTrue($paymentTransaction->offsetExists('TxnSignature'));
     }
 
     public function testToArray()
@@ -54,13 +34,29 @@ final class BaseTransactionTest extends TestCase
             'TransactionType' => 'Payment',
             'TxnSignature' => 'some-filler-string'
         ];
+        $paymentTransaction = new Payment($tx);
 
-        $mock = $this->getMockForAbstractClass(
-            BaseTransaction::class,
-            ['fields' => $tx]
-        );
+        $this->assertEquals($tx, $paymentTransaction->toArray());
 
-        $this->assertEquals($tx, $mock->toArray());
+        $this->expectException("Exception");
+        $this->expectExceptionMessage("Wrong TransactionType for class Payment: AccountSet");
 
+        $txWrongType = [
+            'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+            'TransactionType' => 'AccountSet',
+            'TxnSignature' => 'some-filler-string',
+            'Foo' => 'Bar'
+        ];
+        $paymentTransaction = new Payment($txWrongType);
+
+        $this->expectException("Exception");
+        $this->expectExceptionMessage("Property Foo does not exist in Payment");
+
+        $txWrongProperty = [
+            'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+            'TransactionType' => 'Payment',
+            'TxnSignature' => 'some-filler-string'
+        ];
+        $paymentTransaction = new Payment($txWrongProperty);
     }
 }

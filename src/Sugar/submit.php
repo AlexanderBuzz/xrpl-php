@@ -29,7 +29,7 @@ function submitRequest(
     $binaryCodec = new BinaryCodec();
     if (is_string($signedTransaction)) {
         $signedTxEncoded = $signedTransaction;
-    } else if (is_object($signedTransaction) && get_class($signedTransaction) === Transaction::class) {
+    } else if ($signedTransaction instanceof Transaction) {
         $signedTxEncoded = $binaryCodec->encode($signedTransaction->toArray());
     } else {
         $signedTxEncoded = $binaryCodec->encode($signedTransaction);
@@ -112,7 +112,7 @@ function isSigned(Transaction|string|array $transaction): bool
     if (is_string($transaction)) {
         $binaryCodec = new BinaryCodec();
         $tx = $binaryCodec->decode($transaction);
-    } else if (is_object($transaction) && get_class($transaction) === Transaction::class) {
+    } else if ($transaction instanceof Transaction) {
         $tx = $transaction->toArray();
     } else {
         $tx = $transaction;

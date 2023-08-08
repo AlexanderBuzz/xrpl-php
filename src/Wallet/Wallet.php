@@ -35,8 +35,8 @@ class Wallet
     public function __construct(
         string $publicKey,
         string $privateKey,
+        string $seed,
         ?string $masterAddress = null,
-        ?string $seed = null
     )
     {
         $this->binaryCodec = new BinaryCodec();
@@ -51,14 +51,13 @@ class Wallet
 
         $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
+        $this->seed = $seed;
 
         if (is_string($masterAddress)) {
             $this->classicAddress = CoreUtilities::ensureClassicAddress($masterAddress);
         } else {
             $this->classicAddress = CoreUtilities::deriveAddress($publicKey);
         }
-
-        $this->seed = $seed;
     }
 
     public static function generate(string $type = self::DEFAULT_ALGORITHM): Wallet
@@ -72,7 +71,11 @@ class Wallet
         );
     }
 
-    public static function fromSeed(string $seed, ?string $masterAddress = null, string $type = self::DEFAULT_ALGORITHM): Wallet
+    public static function fromSeed(
+        string $seed,
+        ?string $masterAddress = null,
+        string $type = self::DEFAULT_ALGORITHM
+    ): Wallet
     {
         return self::deriveWallet($seed, $masterAddress, $type);
     }
@@ -81,8 +84,6 @@ class Wallet
      *
      *
      * @param string $seed
-     * @param string|null $masterAddress
-     * @param string $type
      * @return Wallet
      * @throws Exception
      */
@@ -94,7 +95,8 @@ class Wallet
 
         return new Wallet(
             $keyPair->getPublicKey(),
-            $keyPair->getPrivateKey()
+            $keyPair->getPrivateKey(),
+            $seed
         );
     }
 

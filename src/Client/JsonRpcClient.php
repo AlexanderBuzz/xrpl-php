@@ -13,8 +13,8 @@ use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Ledger\LedgerRequest;
-use XRPL_PHP\Models\ServerInfo\SubmitResponse;
-use XRPL_PHP\Models\Transaction\TransactionTypes\Transaction;
+use XRPL_PHP\Models\Transaction\SubmitResponse;
+use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Wallet\Wallet;
 use function XRPL_PHP\Sugar\autofill;
@@ -218,31 +218,57 @@ class JsonRpcClient
         return getXrpBalance($this, $address);
     }
 
-    public function fundWallet(JsonRpcClient $client, ?Wallet $wallet = null, ?string $faucetHost = null): Wallet
+    public function fundWallet(?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
-        return fundWallet($client, $wallet, $faucetHost)['wallet'];
+        return fundWallet($this, $wallet, $faucetHost)['wallet'];
     }
 
-    public function autofill(Transaction|array &$tx): array
+    /**
+     *
+     *
+     * @param Transaction|array $transaction
+     * @return array
+     */
+    public function autofill(Transaction|array &$transaction): array
     {
-        return autofill($this, $tx);
+        return autofill($this, $transaction);
     }
 
+    /**
+     *
+     *
+     * @param Transaction|string|array $transaction
+     * @param bool|null $autofill
+     * @param bool|null $failHard
+     * @param Wallet|null $wallet
+     * @return SubmitResponse
+     * @throws \Exception
+     */
     public function submit(
         Transaction|string|array $transaction,
-        ?bool $autofill = false,
-        ?bool $failHard = false,
-        ?Wallet $wallet = null
+        ?bool                    $autofill = false,
+        ?bool                    $failHard = false,
+        ?Wallet                  $wallet = null
     ): SubmitResponse
     {
         return submit($this, $transaction, $autofill, $failHard, $wallet);
     }
 
+    /**
+     *
+     *
+     * @param Transaction|string|array $transaction
+     * @param bool|null $autofill
+     * @param bool|null $failHard
+     * @param Wallet|null $wallet
+     * @return TxResponse
+     * @throws \Exception
+     */
     public function submitAndWait(
         Transaction|string|array $transaction,
-        ?bool $autofill = false,
-        ?bool $failHard = false,
-        ?Wallet $wallet = null
+        ?bool                    $autofill = false,
+        ?bool                    $failHard = false,
+        ?Wallet                  $wallet = null
     ): TxResponse
     {
         return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);

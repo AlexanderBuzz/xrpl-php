@@ -17,7 +17,7 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
  * https://xrpl.org/transaction-common-fields.html
  */
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 abstract class BaseTransaction implements ArrayAccess
 {
     protected array $baseProperties = [
@@ -38,16 +38,31 @@ abstract class BaseTransaction implements ArrayAccess
 
     protected array $transactionTypeProperties = [];
 
-    public function __construct(array $fields) {
-        $this->fromArray($fields);
+    public function __construct(array $properties) {
+        $this->fromArray($properties);
     }
 
-    public function fromArray(array $fields): void
+    /**
+     *
+     *
+     * @param array $properties
+     * @return void
+     * @throws Exception
+     */
+    public function fromArray(array $properties): void
     {
-        foreach ($fields as $propertyName => $propertyValue) {
+        $className = (new \ReflectionClass($this))->getShortName();
+
+        if (isset($properties['TransactionType']) && $className !== $properties['TransactionType']) {
+            throw new Exception(
+                "Wrong TransactionType for class {$className}: {$properties['TransactionType']}",
+            );
+        }
+
+        $properties['TransactionType'] = $className;
+        foreach ($properties as $propertyName => $propertyValue) {
             $classProperties = array_merge($this->baseProperties, $this->transactionTypeProperties);
             if (!in_array($propertyName, array_keys($classProperties))) {
-                $className = get_class($this);
                 throw new Exception(
                     "Property {$propertyName} does not exist in {$className}",
                 );

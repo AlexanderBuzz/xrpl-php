@@ -5,6 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\Networks;
 use XRPL_PHP\Models\Account\AccountNftsRequest;
+use XRPL_PHP\Utils\Utilities;
 
 function convertStringToHex(string $in): string {
     $hex = '';
@@ -20,30 +21,30 @@ print_r(PHP_EOL . "--- NFT Testnet example ---" . PHP_EOL);
 $testnetUrl = Networks::getNetwork('testnet')['jsonRpcUrl'];
 $client = new JsonRpcClient($testnetUrl);
 
-$standbyWallet = $client->fundWallet($client);
-sleep(2); // TODO: Check for race condition in fundWallet()
-print_r("Created standby wallet - address: {$standbyWallet->getAddress()} seed: {$standbyWallet->getSeed()}" . PHP_EOL);
+$wallet = $client->fundWallet();
+print_r("Created wallet - address: {$wallet->getAddress()} seed: {$wallet->getSeed()}" . PHP_EOL);
 
-$standbyTokenUrl = 'ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi'; // Seems to be hardcoded in the examples
-$standbyFlags = 8; // Sets the tsTransferable flag
-$standbyTransferFee = 1000; // 1% Fee
+$tokenUrl = 'ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi'; // Seems to be hardcoded in the examples
+$flags = 8; // Sets the tsTransferable flag
+$transferFee = 1000; // 1% Fee
 
-$transactionBlob = [
+$tx = [
     "TransactionType" => "NFTokenMint",
-    "Account" => $standbyWallet->getClassicAddress(),
-    "URI" => convertStringToHex($standbyTokenUrl),
-    "Flags" => (int) $standbyFlags,
-    "TransferFee" => (int) $standbyTransferFee,
-    "NFTokenTaxon" => 8 //Required, but if you have no use for it, set to zero.
+    "Account" => $wallet->getClassicAddress(),
+    "URI" => Utilities::convertStringToHex($tokenUrl),
+    //"URI" => convertStringToHex($tokenUrl),
+    "Flags" => $flags,
+    "TransferFee" => $transferFee,
+    "NFTokenTaxon" => 0 //Required, but if you have no use for it, set to zero.
 ];
+$preparedTx = $client->autofill($tx);
+$signedTx = $wallet->sign($preparedTx);
+$txResult = $client->submitAndWait($signedTx['tx_blob']);
+print_r("NFTokenMint result:" . PHP_EOL);
 
-$txResult = $client->submitAndWait(
-    transaction: $transactionBlob,
-    autofill: true,
-    wallet: $standbyWallet,
-);
+print_r($txResult->getResult());
 
-$nftsRequest = new AccountNftsRequest(account: $standbyWallet->getClassicAddress());
+$nftsRequest = new AccountNftsRequest(account: $wallet->getClassicAddress());
 $nftsResponse = $client->request($nftsRequest)->wait();
 
 print_r("AccountNftsRequest result:" . PHP_EOL);

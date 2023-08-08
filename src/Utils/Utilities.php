@@ -9,16 +9,6 @@ class Utilities
     public const HEX_REGEX = '/^[A-F0-9a-f]+$/';
     public const UPPERCASE_HEX_REGEX = '/^[A-F0-9]+$/';
     public const ISSUED_CURRENCY_SIZE = 3;
-    /*
-    public static function getInstance(): Utilities
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-    */
 
     public static function isHex(string $str, bool $checkUppercase = false): bool
     {
@@ -51,5 +41,28 @@ class Utilities
           isset($input['issuer']) && is_string($input['issuer']) &&
           isset($input['value']) && is_string($input['value'])
         );
+    }
+
+    /**
+     * Converts a string to its hex equivalent. Useful for Memos.
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function convertStringToHex(string $string): string
+    {
+        return Buffer::from($string, 'utf-8')->toString();
+    }
+
+    /**
+     * Converts hex to its string equivalent. Useful to read the Domain field and some Memos.
+     *
+     * @param string $hex
+     * @return string
+     * @throws \Exception
+     */
+    public static function convertHexToString(string $hex): string
+    {
+        return Buffer::from($hex, 'hex')->toUtf8();
     }
 }

@@ -3,7 +3,6 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Account\AccountObjectsRequest;
 
 use function XRPL_PHP\Sugar\fundWallet;
 

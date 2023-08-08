@@ -312,6 +312,16 @@ class Buffer implements ArrayAccess
         return (string) hexdec($this->toString());
     }
 
+    public function toUtf8(): string
+    {
+        $str = "";
+        foreach ($this->bytesArray as $byte) {
+            $str .= chr($byte);
+        }
+
+        return $str;
+    }
+
     /**
      * Outputs byte content similar to console.log(Buffer) in node.js
      *

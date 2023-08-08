@@ -7,10 +7,12 @@ use Brick\Math\RoundingMode;
 use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\CoreUtilities;
+use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use XRPL_PHP\Models\Account\AccountInfoRequest;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
 use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\ServerInfo\ServerStateRequest;
+use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
  * @throws Exception
@@ -184,10 +186,19 @@ if (! function_exists('XRPL_PHP\Sugar\autofill')) {
 
     function autofill(
         JsonRpcClient $client,
-        array $tx,
+        Transaction|string|array $transaction,
         ?int $signersCount = null
     ): array
     {
+        if (is_string($transaction)) {
+            $binaryCodec = new BinaryCodec();
+            $tx = $binaryCodec->decode($transaction);
+        } else if ($transaction instanceof Transaction) {
+            $tx = $transaction->toArray();
+        } else {
+            $tx = $transaction;
+        }
+
         setValidAddresses($tx);
 
         //TODO: check function
@@ -209,8 +220,12 @@ if (! function_exists('XRPL_PHP\Sugar\autofill')) {
             checkAccountDeleteBlockers($client, $tx);
         }
 
-        unset($tx['SourceTag']);      //TODO: Clean this out
-        unset($tx['DestinationTag']); //TODO: Clean this out
+        if (empty($tx['SourceTag'])) {
+            unset($tx['SourceTag']);
+        }
+        if (empty($tx['DestinationTag'])) {
+            unset($tx['DestinationTag']);
+        }
 
         return $tx;
     }
