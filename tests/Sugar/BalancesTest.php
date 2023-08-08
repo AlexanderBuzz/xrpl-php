@@ -12,11 +12,11 @@ use function XRPL_PHP\Sugar\xrpToDrops;
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/dropsToXrp.ts
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/xrpToDrops.ts
  */
-
-final class BalancesTest  extends TestCase
+class BalancesTest  extends TestCase
 {
     protected static MockWebServer $server;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private JsonRpcClient $client;
 
     public static function setUpBeforeClass(): void {

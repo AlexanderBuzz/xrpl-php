@@ -19,8 +19,10 @@ final class Vector256Test extends TestCase
 
     private const VALUE2 = "4C97EBA926031A7CF7D7B36FDE3ED66DDA5421192D63DE53FFB46E43B9DC8373";
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private string $json;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private string $hex;
 
     protected function setUp(): void

@@ -15,12 +15,15 @@ use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
  */
 final class KeyPairTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private array $fixtures;
 
     private array $entropy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private Ed25519KeyPairService $ed25519;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private Secp256k1KeyPairService $secp256k1;
 
     protected function setUp(): void

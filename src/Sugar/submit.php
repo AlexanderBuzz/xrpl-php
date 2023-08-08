@@ -225,7 +225,7 @@ if (! function_exists('XRPL_PHP\Sugar\submit')) {
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
+     * @return SubmitResponse
      * @throws Exception
      */
     function submit(
@@ -250,15 +250,15 @@ if (! function_exists('XRPL_PHP\Sugar\submitAndWait')) {
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
+     * @return TxResponse
      * @throws Exception
      */
     function submitAndWait(
         JsonRpcClient $client,
         Transaction|string|array $transaction,
-        ?bool $autofill,
-        ?bool $failHard,
-        ?Wallet $wallet
+        ?bool $autofill = false,
+        ?bool $failHard = false,
+        ?Wallet $wallet = null
     ): TxResponse
     {
         $signedTx = getSignedTx($client, $transaction, $autofill, $failHard, $wallet);

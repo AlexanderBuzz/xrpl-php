@@ -2,9 +2,8 @@
 
 namespace XRPL_PHP\Test\Models\Transaction;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction;
 use XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
 
 final class BaseTransactionTest extends TestCase
@@ -38,7 +37,7 @@ final class BaseTransactionTest extends TestCase
 
         $this->assertEquals($tx, $paymentTransaction->toArray());
 
-        $this->expectException("Exception");
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Wrong TransactionType for class Payment: AccountSet");
 
         $txWrongType = [
@@ -49,7 +48,7 @@ final class BaseTransactionTest extends TestCase
         ];
         $paymentTransaction = new Payment($txWrongType);
 
-        $this->expectException("Exception");
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Property Foo does not exist in Payment");
 
         $txWrongProperty = [

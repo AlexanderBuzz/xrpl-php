@@ -16,8 +16,8 @@ use Exception;
 use SplFixedArray;
 
 /**
- * Re-implements the functionality of node.js Buffer (https://nodejs.org/api/buffer.html) for
- * serialization and deserialization
+ *  Re-implements the functionality of node.js Buffer (https://nodejs.org/api/buffer.html) for
+ *  serialization and deserialization
  */
 class Buffer implements ArrayAccess
 {
@@ -57,7 +57,7 @@ class Buffer implements ArrayAccess
         $buffer = new Buffer();
 
         //Duplicate buffer
-        if (gettype($source) === Buffer::class) {
+        if (gettype($source) === 'object' && get_class($source) === Buffer::class) {
             Buffer::from($buffer->toArray());
         }
 
@@ -373,7 +373,7 @@ class Buffer implements ArrayAccess
     /**
      * Offset to retrieve
      *
-     * @param $offset
+     * @param mixed $offset
      *
      * @return int
      *

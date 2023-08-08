@@ -303,17 +303,26 @@ class Wallet
         return $this->keyPairService->sign($encodedTx, $privateKey);
     }
 
-    public function getAddress(): string|null
-    {
-        return $this->classicAddress;
-    }
-
-    public function getClassicAddress(): string|null
+    /**
+     *
+     * @return string
+     */
+    public function getAddress(): string
     {
         return $this->classicAddress;
     }
 
     /**
+     *
+     * @return string
+     */
+    public function getClassicAddress(): string
+    {
+        return $this->classicAddress;
+    }
+
+    /**
+     *
      * @return string
      */
     public function getPublicKey(): string
@@ -322,6 +331,7 @@ class Wallet
     }
 
     /**
+     *
      * @return string
      */
     public function getPrivateKey(): string

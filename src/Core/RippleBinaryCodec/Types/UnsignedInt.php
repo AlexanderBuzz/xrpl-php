@@ -9,6 +9,12 @@ abstract class UnsignedInt extends SerializedType
 {
     protected BigInteger $value;
 
+    /**
+     *
+     * @param Buffer|null $bytes
+     * @throws \Brick\Math\Exception\MathException
+     * @throws \Brick\Math\Exception\NumberFormatException
+     */
     public function __construct(?Buffer $bytes = null)
     {
         parent::__construct($bytes);
@@ -20,20 +26,37 @@ abstract class UnsignedInt extends SerializedType
         }
     }
 
+    /**
+     *
+     *
+     * @return Buffer
+     */
     public function toBytes(): Buffer
     {
         return $this->bytes;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function toHex(): string
     {
         return strtoupper($this->toBytes()->toString());
     }
 
+    /**
+     *
+     * @return array|string|int
+     */
     public function toJson(): array|string|int
     {
         return $this->valueOf();
     }
 
+    /**
+     *
+     * @return int|string
+     */
     public abstract function valueOf(): int|string;
 }

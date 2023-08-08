@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Client;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
@@ -9,6 +10,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
+use XRPL_PHP\Models\Account\AccountChannelsResponse;
 use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
@@ -136,8 +138,23 @@ class JsonRpcClient
         return $this->handleResponse($request, $response);
     }
 
-    public function handleResponse(BaseRequest $request, ResponseInterface $response): BaseResponse|ErrorResponse
+    /**
+     * @param BaseRequest $request
+     * @param ResponseInterface|null $response
+     * @return BaseResponse|ErrorResponse
+     */
+    public function handleResponse(BaseRequest $request, ?ResponseInterface $response): BaseResponse|ErrorResponse
     {
+        if (is_null($response)) {
+            return new ErrorResponse(
+                id: null,
+                statusCode: 500,
+                error: 'RequestException - could not get response',
+                errorCode: null,
+                errorMessage: null
+            );
+        }
+
         $statusCode = $response->getStatusCode();
 
         if ($statusCode === 200) {
@@ -155,9 +172,12 @@ class JsonRpcClient
             }
 
             $requestClassName = get_class($request);
+            /** @psalm-var class-string  $responseClassName */
             $responseClassName = str_replace('Request', 'Response', $requestClassName);
+            /** @var BaseResponse $responseClass  */
+            $responseClass = new $responseClassName($responsePayload);
 
-            return new $responseClassName($responsePayload);
+            return new $responseClass;
         } else {
             $statusCode = $response->getStatusCode();
             $reason = $response->getReasonPhrase();
@@ -167,7 +187,23 @@ class JsonRpcClient
         }
     }
 
-        /**
+    /*
+    private function getResponseClass(BaseRequest $request): BaseResponse
+    {
+        $className = (new \ReflectionClass($request))->getShortName();
+        try {
+            match ($className) {
+                'AccountChannelsRequest' => return new AccountChannelsResponse();
+            };
+        } catch (\UnhandledMatchError $e) {
+            var_dump($e);
+        }
+    }
+    */
+
+    /**
+     *
+     *
      * @return float
      */
     public function getFeeCushion(): float
@@ -213,11 +249,25 @@ class JsonRpcClient
         };
     }
 
+    /**
+     *
+     *
+     * @param string $address
+     * @return string
+     * @throws Exception
+     */
     public function getXrpBalance(string $address): string
     {
         return getXrpBalance($this, $address);
     }
 
+    /**
+     *
+     *
+     * @param Wallet|null $wallet
+     * @param string|null $faucetHost
+     * @return Wallet
+     */
     public function fundWallet(?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
         return fundWallet($this, $wallet, $faucetHost)['wallet'];
@@ -235,37 +285,42 @@ class JsonRpcClient
     }
 
     /**
+     *
+     *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
      *
-     * @throws \Exception
+     * @return SubmitResponse
+     * @throws Exception
      */
     public function submit(
         Transaction|string|array $transaction,
         ?bool                    $autofill = false,
         ?bool                    $failHard = false,
         ?Wallet                  $wallet = null
-    ): array
+    ): SubmitResponse
     {
         return submit($this, $transaction, $autofill, $failHard, $wallet);
     }
 
     /**
+     *
+     *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
-     * @throws \Exception
+     * @return TxResponse
+     * @throws Exception
      */
     public function submitAndWait(
         Transaction|string|array $transaction,
         ?bool                    $autofill = false,
         ?bool                    $failHard = false,
         ?Wallet                  $wallet = null
-    ): array
+    ): TxResponse
     {
         return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
     }

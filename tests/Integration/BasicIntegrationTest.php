@@ -19,6 +19,7 @@ final class BasicIntegrationTest extends TestCase
 {
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private JsonRpcClient $client;
 
     public function setUp(): void

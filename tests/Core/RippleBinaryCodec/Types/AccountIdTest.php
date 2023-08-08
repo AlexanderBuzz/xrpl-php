@@ -14,15 +14,9 @@ use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
  */
 final class AccountIdTest extends TestCase
 {
-    private string $json;
+    private string $json = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59";
 
-    private string $hex;
-
-    protected function setUp(): void
-    {
-        $this->json = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59";
-        $this->hex = "5E7B112523F68D2F5E879DB4EAC51C6698A69304";
-    }
+    private string $hex = "5E7B112523F68D2F5E879DB4EAC51C6698A69304";
 
    public function testDecode(): void
    {

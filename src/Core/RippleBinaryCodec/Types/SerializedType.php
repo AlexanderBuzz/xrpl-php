@@ -2,6 +2,7 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
@@ -25,32 +26,55 @@ abstract class SerializedType
         $this->bytes = $bytes;
     }
 
+    /**
+     *
+     * @param BytesList $list
+     * @return void
+     */
     public function toBytesSink(BytesList $list): void
     {
         $list->push($this->bytes);
     }
 
+    /**
+     * @return Buffer
+     */
     public function toBytes(): Buffer
     {
         // equals "toValue()"
         return $this->bytes;
     }
 
+    /**
+     * @return string
+     */
     public function toHex(): string
     {
         return strtoupper($this->bytes->toString());
     }
 
+    /**
+     * @return array|string|int
+     */
     public function toJson(): array|string|int
     {
         return $this->toHex();
     }
 
+    /**
+     * @return string
+     */
     public function toString(): string
     {
         return $this->toHex();
     }
 
+    /**
+     *
+     * @param string $hex
+     * @return SerializedType
+     * @throws Exception
+     */
     public static function fromHex(string $hex): SerializedType
     {
         $parser = new BinaryParser($hex);

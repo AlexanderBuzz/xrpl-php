@@ -10,8 +10,7 @@ use function XRPL_PHP\Sugar\xrpToDrops;
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/dropsToXrp.ts
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/xrpToDrops.ts
  */
-
-final class XrpConversionTest  extends TestCase
+class XrpConversionTest  extends TestCase
 {
     public function testDropsToXrp(): void
     {

@@ -12,8 +12,7 @@ use function XRPL_PHP\Sugar\xrpToDrops;
 /**
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/autofill.ts
  */
-
-final class AutofillTest  extends TestCase
+class AutofillTest  extends TestCase
 {
     protected static MockWebServer $server;
 
@@ -24,6 +23,7 @@ final class AutofillTest  extends TestCase
     private const Sequence = 1432;
     private const LastLedgerSequence = 2908734;
 
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private JsonRpcClient $client;
 
     public static function setUpBeforeClass(): void {

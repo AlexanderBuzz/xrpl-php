@@ -2,6 +2,8 @@
 
 namespace XRPL_PHP\Models;
 
+use XRPL_PHP\Models\Account\AccountChannelsResponse;
+
 abstract class BaseRequest
 {
     protected string $command;
