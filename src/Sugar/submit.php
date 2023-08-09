@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use XRPL_PHP\Models\ErrorResponse;
 use XRPL_PHP\Models\Transaction\SubmitRequest;
 use XRPL_PHP\Models\Transaction\SubmitResponse;
 use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
@@ -14,12 +15,12 @@ use XRPL_PHP\Models\Transaction\TxResponse;
 use XRPL_PHP\Utils\Hashes\HashLedger;
 use XRPL_PHP\Wallet\Wallet;
 
-const LEDGER_CLOSE_TIME = 4; //Seconds
+const LEDGER_CLOSE_TIME = 3; //Seconds
 
 function submitRequest(
     JsonRpcClient $client,
-    mixed $signedTransaction,
-    bool $failHard = false
+    array $signedTransaction,
+    ?bool $failHard = false
 ): PromiseInterface
 {
     if (!isSigned($signedTransaction)) {
@@ -27,13 +28,7 @@ function submitRequest(
     }
 
     $binaryCodec = new BinaryCodec();
-    if (is_string($signedTransaction)) {
-        $signedTxEncoded = $signedTransaction;
-    } else if ($signedTransaction instanceof Transaction) {
-        $signedTxEncoded = $binaryCodec->encode($signedTransaction->toArray());
-    } else {
-        $signedTxEncoded = $binaryCodec->encode($signedTransaction);
-    }
+    $signedTxEncoded = $binaryCodec->encode($signedTransaction);
 
     $submitRequest = new SubmitRequest(
         txBlob: $signedTxEncoded,
@@ -75,11 +70,12 @@ function waitForFinalTransactionOutcome(
     $txRequest = new TxRequest($txHash);
     $txResponse = $client->request($txRequest)->wait();
 
-    if ($txResponse::class === 'XRPL_PHP\Models\ErrorResponse') {
+    if ($txResponse instanceof ErrorResponse) {
         if ($txResponse->getError() === 'txnNotFound') {
             return waitForFinalTransactionOutcome(
                 $client,
-                $txHash,$lastLedger,
+                $txHash,
+                $lastLedger,
                 $submissionResult
             );
         }
@@ -104,10 +100,30 @@ function waitForFinalTransactionOutcome(
 /**
  * Checks if the transaction has been signed
  *
- * @param Transaction|string|array $transaction
+ * @param array $tx
  * @return bool
  */
-function isSigned(Transaction|string|array $transaction): bool
+function isSigned(array $tx): bool
+{
+    return (!empty($tx['SigningPubKey']) || !empty($tx['TxnSignature']));
+}
+
+/**
+ * Initializes a transaction for a submit request
+ *
+ * @param JsonRpcClient $client
+ * @param Transaction|string|array $transaction
+ * @param bool|null $autofill
+ * @param Wallet|null $wallet
+ * @return array
+ * @throws Exception
+ */
+function getSignedTx(
+    JsonRpcClient $client,
+    Transaction|string|array $transaction,
+    ?bool $autofill = false,
+    ?Wallet $wallet = null
+): array
 {
     if (is_string($transaction)) {
         $binaryCodec = new BinaryCodec();
@@ -118,61 +134,25 @@ function isSigned(Transaction|string|array $transaction): bool
         $tx = $transaction;
     }
 
-    return (!empty($tx['SigningPubKey']) || !empty($tx['TxnSignature']));
-}
-
-/**
- * Initializes a transaction for a submit request
- *
- * @param JsonRpcClient $client
- * @param Transaction|string|array $transaction
- * @param bool|null $autofill
- * @param bool|null $failHard
- * @param Wallet|null $wallet
- * @return mixed
- * @throws Exception
- */
-function getSignedTx(
-    JsonRpcClient $client,
-    Transaction|string|array $transaction,
-    ?bool $autofill,
-    ?bool $failHard,
-    ?Wallet $wallet
-): string
-{
-    // Cannot use defaults here like in JavaScript
-    if (is_null($autofill)) {
-        $autofill = true;
-    }
-
-    if (isSigned($transaction)) {
-        return $transaction;
+    if (isSigned($tx)) {
+        return $tx;
     }
 
     if(is_null($wallet)) {
         throw new Exception('Wallet must be provided when submitting an unsigned transaction');
     }
 
-    if (is_string($transaction)) {
-        $binaryCodec = new BinaryCodec();
-        $tx = $binaryCodec->decode($transaction);
-    } else if (is_object($transaction) && get_class($transaction) === Transaction::class) {
-        $tx = $transaction->toArray();
-    } else {
-        $tx = $transaction;
-    }
-
     if ($autofill) {
         $tx = autofill($client, $tx);
     }
 
-    return $wallet->sign($tx)['tx_blob'];
+    return $wallet->sign($tx);
 }
 
 /**
  * Checks if there is a LastLedgerSequence as a part of the transaction
  *
- * @param array $tx
+ * @param array|string $tx
  * @return int|null
  */
 function getLastLedgerSequence(array|string $tx): int|null
@@ -188,7 +168,7 @@ function getLastLedgerSequence(array|string $tx): int|null
 /**
  * Checks if the transaction is an AccountDelete transaction
  *
- * @param array $tx
+ * @param array|string $tx
  * @return bool
  */
 function isAccountDelete(array|string $tx): bool
@@ -203,25 +183,9 @@ function isAccountDelete(array|string $tx): bool
 
 if (! function_exists('XRPL_PHP\Sugar\submit')) {
 
-    function submit(
-        JsonRpcClient $client,
-        Transaction|string|array $transaction,
-        ?bool $autofill,
-        ?bool $failHard,
-        ?Wallet $wallet
-    ): PromiseInterface
-    {
-        $signedTx = getSignedTx($client, $transaction, $autofill, $failHard, $wallet);
-
-        return submitRequest($client, $signedTx, $failHard);
-    }
-}
-
-if (! function_exists('XRPL_PHP\Sugar\submit')) {
-
     /**
      * @param JsonRpcClient $client
-     * @param Transaction|string|array $transaction
+     * @param Transaction|array|string $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
@@ -230,13 +194,13 @@ if (! function_exists('XRPL_PHP\Sugar\submit')) {
      */
     function submit(
         JsonRpcClient $client,
-        Transaction|string|array $transaction,
+        Transaction|array|string $transaction,
         ?bool $autofill,
         ?bool $failHard,
         ?Wallet $wallet
     ): SubmitResponse
     {
-        $signedTx = getSignedTx($client, $transaction, $autofill, $failHard, $wallet);
+        $signedTx = getSignedTx($client, $transaction, $autofill, $wallet);
 
         return submitRequest($client, $signedTx, $failHard)->wait();
     }
@@ -246,7 +210,7 @@ if (! function_exists('XRPL_PHP\Sugar\submitAndWait')) {
 
     /**
      * @param JsonRpcClient $client
-     * @param Transaction|string|array $transaction
+     * @param Transaction|array|string $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
@@ -255,13 +219,13 @@ if (! function_exists('XRPL_PHP\Sugar\submitAndWait')) {
      */
     function submitAndWait(
         JsonRpcClient $client,
-        Transaction|string|array $transaction,
+        Transaction|array|string $transaction,
         ?bool $autofill = false,
         ?bool $failHard = false,
         ?Wallet $wallet = null
     ): TxResponse
     {
-        $signedTx = getSignedTx($client, $transaction, $autofill, $failHard, $wallet);
+        $signedTx = getSignedTx($client, $transaction, $autofill, $wallet);
 
         $lastLedger = getLastLedgerSequence($signedTx);
         if(is_null($lastLedger)) {

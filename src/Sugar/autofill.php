@@ -3,6 +3,8 @@
 namespace XRPL_PHP\Sugar;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\Exception\MathException;
+use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Exception;
 use XRPL_PHP\Client\JsonRpcClient;
@@ -15,6 +17,8 @@ use XRPL_PHP\Models\ServerInfo\ServerStateRequest;
 use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
+ * @param array $tx
+ * @return void
  * @throws Exception
  */
 function setValidAddresses (array &$tx): void
@@ -37,6 +41,10 @@ function setValidAddresses (array &$tx): void
 }
 
 /**
+ * @param array $tx
+ * @param string $accountField
+ * @param string $tagField
+ * @return void
  * @throws Exception
  */
 function validateAccountAddress (array &$tx, string $accountField, string $tagField): void
@@ -55,6 +63,9 @@ function validateAccountAddress (array &$tx, string $accountField, string $tagFi
 }
 
 /**
+ * @param string $account
+ * @param int|null $expectedTag
+ * @return array
  * @throws Exception
  */
 function getClassicAccountAndTag (string $account, ?int $expectedTag = null): array
@@ -78,6 +89,9 @@ function getClassicAccountAndTag (string $account, ?int $expectedTag = null): ar
 }
 
 /**
+ * @param array $tx
+ * @param string $fieldName
+ * @return void
  * @throws Exception
  */
 function convertToClassicAddress (array &$tx, string $fieldName): void
@@ -91,6 +105,9 @@ function convertToClassicAddress (array &$tx, string $fieldName): void
 }
 
 /**
+ * @param JsonRpcClient $client
+ * @param array $tx
+ * @return void
  * @throws Exception
  */
 function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
@@ -100,14 +117,19 @@ function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
         ledgerIndex: 'current'
     );
 
-    $accountInfoResponse = $client->syncRequest(($accountInfoRequest));
-    if(get_class($accountInfoResponse) === ErrorResponse::class) {
+    $accountInfoResponse = $client->syncRequest($accountInfoRequest);
+    if($accountInfoResponse instanceof ErrorResponse) {
         throw new Exception($accountInfoResponse->getError());
     }
 
     $tx['Sequence'] = $accountInfoResponse->getResult()['account_data']['Sequence'];
 }
 
+/**
+ * @param JsonRpcClient $client
+ * @return BigDecimal
+ * @throws MathException
+ */
 function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
 {
     $serverStateRequest = new ServerStateRequest();
@@ -123,6 +145,14 @@ function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
     return BigDecimal::of($fee);
 }
 
+/**
+ * @param JsonRpcClient $client
+ * @param array $tx
+ * @param int|null $signersCount
+ * @return void
+ * @throws MathException
+ * @throws RoundingNecessaryException
+ */
 function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int $signersCount = 0): void
 {
     $netFeeXrp = getFeeXrp($client);
@@ -155,11 +185,22 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int
     $tx['Fee'] = (string) $totalFee->toScale(0, RoundingMode::CEILING);
 }
 
-function scaleValue ($value, $multiplier): string
+/**
+ * @param string $value
+ * @param int|float $multiplier
+ * @return BigDecimal
+ * @throws MathException
+ */
+function scaleValue (string $value, int|float $multiplier): BigDecimal
 {
     return BigDecimal::of($value)->multipliedBy($multiplier);
 }
 
+/**
+ * @param JsonRpcClient $client
+ * @param array $tx
+ * @return void
+ */
 function setLatestValidatedLedgerSequence (JsonRpcClient $client, array &$tx): void
 {
     $ledgerSequence = $client->getLedgerIndex();
@@ -167,6 +208,12 @@ function setLatestValidatedLedgerSequence (JsonRpcClient $client, array &$tx): v
     $tx['LastLedgerSequence'] = $ledgerSequence + $ledgerOffset;
 }
 
+/**
+ * @param JsonRpcClient $client
+ * @param array $tx
+ * @return void
+ * @throws Exception
+ */
 function checkAccountDeleteBlockers (JsonRpcClient $client, array &$tx): void
 {
     $accountObjectsRequest = new AccountObjectsRequest(
@@ -184,6 +231,13 @@ function checkAccountDeleteBlockers (JsonRpcClient $client, array &$tx): void
 
 if (! function_exists('XRPL_PHP\Sugar\autofill')) {
 
+    /**
+     * @param JsonRpcClient $client
+     * @param Transaction|string|array $transaction
+     * @param int|null $signersCount
+     * @return array
+     * @throws Exception
+     */
     function autofill(
         JsonRpcClient $client,
         Transaction|string|array $transaction,

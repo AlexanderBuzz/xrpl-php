@@ -89,7 +89,7 @@ class StObject extends SerializedType
             $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
         }
 
-        if ($fieldInstance->getType() === self::ST_OBJECT) {
+        if (isset($fieldInstance) && $fieldInstance->getType() === self::ST_OBJECT) {
             $binarySerializer->put(self::OBJECT_END_MARKER_HEX);
         }
 

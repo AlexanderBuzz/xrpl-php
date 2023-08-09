@@ -73,6 +73,12 @@ You can run the tests with the following command:
 ./vendor/bin/phpunit tests
 ```
 
+You can perform static code analysis with psalm with the following command:
+
+```console
+./vendor/bin/psalm --config=psalm.xml
+```
+
 ## Try it yourself
 
 ### Issuing an [Account Info request](https://xrpl.org/account_info.html):
@@ -109,10 +115,12 @@ print_r($json);
 ### Making a payment:
 
 ```php
+// Use your own credentials here:
 $testnetStandbyAccountSeed = 'sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k';
 $testnetStandbyAccountAddress = 'raJNboPDvjLrYZropPFrxvz2Qm7A9guEVd';
 $standbyWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
 
+// Use your own credentials here:
 $testnetOperationalAccountSeed = 'sEdVHf8rNEaRveJw4NdVKxm3iYWFuRb';
 $testnetOperationalAccountAddress = 'rEQ3ik2kmAvajqpFweKgDghJFZQGpXxuRN';
 $operationalWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
@@ -125,22 +133,14 @@ $tx = [
     "Amount" => xrpToDrops("100"),
     "Destination" => $testnetOperationalAccountAddress
 ];
-
 $autofilledTx = $client->autofill($tx);
-
 $signedTx = $standbyWallet->sign($autofilledTx);
 
-//https://xrpl.org/submit.html
-
-$body = json_encode([
-    "method" => "submit",
-    "params" => [
-        ["tx_blob" => $signedTx['tx_blob']]
-    ]
-]);
-
-$response = $client->rawSyncRequest('POST', '', $body);
-$content = $response->getBody()->getContents();
-
-print_r(json_decode($content, true));
+$txResponse = $client->submitAndWait($signedTx['tx_blob']);
+$result = $txResponse->getResult();
+if ($result['meta']['TransactionResult'] === 'tecUNFUNDED_PAYMENT') {
+    print_r("Error: The sending account is unfunded! TxHash: {$result['hash']}" . PHP_EOL);
+} else {
+    print_r("Token payment done! TxHash: {$result['hash']}" . PHP_EOL);
+}
 ```

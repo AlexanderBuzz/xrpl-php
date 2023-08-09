@@ -4,6 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Models\Account\AccountObjectsRequest;
+use XRPL_PHP\Models\Account\AccountObjectsResponse;
 
 /**
  * This script can be used with the examples from
@@ -32,7 +33,7 @@ $request = new AccountObjectsRequest(
 );
 
 //Test synchronous request
-/* @var $pingResponse \XRPL_PHP\Models\Account\AccountObjectsResponse */
+/* @var $pingResponse AccountObjectsResponse */
 $accountObjectsResponse = $client->syncRequest($request);
 print_r('AccountObjectResult: ' . PHP_EOL);
 print_r($accountObjectsResponse);

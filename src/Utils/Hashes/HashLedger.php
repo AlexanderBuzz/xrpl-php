@@ -27,11 +27,11 @@ class HashLedger
     }
 
     /**
-     * @param Transaction|array|string $tx
+     * @param array|string $tx
      * @return string
      * @throws Exception
      */
-    public static function hashSignedTx(Transaction|array|string $tx): string
+    public static function hashSignedTx(array|string $tx): string
     {
         $_this = self::getInstance();
 
@@ -39,7 +39,7 @@ class HashLedger
             $txBlob = $tx;
             $txObject = $_this->binaryCodec->decode($tx);
         } else {
-            $txBlob = $_this->binaryCodec->encode($tx->toArray());
+            $txBlob = $_this->binaryCodec->encode($tx);
             $txObject = $tx;
         }
 

@@ -109,11 +109,6 @@ abstract class SerializedType
         return new $typeMap[$name]();
     }
 
-    public static function getNameByType(SerializedType $type): string
-    {
-
-    }
-
     abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
     abstract static function fromJson(string $serializedJson): SerializedType;

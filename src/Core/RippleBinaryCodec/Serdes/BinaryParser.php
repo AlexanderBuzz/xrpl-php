@@ -18,12 +18,16 @@ class BinaryParser
 {
     // max length that can be represented in a single byte per XRPL serialization restrictions
     public const MAX_SINGLE_BYTE_LENGTH = 192;
+
     // max length that can be represented in 2 bytes per XRPL serialization restrictions
     public const MAX_DOUBLE_BYTE_LENGTH = 12481;
+
     // max value that can be used in the second byte of a length field
     public const MAX_SECOND_BYTE_VALUE = 240;
+
     // max value that can be represented using one 8-bit byte
     public const MAX_BYTE_VALUE = 256;
+
     // max value that can be represented in using two 8-bit bytes
     public const MAX_DOUBLE_BYTE_VALUE = 65536;
 
@@ -67,7 +71,7 @@ class BinaryParser
         if ($this->bytes->getLength() >= $number) {
             $this->bytes = $this->bytes->slice($number);
         } else {
-            throw new \Exception('Trying to skip more elements than the buffer has');
+            throw new Exception('Trying to skip more elements than the buffer has');
         }
     }
 
@@ -87,7 +91,7 @@ class BinaryParser
             return $slice;
         }
 
-        throw new \Exception('Trying to read more elements than the buffer has');
+        throw new Exception('Trying to read more elements than the buffer has');
     }
 
     /**
@@ -104,7 +108,7 @@ class BinaryParser
             return Buffer::from($stdArray);
         }
 
-        throw new \Exception('Invalid number');
+        throw new Exception('Invalid number');
     }
 
     public function readUInt8(): Buffer
@@ -187,7 +191,7 @@ class BinaryParser
 
         if ($nth === 0) {
             $nth = $this->readUInt8()->toInt();
-            if ($nth == 0 || $nth < 16) {
+            if ($nth < 16) {
                 throw new Exception("Cannot read FieldOrdinal, field_code out of range");
             }
         }
@@ -241,7 +245,7 @@ class BinaryParser
      *
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function readVariableLengthLength(): int
     {
@@ -258,7 +262,7 @@ class BinaryParser
             return self::MAX_DOUBLE_BYTE_LENGTH + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_DOUBLE_BYTE_VALUE + $secondByte * self::MAX_BYTE_VALUE + $thirdByte;
         }
 
-        throw new \Exception("Invalid variable length indicator");
+        throw new Exception("Invalid variable length indicator");
     }
 
     /**

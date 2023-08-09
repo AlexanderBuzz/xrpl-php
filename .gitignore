@@ -8,4 +8,10 @@
 /_js/
 /_py/
 /_private_scripts/
+/examples/quickstart/.env
 /vendor/
+
+/.phpunit.result.cache
+
+
+/xrpljs-pulse

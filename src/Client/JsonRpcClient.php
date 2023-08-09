@@ -177,7 +177,7 @@ class JsonRpcClient
             /** @var BaseResponse $responseClass  */
             $responseClass = new $responseClassName($responsePayload);
 
-            return new $responseClass;
+            return $responseClass;
         } else {
             $statusCode = $response->getStatusCode();
             $reason = $response->getReasonPhrase();

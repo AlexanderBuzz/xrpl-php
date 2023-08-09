@@ -3,7 +3,6 @@
 namespace XRPL_PHP\Sugar;
 
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
 use XRPL_PHP\Client\JsonRpcClient;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\CoreUtilities;
@@ -103,9 +102,10 @@ if (!function_exists('XRPL_PHP\Sugar\fundWallet')) {
                     break;
                 }
             } catch (Exception $e) {
-                sleep($intervalSeconds);
-                $attempts--;
+
             }
+            sleep($intervalSeconds);
+            $attempts--;
         }
 
         return [
