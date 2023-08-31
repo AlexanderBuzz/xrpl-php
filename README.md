@@ -37,6 +37,7 @@ These examples show how to use key features:
 php examples/client.php
 php examples/fundWallet.php
 php examples/payment.php
+php examples/token-create.php // IOU + Token + CBDC - Wallet Matrix with Trustlines
 etc...
 ```
 
