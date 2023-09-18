@@ -1,11 +1,19 @@
 # PHP XRPL
 
-PHP Client Library to interact with the XRP Ledger. It offers all the functionality available in the JavaScript 
+PHP SDK / Client Library to interact with the XRP Ledger. It offers all the functionality available in the JavaScript 
 and Java Versions emphasizing robustness and code readability for those interested in looking under the 
 hood and getting into the nitty-gritty of XRPL development.
 
 ![Build Status](https://github.com/shopware/shopware/workflows/PHPUnit/badge.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
+
+## Features
+
+1. Managing keys & creating test credentials
+2. Submitting transactions to the XRP Ledger
+3. Sending requests to observe the ledger
+4. Creating and signing transactions (e.g. Payments) to modify the ledger state
+5. Parsing ledger data into more convenient formats
 
 ## Installation
 
