@@ -1,13 +1,19 @@
 <?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-use BI\BigInteger;
-use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
+use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
-use function MongoDB\BSON\fromJSON;
 
 class Path extends SerializedType
 {
@@ -20,6 +26,14 @@ class Path extends SerializedType
         parent::__construct($bytes);
     }
 
+    /**
+     *
+     *
+     * @param BinaryParser $parser
+     * @param int|null $lengthHint
+     * @return SerializedType
+     * @throws Exception
+     */
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $bytesList = new BytesList();
@@ -36,6 +50,12 @@ class Path extends SerializedType
         return new Path($bytesList->toBytes());
     }
 
+    /**
+     *
+     *
+     * @param string $serializedJson
+     * @return SerializedType
+     */
     public static function fromJson(string $serializedJson): SerializedType
     {
         $json = json_decode($serializedJson, true);
@@ -50,6 +70,12 @@ class Path extends SerializedType
         return new Path($bytesList->toBytes());
     }
 
+    /**
+     *
+     *
+     * @return array|string|int
+     * @throws Exception
+     */
     public function toJson(): array|string|int
     {
         $result = [];
