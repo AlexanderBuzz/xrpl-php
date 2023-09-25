@@ -1,14 +1,19 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
-use ArrayAccess;
 use XRPL_PHP\Core\Buffer;
 
 /**
- * https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-binary-codec/src/serdes/binary-serializer.ts
- *
- * Bytes list is a collection of buffer objects
+ * This class is a list is a collection of buffer objects ("array of byte arrays"))
  */
 class BytesList
 {
@@ -55,13 +60,6 @@ class BytesList
     {
         $this->bufferArray[$index] =$newElement;
     }
-
-    /*
-    public function toBytesSink(BytesList $list): Buffer
-    {
-        $list->toBytesSink($list); //TODO: Is this necessary?
-    }
-    */
 
     public function toBytes(): Buffer
     {

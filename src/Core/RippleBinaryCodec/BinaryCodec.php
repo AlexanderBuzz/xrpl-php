@@ -12,11 +12,12 @@ class BinaryCodec extends Binary
 {
     const TRANSACTION_SIGN = '53545800';
 
-    public function __construct()
-    {
-
-    }
-
+    /**
+     *
+     *
+     * @param string|array $jsonObject
+     * @return string
+     */
     public function encode(string|array $jsonObject): string
     {
         if (is_array($jsonObject)) {
@@ -27,6 +28,8 @@ class BinaryCodec extends Binary
     }
 
     /**
+     *
+     *
      * @param string $binaryString
      * @return array
      */
@@ -107,6 +110,12 @@ class BinaryCodec extends Binary
     }
     */
 
+    /**
+     *
+     *
+     * @param array $jsonObject
+     * @return array
+     */
     private function removeNonSigningFields(array $jsonObject): array
     {
         foreach ($jsonObject as $fieldName => $value) {
@@ -118,6 +127,12 @@ class BinaryCodec extends Binary
         return $jsonObject;
     }
 
+    /**
+     *
+     *
+     * @param string $fieldName
+     * @return bool
+     */
     private function isSigningField(string $fieldName): bool
     {
         return Definitions::getInstance()->getFieldInstance($fieldName)->isSigningField();

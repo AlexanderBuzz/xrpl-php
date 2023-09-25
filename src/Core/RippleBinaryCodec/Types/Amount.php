@@ -1,17 +1,21 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
-use Brick\Math\BigNumber;
 use Exception;
-use phpDocumentor\Reflection\Types\String_;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
 use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
-use function MongoDB\BSON\fromJSON;
-
 define('MAX_DROPS', BigDecimal::of("1e17"));
 define('MIN_XRP', BigDecimal::of("1e-6"));
 
@@ -31,6 +35,12 @@ class Amount extends SerializedType
 
     public const MAX_IOU_EXPONENT = 80;
 
+    /**
+     *
+     *
+     * @param Buffer|null $bytes
+     * @throws Exception
+     */
     public function __construct(?Buffer $bytes = null)
     {
         if (!$bytes) {
@@ -41,25 +51,34 @@ class Amount extends SerializedType
     }
 
     /**
+     *
+     *
+     * @param BinaryParser $parser
+     * @param int|null $lengthHint
+     * @return SerializedType
      * @throws Exception
      */
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         $isXRP = $parser->peek() & 0x80;
-        $numBytes = $isXRP ? 48 : 8; //NATIVE_AMOUNT_BYTE_LENGTH : CURRENCY_AMOUNT_BYTE_LENGTH;
+        $numBytes = $isXRP ? self::CURRENCY_AMOUNT_BYTE_LENGTH : self::NATIVE_AMOUNT_BYTE_LENGTH;
 
         return new Amount($parser->read($numBytes));
     }
 
     /**
-     * @throws Exception
+     *
+     *
+     * @param string $serializedJson
+     * @return SerializedType
+     * @throws \Brick\Math\Exception\MathException
      */
     public static function fromJson(string $serializedJson): SerializedType
     {
         $isScalar = preg_match('/^\d+$/', $serializedJson);
         if ($isScalar) {
             self::assertXrpIsValid($serializedJson);
-            $padded = str_pad(dechex($serializedJson), 16, 0, STR_PAD_LEFT);
+            $padded = str_pad(dechex((int)$serializedJson), 16, '0', STR_PAD_LEFT);
             $bytes = Buffer::from($padded, 'hex'); //padding!
             $rawBytes = $bytes->toArray();
             $rawBytes[0] |= 0x40;
@@ -76,16 +95,16 @@ class Amount extends SerializedType
         $amount = Buffer::alloc(8);
 
         $number = BigDecimal::of($rawValue);
-        //self::assertIouIsValid($number);
+        self::assertIouIsValid($number);
 
         if($number->isZero()) {
             $amount[0] |= 0x80;
         } else {
-            $intString = str_pad($number->getUnscaledValue()->abs(), 16, 0);
+            $intString = str_pad($number->getUnscaledValue()->abs()->jsonSerialize(), 16, '0');
             $bigInteger = BigInteger::of($intString);
 
-            $hex1 = str_pad($bigInteger->shiftedRight(32)->toBase(16), 8, 0, STR_PAD_LEFT);
-            $hex2 = str_pad($bigInteger->and(0x00000000ffffffff)->toBase(16), 8, 0, STR_PAD_LEFT);
+            $hex1 = str_pad($bigInteger->shiftedRight(32)->toBase(16), 8, '0', STR_PAD_LEFT);
+            $hex2 = str_pad($bigInteger->and(0x00000000ffffffff)->toBase(16), 8, '0', STR_PAD_LEFT);
             $amount = Buffer::from($hex1 . $hex2);
 
             $amount[0] |= 0x80;
@@ -147,6 +166,36 @@ class Amount extends SerializedType
     }
 
     /**
+     *
+     *
+     * @param mixed $amount
+     * @return bool
+     */
+    public static function isAmountValid(mixed $amount): bool
+    {
+        try {
+            self::assertXrpIsValid($amount);
+            // If no exception is thrown, it's a valid XRP amount
+            return true;
+        } catch (Exception $exception) {
+            // Do nothing
+        }
+
+        try {
+            self::assertIouIsValid($amount);
+            // If no exception is thrown, it's a valid IOU/token amount
+            return true;
+        } catch (Exception $exception) {
+            // Do nothing
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @param string $amount
+     * @return void
      * @throws Exception
      */
     private static function assertXrpIsValid(string $amount): void
@@ -164,11 +213,13 @@ class Amount extends SerializedType
     }
 
     /**
+     *
+     *
      * @param BigDecimal $number
      * @return void
      * @throws Exception
      */
-    private function assertIouIsValid(BigDecimal $number): void
+    private static function assertIouIsValid(BigDecimal $number): void
     {
         if(!$number->isZero()) {
             $precision = MathUtilities::getBigDecimalPrecision($number);
@@ -181,26 +232,24 @@ class Amount extends SerializedType
                 throw new Exception("Decimal precision out of range");
             }
 
-            $this->verifyNoDecimal($number);
+            self::verifyNoDecimal($number);
         }
     }
 
-    private function verifyNoDecimal(BigDecimal $decimal): void
+    private static function verifyNoDecimal(BigDecimal $decimal): void
     {
-        $intString = str_pad($decimal->getUnscaledValue()->abs(), 16, 0);
+        $intString = str_pad($decimal->getUnscaledValue()->abs()->jsonSerialize(), 16, '0');
 
         if (str_contains($intString, '.')) {
             throw new Exception("Decimal place found in integerNumberString");
         }
     }
 
-    private function getAmountBytes(BigDecimal $number): Buffer
-    {
-
-    }
-
 
     /**
+     *
+     *
+     * @param array $bytes
      * @return bool
      */
     private function isNative(array $bytes): bool
@@ -210,6 +259,9 @@ class Amount extends SerializedType
     }
 
     /**
+     *
+     *
+     * @param array $bytes
      * @return bool
      */
     private function isPositive(array $bytes): bool
