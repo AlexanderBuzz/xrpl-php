@@ -129,14 +129,14 @@ $signedPaymentTx = $bankWallet->sign($preparedPaymentTx);
 $paymentResponse = $client->submitAndWait($signedPaymentTx['tx_blob']);
 print_r(Color::GREEN . "Token payment done! TxHash: " . Color::WHITE . "{$paymentResponse->getResult()['hash']}" . PHP_EOL . PHP_EOL);
 
-$numT = '12';
-print_r(Color::YELLOW . "Sending {$numT} Tokens from customer wallet to merchant wallet, please wait..." . PHP_EOL);
+$examplePaymentAmount = '15';
+print_r(Color::YELLOW . "Sending {$examplePaymentAmount} Tokens from customer wallet to merchant wallet, please wait..." . PHP_EOL);
 $sendTokenTx = [
     "TransactionType" => "Payment",
     "Account" => $customerWallet->getAddress(),
     "Amount" => [
         "currency" => $tokenName,
-        "value" => $numT,
+        "value" => $examplePaymentAmount,
         "issuer" => $bankWallet->getAddress()
     ],
     "Destination" => $merchantWallet->getAddress()
@@ -145,6 +145,5 @@ $preparedPaymentTx = $client->autofill($sendTokenTx);
 $signedPaymentTx = $customerWallet->sign($preparedPaymentTx);
 $paymentResponse = $client->submitAndWait($signedPaymentTx['tx_blob']);
 print_r(Color::GREEN . "Token payment done! TxHash: " . Color::WHITE . "{$paymentResponse->getResult()['hash']}" . PHP_EOL . PHP_EOL);
-
 
 print_r(Color::RESET . "You can check wallets/accounts and transactions on https://test.bithomp.com"  . PHP_EOL . PHP_EOL);
