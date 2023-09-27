@@ -9,6 +9,8 @@ use XRPL_PHP\Wallet\Wallet;
 use XRPL_PHP\Models\Transaction\SubmitRequest;
 use XRPL_PHP\Models\Transaction\TransactionTypes\AccountSet;
 
+$howToRunExample = "php token-create.php --tokenName LOP --issuerBalance 100000 --customerBalance 1000";
+
 $issuerWallet = null;
 $bankWallet = null;
 $merchantWallet = null;
@@ -19,6 +21,15 @@ $options = getopt("", [
     "issuerBalance:",
     "customerBalance:"
 ]);
+
+if (!isset($options["tokenName"]) || !isset($options["issuerBalance"]) || !isset($options["customerBalance"])) {
+    print_r(PHP_EOL . Color::YELLOW);
+    print_r("Error: Missing Parameter");
+    print_r(PHP_EOL . Color::RED);
+    print_r($howToRunExample);
+    print_r(PHP_EOL . Color::RESET);
+    die();
+}
 
 $tokenName = $options["tokenName"];
 $issuerBalance = $options["issuerBalance"];
