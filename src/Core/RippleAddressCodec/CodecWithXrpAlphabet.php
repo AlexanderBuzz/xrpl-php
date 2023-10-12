@@ -80,7 +80,7 @@ class CodecWithXrpAlphabet extends Codec
             'versions' => [self::NODE_PUBLIC],
             'expectedLength' => 33
         ];
-        return $this->decode($base58string, $options)['bytes'];
+        return Buffer::from($this->decode($base58string, $options)['bytes']);
     }
 
     public function encodeAccountPublic(Buffer $bytes): string
