@@ -1,4 +1,12 @@
 <?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core\RippleAddressCodec;
 
@@ -16,11 +24,20 @@ class CodecWithXrpAlphabet extends Codec
 
     public const ED25519_SEED = [0x01, 0xe1, 0x4b]; // [1, 225, 75]
 
+    /**
+     * @param string $alphabet
+     */
     public function __construct(string $alphabet)
     {
         parent::__construct(Utils::XRPL_ALPHABET);
     }
 
+    /**
+     * @param Buffer $entropy
+     * @param string $type
+     * @return string
+     * @throws \Exception
+     */
     public function encodeSeed(Buffer $entropy, string $type): string
     {
         if ($entropy->getLength() !== 16) {
@@ -36,6 +53,12 @@ class CodecWithXrpAlphabet extends Codec
         return $this->encode($entropy, $options);
     }
 
+    /**
+     * @param string $seed
+     * @param array $options
+     * @return array
+     * @throws \Exception
+     */
     public function decodeSeed(string $seed, array $options = []): array
     {
         $options = array_replace([
@@ -47,6 +70,10 @@ class CodecWithXrpAlphabet extends Codec
         return $this->decode($seed, $options);
     }
 
+    /**
+     * @param Buffer $bytes
+     * @return string
+     */
     public function encodeAccountId(Buffer $bytes): string
     {
         $options = [
@@ -56,6 +83,11 @@ class CodecWithXrpAlphabet extends Codec
         return $this->encode($bytes, $options);
     }
 
+    /**
+     * @param string $accountId
+     * @return Buffer
+     * @throws \Exception
+     */
     public function decodeAccountId(string $accountId): Buffer
     {
         $options = [
@@ -65,6 +97,10 @@ class CodecWithXrpAlphabet extends Codec
         return Buffer::from($this->decode($accountId, $options)['bytes']);
     }
 
+    /**
+     * @param Buffer $bytes
+     * @return string
+     */
     public function encodeNodePublic(Buffer $bytes): string
     {
         $options = [
@@ -74,6 +110,11 @@ class CodecWithXrpAlphabet extends Codec
         return $this->encode($bytes, $options);
     }
 
+    /**
+     * @param string $base58string
+     * @return Buffer
+     * @throws \Exception
+     */
     public function decodeNodePublic(string $base58string): Buffer
     {
         $options = [
@@ -83,6 +124,10 @@ class CodecWithXrpAlphabet extends Codec
         return Buffer::from($this->decode($base58string, $options)['bytes']);
     }
 
+    /**
+     * @param Buffer $bytes
+     * @return string
+     */
     public function encodeAccountPublic(Buffer $bytes): string
     {
         $options = [
@@ -92,15 +137,24 @@ class CodecWithXrpAlphabet extends Codec
         return $this->encode($bytes, $options);
     }
 
+    /**
+     * @param string $base58string
+     * @return Buffer
+     * @throws \Exception
+     */
     public function decodeAccountPublic(string $base58string): Buffer
     {
         $options = [
             'versions' => [self::ACCOUNT_PUBLIC_KEY],
             'expectedLength' => 33
         ];
-        return $this->decode($base58string, $options)['bytes'];
+        return Buffer::from($this->decode($base58string, $options)['bytes']);
     }
 
+    /**
+     * @param string $address
+     * @return bool
+     */
     public function isValidClassicAddress(string $address): bool
     {
         try {
