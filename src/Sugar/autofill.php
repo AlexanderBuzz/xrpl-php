@@ -41,6 +41,8 @@ function setValidAddresses (array &$tx): void
 }
 
 /**
+ * Covert tx if X-address is given. If tag is provided in tx and X-address, check if the match.
+ *
  * @param array $tx
  * @param string $accountField
  * @param string $tagField
@@ -57,9 +59,9 @@ function validateAccountAddress (array &$tx, string $accountField, string $tagFi
         if(isset($tx[$tagField]) && $tx[$tagField] !== $tag) {
             throw new Exception("The {$tagField}, if present, must match the tag of the {$accountField} X-address");
         }
-    }
 
-    $tx[$tagField] = $tag;
+        $tx[$tagField] = $tag;
+    }
 }
 
 /**
