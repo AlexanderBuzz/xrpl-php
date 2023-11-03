@@ -1,0 +1,41 @@
+template:
+  url: https://github.com/moqmar/mintlook-couscous
+
+include:
+  - docs
+
+menu:
+  sections:
+    introduction:
+      name: Introduction
+      items:
+        home:
+          text: Home page
+          relativeUrl: docs/index.html
+        quickstart:
+          text: Quickstart
+          relativeUrl: docs/quickstart.html
+        wallet:
+          text: Wallet
+          relativeUrl: docs/wallet.html
+        client:
+          text: Client
+          relativeUrl: docs/client.html
+        methods:
+          text: Client
+          relativeUrl: docs/client.html
+    core:
+      name: Core
+      items:
+        address-codec:
+          text: AddressCodec
+          relativeUrl: docs/address-codec.html
+        binary-codec:
+          text: BinaryCodec
+          relativeUrl: docs/binary-codec.html
+        keypairs:
+          text: Keypairs
+          relativeUrl: docs/keypairs.html
+#    utilities:
+#      name: Utilities
+#      items:

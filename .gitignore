@@ -13,5 +13,7 @@
 
 /.phpunit.result.cache
 
-
-/xrpljs-pulse
+# Documentation
+/.couscous/
+/website/bower_components/
+/website/css/all.min.css
