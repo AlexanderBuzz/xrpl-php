@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ title|default('XRPL_PHP') }}</title>
+    <meta name="description" content="XRPL_PHP - PHP integration for the PHP ledger">
+
+    <link rel="canonical" href="https://php-di.org" />
+
+    <meta name="application-name" content="XRPL_PHP"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ baseUrl }}/img/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ baseUrl }}/img/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="{{ baseUrl }}/img/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ baseUrl }}/img/favicon-16x16.png" sizes="16x16" />
+    <meta name="msapplication-TileColor" content="#484949" />
+    <meta name="msapplication-TileImage" content="{{ baseUrl }}/img/mstile-144x144.png" />
+
+    {% block css %}
+        <link href="https://fonts.googleapis.com/css?family=Abel:400|Oswald:300,400,700" media="all" rel="stylesheet" type="text/css">
+
+        <link href="{{ baseUrl }}/css/highlight.css" rel="stylesheet">
+        <link href="{{ baseUrl }}/css/all.min.css" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+
+<header>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ baseUrl }}/" title="">XRPL_PHP</a>
+            </div>
+            <!--
+            <div class="navbar-form navbar-left hidden-xs hidden-sm">
+                <input id="search-input" type="text" class="form-control" placeholder="Search...">
+            </div>
+            -->
+            <div class="collapse navbar-collapse" id="top-navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{ baseUrl }}/docs/index.html" title="Getting started with XRPL_PHP">Home</a></li>
+                    <li><a href="{{ baseUrl }}/docs/quickstart.html" title="Getting started with XRPL_PHP">Quickstart</a></li>
+                    <li><a class="github" href="https://github.com/AlexanderBuzz/xrpl-php" title="XRPL_PHP on GitHub"><i class="fa fa-github"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% block content %}
+    <article class="container">
+        {{ content|raw }}
+    </article>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <div class='container'>
+            <p>
+                Website generated with
+                <a href="http://couscous.io" title="Static website generator for software documentation">Couscous</a>.
+            </p>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ baseUrl }}/js/jquery.min.js"></script>
+    <script src="{{ baseUrl }}/js/bootstrap.min.js"></script>
+    <script src="{{ baseUrl }}/js/highlight.min.js"></script>
+
+    <script>
+        $(function() {
+            hljs.initHighlightingOnLoad();
+
+            // Add anchors to headers
+            $('article h2, article h3, article h4, article h5').each(function () {
+                var url = document.URL.replace(/#.*$/, "") + '#' + $(this).attr('id');
+                $(this).append(' <a class="anchor" href="' + url + '">#</a>');
+            });
+        });
+    </script>
+{% endblock %}
+
+</body>
+</html>

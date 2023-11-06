@@ -1,6 +1,19 @@
-### Creating a Wallet
+---
+layout: documentation
+title: Wallet
+current_menu: wallet
+---
 
-### Creating a wallet
+
+### Generating a Wallet 
+
+```php
+use XRPL_PHP\Wallet\Wallet;
+
+$exampleWallet = Wallet::generate();
+```
+
+### Creating a Wallet from Seed
 
 ```php
 use XRPL_PHP\Wallet\Wallet;

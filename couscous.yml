@@ -1,41 +1,55 @@
-template:
-  url: https://github.com/moqmar/mintlook-couscous
+baseUrl: https://php-di.org
 
 include:
   - docs
 
 menu:
-  sections:
+  items:
     introduction:
-      name: Introduction
+      section: Usage
       items:
-        home:
-          text: Home page
-          relativeUrl: docs/index.html
         quickstart:
           text: Quickstart
-          relativeUrl: docs/quickstart.html
+          url: docs/quickstart.html
         wallet:
           text: Wallet
-          relativeUrl: docs/wallet.html
+          url: docs/wallet.html
         client:
-          text: Client
-          relativeUrl: docs/client.html
+          text: JSON RPC Client
+          url: docs/client.html
         methods:
-          text: Client
-          relativeUrl: docs/client.html
+          text: Client Methods
+          url: docs/methods.html
     core:
-      name: Core
+      section: Core
       items:
         address-codec:
           text: AddressCodec
-          relativeUrl: docs/address-codec.html
+          url: docs/address-codec.html
         binary-codec:
           text: BinaryCodec
-          relativeUrl: docs/binary-codec.html
+          url: docs/binary-codec.html
         keypairs:
           text: Keypairs
-          relativeUrl: docs/keypairs.html
-#    utilities:
-#      name: Utilities
-#      items:
+          url: docs/keypairs.html
+        buffer:
+          text: Buffer
+          url: docs/buffer.html
+        ctid:
+          text: CTID
+          url: docs/ctid.html
+        networks:
+          text: Networks
+          url: docs/networks.html
+    utilities:
+      section: Utilities
+      items:
+        core-utilities:
+          text: Core Utilities
+          url: docs/core-utilities.html
+        math-utilities:
+          text: Math Utilities
+          url: docs/math-utilities.html
+        utilities:
+          text: Utilities
+          url: docs/utilities.html

@@ -1,0 +1,33 @@
+{% extends "default.twig" %}
+
+{% block content %}
+
+    <div class="container documentation">
+
+        <div class="sidebar">
+            <ul>
+                {% for itemId, item in menu.items %}
+                    <li>
+                        <span class="section-title">{{ item.section }}</span>
+
+                        <ul>
+                            {% for itemId, item in item.items %}
+                                <li class="{{ itemId == current_menu ? 'active' }}">
+                                    <a href="{{ item.absoluteUrl|default(baseUrl ~ '/' ~ item.url) }}">
+                                        {{ item.text|raw }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <article>
+            {{ content|raw }}
+        </article>
+
+    </div>
+
+{% endblock %}

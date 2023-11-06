@@ -90,6 +90,8 @@ function waitForFinalTransactionOutcome(
         return $txResponse;
     }
 
+    //print_r($txResponse);
+
     return waitForFinalTransactionOutcome(
       $client,
       $txHash,$lastLedger,

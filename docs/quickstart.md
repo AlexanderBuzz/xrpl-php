@@ -1,4 +1,5 @@
 ---
+layout: documentation
 title: Quickstart
 current_menu: quickstart
 ---
