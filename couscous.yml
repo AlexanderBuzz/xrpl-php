@@ -1,4 +1,4 @@
-baseUrl: https://php-di.org
+baseUrl: https://alexanderbuzz.github.io/xrpl-php-docs/
 
 include:
   - docs
@@ -6,50 +6,50 @@ include:
 menu:
   items:
     introduction:
-      section: Usage
+      section: Concepts
       items:
         quickstart:
           text: Quickstart
-          url: docs/quickstart.html
+          url: quickstart.html
         wallet:
           text: Wallet
-          url: docs/wallet.html
+          url: wallet.html
         client:
           text: JSON RPC Client
-          url: docs/client.html
+          url: client.html
         methods:
           text: Client Methods
-          url: docs/methods.html
+          url: methods.html
     core:
       section: Core
       items:
         address-codec:
           text: AddressCodec
-          url: docs/address-codec.html
+          url: address-codec.html
         binary-codec:
           text: BinaryCodec
-          url: docs/binary-codec.html
+          url: binary-codec.html
         keypairs:
           text: Keypairs
-          url: docs/keypairs.html
+          url: keypairs.html
         buffer:
           text: Buffer
-          url: docs/buffer.html
+          url: buffer.html
         ctid:
           text: CTID
-          url: docs/ctid.html
+          url: ctid.html
         networks:
           text: Networks
-          url: docs/networks.html
+          url: networks.html
     utilities:
       section: Utilities
       items:
         core-utilities:
           text: Core Utilities
-          url: docs/core-utilities.html
+          url: core-utilities.html
         math-utilities:
           text: Math Utilities
-          url: docs/math-utilities.html
+          url: math-utilities.html
         utilities:
           text: Utilities
-          url: docs/utilities.html
+          url: utilities.html

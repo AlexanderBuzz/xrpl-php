@@ -2,11 +2,25 @@
 title: Documentation index
 ---
 
-### Introduction
+## Introduction
 
-* [quickstart](quickstart.md)
+XRPL_PHP is the PHP SDK for the [XRPL | XRP Ledger](https://xrpl.org/). The XRP Ledger (XRPL) is a decentralized, 
+public blockchain led by a global community of businesses and developers looking to solve problems and create value.
 
-### Usage
+Proven reliable over more than a decade of error-free functioning, the XRPL offers streamlined development, 
+low transaction costs, high performance, and sustainability. So you can build with confidence–and move your most critical projects forward.
+
+## Getting Started
+
+To get a quick overview on how to use XRPL_PHP, just go to the [Quickstart](quickstart.md) page.
+
+For in-depth documentation, you can refer to the following pages:
+
+### Concepts
+* [Wallet](wallet.md)
+* [JSON RPC Client](client.md)
+* [Client Methods](methods.md)
+* [Recipes & Patterns](recipes-patterns.md)
 
 ### License
 

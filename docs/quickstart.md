@@ -20,6 +20,8 @@ XRPL_PHP requires PHP 8.1 or above.
 
 You can try XRPL_PHP in the following sandbox environment: [XRPL_PHP Sandbox](https://phpsandbox.io/n/yellow-kit-fisto-31c5a)
 
+## 
+
 ## Basic usage
 
 ### Pinging the XRP Ledger
@@ -76,8 +78,8 @@ $txResponse = $client->submitAndWait($signedTx['tx_blob']);
 $result = $txResponse->getResult();
 ```
 
-Here, we 
-1. We create a `Transaction` array (you can also use dedicated Method objects)
+The steps are as follows:
+1. We create a `Transaction` array (you can also use dedicated [Method](methods.md) objects)
 2. We use the `autofill()` function to add necessary fields like `Sequence`, `Fee` and `LastLedgerSequence`
 3. We sign our Transaction (which will result in an array with the fields tx_blob and hash)
 4. We submit our transaction using `submitAndWait()`, which submits the serialized `Transaction` and waits for validation
