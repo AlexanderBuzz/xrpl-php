@@ -1,16 +1,24 @@
 <?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Client;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
-use XRPL_PHP\Models\Account\AccountChannelsResponse;
 use XRPL_PHP\Models\BaseRequest;
 use XRPL_PHP\Models\BaseResponse;
 use XRPL_PHP\Models\ErrorResponse;
@@ -24,8 +32,6 @@ use function XRPL_PHP\Sugar\fundWallet;
 use function XRPL_PHP\Sugar\getXrpBalance;
 use function XRPL_PHP\Sugar\submit;
 use function XRPL_PHP\Sugar\submitAndWait;
-
-//use function XRPL_PHP\Sugar\getLedgerIndex;
 
 class JsonRpcClient
 {
@@ -45,6 +51,8 @@ class JsonRpcClient
 
     private string $maxFeeXrp;
 
+    private float $timeout;
+
     public function __construct(
         string $connectionUrl,
         ?float $feeCushion = null,
@@ -57,17 +65,27 @@ class JsonRpcClient
 
         $this->maxFeeXrp = $maxFeeXrp ?? self::DEFAULT_MAX_FEE_XRP;
 
+        $this->timeout = $timeout;
+
         $stack = HandlerStack::create(new CurlHandler());
 
         $this->restClient = new Client(
             [
                 'base_uri' => $this->connectionUrl,
                 'handler' => $stack,
-                'timeout' => $timeout,
+                'timeout' => $this->timeout,
             ]
         );
     }
 
+    /**
+     * Issue a asyncronous JSON RPC request using raw data.
+     *
+     * @param string $method
+     * @param string $resource
+     * @param string|null $body
+     * @return PromiseInterface
+     */
     public function rawRequest(string $method, string $resource = '', string $body = null): PromiseInterface
     {
         $request = new Request(
@@ -80,6 +98,13 @@ class JsonRpcClient
         return $this->restClient->sendAsync($request);
     }
 
+    /***
+     * Issue a asynchronous JSON RPC request using a method object.
+     *
+     * @param BaseRequest $request
+     * @param bool|null $returnRawResponse
+     * @return PromiseInterface
+     */
     public function request(BaseRequest $request, ?bool $returnRawResponse = false): PromiseInterface
     {
         $promise = $this->rawRequest(
@@ -100,11 +125,13 @@ class JsonRpcClient
     }
 
     /**
+     * Issue a asyncronous JSON RPC request using raw data.
+     *
      * @param string $method
      * @param string $resource
      * @param string|null $body
      * @return ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function rawSyncRequest(string $method, string $resource = '', string $body = null): ResponseInterface
     {
@@ -118,6 +145,14 @@ class JsonRpcClient
         return $this->restClient->send($request);
     }
 
+    /**
+     * Issue a synchronous JSON RPC request using a method object.
+     *
+     * @param BaseRequest $request
+     * @param bool|null $returnRawResponse
+     * @return ResponseInterface|BaseResponse|ErrorResponse
+     * @throws GuzzleException
+     */
     public function syncRequest(BaseRequest $request, ?bool $returnRawResponse = false): ResponseInterface|BaseResponse|ErrorResponse
     {
         try {
@@ -138,11 +173,13 @@ class JsonRpcClient
     }
 
     /**
+     * Process RPC response.
+     *
      * @param BaseRequest $request
      * @param ResponseInterface|null $response
      * @return BaseResponse|ErrorResponse
      */
-    public function handleResponse(BaseRequest $request, ?ResponseInterface $response): BaseResponse|ErrorResponse
+    private function handleResponse(BaseRequest $request, ?ResponseInterface $response): BaseResponse|ErrorResponse
     {
         if (is_null($response)) {
             return new ErrorResponse(
@@ -210,6 +247,11 @@ class JsonRpcClient
         return $this->feeCushion;
     }
 
+    /**
+     * Query
+     *
+     * @return int
+     */
     public function getLedgerIndex(): int
     {
         $ledgerRequest = new LedgerRequest(ledgerIndex: 'validated');

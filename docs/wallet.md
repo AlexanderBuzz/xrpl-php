@@ -4,8 +4,11 @@ title: Wallet
 current_menu: wallet
 ---
 
+# Wallet
 
-### Generating a Wallet 
+### Creating a new Wallet 
+
+To create a new `Wallet`, you can use the static `generate()` method of the `Wallet` class:
 
 ```php
 use XRPL_PHP\Wallet\Wallet;
@@ -13,7 +16,16 @@ use XRPL_PHP\Wallet\Wallet;
 $exampleWallet = Wallet::generate();
 ```
 
+It provides the necessary
+properties for an Account on the ledger to exist, e.g. Seed, Keys and Address etc. Note that this Account does not
+yet exist on the Ledger: It has to be activated by a `Payment Transaction`. If you are using the testnet, you can use the
+`fundWallet()` utility method or use a [Faucet](https://test.bithomp.com/faucet/) to get your `Wallet` funded and active.
+
+
 ### Creating a Wallet from Seed
+
+If you already have an active `Account` on the XRPL, you can create a corresponding `Wallet` from its seed by using the 
+static `fromSeed()`method:
 
 ```php
 use XRPL_PHP\Wallet\Wallet;
@@ -25,7 +37,8 @@ $exampleWallet = Wallet::fromSeed($exampleSeed);
 
 ### Creating a Faucet Wallet on the Testnet
 
-An account on the XRPL has to be funded / activated. On the Mainnet, this is done by sending a Payment transaction On the Testnet, you can create a
+An Account on the XRPL has to be funded to be activated. On the Mainnet, this is done by sending a `Payment Transaction`. 
+On the Testnet, you can create a prefunded Wallet in the following way:
 
 ```php
 use XRPL_PHP\Client\JsonRpcClient;
@@ -42,4 +55,24 @@ $fundWalletResponse = fundWallet(
 $fundedWallet = $fundWalletResponse['wallet'];
 ```
 
-### Create a Wallet from seed
+### Signing a Transaction
+
+To sign a `Transaction`, you can use the `sign()` method of a `Wallet`:
+
+```php
+$tx = [
+    "TransactionType" => "Payment",
+    "Account" => $aliceWallet->getAddress(),
+    "Amount" => xrpToDrops($xrpAmount),
+    "Destination" => $bobWallet->getAddress(),
+    "DestinationTag" => 1937215245,
+    "Sequence" => 42538726,
+    "Fee" => 12,
+    "LastLedgerSequence" => 42697421  
+];
+$signedTx = $wallet->sign($tx);
+```
+
+The result will be an array comprised of two fields:
+1. `$signedTx['tx_blob']`, representing the signed, serialized `Transaction`
+2. `$signedTx['hash']`, the hashed `tx_blob`

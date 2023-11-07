@@ -1,4 +1,12 @@
 <?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace XRPL_PHP\Core\RippleBinaryCodec;
 
@@ -13,7 +21,7 @@ class BinaryCodec extends Binary
     const TRANSACTION_SIGN = '53545800';
 
     /**
-     *
+     * Serializes an array (or JSON string) into a hex-encoded string.
      *
      * @param string|array $jsonObject
      * @return string
@@ -28,7 +36,7 @@ class BinaryCodec extends Binary
     }
 
     /**
-     *
+     * Deserializes a hex-encoded string into an array.
      *
      * @param string $binaryString
      * @return array
@@ -65,7 +73,7 @@ class BinaryCodec extends Binary
     */
 
     /**
-     * Encode a transaction and prepare for multi-signing
+     * Encode a transaction and prepare it for multi-signing
      *
      * @param string|array $tx
      * @param string $signAs
@@ -111,7 +119,7 @@ class BinaryCodec extends Binary
     */
 
     /**
-     *
+     * Remove fields from a tx array that will not be signed.
      *
      * @param array $jsonObject
      * @return array
@@ -128,7 +136,7 @@ class BinaryCodec extends Binary
     }
 
     /**
-     *
+     * Checks if a given field is included in the fields that constitute the part of the tx that will be signed.
      *
      * @param string $fieldName
      * @return bool

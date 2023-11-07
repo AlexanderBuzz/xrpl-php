@@ -14,17 +14,26 @@ You can install XRPL_PHP with [Composer](http://getcomposer.org/doc/00-intro.md)
 composer require hardcastle/xrpl_php
 ```
 
-XRPL_PHP requires PHP 8.1 or above.
+XRPL_PHP requires PHP 8.1 or above. Optional but recommended are the PHP extensions [GMP](http://php.net/manual/en/book.gmp.php)
+and / or [BCMath](https://www.php.net/manual/de/book.bc.php), which will speed up operations involving arbitrary length numbers like
+Encryption and Serialisation.
 
 ## Sandbox
 
 You can try XRPL_PHP in the following sandbox environment: [XRPL_PHP Sandbox](https://phpsandbox.io/n/yellow-kit-fisto-31c5a)
 
-## 
+## Docker
+
+[WIP]
 
 ## Basic usage
 
-### Pinging the XRP Ledger
+Interacting with the XRPL basically involves two kinds of operations: 
+
+1. Querying the ledger, e.g. looking up the XRP balance of a given account or requesting the details of a specific transaction.
+2. Doing [Transactions](https://xrpl.org/transactions.html), which are operations that modify the ledger state. Examples are issuing Payments or minting NFTs.
+
+### Query Example - Pinging the XRP Ledger
 
 First, let's do a very basic request to the XRPL Testnet:
 
@@ -43,9 +52,9 @@ $result = $pingResponse->getResult();
 print_r($result);
 ```
 
-### Issuing a Payment
+### Transaction example - Issuing a Payment
 
-In this more complex example, we create two Wallets from their corresponding Seeds and issue a Payment from one to the other.
+In this more complex example, we create two Wallets from their corresponding Seeds and issue a Payment from one to the other. 
 
 ```php
 use Codedungeon\PHPCliColors\Color;
@@ -84,4 +93,8 @@ The steps are as follows:
 3. We sign our Transaction (which will result in an array with the fields tx_blob and hash)
 4. We submit our transaction using `submitAndWait()`, which submits the serialized `Transaction` and waits for validation
 
-### Further Reading 
+## Further Reading
+In those two examples we've touched most of the basic needs for most use cases. To get a better understanding, you can take a look at 
+more [examples](https://github.com/AlexanderBuzz/xrpl-php/tree/master/examples) or explore this documentation. Tip: This documentation is
+structured in a conceptually successive order. So just skimming it in order will give you a birds eye view on how all the 
+parts fit into the big picture. 

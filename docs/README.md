@@ -17,10 +17,14 @@ To get a quick overview on how to use XRPL_PHP, just go to the [Quickstart](quic
 For in-depth documentation, you can refer to the following pages:
 
 ### Concepts
+
 * [Wallet](wallet.md)
 * [JSON RPC Client](client.md)
 * [Client Methods](methods.md)
 * [Recipes & Patterns](recipes-patterns.md)
+
+The documentation is structured in a consecutive way. By just skimming each page in order, you will get a birds eye view 
+of all the available building blocks and how to make them interact with each other.
 
 ### License
 
