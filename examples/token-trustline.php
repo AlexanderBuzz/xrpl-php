@@ -36,9 +36,9 @@ $issuerBalance = $options["issuerBalance"];
 $customerBalance = $options["customerBalance"];
 
 print_r(PHP_EOL . Color::GREEN);
-print_r("┌────────────────────────────┐" . PHP_EOL);
-print_r("│ LedgerDirect Token Creator │" . PHP_EOL);
-print_r("└────────────────────────────┘" . PHP_EOL);
+print_r("┌───────────────────────────┐" . PHP_EOL);
+print_r("│ Token & Trustline Example │" . PHP_EOL);
+print_r("└───────────────────────────┘" . PHP_EOL);
 print_r(PHP_EOL . Color::RESET);
 
 

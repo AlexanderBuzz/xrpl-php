@@ -22,29 +22,26 @@ use function XRPL_PHP\Sugar\xrpToDrops;
  */
 
 // Use your own credentials here:
-$testnetStandbyAccountSeed = 'sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k';
-$testnetStandbyAccountAddress = 'raJNboPDvjLrYZropPFrxvz2Qm7A9guEVd';
-$standbyWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
+$aliceAccountSeed = 'sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k';
+$aliceWallet = Wallet::fromSeed($aliceAccountSeed);
 
 // Use your own credentials here:
-$testnetOperationalAccountSeed = 'sEdVHf8rNEaRveJw4NdVKxm3iYWFuRb';
-$testnetOperationalAccountAddress = 'rEQ3ik2kmAvajqpFweKgDghJFZQGpXxuRN';
-$operationalWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
+$bobAccountSeed = 'sEdVHf8rNEaRveJw4NdVKxm3iYWFuRb';
+$bobWallet = Wallet::fromSeed($bobAccountSeed);
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 $xrpAmount = '100';
 print_r(Color::YELLOW . "Sending {$xrpAmount} XRP from standby wallet to operational wallet, please wait..." . PHP_EOL);
-$tx = [
+$paymentTx = [
     "TransactionType" => "Payment",
-    "Account" => $testnetStandbyAccountAddress,
+    "Account" => $aliceWallet->getAddress(),
     "Amount" => xrpToDrops($xrpAmount),
-    "Destination" => $testnetOperationalAccountAddress
+    "Destination" => $bobWallet->getAddress()
 ];
-$autofilledTx = $client->autofill($tx);
-$signedTx = $standbyWallet->sign($autofilledTx);
+$preparedTx = $client->autofill($paymentTx);
+$signedTx = $aliceWallet->sign($preparedTx);
 
-// Using method (object) request:
 $txResponse = $client->submitAndWait($signedTx['tx_blob']);
 $result = $txResponse->getResult();
 if ($result['meta']['TransactionResult'] === 'tecUNFUNDED_PAYMENT') {
@@ -52,17 +49,5 @@ if ($result['meta']['TransactionResult'] === 'tecUNFUNDED_PAYMENT') {
 } else {
     print_r(Color::GREEN . "Token payment done! TxHash: " . Color::WHITE . "{$result['hash']}" . PHP_EOL . PHP_EOL);
 }
-
-// Using raw (array) request:
-//
-// $body = json_encode([
-//     "method" => "submit",
-//     "params" => [
-//         ["tx_blob" => $signedTx['tx_blob']]
-//      ]
-// ]);
-// $response = $client->rawSyncRequest('POST', '', $body);
-// $content = $response->getBody()->getContents();
-// print_r(json_decode($content, true));
 
 print_r(Color::RESET . "You can check wallets/accounts and transactions on https://test.bithomp.com"  . PHP_EOL . PHP_EOL);
