@@ -97,7 +97,7 @@ if (!function_exists('XRPL_PHP\Sugar\fundWallet')) {
         $attempts = 20;
         while ($attempts > 0) {
             try {
-                $updatedBalance = (float)getXrpBalance($client, $classicAddress);
+                $updatedBalance = (float) getXrpBalance($client, $classicAddress);
                 if ($updatedBalance > $startingBalance) {
                     break;
                 }

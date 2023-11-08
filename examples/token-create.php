@@ -54,7 +54,6 @@ $client = new JsonRpcClient($testnetUrl);
 
 print_r(Color::YELLOW . "Funding bank wallet, please wait..." . PHP_EOL);
 $bankWallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created bank wallet - address: " . Color::WHITE . "{$bankWallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$bankWallet->getSeed()}" . PHP_EOL);
 
 //print_r("Configuring bank wallet, please wait..." . PHP_EOL);
@@ -69,7 +68,6 @@ $accountSetResponse = $client->submitAndWait($bankWalletConfigTxSigned['tx_blob'
 
 print_r(Color::YELLOW . "Funding merchant wallet, please wait..." . PHP_EOL);
 $merchantWallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created merchant wallet - address: " . Color::WHITE . "{$merchantWallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$merchantWallet->getSeed()}" . PHP_EOL);
 
 // Configure Wallet ...
@@ -92,7 +90,6 @@ print_r(Color::GREEN . "Trust line created! TxHash: " . Color::WHITE . "{$trustS
 
 print_r(Color::YELLOW . "Funding customer wallet, please wait..." . PHP_EOL);
 $customerWallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created customer wallet - address: " . Color::WHITE . "{$customerWallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$customerWallet->getSeed()}" . PHP_EOL);
 
 // Configure Wallet ...

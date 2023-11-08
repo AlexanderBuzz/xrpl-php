@@ -19,7 +19,6 @@ print_r(PHP_EOL . Color::RESET);
 
 print_r(Color::YELLOW . "Funding wallet, please wait..." . PHP_EOL);
 $wallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created wallet - address: " . Color::WHITE . "{$wallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$wallet->getSeed()}" . PHP_EOL);
 
 print_r(Color::YELLOW . "Minting NFT, please wait..." . PHP_EOL);

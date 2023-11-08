@@ -19,7 +19,6 @@ print_r(PHP_EOL . Color::RESET);
 
 print_r(Color::YELLOW . "Funding standby wallet, please wait..." . PHP_EOL);
 $standbyWallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created standby wallet - address: " . Color::WHITE . "{$standbyWallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$standbyWallet->getSeed()}" . PHP_EOL);
 
 print_r(Color::YELLOW . "Funding operational wallet, please wait..." . PHP_EOL);

@@ -20,7 +20,6 @@ $client = new JsonRpcClient($testnetUrl);
 
 print_r(Color::YELLOW . "Funding cold wallet, please wait..." . PHP_EOL);
 $coldWallet = $client->fundWallet();
-sleep(2);
 print_r(Color::GREEN . "Created cold wallet - address: " . Color::WHITE . "{$coldWallet->getAddress()} " . Color::GREEN . "seed: " . Color::WHITE . "{$coldWallet->getSeed()}" . PHP_EOL);
 
 /*

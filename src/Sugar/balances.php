@@ -30,13 +30,16 @@ if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
         JsonRpcClient $client,
         string $address,
         ?string $ledgerHash = null,
-        ?string $ledgerIndex = null,
+        ?string $ledgerIndex = 'validated',
     ): string
     {
-        //$xrpRequest = new AccountInfoRequest($address, $ledgerIndex, $ledgerIndex || 'validated');
-        $xrpRequest = new AccountInfoRequest($address);
+        $accountInfoRequest = new AccountInfoRequest(
+            account: $address,
+            ledgerHash: $ledgerHash,
+            ledgerIndex: $ledgerIndex
+        );
 
-        $xrpResponse = $client->request($xrpRequest)->wait();
+        $xrpResponse = $client->request($accountInfoRequest)->wait();
 
         if(get_class($xrpResponse) === ErrorResponse::class) {
             throw new Exception($xrpResponse->getError());
