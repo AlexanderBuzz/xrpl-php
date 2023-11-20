@@ -21,7 +21,7 @@ $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 XRPL_PHP offers most of the standardized [Public API Methods](https://xrpl.org/public-api-methods.html) 
 and [Admin API Methods](https://xrpl.org/admin-api-methods.html). In most use cases you create a request method and
-pass it to the clients `syncReuqest()` or `asyncRequest()` methods.
+pass it to the clients `syncRequest()` or `asyncRequest()` methods.
 
 ```php
 use XRPL_PHP\Client\JsonRpcClient;
@@ -37,6 +37,8 @@ $result = $pingResponse->getResult();
 
 print_r($result);
 ```
+
+You can find a [list of supported Methods here](methods.md).
 
 You can also use the `rawRequest()` method if you need more control over the request, e.g. using a currently not implemented method:
 
@@ -61,4 +63,6 @@ print_r($content);
 
 ### Synchronous and Asynchronous requests
 
-XRPL_PHP supports both synchronous and asynchronous request flows. 
+XRPL_PHP supports both synchronous and asynchronous request flows. Under the hood it uses the [Guzzle HTTP Client](https://docs.guzzlephp.org/en/stable/)
+to send the requests. Synchronous requests are just wrapped asynchrous requests that conveniently fit into legacy PHP programming patterns. 
+You can find more information about the differences between synchronous and asynchronous requests in PHP [here](https://www.php.net/manual/en/https://github.com/guzzle/promises).

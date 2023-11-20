@@ -14,9 +14,9 @@ You can install XRPL_PHP with [Composer](http://getcomposer.org/doc/00-intro.md)
 composer require hardcastle/xrpl_php
 ```
 
-XRPL_PHP requires PHP 8.1 or above. Optional but recommended are the PHP extensions [GMP](http://php.net/manual/en/book.gmp.php)
-and / or [BCMath](https://www.php.net/manual/de/book.bc.php), which will speed up operations involving arbitrary length numbers like
-Encryption and Serialisation.
+XRPL_PHP requires PHP 8.1 or above. Required is the PHP extension [GMP](http://php.net/manual/en/book.gmp.php). Optional 
+but recommended is the PHP extension [BCMath](https://www.php.net/manual/de/book.bc.php), which will speed up operations 
+involving arbitrary length numbers like encryption and serialisation.
 
 ## Sandbox
 
