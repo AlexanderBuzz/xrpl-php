@@ -12,6 +12,7 @@ namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
+use Brick\Math\Exception\MathException;
 use Exception;
 use XRPL_PHP\Core\Buffer;
 use XRPL_PHP\Core\MathUtilities;
@@ -36,7 +37,7 @@ class Amount extends SerializedType
     public const MAX_IOU_EXPONENT = 80;
 
     /**
-     *
+     * Class for serializing/Deserializing Amounts
      *
      * @param Buffer|null $bytes
      * @throws Exception
@@ -51,7 +52,7 @@ class Amount extends SerializedType
     }
 
     /**
-     *
+     * Read an amount from a BinaryParser
      *
      * @param BinaryParser $parser
      * @param int|null $lengthHint
@@ -67,11 +68,11 @@ class Amount extends SerializedType
     }
 
     /**
-     *
+     *  Creates an Amount object from a JSON string
      *
      * @param string $serializedJson
      * @return SerializedType
-     * @throws \Brick\Math\Exception\MathException
+     * @throws MathException
      */
     public static function fromJson(string $serializedJson): SerializedType
     {
@@ -125,6 +126,12 @@ class Amount extends SerializedType
         return new Amount(Buffer::from(array_merge($amount->toArray(), $currency->toArray(), $issuer->toArray())));
     }
 
+    /**
+     * Returns the JSON representation of an Amount object as a string or array
+     *
+     * @return string|array
+     * @throws MathException
+     */
     public function toJson(): string|array
     {
         $rawBytes = $this->bytes->toArray();
@@ -193,6 +200,7 @@ class Amount extends SerializedType
     }
 
     /**
+     *  Validate XRP amount
      *
      * @param string $amount
      * @return void
@@ -213,7 +221,7 @@ class Amount extends SerializedType
     }
 
     /**
-     *
+     * Validate IOU.value amount
      *
      * @param BigDecimal $number
      * @return void
@@ -247,7 +255,7 @@ class Amount extends SerializedType
 
 
     /**
-     *
+     * Test if this amount is in units of Native Currency(XRP)
      *
      * @param array $bytes
      * @return bool
@@ -259,7 +267,7 @@ class Amount extends SerializedType
     }
 
     /**
-     *
+     * Test if bytes represent a positive amount
      *
      * @param array $bytes
      * @return bool

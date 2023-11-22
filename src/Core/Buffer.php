@@ -117,17 +117,13 @@ class Buffer implements ArrayAccess
         $tempArray = [];
 
         foreach ($bufferList as $buffer) {
+            if (gettype($buffer) === 'object' && get_class($buffer) === Buffer::class) {
+                $buffer = $buffer->toArray();
+            }
             $tempArray = array_merge($tempArray, $buffer);
         }
 
-        if ($totalLength === null) {
-            $totalLength = 0;
-            for ($i = 0; $i < count($bufferList); ++$i) {
-                $totalLength += count($bufferList[$i]);
-            }
-        }
-
-        if ($totalLength && count($tempArray) > $totalLength) {
+        if (is_int($totalLength) && count($tempArray) > $totalLength) {
             $tempArray = array_slice($tempArray, 0, $totalLength);
         }
 
