@@ -8,19 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Ledger;
+namespace XRPL_PHP\Models\PathOrderbook;
 
-use XRPL_PHP\Models\BaseRequest;
+use XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Ledger Methods
- * https://xrpl.org/ledger_current.html
+ * https://xrpl.org/amm_info.html
  */
-class LedgerCurrentRequest extends BaseRequest
+class AmmInfoResponse extends BaseResponse
 {
-    protected string $command = "ledger_current";
 
-    public function __construct(
-        protected string|int $id
-    ) {}
 }

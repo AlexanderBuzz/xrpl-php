@@ -10,17 +10,18 @@
 
 namespace XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/escrowcancel.html
+ * https://xrpl.org/ammbid.html
  */
-class EscrowCancel extends BaseTransaction
+class AmmCreate extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Owner' => AccountId::class,
-        'OfferSequence' => UnsignedInt32::class
+        'Amount' => Amount::class,
+        'Amount2' => Amount::class,
+        'TradingFee' => UnsignedInt16::class
     ];
 }
