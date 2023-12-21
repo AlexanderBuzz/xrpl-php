@@ -2,6 +2,8 @@
 
 namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
+use Exception;
+
 class Definitions
 {
     public static ?Definitions $instance = null;
@@ -22,10 +24,21 @@ class Definitions
 
     private array $fieldIdNameMap = [];
 
+    /**
+     * Definitions constructor.
+     *
+     * @throws Exception
+     */
     public function __construct()
     {
-        $path = dirname(__FILE__) . "/definitions.json";
-        $this->definitions = json_decode(file_get_contents($path), true);
+        $path = getenv('XRPL_PHP_DEFINITIONS_FILE_PATH') ?: dirname(__FILE__) . "/definitions.json";
+        if (file_exists($path)) {
+            $fileContents = file_get_contents($path);
+        } else {
+            throw new Exception("Definitions file not found.");
+        }
+
+        $this->definitions = json_decode($fileContents, true);
 
         $this->typeOrdinals = $this->definitions['TYPES'];
         $this->ledgerEntryTypes = $this->definitions['LEDGER_ENTRY_TYPES'];
