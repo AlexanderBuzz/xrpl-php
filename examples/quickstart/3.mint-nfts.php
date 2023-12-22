@@ -29,7 +29,7 @@ $transferFee = 1000; // 1% Fee
 
 $tx = [
     "TransactionType" => "NFTokenMint",
-    "Account" => $wallet->getClassicAddress(),
+    "Account" => $wallet->getAddress(),
     "URI" => Utilities::convertStringToHex($tokenUrl),
     "Flags" => $flags,
     "TransferFee" => $transferFee,
@@ -42,7 +42,7 @@ print_r(Color::GREEN . "Non fungible token minted!: TxHash: " . Color::WHITE . "
 
 print_r(Color::RESET . "You can check wallets/accounts and transactions on https://test.bithomp.com"  . PHP_EOL . PHP_EOL);
 
-// print_r(Color::RESET . "AccountNftsRequest result:" . PHP_EOL);
-// $nftRequest = new AccountNftsRequest(account: $wallet->getClassicAddress());
+// print_r(Color::RESET . "Performing AccountNftRequest:" . PHP_EOL);
+// $nftRequest = new AccountNftsRequest(account: $wallet->getAddress());
 // $nftResponse = $client->request($nftRequest)->wait();
 // print_r($nftResponse->getResult());
