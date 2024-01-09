@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core;
+namespace Hardcastle\XRPL_PHP\Test\Core;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\Ctid;
+use Hardcastle\XRPL_PHP\Core\Ctid;
 
 final class CtidTest extends TestCase
 {

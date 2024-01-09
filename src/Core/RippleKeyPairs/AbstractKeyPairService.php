@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleKeyPairs;
+namespace Hardcastle\XRPL_PHP\Core\RippleKeyPairs;
 
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\CoreUtilities;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\XRPL_PHP\Core\CoreUtilities;
 
 class AbstractKeyPairService
 {

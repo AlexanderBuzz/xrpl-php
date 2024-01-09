@@ -17,7 +17,7 @@
   },
   "autoload": {
     "psr-4": {
-      "XRPL_PHP\\": "src/"
+      "Hardcastle\\XRPL_PHP\\": "src/"
     },
     "files": [
       "src/Polyfill.php",
@@ -31,16 +31,17 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "XRPL_PHP\\Test\\": "tests/"
+      "Hardcastle\\XRPL_PHP\\Test\\": "tests/"
     }
   },
   "require": {
+    "brick/money": "^0.9.0",
+    "codedungeon/php-cli-colors": "^1.12",
+    "ext-bcmath": "*",
     "guzzlehttp/guzzle": "^7.4",
     "php-ds/php-ds": "^1.4",
-    "brick/money": "^0.7.0",
     "simplito/elliptic-php": "^1.0",
-    "codedungeon/php-cli-colors": "^1.12",
-    "ext-bcmath": "*"
+    "hardcastle/buffer": "^0.1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.3.1",

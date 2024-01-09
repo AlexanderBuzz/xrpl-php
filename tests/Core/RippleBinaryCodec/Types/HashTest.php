@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Hash128;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Hash160;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash128;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash160;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
 
 /**
  * XRPL4J:

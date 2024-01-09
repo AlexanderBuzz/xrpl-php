@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Exceptions;
+namespace Hardcastle\XRPL_PHP\Exceptions;
 
 /**
  * Error thrown when a client cannot generate a wallet from the testnet/devnet

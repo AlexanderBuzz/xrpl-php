@@ -3,10 +3,9 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\Networks;
-use XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
-use function XRPL_PHP\Sugar\xrpToDrops;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\Networks;
+use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
 $testnetUrl = Networks::getNetwork('testnet')['jsonRpcUrl'];
 $client = new JsonRpcClient($testnetUrl);

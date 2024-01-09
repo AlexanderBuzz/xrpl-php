@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Clio;
+namespace Hardcastle\XRPL_PHP\Models\Clio;
 
-use XRPL_PHP\Models\BaseResponse;
+use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Clio Methods

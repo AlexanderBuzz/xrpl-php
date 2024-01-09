@@ -2,8 +2,7 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 
 $codec = new BinaryCodec();
 

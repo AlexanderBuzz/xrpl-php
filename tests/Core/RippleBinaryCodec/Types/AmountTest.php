@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
 
 /**
  * https://github.com/XRPLF/xrpl4j/blob/main/xrpl4j-binary-codec/src/test/java/org/xrpl/xrpl4j/codec/binary/types/AmountTypeTest.java

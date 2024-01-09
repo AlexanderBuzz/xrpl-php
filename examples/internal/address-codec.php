@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
 $codec = new AddressCodec();
 

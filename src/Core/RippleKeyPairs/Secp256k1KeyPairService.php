@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleKeyPairs;
+namespace Hardcastle\XRPL_PHP\Core\RippleKeyPairs;
 
 use BN\BN;
 use Elliptic\EC;
 use Exception;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
 class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {

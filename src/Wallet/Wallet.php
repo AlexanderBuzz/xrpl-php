@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Wallet;
+namespace Hardcastle\XRPL_PHP\Wallet;
 
 use Exception;
-use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
-use XRPL_PHP\Core\RippleKeyPairs\KeyPair;
-use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
-use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
-use XRPL_PHP\Core\CoreUtilities as CoreUtilities;
-use XRPL_PHP\Utils\Utilities as XrplUtilities;
-use XRPL_PHP\Exceptions\ValidationException;
-use XRPL_PHP\Exceptions\XrplException;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
-use XRPL_PHP\Utils\Hashes\HashLedger;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPair;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
+use Hardcastle\XRPL_PHP\Core\CoreUtilities as CoreUtilities;
+use Hardcastle\XRPL_PHP\Utils\Utilities as XrplUtilities;
+use Hardcastle\XRPL_PHP\Exceptions\ValidationException;
+use Hardcastle\XRPL_PHP\Exceptions\XrplException;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
+use Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger;
 
 class Wallet
 {

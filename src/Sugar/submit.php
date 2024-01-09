@@ -1,19 +1,19 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\ErrorResponse;
-use XRPL_PHP\Models\Transaction\SubmitRequest;
-use XRPL_PHP\Models\Transaction\SubmitResponse;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
-use XRPL_PHP\Models\Transaction\TxRequest;
-use XRPL_PHP\Models\Transaction\TxResponse;
-use XRPL_PHP\Utils\Hashes\HashLedger;
-use XRPL_PHP\Wallet\Wallet;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
+use Hardcastle\XRPL_PHP\Models\Transaction\SubmitRequest;
+use Hardcastle\XRPL_PHP\Models\Transaction\SubmitResponse;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
+use Hardcastle\XRPL_PHP\Models\Transaction\TxRequest;
+use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
+use Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 const LEDGER_CLOSE_TIME = 3; //Seconds
 
@@ -183,7 +183,7 @@ function isAccountDelete(array|string $tx): bool
     return($tx['TransactionType'] === 'AccountDelete');
 }
 
-if (! function_exists('XRPL_PHP\Sugar\submit')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submit')) {
 
     /**
      * @param JsonRpcClient $client
@@ -208,7 +208,7 @@ if (! function_exists('XRPL_PHP\Sugar\submit')) {
     }
 }
 
-if (! function_exists('XRPL_PHP\Sugar\submitAndWait')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submitAndWait')) {
 
     /**
      * @param JsonRpcClient $client

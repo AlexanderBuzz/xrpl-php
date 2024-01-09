@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
-use XRPL_PHP\Core\Buffer;
+use Hardcastle\Buffer\Buffer;
 
 /**
  * This class is a list is a collection of buffer objects ("array of byte arrays"))

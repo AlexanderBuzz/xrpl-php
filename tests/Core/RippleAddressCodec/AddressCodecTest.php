@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleAddressCodec;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleAddressCodec;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
 /**
  * XRPL4J:

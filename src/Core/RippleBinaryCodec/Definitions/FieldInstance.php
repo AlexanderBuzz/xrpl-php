@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
-use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 /**
  * A collection of serialization information about a specific field type.

@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
@@ -10,7 +10,7 @@ const DROPS_PER_XRP = 1000000.0;
 const MAX_FRACTION_LENGTH = 6;
 const SANITY_CHECK = "/^-?[0-9.]+$/u";
 
-if (! function_exists('XRPL_PHP\Sugar\dropsToXrp')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\dropsToXrp')) {
     /**
      * Create a new queued Closure event listener.
      *
@@ -34,7 +34,7 @@ if (! function_exists('XRPL_PHP\Sugar\dropsToXrp')) {
     }
 }
 
-if (! function_exists('XRPL_PHP\Sugar\xrpToDrops')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\xrpToDrops')) {
     /**
      * Create a new queued Closure event listener.
      *

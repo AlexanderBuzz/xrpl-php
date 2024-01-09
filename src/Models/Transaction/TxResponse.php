@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Transaction;
+namespace Hardcastle\XRPL_PHP\Models\Transaction;
 
-use XRPL_PHP\Models\BaseResponse;
+use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
 class TxResponse extends BaseResponse
 {

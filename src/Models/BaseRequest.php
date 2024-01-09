@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models;
+namespace Hardcastle\XRPL_PHP\Models;
 
 abstract class BaseRequest
 {

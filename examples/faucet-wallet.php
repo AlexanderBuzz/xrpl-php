@@ -2,8 +2,8 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Wallet\Wallet;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
 use function XRPL_PHP\Sugar\fundWallet;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");

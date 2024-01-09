@@ -1,12 +1,12 @@
 <?php
 
-namespace XRPL_PHP\Utils\Hashes;
+namespace Hardcastle\XRPL_PHP\Utils\Hashes;
 
 use Exception;
-use XRPL_PHP\Core\HashPrefix;
-use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
+use Hardcastle\XRPL_PHP\Core\HashPrefix;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
  *

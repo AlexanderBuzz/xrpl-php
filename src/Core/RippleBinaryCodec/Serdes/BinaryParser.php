@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
 use Exception;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 /**
  * BinaryParser is used to compute fields and values from a HexString

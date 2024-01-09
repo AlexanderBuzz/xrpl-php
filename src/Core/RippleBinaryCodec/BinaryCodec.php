@@ -8,13 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec;
 
 use Exception;
-use XRPL_PHP\Core\HashPrefix;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
+use Hardcastle\XRPL_PHP\Core\HashPrefix;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
 class BinaryCodec extends Binary
 {

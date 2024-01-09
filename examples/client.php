@@ -2,8 +2,8 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Utility\PingRequest;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Utility\PingRequest;
 
 /**
  * This script can be used with the examples from

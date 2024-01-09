@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Transaction\TransactionTypes;
+namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
  * public API Methods / Transaction Methods

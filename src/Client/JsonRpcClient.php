@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Client;
+namespace Hardcastle\XRPL_PHP\Client;
 
 use Exception;
 use GuzzleHttp\Client;
@@ -19,19 +19,19 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
-use XRPL_PHP\Models\BaseRequest;
-use XRPL_PHP\Models\BaseResponse;
-use XRPL_PHP\Models\ErrorResponse;
-use XRPL_PHP\Models\Ledger\LedgerRequest;
-use XRPL_PHP\Models\Transaction\SubmitResponse;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
-use XRPL_PHP\Models\Transaction\TxResponse;
-use XRPL_PHP\Wallet\Wallet;
-use function XRPL_PHP\Sugar\autofill;
-use function XRPL_PHP\Sugar\fundWallet;
-use function XRPL_PHP\Sugar\getXrpBalance;
-use function XRPL_PHP\Sugar\submit;
-use function XRPL_PHP\Sugar\submitAndWait;
+use Hardcastle\XRPL_PHP\Models\BaseRequest;
+use Hardcastle\XRPL_PHP\Models\BaseResponse;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
+use Hardcastle\XRPL_PHP\Models\Ledger\LedgerRequest;
+use Hardcastle\XRPL_PHP\Models\Transaction\SubmitResponse;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
+use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
+use function Hardcastle\XRPL_PHP\Sugar\autofill;
+use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
+use function Hardcastle\XRPL_PHP\Sugar\getXrpBalance;
+use function Hardcastle\XRPL_PHP\Sugar\submit;
+use function Hardcastle\XRPL_PHP\Sugar\submitAndWait;
 
 class JsonRpcClient
 {
@@ -113,7 +113,7 @@ class JsonRpcClient
             $request->getJson()
         );
 
-        $resolve = function(ResponseInterface $response) use(&$promise, $request, $returnRawResponse): \XRPL_PHP\Models\ErrorResponse|\XRPL_PHP\Models\BaseResponse|\Psr\Http\Message\ResponseInterface {
+        $resolve = function(ResponseInterface $response) use(&$promise, $request, $returnRawResponse): \Hardcastle\XRPL_PHP\Models\ErrorResponse|\Hardcastle\XRPL_PHP\Models\BaseResponse|\Psr\Http\Message\ResponseInterface {
             if ($returnRawResponse) {
                 return $response;
             }

@@ -1,20 +1,20 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Exception;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\CoreUtilities;
-use XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use XRPL_PHP\Models\Account\AccountInfoRequest;
-use XRPL_PHP\Models\Account\AccountObjectsRequest;
-use XRPL_PHP\Models\ErrorResponse;
-use XRPL_PHP\Models\ServerInfo\ServerStateRequest;
-use XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\CoreUtilities;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
+use Hardcastle\XRPL_PHP\Models\Account\AccountObjectsRequest;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
+use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerStateRequest;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
  * @param array $tx
@@ -231,7 +231,7 @@ function checkAccountDeleteBlockers (JsonRpcClient $client, array &$tx): void
     }
 }
 
-if (! function_exists('XRPL_PHP\Sugar\autofill')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\autofill')) {
 
     /**
      * @param JsonRpcClient $client

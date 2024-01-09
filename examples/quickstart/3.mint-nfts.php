@@ -3,10 +3,9 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\Networks;
-use XRPL_PHP\Models\Account\AccountNftsRequest;
-use XRPL_PHP\Utils\Utilities;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\Networks;
+use Hardcastle\XRPL_PHP\Utils\Utilities;
 
 $testnetUrl = Networks::getNetwork('testnet')['jsonRpcUrl'];
 $client = new JsonRpcClient($testnetUrl);

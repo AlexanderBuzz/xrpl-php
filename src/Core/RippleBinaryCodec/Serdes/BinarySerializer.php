@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Serdes;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 class BinarySerializer
 {

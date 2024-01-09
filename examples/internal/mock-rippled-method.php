@@ -3,10 +3,8 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use donatj\MockWebServer\MockWebServer;
-use donatj\MockWebServer\Response;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Account\AccountObjectsRequest;
-use XRPL_PHP\Test\MockRippled\MockRippledResponse;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Test\MockRippled\MockRippledResponse;
 
 const PORT = 50267;
 $server = new MockWebServer(PORT);

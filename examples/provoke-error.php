@@ -6,8 +6,8 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\ErrorResponse;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 

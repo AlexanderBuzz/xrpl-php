@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Account;
+namespace Hardcastle\XRPL_PHP\Models\Account;
 
-use XRPL_PHP\Models\BaseRequest;
+use Hardcastle\XRPL_PHP\Models\BaseRequest;
 
 /**
  * public API Methods / Ledger Methods

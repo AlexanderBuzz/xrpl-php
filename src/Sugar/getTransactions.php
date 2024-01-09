@@ -1,15 +1,15 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Exception;
-use XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use GuzzleHttp\Promise\Promise;
-use XRPL_PHP\Models\Account\AccountInfoRequest;
-use XRPL_PHP\Models\Account\AccountLinesRequest;
+use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
+use Hardcastle\XRPL_PHP\Models\Account\AccountLinesRequest;
 
 
-if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getXrpBalance')) {
 
     /**
      * @throws Exception
@@ -33,7 +33,7 @@ if (! function_exists('XRPL_PHP\Sugar\getXrpBalance')) {
     }
 }
 
-if (! function_exists('XRPL_PHP\Sugar\getBalances')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getBalances')) {
 
     function getBalances(
         JsonRpcClient $client,

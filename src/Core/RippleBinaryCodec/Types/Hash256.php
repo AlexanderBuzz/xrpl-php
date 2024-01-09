@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use BI\BigInteger;
 use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class Hash256 extends Hash
 {

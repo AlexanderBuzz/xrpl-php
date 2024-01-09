@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class AccountId extends Hash160
 {

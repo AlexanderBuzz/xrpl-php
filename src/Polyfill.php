@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-if (!function_exists('bchexdec')) {
+if (extension_loaded('bcmath') && !function_exists('bchexdec')) {
     /**
      * hexdec with Uint64 number support
      */
@@ -14,7 +14,7 @@ if (!function_exists('bchexdec')) {
         return $dec;
     }
 }
-if (!function_exists('bcdechex')) {
+if (extension_loaded('bcmath') && !function_exists('bcdechex')) {
     /**
      * dechex with Uint64 number support
      */

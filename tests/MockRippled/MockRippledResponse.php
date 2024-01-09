@@ -1,6 +1,6 @@
 <?php
 
-namespace XRPL_PHP\Test\MockRippled;
+namespace Hardcastle\XRPL_PHP\Test\MockRippled;
 
 use donatj\MockWebServer\Response;
 

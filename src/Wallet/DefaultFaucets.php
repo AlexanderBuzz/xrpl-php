@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Wallet;
+namespace Hardcastle\XRPL_PHP\Wallet;
 
 use Exception;
-use XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 
 class DefaultFaucets
 {

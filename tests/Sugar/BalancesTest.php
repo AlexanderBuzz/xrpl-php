@@ -1,12 +1,12 @@
 <?php
 
-namespace XRPL_PHP\Test\Sugar;
+namespace Hardcastle\XRPL_PHP\Test\Sugar;
 
 use donatj\MockWebServer\MockWebServer;
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Client\JsonRpcClient;
-use function XRPL_PHP\Sugar\dropsToXrp;
-use function XRPL_PHP\Sugar\xrpToDrops;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use function Hardcastle\XRPL_PHP\Sugar\dropsToXrp;
+use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
 /**
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/dropsToXrp.ts

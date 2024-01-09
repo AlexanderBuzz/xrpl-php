@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Exception;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
-use XRPL_PHP\Core\CoreUtilities;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
+use Hardcastle\XRPL_PHP\Core\CoreUtilities;
 
 class StObject extends SerializedType
 {

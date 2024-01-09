@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec;
 
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
 class Binary
 {

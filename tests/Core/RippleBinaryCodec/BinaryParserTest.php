@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleBinaryCodec;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleBinaryCodec;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 final class BinaryParserTest extends TestCase
 {

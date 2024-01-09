@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 /**
  * Model object for field info from the "fields" section of definitions.json.

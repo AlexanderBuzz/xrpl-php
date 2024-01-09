@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigInteger;
-use XRPL_PHP\Core\Buffer;
+use Hardcastle\Buffer\Buffer;
 
 abstract class UnsignedInt extends SerializedType
 {

@@ -8,13 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core;
+namespace Hardcastle\XRPL_PHP\Core;
 
-use ArrayAccess;
-use Brick\Math\BigInteger;
 use Exception;
-use phpDocumentor\Reflection\Types\Self_;
-use SplFixedArray;
+use Hardcastle\Buffer\Buffer;
 
 /**
  * Concise Transaction Identifier

@@ -1,9 +1,9 @@
 <?php
 
-namespace XRPL_PHP\Test\Utils;
+namespace Hardcastle\XRPL_PHP\Test\Utils;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Utils\Utilities;
+use Hardcastle\XRPL_PHP\Utils\Utilities;
 
 class UtilitiesTest extends TestCase
 {

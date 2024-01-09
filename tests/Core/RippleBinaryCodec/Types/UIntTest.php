@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigInteger;
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt8;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt8;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 
 final class UIntTest extends TestCase
 {

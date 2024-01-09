@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleKeyPairs;
+namespace Hardcastle\XRPL_PHP\Core\RippleKeyPairs;
 
 use Elliptic\EdDSA;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
 class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Models\Transaction;
+namespace Hardcastle\XRPL_PHP\Test\Models\Transaction;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\Payment;
 
 final class BaseTransactionTest extends TestCase
 {

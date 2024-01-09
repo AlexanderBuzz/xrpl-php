@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\Exception\MathException;
 use Exception;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\MathUtilities;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 define('MAX_DROPS', BigDecimal::of("1e17"));
 define('MIN_XRP', BigDecimal::of("1e-6"));
 

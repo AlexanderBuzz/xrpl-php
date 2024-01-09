@@ -1,12 +1,12 @@
 <?php
 
-namespace XRPL_PHP\Test\Client;
+namespace Hardcastle\XRPL_PHP\Test\Client;
 
 use donatj\MockWebServer\MockWebServer;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Test\MockRippled\MockRippledResponse;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Test\MockRippled\MockRippledResponse;
 
 class JsonRpcClientTest extends TestCase
 {

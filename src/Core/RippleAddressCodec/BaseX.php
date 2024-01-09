@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleAddressCodec;
+namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 
-use XRPL_PHP\Core\Buffer;
+use Hardcastle\Buffer\Buffer;
 use SplFixedArray;
 
 class BaseX

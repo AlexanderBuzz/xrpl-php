@@ -1,12 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace XRPL_PHP\Test;
+namespace Hardcastle\XRPL_PHP\Test;
 
 use PHPUnit\Framework\TestCase;
 
 final class PolyfillTest extends TestCase
 {
+    public function setUp(): void
+    {
+        $this->needsBcmathExtension();
+    }
+
     public function testBchexdec()
     {
         $this->assertEquals('18446744073709551615', bchexdec('FFFFFFFFFFFFFFFF'));
@@ -21,5 +26,12 @@ final class PolyfillTest extends TestCase
         $this->assertEquals('7FFFFFFFFFFFFFFF', bcdechex('9223372036854775807'));
         $this->assertEquals('8000000000000000', bcdechex('9223372036854775808'));
         $this->assertEquals('0', bcdechex('0'));
+    }
+
+    private function needsBcmathExtension()
+    {
+        if (!extension_loaded('bcmath')) {
+            $this->markTestSkipped('The bcmath extension is not available.');
+        }
     }
 }

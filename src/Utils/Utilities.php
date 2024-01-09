@@ -1,8 +1,8 @@
 <?php
 
-namespace XRPL_PHP\Utils;
+namespace Hardcastle\XRPL_PHP\Utils;
 
-use XRPL_PHP\Core\Buffer;
+use Hardcastle\Buffer\Buffer;
 
 class Utilities
 {

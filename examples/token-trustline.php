@@ -3,11 +3,8 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\Networks;
-use XRPL_PHP\Wallet\Wallet;
-use XRPL_PHP\Models\Transaction\SubmitRequest;
-use XRPL_PHP\Models\Transaction\TransactionTypes\AccountSet;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\Networks;
 
 $howToRunExample = "php token-create.php --tokenName LOP --issuerBalance 100000 --customerBalance 1000";
 

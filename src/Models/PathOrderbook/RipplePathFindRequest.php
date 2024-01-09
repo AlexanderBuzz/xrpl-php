@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\PathOrderbook;
+namespace Hardcastle\XRPL_PHP\Models\PathOrderbook;
 
-use XRPL_PHP\Models\BaseRequest;
+use Hardcastle\XRPL_PHP\Models\BaseRequest;
 
 /**
  * public API Methods / Ledger Methods

@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Models\Transaction\TransactionTypes;
+namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
 
 /**
  * public API Methods / Transaction Methods

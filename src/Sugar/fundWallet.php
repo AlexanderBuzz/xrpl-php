@@ -1,13 +1,13 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Exception;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\CoreUtilities;
-use XRPL_PHP\Wallet\DefaultFaucets;
-use XRPL_PHP\Wallet\Wallet;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\CoreUtilities;
+use Hardcastle\XRPL_PHP\Wallet\DefaultFaucets;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 function getHttpOptions(JsonRpcClient $client, Buffer $postBody, ?string $faucetHost): array
 {
@@ -42,7 +42,7 @@ function getUpdatedBalance(JsonRpcClient $client, string $address, float $origin
     return 0;
 }
 
-if (!function_exists('XRPL_PHP\Sugar\fundWallet')) {
+if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
 
     function fundWallet(
         JsonRpcClient $client,

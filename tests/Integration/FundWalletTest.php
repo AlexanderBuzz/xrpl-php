@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Integration;
+namespace Hardcastle\XRPL_PHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Utility\PingRequest;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Utility\PingRequest;
 
 final class FundWalletTest extends TestCase
 {

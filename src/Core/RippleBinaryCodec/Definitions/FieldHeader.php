@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Definitions;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 use Ds\Hashable;
-use XRPL_PHP\Core\Buffer;
+use Hardcastle\Buffer\Buffer;
 
 class FieldHeader implements Hashable
 {

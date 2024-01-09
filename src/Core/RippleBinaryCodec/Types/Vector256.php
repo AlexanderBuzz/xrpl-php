@@ -8,13 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace XRPL_PHP\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use BI\BigInteger;
 use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
-use XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
 class Vector256 extends SerializedType
 {

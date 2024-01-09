@@ -3,9 +3,9 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Wallet\Wallet;
-use function XRPL_PHP\Sugar\xrpToDrops;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
+use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
 /**
  * This script can be used with the examples from

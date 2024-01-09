@@ -1,14 +1,14 @@
 <?php
 
-namespace XRPL_PHP\Sugar;
+namespace Hardcastle\XRPL_PHP\Sugar;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 use Exception;
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\ServerInfo\ServerInfoRequest;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerInfoRequest;
 
-if (! function_exists('XRPL_PHP\Sugar\getFeeXrp')) {
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getFeeXrp')) {
 
     /**
      *  Calculates the current transaction fee for the ledger.

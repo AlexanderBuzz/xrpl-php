@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleKeyPairs;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleKeyPairs;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\Buffer;
-use XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
-use XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
-use XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
-use XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
+use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Secp256k1KeyPairService;
 
 
 /**

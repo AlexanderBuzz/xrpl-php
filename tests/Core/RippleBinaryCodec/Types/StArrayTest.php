@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
+namespace Hardcastle\XRPL_PHP\Test\Core\RippleBinaryCodec\Types;
 
 use PHPUnit\Framework\TestCase;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
-use XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
 final class StArrayTest extends TestCase
 {
