@@ -40,7 +40,8 @@
     "ext-bcmath": "*",
     "guzzlehttp/guzzle": "^7.4",
     "php-ds/php-ds": "^1.4",
-    "simplito/elliptic-php": "^1.0",
+    "simplito/elliptic-php": "^1.0.12",
+    "simplito/bn-php": "^1.1.4",
     "hardcastle/buffer": "^0.1.0"
   },
   "require-dev": {
