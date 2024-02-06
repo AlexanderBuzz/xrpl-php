@@ -4,7 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
-use function XRPL_PHP\Sugar\fundWallet;
+use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
@@ -15,4 +15,3 @@ fundWallet($client, $wallet);
 print_r(PHP_EOL);
 print_r('Wallet address: ' . $wallet->getAddress() . PHP_EOL);
 print_r('Wallet seed: ' . $wallet->getSeed());
-

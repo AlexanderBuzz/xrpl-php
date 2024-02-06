@@ -30,3 +30,22 @@ if (extension_loaded('bcmath') && !function_exists('bcdechex')) {
         return strtoupper($r);
     }
 }
+
+/**
+ * @param string $hex
+ * @return string
+ */
+function hex2str(string $hex): string
+{
+    return pack('H*', $hex);
+}
+
+/**
+ * @param string $str
+ * @return string
+ */
+function str2hex(string $str): string
+{
+    $unpacked = unpack('H*', $str);
+    return array_shift($unpacked);
+}

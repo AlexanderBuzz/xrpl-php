@@ -15,4 +15,19 @@ final class UtilitiesTest extends TestCase
         $this->assertInstanceOf(CoreUtilities::class, $firstCall);
         $this->assertSame($firstCall, $secondCall);
     }
+
+    public function testEncodeCustomCurrency(): void
+    {
+        $customCurrency = "SOLO";
+        $hash = CoreUtilities::encodeCustomCurrency($customCurrency);
+        $this->assertEquals('534F4C4F00000000000000000000000000000000', $hash);
+    }
+
+    public function testDecodecustomCurrency(): void
+    {
+        $hash = '534F4C4F00000000000000000000000000000000';
+        $currency = CoreUtilities::decodeCustomCurrency($hash);
+        $this->assertEquals('SOLO', $currency);
+    }
+
 }

@@ -28,6 +28,16 @@ final class PolyfillTest extends TestCase
         $this->assertEquals('0', bcdechex('0'));
     }
 
+    public function testHex2str(): void
+    {
+        $this->assertEquals('Hello World!', hex2str('48656c6c6f20576f726c6421'));
+    }
+
+    public function testStr2hex(): void
+    {
+        $this->assertEquals('48656c6c6f20576f726c6421', str2hex('Hello World!'));
+    }
+
     private function needsBcmathExtension()
     {
         if (!extension_loaded('bcmath')) {

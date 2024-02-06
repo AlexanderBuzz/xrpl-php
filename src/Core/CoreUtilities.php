@@ -121,6 +121,36 @@ class CoreUtilities
     }
 
     /**
+     * Encode Nonstandard Currency Codes as in https://xrpl.org/currency-formats.html
+     *
+     * @param string $currencyName
+     * @return string
+     * @throws Exception
+     */
+    public static function encodeCustomCurrency(string $currencyName): string
+    {
+        $hex = str2hex($currencyName);
+        $rawHash = str_pad($hex, 40, "00");
+        return strtoupper($rawHash);
+    }
+
+    /**
+     * Decode Nonstandard Currency Codes as in https://xrpl.org/currency-formats.html
+     *
+     * @param string $currencyHash
+     * @return string
+     * @throws Exception Error
+     */
+    public static function decodeCustomCurrency(string $currencyHash): string
+    {
+        if (!str_starts_with($currencyHash, "00")) {
+            return rtrim(hex2str($currencyHash));
+        }
+
+        throw new Exception("Invalid currency hash");
+    }
+
+    /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      */
