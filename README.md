@@ -95,8 +95,8 @@ You can perform static code analysis with psalm with the following command:
 ```php
 require __DIR__.'/../vendor/autoload.php';
 
-use XRPL_PHP\Client\JsonRpcClient;
-use XRPL_PHP\Models\Account\AccountObjectsRequest;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Account\AccountObjectsRequest;
 
 // Those will be purged from the Testnet in regular intervals, you can use fundWallet()
 // to generate prefunded Wallets on the Testnet
