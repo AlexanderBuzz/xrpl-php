@@ -3,13 +3,13 @@
 ## Tech Stack
 AlexanderBuzz/xrpl-php is built on the following main stack:
 
-- [PHP](http://www.php.net/) – Languages
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) – Languages
-- [PHPUnit](https://phpunit.de/) – Testing Frameworks
+- [PHP](http://www.php.net/) – Languages
 - [Guzzle](http://guzzlephp.org/) – Microframeworks (Backend)
-- [PhpSpec](http://www.phpspec.net/en/latest/) – Testing Frameworks
-- [GitHub Actions](https://github.com/features/actions) – Continuous Integration
 - [Docker](https://www.docker.com/) – Virtual Machine Platforms & Containers
+- [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- [PHPUnit](https://phpunit.de/) – Testing Frameworks
+- [PhpSpec](http://www.phpspec.net/en/latest/) – Testing Frameworks
 
 Full tech stack [here](/techstack.md)
 
@@ -19,13 +19,13 @@ Full tech stack [here](/techstack.md)
 ## Tech Stack
 AlexanderBuzz/xrpl-php is built on the following main stack:
 
-- <img width='25' height='25' src='https://img.stackshare.io/service/991/hwUcGZ41_400x400.jpg' alt='PHP'/> [PHP](http://www.php.net/) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/1209/javascript.jpeg' alt='JavaScript'/> [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) – Languages
-- <img width='25' height='25' src='https://img.stackshare.io/service/1616/1_WsEnddd5Y4EgEHsT054kUQ.jpeg' alt='PHPUnit'/> [PHPUnit](https://phpunit.de/) – Testing Frameworks
+- <img width='25' height='25' src='https://img.stackshare.io/service/991/hwUcGZ41_400x400.jpg' alt='PHP'/> [PHP](http://www.php.net/) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/2350/638632.png' alt='Guzzle'/> [Guzzle](http://guzzlephp.org/) – Microframeworks (Backend)
-- <img width='25' height='25' src='https://img.stackshare.io/service/3502/6b9dfb07681dee602dbdf75d9393f07c_400x400.png' alt='PhpSpec'/> [PhpSpec](http://www.phpspec.net/en/latest/) – Testing Frameworks
-- <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
 - <img width='25' height='25' src='https://img.stackshare.io/service/586/n4u37v9t_400x400.png' alt='Docker'/> [Docker](https://www.docker.com/) – Virtual Machine Platforms & Containers
+- <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- <img width='25' height='25' src='https://img.stackshare.io/service/1616/1_WsEnddd5Y4EgEHsT054kUQ.jpeg' alt='PHPUnit'/> [PHPUnit](https://phpunit.de/) – Testing Frameworks
+- <img width='25' height='25' src='https://img.stackshare.io/service/3502/6b9dfb07681dee602dbdf75d9393f07c_400x400.png' alt='PhpSpec'/> [PhpSpec](http://www.phpspec.net/en/latest/) – Testing Frameworks
 
 Full tech stack [here](/techstack.md)
 
@@ -36,7 +36,7 @@ Full tech stack [here](/techstack.md)
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [AlexanderBuzz/xrpl-php](https://github.com/AlexanderBuzz/xrpl-php)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|14<br/>Tools used|01/05/24 <br/>Report generated|
+|14<br/>Tools used|02/29/24 <br/>Report generated|
 |------|------|
 </div>
 
