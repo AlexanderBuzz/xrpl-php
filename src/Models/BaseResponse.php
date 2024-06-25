@@ -42,7 +42,7 @@ abstract class BaseResponse
         return $this->result;
     }
 
-    public function getStatus(): array
+    public function getStatus(): string
     {
         return $this->result['status'];
     }
