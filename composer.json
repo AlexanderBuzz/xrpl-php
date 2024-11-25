@@ -35,7 +35,7 @@
     }
   },
   "require": {
-    "brick/math": "^0.11.0",
+    "brick/math": "^0.11|^0.12",
     "codedungeon/php-cli-colors": "^1.12",
     "ext-bcmath": "*",
     "guzzlehttp/guzzle": "^7.4",
