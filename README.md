@@ -6,7 +6,7 @@ hood and getting into the nitty-gritty of XRPL development.
 
 [![Latest Stable Version](http://poser.pugx.org/hardcastle/xrpl_php/v)](https://packagist.org/packages/hardcastle/xrpl_php)
 [![Total Downloads](http://poser.pugx.org/hardcastle/xrpl_php/downloads)](https://packagist.org/packages/hardcastle/xrpl_php)
-[!PHPUnit](https://github.com/AlexanderBuzz/xrpl-php/actions/workflows/unit_test.yml/badge.svg)
+[![PHPUnit](https://github.com/AlexanderBuzz/xrpl-php/actions/workflows/unit_test.yml/badge.svg)](https://phpunit.de/index.html)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
 
 ## Features
