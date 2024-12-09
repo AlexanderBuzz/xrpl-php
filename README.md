@@ -66,8 +66,8 @@ etc...
 1. In the project directory, start the project and open a shell:
 
 ```console
-docker-compose up -d
-docker-compose exec -u 0 php bash
+docker compose up -d
+docker compose exec -u 0 php bash
 ```
 
 2. In the container shell, install the composer dependencies:
