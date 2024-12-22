@@ -4,6 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
+use Hardcastle\XRPL_PHP\Models\Account\AccountTxRequest;
 
 /**
  * This script can be used with the examples from
@@ -14,7 +15,7 @@ use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
  * by using the above link
  */
 
-$testnetAccount = 'rN7T1bzCHSwQu6adkqPJAtvF4mdf1FMuG6'; //Address, not seed!
+$testnetAccount = 'rNmDxPqCiPj65nXbvaxyqNn3JDqFYUEjd8'; //Address, not seed!
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
@@ -29,3 +30,12 @@ print_r(PHP_EOL);
 print_r("XRP Balance for Wallet {$testnetAccount} is {$json['result']['account_data']['Balance']} XRP");
 print_r(PHP_EOL);
 
+$req = new AccountTxRequest($testnetAccount);
+$res = $client->syncRequest($req, true);
+
+$content = $response->getBody()->getContents();
+$json = json_decode($content, true);
+
+print_r(PHP_EOL);
+print_r($json);
+print_r(PHP_EOL);

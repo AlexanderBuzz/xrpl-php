@@ -19,6 +19,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
+use Hardcastle\XRPL_PHP\Core\Networks;
 use Hardcastle\XRPL_PHP\Models\BaseRequest;
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 use Hardcastle\XRPL_PHP\Models\ErrorResponse;
@@ -59,7 +60,7 @@ class JsonRpcClient
         ?string $maxFeeXrp = null,
         ?float $timeout = 3.0
     ) {
-        $this->connectionUrl = $connectionUrl;
+        $this->connectionUrl = $this->getNetworkUrl($connectionUrl);
 
         $this->feeCushion = $feeCushion ?? self::DEFAULT_FEE_CUSHION;
 
@@ -353,6 +354,7 @@ class JsonRpcClient
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
+     *
      * @return TxResponse
      * @throws Exception
      */
@@ -364,6 +366,23 @@ class JsonRpcClient
     ): TxResponse
     {
         return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
+    }
+
+    /**
+     *
+     *
+     * @param string $connection
+     *
+     * @return string
+     */
+    private function getNetworkUrl(string $connection): string
+    {
+        try {
+            $network = Networks::getNetwork($connection);
+            return $network['jsonRpcUrl'];
+        } catch (Exception $e) {
+            return $connection;
+        }
     }
 
     /*

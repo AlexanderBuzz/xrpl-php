@@ -17,8 +17,8 @@ class Networks
     private const NETWORKS = [
         'mainnet' => [
             'label' => 'XRPL Mainnet',
-            'jsonRpcUrl' => 'https://s1.ripple.com:51234',
-            'wsUrl' => 'wss://s1.ripple.com',
+            'jsonRpcUrl' => 'https://xrplcluster.com',
+            'wsUrl' => 'wss://xrplcluster.com',
             'networkId' => 0
         ],
         'testnet' => [
