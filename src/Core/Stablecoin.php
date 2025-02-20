@@ -16,7 +16,7 @@ class Stablecoin {
     private const RLUSD = [
         'mainnet' => [
             'issuer' => 'rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De',
-            'currency' => 'USD',
+            'currency' => '524C555344000000000000000000000000000000',
         ],
         'testnet' => [
             'issuer' => 'rQhWct2fv4Vc4KRjRgMrxa8xPN9Zx9iLKV',
