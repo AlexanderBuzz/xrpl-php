@@ -106,6 +106,7 @@ abstract class SerializedType
             "Hash128" => Hash128::class,
             "Hash160" => Hash160::class,
             "Hash256" => Hash256::class,
+            "Issue" => Issue::class,
             "PathSet" => PathSet::class,
             "STArray" => StArray::class,
             "STObject" => StObject::class,
