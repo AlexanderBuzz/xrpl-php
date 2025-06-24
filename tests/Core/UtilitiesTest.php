@@ -23,7 +23,7 @@ final class UtilitiesTest extends TestCase
         $this->assertEquals('534F4C4F00000000000000000000000000000000', $hash);
     }
 
-    public function testDecodecustomCurrency(): void
+    public function testDecodeCustomCurrency(): void
     {
         $hash = '534F4C4F00000000000000000000000000000000';
         $currency = CoreUtilities::decodeCustomCurrency($hash);

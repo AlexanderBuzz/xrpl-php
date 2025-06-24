@@ -173,7 +173,7 @@ class Amount extends SerializedType
     }
 
     /**
-     *
+     * Check if the given amount is a valid XRP or IOU/token amount.
      *
      * @param mixed $amount
      * @return bool
@@ -231,7 +231,7 @@ class Amount extends SerializedType
     {
         if(!$number->isZero()) {
             $precision = MathUtilities::getBigDecimalPrecision($number);
-            $exponent = MathUtilities::getBigDecimalExponent($number);
+            $exponent = MathUtilities::getBigDecimalExponent($number) - 15;
 
             if ($precision > self::MAX_IOU_EXPONENT ||
                 $exponent > self::MAX_IOU_EXPONENT ||

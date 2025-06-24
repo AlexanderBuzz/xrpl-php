@@ -48,16 +48,28 @@ class MathUtilities
     }
 
     /**
-     * returns the "Stellen / precision"
+     * Returns the number of significant digits of the value of this Decimal.
+     *
+     * If include_zeros is true or 1 then any trailing zeros of the integer part of a number are counted as significant digits, otherwise they are not.
+     *
      * @param BigDecimal $number
+     * @param bool $include_zeros
      * @return int
      */
-    public static function getBigDecimalPrecision(BigDecimal $number): int
+    public static function getBigDecimalPrecision(BigDecimal $number, bool $include_zeros = false): int
     {
-        $ip = $number->getIntegralPart();
-        $fp = $number->getFractionalPart();
+        $absNumber = $number->abs(); // Get the absolute value
+        $integralPart = $absNumber->getIntegralPart();
+        $fractionalPart = $absNumber->getFractionalPart();
 
-        return strlen($ip) + strlen($fp);
+        if ($include_zeros) {
+            $combined = $integralPart . $fractionalPart;
+        } else {
+            $combined = rtrim($integralPart . $fractionalPart, '0');
+        }
+
+        return strlen($combined);
+
     }
 
     /**

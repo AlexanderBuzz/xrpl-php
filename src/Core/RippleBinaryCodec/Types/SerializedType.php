@@ -49,7 +49,6 @@ abstract class SerializedType
      */
     public function toBytes(): Buffer
     {
-        // equals "toValue()"
         return $this->bytes;
     }
 
@@ -107,7 +106,9 @@ abstract class SerializedType
             "Hash160" => Hash160::class,
             "Hash256" => Hash256::class,
             "Issue" => Issue::class,
+            "Path" => Issue::class,
             "PathSet" => PathSet::class,
+            "PathStep" => PathStep::class,
             "STArray" => StArray::class,
             "STObject" => StObject::class,
             "UInt8" => UnsignedInt8::class,
@@ -115,6 +116,7 @@ abstract class SerializedType
             "UInt32" => UnsignedInt32::class,
             "UInt64" => UnsignedInt64::class,
             "Vector256" => Vector256::class,
+            "XchainBridge" => XchainBridge::class
         ];
 
         if (!isset($typeMap[$name])) {

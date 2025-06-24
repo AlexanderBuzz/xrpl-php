@@ -147,7 +147,7 @@ final class AmountTest extends TestCase
         );
     }
 
-    public function testEncodeZeroCurrencyAmount(): void
+    public function testDecodeZeroCurrencyAmount(): void
     {
         $hex = "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001";
         $json = "{\"currency\":\"USD\",\"value\":\"0.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
@@ -162,6 +162,33 @@ final class AmountTest extends TestCase
     {
         $hex = "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001";
         $json = "{\"currency\":\"USD\",\"value\":\"1111111111111111.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
+
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
+    }
+
+    public function testEdgeCases(): void
+    {
+        $hex = "EC2386F26FC0FFFF00000000000000000000000058504D000000000005BF25234D58ED48A3E44BB7F3D39AA7834A2905";
+        $json = "{\"currency\":\"XPM\",\"value\":\"99999999999999990000000000000000000000000000000000000000000000000000000000000000000000000000000.0\",\"issuer\":\"rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa\"}";
+
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
+
+        $hex = "D82386F26FC0FFF65045575045570000000000000000000000000000797EF64BE4DC6DCBFAF5A993E28765441EB1C802";
+        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"999999999999999.0\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
+
+        $this->assertEquals(
+            json_decode($json, true),
+            Amount::fromHex($hex)->toJson()
+        );
+
+        $hex = "D8438D7EA4C680005045575045570000000000000000000000000000797EF64BE4DC6DCBFAF5A993E28765441EB1C802";
+        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"1000000000000000.0\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
 
         $this->assertEquals(
             json_decode($json, true),
