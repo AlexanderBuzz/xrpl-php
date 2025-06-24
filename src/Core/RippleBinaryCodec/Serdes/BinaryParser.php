@@ -24,21 +24,6 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
  */
 class BinaryParser
 {
-    // max length that can be represented in a single byte per XRPL serialization restrictions
-    public const MAX_SINGLE_BYTE_LENGTH = 192;
-
-    // max length that can be represented in 2 bytes per XRPL serialization restrictions
-    public const MAX_DOUBLE_BYTE_LENGTH = 12481;
-
-    // max value that can be used in the second byte of a length field
-    public const MAX_SECOND_BYTE_VALUE = 240;
-
-    // max value that can be represented using one 8-bit byte
-    public const MAX_BYTE_VALUE = 256;
-
-    // max value that can be represented in using two 8-bit bytes
-    public const MAX_DOUBLE_BYTE_VALUE = 65536;
-
     private Buffer $bytes;
 
     /**
@@ -259,15 +244,15 @@ class BinaryParser
     {
         $firstByte = $this->readUInt8()->toInt(); //BigInt?
 
-        if ($firstByte <= self::MAX_SINGLE_BYTE_LENGTH) {
+        if ($firstByte <= 192) {
             return $firstByte;
-        } else if ($firstByte <= self::MAX_SECOND_BYTE_VALUE) {
+        } else if ($firstByte <= 240) {
             $secondByte = $this->readUInt8()->toInt();
-            return self::MAX_SECOND_BYTE_VALUE - 1 + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_BYTE_VALUE + $secondByte;
+            return 193 + ($firstByte - 193) * 256 + $secondByte;
         } else if ($firstByte <= 254) {
             $secondByte = $this->readUInt8()->toInt();
             $thirdByte = $this->readUInt8()->toInt();
-            return self::MAX_DOUBLE_BYTE_LENGTH + ($firstByte - self::MAX_SECOND_BYTE_VALUE - 1) * self::MAX_DOUBLE_BYTE_VALUE + $secondByte * self::MAX_BYTE_VALUE + $thirdByte;
+            return 12481 + ($firstByte - 241) * 65536 + $secondByte * 256 + $thirdByte;
         }
 
         throw new Exception("Invalid variable length indicator");
