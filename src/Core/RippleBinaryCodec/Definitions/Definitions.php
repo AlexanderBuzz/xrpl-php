@@ -57,7 +57,7 @@ class Definitions
             $fieldHeader = new FieldHeader($this->typeOrdinals[$fieldInfo->getType()], $fieldInfo->getNth());
 
             $this->fieldInfoMap[$fieldName] = $fieldInfo;
-            $this->fieldIdNameMap[md5(serialize($fieldHeader))] = $fieldName;
+            $this->fieldIdNameMap[$fieldHeader->hash()] = $fieldName;
             $this->fieldHeaderMap[$fieldName] = $fieldHeader;
         }
     }
@@ -78,7 +78,7 @@ class Definitions
 
     public function getFieldNameFromHeader(FieldHeader $fieldHeader): string
     {
-        return $this->fieldIdNameMap[md5(serialize($fieldHeader))];
+        return $this->fieldIdNameMap[$fieldHeader->hash()];
     }
 
     public function getFieldInstance(string $fieldName): FieldInstance
