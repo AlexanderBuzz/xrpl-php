@@ -20,11 +20,18 @@ class Stablecoin {
         ],
         'testnet' => [
             'issuer' => 'rQhWct2fv4Vc4KRjRgMrxa8xPN9Zx9iLKV',
-            'currency' => 'USD',
+            'currency' => '524C555344000000000000000000000000000000',
         ],
     ];
 
-    public static function getRLUSD(string $network): array
+    /**
+     * Returns the RLUSD stablecoin information for the specified network.
+     *
+     * @param string $network The network type (e.g., 'mainnet', 'testnet').
+     * @return array An array containing the issuer and currency of RLUSD.
+     * @throws Exception If the network is not supported.
+     */
+    public static function getRlusdSettings(string $network): array
     {
         if (isset(self::RLUSD[$network])) {
             return self::RLUSD[$network];
@@ -33,9 +40,17 @@ class Stablecoin {
         throw new Exception('RLUSD not available for network: ' . $network);
     }
 
+    /**
+     * Convenience function returns an object of type Amount for RLUSD.
+     *
+     * @param string $network The network type (e.g., 'mainnet', 'testnet').
+     * @param string $value The value of the RLUSD amount.
+     * @return array An array containing the currency, issuer, and value.
+     * @throws Exception If the network is not supported.
+     */
     public static function getRLUSDAmount(string $network, string $value): array
     {
-        $rlusd = self::getRLUSD($network);
+        $rlusd = self::getRlusdSettings($network);
 
         return [
             'currency' => $rlusd['currency'],
