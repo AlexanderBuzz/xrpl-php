@@ -1,0 +1,182 @@
+repo_name: AlexanderBuzz/xrpl-php
+report_id: 73e651421648db0467bdc5fe05cfc310
+version: 0.1
+repo_type: Public
+timestamp: '2024-02-29T19:10:49+00:00'
+requested_by: AlexanderBuzz
+provider: github
+branch: master
+detected_tools_count: 14
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/website/js/highlight.min.js
+  detection_source: website/js/highlight.min.js
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-11-06 10:45:51.000000000 Z
+- name: PHP
+  description: A popular general-purpose scripting language that is especially suited
+    to web development
+  website_url: http://www.php.net/
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/991/hwUcGZ41_400x400.jpg
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php
+  detection_source: Repo Metadata
+- name: Guzzle
+  description: PHP HTTP client that makes it easy to send HTTP requests and trivial
+    to integrate with web services
+  website_url: http://guzzlephp.org/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Microframeworks (Backend)
+  image_url: https://img.stackshare.io/service/2350/638632.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-06-19 14:23:19.000000000 Z
+- name: Docker
+  description: Enterprise Container Platform for High-Velocity Innovation.
+  website_url: https://www.docker.com/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Virtual Machine Platforms & Containers
+  image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php
+  detection_source: Repo Metadata
+- name: GitHub Actions
+  description: Automate your workflow from idea to production
+  website_url: https://github.com/features/actions
+  open_source: false
+  hosted_saas: true
+  category: Build, Test, Deploy
+  sub_category: Continuous Integration
+  image_url: https://img.stackshare.io/service/11563/actions.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/.github/workflows/unit_test.yml
+  detection_source: ".github/workflows/unit_test.yml"
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-12-21 20:25:08.000000000 Z
+- name: PHPUnit
+  description: Testing framework for PHP
+  website_url: https://phpunit.de/
+  version: 10.3.1
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Testing Frameworks
+  image_url: https://img.stackshare.io/service/1616/1_WsEnddd5Y4EgEHsT054kUQ.jpeg
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBusse
+  last_updated_on: 2022-03-28 23:11:48.000000000 Z
+- name: PhpSpec
+  description: A  toolset for behavior driven development
+  website_url: http://www.phpspec.net/en/latest/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Testing Frameworks
+  image_url: https://img.stackshare.io/service/3502/6b9dfb07681dee602dbdf75d9393f07c_400x400.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/containers/php/Dockerfile
+  detection_source: containers/php/Dockerfile
+  last_updated_by: AlexanderBusse
+  last_updated_on: 2022-03-28 23:11:48.000000000 Z
+- name: codedungeon/php-cli-colors
+  description: Liven up you PHP Console Apps with standard colors
+  package_url: https://packagist.org/codedungeon/php-cli-colors
+  version: '1.12'
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/packagist/image.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-12-21 20:22:04.000000000 Z
+- name: guzzlehttp/guzzle
+  description: Guzzle is a PHP HTTP client library
+  package_url: https://packagist.org/guzzlehttp/guzzle
+  version: '7.4'
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/packagist/image.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-06-19 14:23:19.000000000 Z
+- name: php-ds/php-ds
+  description: Compatibility polyfill
+  package_url: https://packagist.org/php-ds/php-ds
+  version: '1.4'
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/packagist/image.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-12-21 20:22:04.000000000 Z
+- name: phpunit/phpunit
+  description: The PHP Unit Testing framework
+  package_url: https://packagist.org/phpunit/phpunit
+  version: 10.3.1
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/packagist/image.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-12-21 20:22:04.000000000 Z
+- name: vimeo/psalm
+  description: A static analysis tool for finding errors in PHP applications
+  package_url: https://packagist.org/vimeo/psalm
+  version: '5.14'
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/package/packagist/image.png
+  detection_source_url: https://github.com/AlexanderBuzz/xrpl-php/blob/master/composer.json
+  detection_source: composer.json
+  last_updated_by: AlexanderBuzz
+  last_updated_on: 2023-08-08 13:49:48.000000000 Z
