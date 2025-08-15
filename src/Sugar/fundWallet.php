@@ -62,7 +62,7 @@ if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
         // Create the POST request body
         $jsonData = json_encode([
             'destination' => $walletToFund->getClassicAddress(),
-            'xrpAmount' => $amount
+            'xrpAmount' => '100', // Default to 1000 XRP in drops
         ]);
 
         $startingBalance = 0;

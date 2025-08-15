@@ -3,8 +3,8 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
-use Hardcastle\XRPL_PHP\Core\Stablecoin;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Core\Stablecoin\RLUSD;
 
 print_r(PHP_EOL . Color::GREEN);
 print_r("┌───────────────────────┐" . PHP_EOL);
@@ -25,7 +25,7 @@ print_r(Color::YELLOW . "Creating RLUSD trust line, please wait..." . PHP_EOL);
 $trustSetTx = [
     "TransactionType" => "TrustSet",
     "Account" => $wallet->getAddress(),
-    "LimitAmount" => Stablecoin::getRLUSDAmount(NETWORK, '10000')
+    "LimitAmount" => RLUSD::getAmount(NETWORK, '10000')
 ];
 $trustSetPreparedTx = $client->autofill($trustSetTx);
 $signedTx = $wallet->sign($trustSetPreparedTx);

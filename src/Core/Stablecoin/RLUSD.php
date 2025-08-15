@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Hardcastle\XRPL_PHP\Core;
+namespace Hardcastle\XRPL_PHP\Core\Stablecoin;
 
 use Exception;
 
-class Stablecoin {
-    private const RLUSD = [
+class RLUSD extends Stablecoin {
+    private const SETTINGS = [
         'mainnet' => [
             'issuer' => 'rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De',
             'currency' => '524C555344000000000000000000000000000000',
@@ -31,10 +31,10 @@ class Stablecoin {
      * @return array An array containing the issuer and currency of RLUSD.
      * @throws Exception If the network is not supported.
      */
-    public static function getRlusdSettings(string $network): array
+    public static function getSettings(string $network): array
     {
-        if (isset(self::RLUSD[$network])) {
-            return self::RLUSD[$network];
+        if (isset(self::SETTINGS[$network])) {
+            return self::SETTINGS[$network];
         }
 
         throw new Exception('RLUSD not available for network: ' . $network);
@@ -48,9 +48,9 @@ class Stablecoin {
      * @return array An array containing the currency, issuer, and value.
      * @throws Exception If the network is not supported.
      */
-    public static function getRLUSDAmount(string $network, string $value): array
+    public static function getAmount(string $network, string $value): array
     {
-        $rlusd = self::getRlusdSettings($network);
+        $rlusd = self::getSettings($network);
 
         return [
             'currency' => $rlusd['currency'],
