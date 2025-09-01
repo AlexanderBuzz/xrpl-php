@@ -9,7 +9,8 @@ composer.lock export-ignore
 
 containers/ export-ignore
 docs/ export-ignore
-.couscous.yml export-ignore
-.docker-compose.yml export-ignore
-.docker-compose.linux.yml export-ignore
-.docker-compose.mac.yml export-ignore
+website/ export-ignore
+couscous.yml export-ignore
+docker-compose.yml export-ignore
+docker-compose.linux.yml export-ignore
+docker-compose.mac.yml export-ignore
