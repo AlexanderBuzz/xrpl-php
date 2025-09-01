@@ -1,0 +1,15 @@
+# Exclude from git archive (builds)
+
+.github/ export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+
+composer.lock export-ignore
+.phpunit.result.cache export-ignore
+
+containers/ export-ignore
+docs/ export-ignore
+.couscous.yml export-ignore
+.docker-compose.yml export-ignore
+.docker-compose.linux.yml export-ignore
+.docker-compose.mac.yml export-ignore
