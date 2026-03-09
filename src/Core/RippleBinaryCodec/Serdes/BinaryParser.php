@@ -96,7 +96,7 @@ class BinaryParser
      */
     public function readUIntN(int $number): Buffer //BigInteger
     {
-        if ($number > 0 && $number <= 8) {
+        if ($number > 0) {
             $stdArray = $this->read($number)->toArray();
             return Buffer::from($stdArray);
         }
