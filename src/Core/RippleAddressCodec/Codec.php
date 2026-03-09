@@ -15,14 +15,11 @@ use Hardcastle\Buffer\Buffer;
 
 class Codec
 {
-    private string $alphabet;
+    private readonly BaseX $baseCodec;
 
-    private BaseX $baseCodec;
-
-    public function __construct(string $alphabet)
+    public function __construct(private readonly string $alphabet)
     {
-        $this->alphabet = $alphabet;
-        $this->baseCodec = new BaseX($alphabet);
+        $this->baseCodec = new BaseX($this->alphabet);
     }
 
     public function encode(Buffer $bytes, array $options): string

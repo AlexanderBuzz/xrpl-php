@@ -10,14 +10,8 @@ class KeyPair
 
     public const EC = 'secp256k1';
 
-    private string $publicKey;
-
-    private string $privateKey;
-
-    public function __construct(string $publicKey, string $privateKey)
+    public function __construct(private string $publicKey, private string $privateKey)
     {
-        $this->publicKey = $publicKey;
-        $this->privateKey = $privateKey;
     }
 
     /**

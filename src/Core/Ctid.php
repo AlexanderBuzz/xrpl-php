@@ -20,7 +20,7 @@ class Ctid
 {
     private const FILLER = 0xc0000000;
 
-    private Buffer $internal;
+    private readonly Buffer $internal;
 
     /**
      * // https://github.com/XRPLF/XRPL-Standards/discussions/91

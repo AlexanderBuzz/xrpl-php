@@ -192,7 +192,7 @@ class Amount extends SerializedType
             self::assertIouIsValid($amount);
             // If no exception is thrown, it's a valid IOU/token amount
             return true;
-        } catch (Exception $exception) {
+        } catch (Exception) {
             // Do nothing
         }
 

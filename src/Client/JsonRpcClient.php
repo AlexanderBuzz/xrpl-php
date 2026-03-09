@@ -44,29 +44,25 @@ class JsonRpcClient
 
     private const NORMAL_DISCONNECT_CODE = 1000;
 
-    private Client $restClient;
+    private readonly Client $restClient;
 
-    private string $connectionUrl;
+    private readonly string $connectionUrl;
 
-    private float $feeCushion;
+    private readonly float $feeCushion;
 
-    private string $maxFeeXrp;
-
-    private float $timeout;
+    private readonly string $maxFeeXrp;
 
     public function __construct(
         string $connectionUrl,
         ?float $feeCushion = null,
         ?string $maxFeeXrp = null,
-        ?float $timeout = 3.0
+        private readonly float $timeout = 3.0
     ) {
         $this->connectionUrl = $this->getNetworkUrl($connectionUrl);
 
         $this->feeCushion = $feeCushion ?? self::DEFAULT_FEE_CUSHION;
 
         $this->maxFeeXrp = $maxFeeXrp ?? self::DEFAULT_MAX_FEE_XRP;
-
-        $this->timeout = $timeout;
 
         $stack = HandlerStack::create(new CurlHandler());
 
@@ -208,7 +204,7 @@ class JsonRpcClient
                 );
             }
 
-            $requestClassName = get_class($request);
+            $requestClassName = $request::class;
             /** @psalm-var class-string  $responseClassName */
             $responseClassName = str_replace('Request', 'Response', $requestClassName);
             /** @var BaseResponse $responseClass  */
@@ -380,7 +376,7 @@ class JsonRpcClient
         try {
             $network = Networks::getNetwork($connection);
             return $network['jsonRpcUrl'];
-        } catch (Exception $e) {
+        } catch (Exception) {
             return $connection;
         }
     }

@@ -41,7 +41,7 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getXrpBalance')) {
 
         $xrpResponse = $client->request($accountInfoRequest)->wait();
 
-        if(get_class($xrpResponse) === ErrorResponse::class) {
+        if($xrpResponse::class === ErrorResponse::class) {
             throw new Exception($xrpResponse->getError());
         }
 

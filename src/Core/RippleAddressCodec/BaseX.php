@@ -21,13 +21,13 @@ class BaseX
 
     private SplFixedArray $baseMap;
 
-    private int $base;
+    private readonly int $base;
 
-    private string $leader;
+    private readonly string $leader;
 
-    private float $factor;
+    private readonly float $factor;
 
-    private float $inverseFactor;
+    private readonly float $inverseFactor;
 
     public function __construct(string $alphabet)
     {
@@ -170,9 +170,7 @@ class BaseX
             $vch[$j++] = $b256[$it4++];
         }
 
-        $hexStr = join(array_map(function ($item) {
-            return sprintf('%02X', $item);
-        }, $vch));
+        $hexStr = join('', array_map(fn($item) => sprintf('%02X', $item), $vch));
 
         //decimalArrayToHexStr
         return Buffer::from($hexStr);

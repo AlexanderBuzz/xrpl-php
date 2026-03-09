@@ -17,11 +17,8 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 class BinarySerializer
 {
-    private Buffer $bytes;
-
-    public function __construct(Buffer $bytes)
+    public function __construct(private readonly Buffer $bytes)
     {
-        $this->bytes = $bytes;
     }
 
     public function put(string $hexBytes): void

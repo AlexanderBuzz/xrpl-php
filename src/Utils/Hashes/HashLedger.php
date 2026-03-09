@@ -15,7 +15,7 @@ class HashLedger
 {
     private static ?HashLedger $instance = null;
 
-    private BinaryCodec $binaryCodec;
+    private readonly BinaryCodec $binaryCodec;
 
     public static function getInstance(): HashLedger
     {

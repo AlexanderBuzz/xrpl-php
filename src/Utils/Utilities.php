@@ -23,9 +23,7 @@ class Utilities
     {
         $bytes = Buffer::alloc(20);
         if ($iso !== 'XRP') {
-            $isoBytes = array_map(function ($c) {
-                return ord($c);
-            }, str_split($iso));
+            $isoBytes = array_map(ord(...), str_split($iso));
             $bytes->set(12, $isoBytes);
         }
 

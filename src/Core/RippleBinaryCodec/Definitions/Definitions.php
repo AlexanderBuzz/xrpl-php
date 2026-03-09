@@ -31,7 +31,7 @@ class Definitions
      */
     public function __construct()
     {
-        $path = getenv('XRPL_PHP_DEFINITIONS_FILE_PATH') ?: dirname(__FILE__) . "/definitions.json";
+        $path = getenv('XRPL_PHP_DEFINITIONS_FILE_PATH') ?: __DIR__ . "/definitions.json";
         if (file_exists($path)) {
             $fileContents = file_get_contents($path);
         } else {
@@ -40,7 +40,7 @@ class Definitions
 
         $this->definitions = json_decode($fileContents, true);
 
-        $hooksPath = dirname(__FILE__) . "/../../../Hooks/hooksDefinitions.json";
+        $hooksPath = __DIR__ . "/../../../Hooks/hooksDefinitions.json";
         if (file_exists($hooksPath)) {
             $hooksDefinitions = json_decode(file_get_contents($hooksPath), true);
             $this->definitions['TYPES'] = array_merge($this->definitions['TYPES'], $hooksDefinitions['TYPES']);
@@ -126,7 +126,7 @@ class Definitions
         }
 
         //TODO: In case the value is not found, should an exception be thrown?
-        return (isset($lookup[$value])) ? $lookup[$value] : $value;
+        return $lookup[$value] ?? $value;
     }
 
     public function mapValueToSpecificField(string $fieldName, string|int $value): string
@@ -145,6 +145,6 @@ class Definitions
                 return "";
         }
 
-        return (isset($lookup[(int)$value])) ? $lookup[(int)$value] : "";
+        return $lookup[(int)$value] ?? "";
     }
 }
