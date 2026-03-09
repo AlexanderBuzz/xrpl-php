@@ -18,7 +18,7 @@ class CoreUtilities
 {
     private static ?CoreUtilities $instance = null;
 
-    private AddressCodec $addressCodec;
+    private readonly AddressCodec $addressCodec;
 
     public static function getInstance(): CoreUtilities
     {
@@ -33,7 +33,7 @@ class CoreUtilities
     {
         $_this = self::getInstance();
         if ($_this->addressCodec->isValidXAddress($account)) {
-            list($classicAddress, $tag) = $_this->addressCodec->xAddressToClassicAddress($account);
+            [$classicAddress, $tag] = $_this->addressCodec->xAddressToClassicAddress($account);
 
             /*
              * Except for special cases, X-addresses used for requests

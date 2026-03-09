@@ -20,22 +20,18 @@ class Wallet
 
     public const DEFAULT_ALGORITHM = KeyPair::EDDSA;
 
-    private BinaryCodec $binaryCodec;
+    private readonly BinaryCodec $binaryCodec;
 
     private KeyPairServiceInterface $keyPairService;
 
-    private string $publicKey;
-
-    private string $privateKey;
+    private readonly string $publicKey;
 
     private string $classicAddress;
 
-    private ?string $seed;
-
     public function __construct(
         string $publicKey,
-        string $privateKey,
-        string $seed,
+        private readonly string $privateKey,
+        private readonly ?string $seed,
         ?string $masterAddress = null,
     )
     {
@@ -50,8 +46,6 @@ class Wallet
         }
 
         $this->publicKey = $publicKey;
-        $this->privateKey = $privateKey;
-        $this->seed = $seed;
 
         if (is_string($masterAddress)) {
             $this->classicAddress = CoreUtilities::ensureClassicAddress($masterAddress);
@@ -224,21 +218,21 @@ class Wallet
                     if(!XrplUtilities::isHex($memo['Memo']['MemoData'])) {
                         throw new ValidationException('MemoData field must be a hex value');
                     }
-                    $memo['Memo']['MemoData'] = strtoupper($memo['Memo']['MemoData']);
+                    $memo['Memo']['MemoData'] = strtoupper((string) $memo['Memo']['MemoData']);
                 }
 
                 if (isset($memo['Memo']['MemoType'])) {
                     if(!XrplUtilities::isHex($memo['Memo']['MemoType'])) {
                         throw new ValidationException('MemoType field must be a hex value');
                     }
-                    $memo['Memo']['MemoType'] = strtoupper($memo['Memo']['MemoType']);
+                    $memo['Memo']['MemoType'] = strtoupper((string) $memo['Memo']['MemoType']);
                 }
 
                 if (isset($memo['Memo']['MemoFormat'])) {
                     if(!XrplUtilities::isHex($memo['Memo']['MemoFormat'])) {
                         throw new ValidationException('MemoFormat field must be a hex value');
                     }
-                    $memo['Memo']['MemoFormat'] = strtoupper($memo['Memo']['MemoFormat']);
+                    $memo['Memo']['MemoFormat'] = strtoupper((string) $memo['Memo']['MemoFormat']);
                 }
 
                 return $memo;
@@ -259,12 +253,12 @@ class Wallet
                 $txAmount = $value;
                 $txCurrency = $txAmount['currency'];
 
-                if (strlen($txCurrency) === XrplUtilities::ISSUED_CURRENCY_SIZE && strtoupper($txCurrency) === 'XRP') {
+                if (strlen((string) $txCurrency) === XrplUtilities::ISSUED_CURRENCY_SIZE && strtoupper((string) $txCurrency) === 'XRP') {
                     throw new XrplException("Trying to sign an issued currency with a similar standard code to XRP (received '{$txCurrency}'). XRP is not an issued currency.");
                 }
 
-                if(strlen($txCurrency) !== strlen($decodedTxCurrency)) {
-                    if(strlen($decodedTxCurrency) === XrplUtilities::ISSUED_CURRENCY_SIZE) {
+                if(strlen((string) $txCurrency) !== strlen((string) $decodedTxCurrency)) {
+                    if(strlen((string) $decodedTxCurrency) === XrplUtilities::ISSUED_CURRENCY_SIZE) {
                         $decodedTx[$key]['currency'] = XrplUtilities::isoToHex($decodedTxCurrency);
                     } else {
                         $tx[$key]['currency'] = XrplUtilities::isoToHex($txCurrency);

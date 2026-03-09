@@ -115,6 +115,12 @@ abstract class SerializedType
             "UInt16" => UnsignedInt16::class,
             "UInt32" => UnsignedInt32::class,
             "UInt64" => UnsignedInt64::class,
+            "UInt96" => UnsignedInt96::class,
+            "UInt192" => UnsignedInt192::class,
+            "UInt384" => UnsignedInt384::class,
+            "UInt512" => UnsignedInt512::class,
+            "Int32" => SignedInt32::class,
+            "Int64" => SignedInt64::class,
             "Vector256" => Vector256::class,
             "XchainBridge" => XchainBridge::class
         ];

@@ -40,9 +40,14 @@ class BinaryCodec extends Binary
      *
      * @param string $binaryString
      * @return array
+     * @throws Exception
      */
     public function decode(string $binaryString): array
     {
+        if (str_starts_with(trim(bin2hex(hex2bin($binaryString))), "7b")) {
+            throw new Exception("The provided binary string appears to be a hex-encoded JSON object, not a binary-encoded transaction.");
+        }
+
         return $this->binaryToJson($binaryString);
     }
 

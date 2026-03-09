@@ -7,14 +7,8 @@ use Hardcastle\Buffer\Buffer;
 
 class FieldHeader implements Hashable
 {
-    private int $typeCode;
-
-    private int $fieldCode;
-
-    public function __construct(int $typeCode, int $fieldCode)
+    public function __construct(private int $typeCode, private int $fieldCode)
     {
-        $this->typeCode = $typeCode;
-        $this->fieldCode = $fieldCode;
     }
 
     public function toBytes(): Buffer

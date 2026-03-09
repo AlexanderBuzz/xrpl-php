@@ -11,7 +11,6 @@ use Exception;
 class XrplException extends Exception
 {
     protected string $name;
-    protected ?string $data;
 
     /**
      * Construct an XrplError.
@@ -19,9 +18,8 @@ class XrplException extends Exception
      * @param string $message
      * @param string|null $data
      */
-    public function __construct(string $message = '', ?string $data = '') {
+    public function __construct(string $message = '', protected ?string $data = '') {
         $this->name = self::class;
-        $this->data = $data;
 
         parent::__construct($message);
     }

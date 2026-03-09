@@ -9,59 +9,72 @@ use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
 use Hardcastle\XRPL_PHP\Models\Account\AccountLinesRequest;
 
 
-if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getXrpBalance')) {
+use Hardcastle\XRPL_PHP\Models\Account\AccountTxRequest;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
+
+if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getTransactions')) {
 
     /**
+     * @param JsonRpcClient $client
+     * @param string $address
+     * @param int|null $ledgerIndexMin
+     * @param int|null $ledgerIndexMax
+     * @param string|null $ledgerHash
+     * @param string|null $ledgerIndex
+     * @param bool|null $binary
+     * @param bool|null $forward
+     * @param int|null $limit
+     * @param mixed|null $marker
+     * @return array
      * @throws Exception
      */
-    function getXrpBalance(
+    function getTransactions(
         JsonRpcClient $client,
         string $address,
+        ?int $ledgerIndexMin = null,
+        ?int $ledgerIndexMax = null,
         ?string $ledgerHash = null,
-        ?string $ledgerIndex = null,
-    ): string
-    {
-        //$xrpRequest = new AccountInfoRequest($address, $ledgerIndex, $ledgerIndex || 'validated');
-        $xrpRequest = new AccountInfoRequest($address);
-        $body = json_encode($xrpRequest->getBody());
-        $response = $client->rawSyncRequest('POST', '', $body);
-
-        $content = $response->getBody()->getContents();
-        $json = json_decode($content, true);
-
-        return dropsToXrp($json['result']['account_data']['Balance']);
-    }
-}
-
-if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getBalances')) {
-
-    function getBalances(
-        JsonRpcClient $client,
-        string $address,
-        ?string $ledgerHash = null,
-        ?string $ledgerIndex = null,
-        ?string $peer = null,
-        ?int $limit = null
+        ?string $ledgerIndex = 'validated',
+        ?bool $binary = null,
+        ?bool $forward = null,
+        ?int $limit = null,
+        mixed $marker = null
     ): array
     {
-        //TODO: Complete this function!
+        $transactions = [];
 
-        $balances = [];
+        while (true) {
+            $request = new AccountTxRequest(
+                account: $address,
+                ledgerIndexMin: $ledgerIndexMin,
+                ledgerIndexMax: $ledgerIndexMax,
+                ledgerHash: $ledgerHash,
+                ledgerIndex: $ledgerIndex,
+                binary: $binary,
+                forward: $forward,
+                limit: $limit,
+                marker: $marker
+            );
 
-        $xrp = '';
-        if(!$peer) {
-            $xrp = getXrpBalance($client, $address, $ledgerHash, $ledgerIndex);
+            $response = $client->request($request)->wait();
+
+            if ($response::class === ErrorResponse::class) {
+                throw new Exception($response->getError());
+            }
+
+            $result = $response->getResult();
+            $transactions = array_merge($transactions, $result['transactions']);
+
+            $marker = $result['marker'] ?? null;
+            if (!$marker || ($limit && count($transactions) >= $limit)) {
+                break;
+            }
         }
 
-        $linesRequest = new AccountLinesRequest(
-            $address,
-            $ledgerHash,
-            $ledgerIndex,
-            $peer,
-            $limit
-        );
+        if ($limit && count($transactions) > $limit) {
+            return array_slice($transactions, 0, $limit);
+        }
 
-
-        return array_slice($balances, 0, $limit);
+        return $transactions;
     }
 }

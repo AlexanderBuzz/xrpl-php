@@ -28,7 +28,7 @@ function getUpdatedBalance(JsonRpcClient $client, string $address, float $origin
     $newBalance = null;
     try {
         $newBalance = (float)$client->getXrpBalance($address);
-    } catch (Exception $e) {
+    } catch (Exception) {
         //new Balance remains undefined
     }
 
@@ -68,7 +68,7 @@ if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
         $startingBalance = 0;
         try {
             $startingBalance = getXrpBalance($client, $walletToFund->getClassicAddress());
-        } catch (Exception $e) {
+        } catch (Exception) {
             // startingBalance remains '0'
         }
 
@@ -83,7 +83,7 @@ if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
             body: $jsonData
         )->wait();
 
-        $faucetWallet = json_decode($response->getBody(), true);
+        $faucetWallet = json_decode((string) $response->getBody(), true);
 
         if (!isset($faucetWallet['account']['address'])) {
             // error: 'The faucet account is undefined'
@@ -101,7 +101,7 @@ if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
                 if ($updatedBalance > $startingBalance) {
                     break;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
 
             }
             sleep($intervalSeconds);
@@ -111,7 +111,7 @@ if (!function_exists('Hardcastle\XRPL_PHP\Sugar\fundWallet')) {
         return [
             'wallet' => $walletToFund,
             'balance' => $updatedBalance,
-            'fundWalletResponse' => json_decode($response->getBody(), true)
+            'fundWalletResponse' => json_decode((string) $response->getBody(), true)
         ];
     }
 }

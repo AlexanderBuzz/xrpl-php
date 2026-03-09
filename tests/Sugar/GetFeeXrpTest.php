@@ -1,0 +1,43 @@
+<?php
+
+namespace Hardcastle\XRPL_PHP\Test\Sugar;
+
+use donatj\MockWebServer\MockWebServer;
+use PHPUnit\Framework\TestCase;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
+
+/**
+ * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/dropsToXrp.ts
+ * https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/xrpToDrops.ts
+ */
+class GetFeeXrpTest  extends TestCase
+{
+    protected static MockWebServer $server;
+
+    /** @psalm-suppress PropertyNotSetInConstructor */
+    protected JsonRpcClient $client;
+
+    public static function setUpBeforeClass(): void {
+        self::$server = new MockWebServer();
+        self::$server->start();
+    }
+
+    public function setUp(): void
+    {
+        $mockRippledUrl = self::$server->getServerRoot();
+        $this->client = new JsonRpcClient($mockRippledUrl);
+    }
+
+    public function testGetXrpBalance(): void
+    {
+        //TODO: Implement test
+        $this->assertEquals(true, true);
+    }
+
+    public function testGetBalances(): void
+    {
+        //TODO: Implement test
+        $this->assertEquals(true, true);
+    }
+}

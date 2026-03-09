@@ -56,16 +56,14 @@ class AddressCodec extends CodecWithXrpAlphabet
             0, 0, 0, 0
         ]);
 
-        $hex = array_map(function ($item) {
-            return sprintf('%02X', $item);
-        }, $bytes);
+        $hex = array_map(fn($item) => sprintf('%02X', $item), $bytes);
 
-        return $this->encodeChecked(Buffer::from(join($hex)));
+        return $this->encodeChecked(Buffer::from(join('', $hex)));
     }
 
     public function xAddressToClassicAddress(string $xAddress): array
     {
-        list($accountId, $tag, $test) = array_values($this->decodeXAddress($xAddress));
+        [$accountId, $tag, $test] = array_values($this->decodeXAddress($xAddress));
         $classicAddress = $this->encodeAccountID($accountId);
         return [
             'classicAddress' => $classicAddress,
@@ -91,7 +89,7 @@ class AddressCodec extends CodecWithXrpAlphabet
     {
         try {
             $this->decodeXAddress($xAddress);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return false;
         }
         return true;

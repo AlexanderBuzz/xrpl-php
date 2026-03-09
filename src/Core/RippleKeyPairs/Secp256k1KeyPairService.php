@@ -12,7 +12,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 {
     private static ?Secp256k1KeyPairService $instance = null;
 
-    private EC $elliptic;
+    private readonly EC $elliptic;
 
     public function __construct()
     {
@@ -135,7 +135,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
                 $buffer->appendHex('00000000');
             }
 
-            $seqHex = str_pad($seqBN->toString('hex'), 8, '00', STR_PAD_LEFT);
+            $seqHex = str_pad((string) $seqBN->toString('hex'), 8, '00', STR_PAD_LEFT);
             $buffer->appendHex($seqHex);
 
             $hash = MathUtilities::sha512Half($buffer);

@@ -10,7 +10,7 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 {
     private static ?Ed25519KeyPairService $instance = null;
 
-    private EdDSA $elliptic;
+    private readonly EdDSA $elliptic;
 
     public function __construct()
     {

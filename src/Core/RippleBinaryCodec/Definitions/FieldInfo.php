@@ -7,29 +7,8 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
  */
 class FieldInfo
 {
-    private int $nth;
-
-    private bool $isVariableLengthEncoded;
-
-    private bool $isSerialized;
-
-    private bool $isSigningField;
-
-    private string $type;
-
-    public function __construct(
-        int    $nth,
-        bool   $isVariableLengthEncoded,
-        bool   $isSerialized,
-        bool   $isSigningField,
-        string $typeName
-    )
+    public function __construct(private int    $nth, private bool   $isVariableLengthEncoded, private bool   $isSerialized, private bool   $isSigningField, private string $type)
     {
-        $this->nth = $nth;
-        $this->isVariableLengthEncoded = $isVariableLengthEncoded;
-        $this->isSerialized = $isSerialized;
-        $this->isSigningField = $isSigningField;
-        $this->type = $typeName;
     }
 
     /**

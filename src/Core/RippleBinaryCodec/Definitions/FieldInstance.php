@@ -21,29 +21,23 @@ class FieldInstance
 
     private readonly int $ordinal;
 
-    private readonly string $name;
-
-    private FieldHeader $fieldHeader;
-
     private readonly string $associatedType;
 
     /**
      *
      *
      * @param FieldInfo $fieldInfo
-     * @param string $fieldName
+     * @param string $name
      * @param FieldHeader $fieldHeader
      * @throws \Exception
      */
-    public function __construct(FieldInfo $fieldInfo, string $fieldName, FieldHeader $fieldHeader)
+    public function __construct(FieldInfo $fieldInfo, private readonly string $name, private readonly FieldHeader $fieldHeader)
     {
         $this->nth = $fieldInfo->getNth();
         $this->isVariableLengthEncoded = $fieldInfo->isVariableLengthEncoded();
         $this->isSerialized = $fieldInfo->isSerialized();
         $this->isSigningField = $fieldInfo->isSigningField();
         $this->type = $fieldInfo->getType();
-        $this->name = $fieldName;
-        $this->fieldHeader = $fieldHeader;
         $this->ordinal = $this->fieldHeader->getTypeCode() << 16 | $this->nth;
         $this->associatedType = SerializedType::getTypeByName($this->type)::class;
     }

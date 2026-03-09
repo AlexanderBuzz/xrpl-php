@@ -159,7 +159,7 @@ class CodecWithXrpAlphabet extends Codec
     {
         try {
             $this->decodeAccountId($address);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return false;
         }
         return true;
