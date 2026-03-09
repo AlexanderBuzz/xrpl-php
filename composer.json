@@ -39,6 +39,8 @@
       "src/Sugar/balances.php",
       "src/Sugar/fundWallet.php",
       "src/Sugar/getFeeXrp.php",
+      "src/Sugar/getOrderbook.php",
+      "src/Sugar/getTransactions.php",
       "src/Sugar/submit.php",
       "src/Sugar/xrpConversion.php"
     ]

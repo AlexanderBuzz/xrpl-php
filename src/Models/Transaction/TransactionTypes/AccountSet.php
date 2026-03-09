@@ -10,6 +10,7 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash128;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
@@ -27,7 +28,7 @@ class AccountSet extends BaseTransaction
         'Domain' => Blob::class,
         'EmailHash' => Hash128::class,
         'MessageKey' => Blob::class,
-        'NFTokenMinter' => Blob::class,
+        'NFTokenMinter' => AccountId::class,
         'SetFlag' => UnsignedInt32::class,
         'TransferRate' => UnsignedInt32::class,
         'TickSize' => UnsignedInt8::class,

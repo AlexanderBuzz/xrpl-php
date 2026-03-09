@@ -31,6 +31,10 @@ use Hardcastle\XRPL_PHP\Wallet\Wallet;
 use function Hardcastle\XRPL_PHP\Sugar\autofill;
 use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
 use function Hardcastle\XRPL_PHP\Sugar\getXrpBalance;
+use function Hardcastle\XRPL_PHP\Sugar\getBalances;
+use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
+use function Hardcastle\XRPL_PHP\Sugar\getOrderbook;
+use function Hardcastle\XRPL_PHP\Sugar\getTransactions;
 use function Hardcastle\XRPL_PHP\Sugar\submit;
 use function Hardcastle\XRPL_PHP\Sugar\submitAndWait;
 
@@ -297,6 +301,87 @@ class JsonRpcClient
     public function getXrpBalance(string $address): string
     {
         return getXrpBalance($this, $address);
+    }
+
+    /**
+     * @param string $address
+     * @param string|null $ledgerHash
+     * @param string|null $ledgerIndex
+     * @param string|null $peer
+     * @param int|null $limit
+     * @return array
+     * @throws Exception
+     */
+    public function getBalances(
+        string $address,
+        ?string $ledgerHash = null,
+        ?string $ledgerIndex = 'validated',
+        ?string $peer = null,
+        ?int $limit = null
+    ): array
+    {
+        return getBalances($this, $address, $ledgerHash, $ledgerIndex, $peer, $limit);
+    }
+
+    /**
+     * @param string $address
+     * @param int|null $ledgerIndexMin
+     * @param int|null $ledgerIndexMax
+     * @param string|null $ledgerHash
+     * @param string|null $ledgerIndex
+     * @param bool|null $binary
+     * @param bool|null $forward
+     * @param int|null $limit
+     * @param mixed|null $marker
+     * @return array
+     * @throws Exception
+     */
+    public function getTransactions(
+        string $address,
+        ?int $ledgerIndexMin = null,
+        ?int $ledgerIndexMax = null,
+        ?string $ledgerHash = null,
+        ?string $ledgerIndex = 'validated',
+        ?bool $binary = null,
+        ?bool $forward = null,
+        ?int $limit = null,
+        mixed $marker = null
+    ): array
+    {
+        return getTransactions($this, $address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
+    }
+
+    /**
+     * @param array $takerGets
+     * @param array $takerPays
+     * @param string|null $ledgerHash
+     * @param string|null $ledgerIndex
+     * @param int|null $limit
+     * @param string|null $taker
+     * @return array
+     * @throws Exception
+     */
+    public function getOrderbook(
+        array $takerGets,
+        array $takerPays,
+        ?string $ledgerHash = null,
+        ?string $ledgerIndex = 'validated',
+        ?int $limit = null,
+        ?string $taker = null
+    ): array
+    {
+        return getOrderbook($this, $takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
+    }
+
+    /**
+     * @param int|null $cushion
+     * @return string
+     * @throws \Brick\Math\Exception\MathException
+     * @throws \Brick\Math\Exception\RoundingNecessaryException
+     */
+    public function getFeeXrp(?int $cushion = null): string
+    {
+        return getFeeXrp($this, $cushion);
     }
 
     /**

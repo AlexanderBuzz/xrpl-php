@@ -8,19 +8,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes;
+namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 
 /**
- * Invoke transaction (Xahau/Hooks).
+ * DIDSet transaction
+ * https://xrpl.org/didset.html
  */
-class Invoke extends BaseTransaction
+class DIDSet extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Destination' => AccountId::class,
-        'Blob' => Blob::class,
+        'Data' => Blob::class,
+        'DIDDocument' => Blob::class,
+        'URI' => Blob::class,
     ];
 }

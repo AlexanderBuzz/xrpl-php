@@ -12,15 +12,17 @@ namespace Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
 
 /**
- * Invoke transaction (Xahau/Hooks).
+ * URITokenCreateSellOffer transaction (Xahau/Hooks).
  */
-class Invoke extends BaseTransaction
+class URITokenCreateSellOffer extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
+        'URITokenID' => Hash256::class,
+        'Amount' => Amount::class,
         'Destination' => AccountId::class,
-        'Blob' => Blob::class,
     ];
 }

@@ -11,16 +11,14 @@
 namespace Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
- * Invoke transaction (Xahau/Hooks).
+ * SetHook transaction (Xahau/Hooks).
  */
-class Invoke extends BaseTransaction
+class SetHook extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Destination' => AccountId::class,
-        'Blob' => Blob::class,
+        'Hooks' => StArray::class,
     ];
 }

@@ -15,12 +15,12 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 
 /**
- * Invoke transaction (Xahau/Hooks).
+ * URITokenMint transaction (Xahau/Hooks).
  */
-class Invoke extends BaseTransaction
+class URITokenMint extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
+        'URI' => Blob::class,
         'Destination' => AccountId::class,
-        'Blob' => Blob::class,
     ];
 }
