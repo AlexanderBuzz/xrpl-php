@@ -87,7 +87,7 @@ class JsonRpcClient
      * @param string|null $body
      * @return PromiseInterface
      */
-    public function rawRequest(string $method, string $resource = '', string $body = null): PromiseInterface
+    public function rawRequest(string $method, string $resource = '', ?string $body = null): PromiseInterface
     {
         $request = new Request(
             $method,
@@ -134,7 +134,7 @@ class JsonRpcClient
      * @return ResponseInterface
      * @throws GuzzleException
      */
-    public function rawSyncRequest(string $method, string $resource = '', string $body = null): ResponseInterface
+    public function rawSyncRequest(string $method, string $resource = '', ?string $body = null): ResponseInterface
     {
         $request = new Request(
             $method,
