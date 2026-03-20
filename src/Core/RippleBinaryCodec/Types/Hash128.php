@@ -35,6 +35,6 @@ class Hash128 extends Hash
 
     public static function fromJson(string $serializedJson): SerializedType
     {
-        return new Hash128(Buffer::from($serializedJson));
+        return new Hash128(Buffer::from($serializedJson, 'hex'));
     }
 }

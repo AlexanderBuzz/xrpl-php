@@ -58,7 +58,7 @@ class AddressCodec extends CodecWithXrpAlphabet
 
         $hex = array_map(fn($item) => sprintf('%02X', $item), $bytes);
 
-        return $this->encodeChecked(Buffer::from(join('', $hex)));
+        return $this->encodeChecked(Buffer::from(join('', $hex), 'hex'));
     }
 
     public function xAddressToClassicAddress(string $xAddress): array

@@ -106,7 +106,7 @@ class Amount extends SerializedType
 
             $hex1 = str_pad($bigInteger->shiftedRight(32)->toBase(16), 8, '0', STR_PAD_LEFT);
             $hex2 = str_pad($bigInteger->and(0x00000000ffffffff)->toBase(16), 8, '0', STR_PAD_LEFT);
-            $amount = Buffer::from($hex1 . $hex2);
+            $amount = Buffer::from($hex1 . $hex2, 'hex');
 
             $amount[0] |= 0x80;
 

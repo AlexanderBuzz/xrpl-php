@@ -30,7 +30,7 @@ class UnsignedInt8 extends UnsignedInt
             $serializedJson = (int) json_decode($serializedJson);
         }
 
-        return new UnsignedInt8(Buffer::from(dechex($serializedJson)));
+        return new UnsignedInt8(Buffer::from(str_pad(dechex($serializedJson), 2, '0', STR_PAD_LEFT), 'hex'));
     }
 
     public function valueOf(): int|string
