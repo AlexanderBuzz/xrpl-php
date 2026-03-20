@@ -40,9 +40,6 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return $this->addressCodec->encodeSeed($entropy, 'secp256k1');
     }
 
-    /**
-     * @throws Exception Error
-     */
     public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
@@ -61,31 +58,26 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     public function sign(Buffer|string $message, string $privateKey): string
     {
-        if (!is_string($message)) {
-            $message = $message->toString();
-        }
+        $messageBytes = ($message instanceof Buffer) ? $message->toUtf8() : $message;
 
-        $hash = MathUtilities::sha512Half($message);
+        $hash = MathUtilities::sha512Half($messageBytes);
         $signed = $this->elliptic->sign(
-            $hash->toString(),
-            //substr($privateKey, 2),
-            $privateKey,//substr($privateKey, 2),
+            bin2hex($hash->toUtf8()),
+            $privateKey,
             'hex',
             ['canonical' => true]
         )->toDER('hex');
 
-        return Buffer::from($signed)->toString();
+        return strtoupper($signed);
     }
 
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
-        if (!is_string($message)) {
-            $message = $message->toString();
-        }
+        $messageBytes = ($message instanceof Buffer) ? $message->toUtf8() : $message;
 
-        $hash = MathUtilities::sha512Half($message);
+        $hash = MathUtilities::sha512Half($messageBytes);
 
-        return $this->elliptic->verify($hash->toString(), $signature, $publicKey, 'hex');
+        return $this->elliptic->verify(bin2hex($hash->toUtf8()), $signature, $publicKey, 'hex');
     }
 
     /**
@@ -101,20 +93,19 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
      */
     private function derivePrivateKey(Buffer $seed, bool $validator = false, int  $accountIndex = 0): string
     {
-        $order = $this->elliptic->n;
         $privateGen = $this->deriveScalar($seed);
 
         //root key
         if ($validator) {
-            return $privateGen->toString('hex');
+            return str_pad($privateGen->toString(16), 64, '0', STR_PAD_LEFT);
         }
 
         $publicGen = $this->elliptic->g->mul($privateGen);
 
-        return $this->deriveScalar(Buffer::from($publicGen->encodeCompressed('hex')), $accountIndex)
+        return $this->deriveScalar(Buffer::from($publicGen->encodeCompressed('hex'), 'hex'), $accountIndex)
             ->add($privateGen)
             ->mod($this->elliptic->n)
-            ->toString('hex');
+            ->toString(16);
     }
 
     private function derivePublicKey(BN $privateKey): string
@@ -124,28 +115,27 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     private function deriveScalar(Buffer $seed, ?int $discriminator = null): BN
     {
-        $seedArray = $seed->toArray();
         $zeroBN = new BN(0);
         $seqBN = $zeroBN->_clone();
 
         while (true) {
-            $buffer = Buffer::from($seedArray);
+            $buffer = Buffer::from($seed->toArray());
 
             if (is_int($discriminator)) {
-                $buffer->appendHex('00000000');
+                $buffer->appendHex(str_pad(dechex($discriminator), 8, '0', STR_PAD_LEFT));
             }
 
-            $seqHex = str_pad((string) $seqBN->toString('hex'), 8, '00', STR_PAD_LEFT);
+            $seqHex = str_pad($seqBN->toString(16), 8, '0', STR_PAD_LEFT);
             $buffer->appendHex($seqHex);
 
             $hash = MathUtilities::sha512Half($buffer);
-            $hashBN = new BN($hash->toString(), 16);
+            $hashBN = new BN(bin2hex($hash->toUtf8()), 16);
 
             if($hashBN->cmp($zeroBN) != 0 && $hashBN->cmp($this->elliptic->n) < 0) {
                 return $hashBN;
             }
 
-            $seqBN = $seqBN->add(1);
+            $seqBN = $seqBN->add(new BN(1));
         }
     }
 }

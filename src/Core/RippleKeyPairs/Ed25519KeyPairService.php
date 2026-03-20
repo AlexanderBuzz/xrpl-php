@@ -46,7 +46,7 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         }
 
         $rawPrivateKey = MathUtilities::sha512Half($seed);
-        $rawKeyPair = $this->elliptic->keyFromSecret($rawPrivateKey->toString());
+        $rawKeyPair = $this->elliptic->keyFromSecret(bin2hex($rawPrivateKey->toUtf8()));
 
         $publicKey = self::PREFIX_ED25519 . Buffer::from($rawKeyPair->getPublic())->toString();
         $privateKey = self::PREFIX_ED25519 . Buffer::from($rawKeyPair->getSecret())->toString();
@@ -56,8 +56,8 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 
     public function sign(Buffer|string $message, string $privateKey): string
     {
-        if (!is_string($message)) {
-            $message = $message->toString();
+        if ($message instanceof Buffer) {
+            $message = bin2hex($message->toUtf8());
         }
 
         $signed = $this->elliptic->sign($message, substr($privateKey, 2));
@@ -67,8 +67,8 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
-        if (!is_string($message)) {
-            $message = $message->toString();
+        if ($message instanceof Buffer) {
+            $message = bin2hex($message->toUtf8());
         }
 
         return $this->elliptic->verify($message, $signature, substr($publicKey, 2));

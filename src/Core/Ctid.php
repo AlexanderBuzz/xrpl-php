@@ -29,7 +29,7 @@ class Ctid
      */
     public function __construct(string $ctidAsHex)
     {
-        $this->internal = Buffer::from($ctidAsHex);
+        $this->internal = Buffer::from($ctidAsHex, 'hex');
     }
 
     /**

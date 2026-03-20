@@ -35,6 +35,6 @@ class Hash256 extends Hash
 
     public static function fromJson(string $serializedJson): SerializedType
     {
-        return new Hash256(Buffer::from($serializedJson));
+        return new Hash256(Buffer::from($serializedJson, 'hex'));
     }
 }

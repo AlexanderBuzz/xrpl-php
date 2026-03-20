@@ -28,7 +28,7 @@ class UnsignedInt32 extends UnsignedInt
             $serializedJson = (int) json_decode($serializedJson);
         }
 
-        return new UnsignedInt32(Buffer::from(dechex($serializedJson)));
+        return new UnsignedInt32(Buffer::from(str_pad(dechex($serializedJson), 8, '0', STR_PAD_LEFT), 'hex'));
     }
 
     public function toBytes(): Buffer

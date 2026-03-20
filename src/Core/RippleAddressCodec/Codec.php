@@ -33,17 +33,16 @@ class Codec
 
         $defaultOptions = [
             'versionTypes' => ['ed25519', 'secp256k1'],
-            'version' => [[1, 225, 75], 33],
+            'versions' => [[1, 225, 75], [33]],
             'expectedLength' => 16
         ];
 
         $options = array_replace($defaultOptions, $options);
 
         $versions = $options['versions'];
-        $types = $options['versionTypes'];
+        $types = $options['versionTypes'] ?? null;
 
-
-        if (count($options['versions']) > 1 && !$options['expectedLength']) {
+        if (count($versions) > 1 && !$options['expectedLength']) {
             throw new Exception('expectedLength is required because there are >= 2 possible versions');
         }
 
@@ -63,12 +62,14 @@ class Codec
                 ];
             }
         }
+
+        throw new Exception('Unknown version');
     }
 
     public function encodeChecked(Buffer $bytes): string
     {
         $check = $this->sha256($this->sha256($bytes))->slice(0,4);
-        return $this->encodeRaw(Buffer::concat([$bytes->toArray(), $check->toArray()]));
+        return $this->encodeRaw(Buffer::concat([$bytes, $check]));
     }
 
     public function decodeChecked(string $base58string): Buffer
@@ -92,7 +93,8 @@ class Codec
             throw new Exception('unexpected_payload_length: bytes.length does not match expectedLength. Ensure that the bytes are a Buffer.');
         }
 
-        $bytes->prependBuffer(Buffer::from($versions));
+        $versionBytes = is_numeric($versions[0]) ? $versions : $versions[0];
+        $bytes = Buffer::concat([Buffer::from($versionBytes), $bytes]);
 
         return $this->encodeChecked($bytes);
     }
@@ -109,16 +111,14 @@ class Codec
 
     private function sha256(Buffer $bytes): Buffer
     {
-        $binaryValue = hex2bin($bytes->toString());
-        $binaryHash = hash('sha256', $binaryValue, true);
-        $hexValue = bin2hex($binaryHash);
-        return Buffer::from($hexValue);
+        $binaryHash = hash('sha256', $bytes->toUtf8(), true);
+        return Buffer::from($binaryHash);
     }
 
     private function verifyCheckSum(Buffer $bytes): bool
     {
         $computed = $this->sha256($this->sha256($bytes->slice(0,-4)))->slice(0,4);
         $checksum = $bytes->slice(-4);
-        return $computed->toString() === $checksum->toString(); //TODO: Perhaps make Buffer comparable
+        return $computed->toUtf8() === $checksum->toUtf8();
     }
 }

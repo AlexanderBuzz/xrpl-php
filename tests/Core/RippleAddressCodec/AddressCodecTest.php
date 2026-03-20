@@ -57,7 +57,7 @@ class AddressCodecTest extends TestCase
     public function testEncodeEd25519Seed(): void
     {
         $encoded = $this->addressCodec->encodeSeed(
-            Buffer::from("4C3A1D213FBDFB14C7C28D609469B341"),
+            Buffer::from("4C3A1D213FBDFB14C7C28D609469B341", 'hex'),
             'ed25519'
         );
 
@@ -84,7 +84,7 @@ class AddressCodecTest extends TestCase
     public function testEncodeSecp256k1Seed(): void
     {
         $encoded = $this->addressCodec->encodeSeed(
-            Buffer::from('CF2DE378FBDD7E2EE87D486DFB5A7BFF'),
+            Buffer::from('CF2DE378FBDD7E2EE87D486DFB5A7BFF', 'hex'),
             'secp256k1'
         );
 

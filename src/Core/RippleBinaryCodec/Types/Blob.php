@@ -38,6 +38,6 @@ class Blob extends SerializedType
 
     public static function fromJson(string $serializedJson): SerializedType
     {
-        return new Blob(Buffer::from($serializedJson));
+        return new Blob(Buffer::from($serializedJson, 'hex'));
     }
 }

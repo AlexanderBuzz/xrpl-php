@@ -94,7 +94,7 @@ class CoreUtilities
         $_this = self::getInstance();
 
         if (is_string($publicKey)) {
-            $publicKey = Buffer::from($publicKey);
+            $publicKey = Buffer::from($publicKey, 'hex');
         }
 
         $publicKeyHash = MathUtilities::computePublicKeyHash($publicKey);

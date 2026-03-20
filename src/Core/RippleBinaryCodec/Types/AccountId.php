@@ -41,7 +41,7 @@ class AccountId extends Hash160
         $isHex = (preg_match(self::HEX_REGEX, $serializedJson) === 1);
 
         if ($isHex) {
-            return new AccountId(Buffer::from($serializedJson));
+            return new AccountId(Buffer::from($serializedJson, 'hex'));
         }
 
         $addressCodec = new AddressCodec();

@@ -24,10 +24,10 @@ class UnsignedInt512 extends UnsignedInt
     public static function fromJson(string|int $serializedJson): SerializedType
     {
         if (is_int($serializedJson)) {
-             $serializedJson = (string)$serializedJson;
+            $serializedJson = (string)$serializedJson;
         }
 
-        return new UnsignedInt512(Buffer::from($serializedJson));
+        return new UnsignedInt512(Buffer::from($serializedJson, 'hex'));
     }
 
     public function toBytes(): Buffer

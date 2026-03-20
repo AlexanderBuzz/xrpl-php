@@ -26,25 +26,23 @@ class MathUtilities
 
     public static function computePublicKeyHash(Buffer $bytes): Buffer
     {
-        $binaryValue = hex2bin($bytes->toString());
-        $hash256 = hash('sha256', $binaryValue, true);
+        $hash256 = hash('sha256', $bytes->toUtf8(), true);
         $hash160 = hash('ripemd160', $hash256, true);
-        $hexValue = bin2hex($hash160);
 
-        return Buffer::from($hexValue)->slice(0, 32);
+        return Buffer::from($hash160);
     }
 
     public static function sha512Half(Buffer|string $input): Buffer
     {
-        if(!is_string($input)) {
-            $input = $input->toString();
+        if ($input instanceof Buffer) {
+            $input = $input->toUtf8();
+        } else if (preg_match('/^[0-9a-fA-F]+$/', $input)) {
+            $input = hex2bin($input);
         }
 
-        $binaryValue = hex2bin($input);
-        $binaryHash = hash('sha512', $binaryValue, true);
-        $hexValue = bin2hex($binaryHash);
+        $binaryHash = hash('sha512', $input, true);
 
-        return Buffer::from($hexValue)->slice(0, 32);
+        return Buffer::from(substr($binaryHash, 0, 32));
     }
 
     /**

@@ -162,18 +162,14 @@ class BaseX
             $it4++;
         }
 
-        $vch = Buffer::from(str_repeat('00', $zeroes + ($size - $it4)));
-        $vch = $vch->toArray();
+        $vch = array_fill(0, $zeroes + ($size - $it4), 0);
         $j = $zeroes;
 
         while ($it4 !== $size) {
             $vch[$j++] = $b256[$it4++];
         }
 
-        $hexStr = join('', array_map(fn($item) => sprintf('%02X', $item), $vch));
-
-        //decimalArrayToHexStr
-        return Buffer::from($hexStr);
+        return Buffer::from($vch);
     }
 
     /**
