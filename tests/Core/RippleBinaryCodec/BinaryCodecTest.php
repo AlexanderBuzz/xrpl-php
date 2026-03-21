@@ -75,4 +75,8 @@ final class BinaryCodecTest extends TestCase
         );
     }
 
+    public function testIssue36UNLReportDecoding(): void
+    {
+        $this->markTestIncomplete('Xahau UNLReport blob decoding requires further synchronization of hooksDefinitions.json');
+    }
 }

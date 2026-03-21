@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - No released changes yet.
 
+## [1.1.0] - 2026-03-09
+### Added
+- **Xahau/Hooks Support**:
+  - Expanded `hooksDefinitions.json` with missing Xahau fields: `NetworkID`, `GovernanceFlags`, `Amount2`, `RewardAccumulator`, `RewardLgrFirst`, `RewardLgrLast`, `ImportSequence`, `ActiveAccounts`.
+  - New transaction models: `GenesisMint`, `Import`, `ClaimReward`, `UNLReport`.
+
 ## [1.0.0] - 2026-03-09
 ### Added
 - **Xahau/Hooks Support**:

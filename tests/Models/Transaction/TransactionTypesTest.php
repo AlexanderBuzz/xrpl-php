@@ -46,6 +46,10 @@ use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\URITokenCreate
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\URITokenCancelSellOffer;
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\SetHook;
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\Invoke;
+use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\GenesisMint;
+use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\Import;
+use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\ClaimReward;
+use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\UNLReport;
 
 final class TransactionTypesTest extends TestCase
 {
@@ -259,5 +263,57 @@ final class TransactionTypesTest extends TestCase
         ]);
         $model = new Invoke($tx);
         $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testGenesisMint(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'GenesisMint',
+            'Amount' => '1000000',
+            'Destination' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+        ]);
+        $model = new GenesisMint($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testImport(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'Import',
+            'Blob' => '64617461',
+        ]);
+        $model = new Import($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testClaimReward(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'ClaimReward',
+            'Issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+        ]);
+        $model = new ClaimReward($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testUNLReport(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'UNLReport',
+            'ActiveAccounts' => [
+                [
+                    'ActiveAccount' => [
+                        'Account' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+                    ]
+                ]
+            ],
+        ]);
+        $model = new UNLReport($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testUNLReportWithInt64(): void
+    {
+        $this->markTestIncomplete('The Issue #36 blob uses Int64 RewardAccumulator (11:9) which is not in official Xahau definitions.');
     }
 }

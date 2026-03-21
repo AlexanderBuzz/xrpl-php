@@ -1,6 +1,6 @@
 # PHP XRPL
 
-PHP SDK / Client Library to interact with the XRP Ledger. It offers all the functionality available in the JavaScript 
+PHP SDK / Client Library to interact with the XRP Ledger and the Xahau Network. It offers all the functionality available in the JavaScript 
 and Java Versions emphasizing robustness and code readability for those interested in looking under the 
 hood and getting into the nitty-gritty of XRPL development.
 
@@ -11,11 +11,12 @@ hood and getting into the nitty-gritty of XRPL development.
 
 ## Features
 
-1. Managing keys & creating test credentials
+1. Managing & creating keys and wallets
 2. Submitting transactions to the XRP Ledger
 3. Sending requests to observe the ledger
 4. Creating and signing transactions (e.g. Payments) to modify the ledger state
 5. Parsing ledger data into more convenient formats
+6. Xahau Network Compatibility(Hooks, UNLReport, GenesisMint, etc.)
 
 ## Installation
 

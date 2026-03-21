@@ -27,7 +27,7 @@ class UnsignedInt96 extends UnsignedInt
              $serializedJson = (string)$serializedJson;
         }
 
-        return new UnsignedInt96(Buffer::from($serializedJson));
+        return new UnsignedInt96(Buffer::from($serializedJson, 'hex'));
     }
 
     public function toBytes(): Buffer

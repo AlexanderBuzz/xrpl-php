@@ -16,6 +16,8 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class UnsignedInt16 extends UnsignedInt
 {
+    public const WIDTH = 2;
+
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt16
     {
         $bytes  = $parser->readUInt16();
@@ -28,7 +30,7 @@ class UnsignedInt16 extends UnsignedInt
             $serializedJson = (int) json_decode($serializedJson);
         }
 
-        return new UnsignedInt16(Buffer::from(dechex($serializedJson)));
+        return new UnsignedInt16(Buffer::from(str_pad(dechex($serializedJson), 4, '0', STR_PAD_LEFT), 'hex'));
     }
 
     public function toBytes(): Buffer

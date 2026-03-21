@@ -53,7 +53,7 @@ class Currency extends Hash160
             throw new \Exception('Unsupported Currency representation: ' . $serializedJson);
         }
 
-        $bytes = strlen($serializedJson) === 3 ? static::isoToBytes($serializedJson) : Buffer::from($serializedJson);
+        $bytes = strlen($serializedJson) === 3 ? static::isoToBytes($serializedJson) : Buffer::from($serializedJson, 'hex');
 
         return new Currency($bytes);
     }

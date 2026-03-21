@@ -35,6 +35,6 @@ class Hash160 extends Hash
 
     public static function fromJson(string $serializedJson): SerializedType
     {
-        return new Hash160(Buffer::from($serializedJson));
+        return new Hash160(Buffer::from($serializedJson, 'hex'));
     }
 }

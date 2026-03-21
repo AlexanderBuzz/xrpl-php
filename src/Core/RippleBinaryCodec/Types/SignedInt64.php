@@ -10,7 +10,7 @@ class SignedInt64 extends SignedInt
 {
     public const WIDTH = 8;
 
-    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SignedInt64
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
         return new SignedInt64($parser->readUInt64());
     }
