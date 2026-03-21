@@ -16,7 +16,7 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
 class UnsignedInt8 extends UnsignedInt
 {
-    const WIDTH = 32 / 8; //4
+    public const WIDTH = 1;
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt8
     {

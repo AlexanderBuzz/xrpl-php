@@ -24,34 +24,17 @@ class FieldHeader implements Hashable
                 $header[] = $this->typeCode << 4;
                 $header[] = $this->fieldCode;
             }
+        } else if ($this->fieldCode < 16) {
+            // 2 byte case where first byte contains filler+field code, second byte contains typeCode
+            $header[] = $this->fieldCode;
+            $header[] = $this->typeCode;
         } else {
-            if ($this->fieldCode < 16) {
-                // 2 byte case where first byte contains filler+field code, second byte contains typeCode
-                $header[] = $this->fieldCode;
-                $header[] = $this->typeCode;
-            } else {
-                // 3 byte case where first byte is filler, 2nd byte is type code, third byte is field code
-                $header[] = 0;
-                $header[] = $this->typeCode;
-                $header[] = $this->fieldCode;
-            }
+            // 3 byte case where first byte is filler, 2nd byte is type code, third byte is field code
+            $header[] = 0;
+            $header[] = $this->typeCode;
+            $header[] = $this->fieldCode;
         }
         return Buffer::from($header);
-        /*
-         *  header = []
-        if self.type_code < 16:
-            if self.field_code < 16:
-                header.append(self.type_code << 4 | self.field_code)
-            else:
-                header.append(self.type_code << 4)
-                header.append(self.field_code)
-        elif self.field_code < 16:
-            header += [self.field_code, self.type_code]
-        else:
-            header += [0, self.type_code, self.field_code]
-
-        return bytes(header)
-         */
     }
 
     /**
@@ -88,7 +71,7 @@ class FieldHeader implements Hashable
 
     public function hash()
     {
-        return $this->typeCode . $this->fieldCode;
+        return $this->typeCode . ":" . $this->fieldCode;
     }
 
     public function equals($obj): bool
