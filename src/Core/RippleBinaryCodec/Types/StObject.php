@@ -34,6 +34,12 @@ class StObject extends SerializedType
 
     public const DESTINATION_TAG = 'DestinationTag';
 
+    /**
+     * Set when the object was parsed, so that toJson() resolves field names
+     * against the same definitions the parser used.
+     */
+    protected ?Definitions $definitions = null;
+
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
@@ -53,14 +59,17 @@ class StObject extends SerializedType
             }
         }
 
-        return new StObject($binarySerializer->getBytes());
+        $object = new StObject($binarySerializer->getBytes());
+        $object->definitions = $parser->getDefinitions();
+
+        return $object;
     }
 
-    public static function fromJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson, ?Definitions $definitions = null): SerializedType
     {
         $json = json_decode($serializedJson, true);
         $binarySerializer = new BinarySerializer(Buffer::alloc(0));
-        $definitions = Definitions::getInstance();
+        $definitions ??= Definitions::getInstance();
 
         $isUnlModify = false;
 
@@ -96,6 +105,10 @@ class StObject extends SerializedType
 
             if ($serializedTypeInstance instanceof UnsignedInt64 && UnsignedInt64::isBase10Field($key)) {
                 $fieldValue = UnsignedInt64::fromBase10((string)$value);
+            } else if ($serializedTypeInstance instanceof StObject || $serializedTypeInstance instanceof StArray) {
+                // Only these two resolve field names, so only they need to know
+                // which network's definitions are in play.
+                $fieldValue = $serializedTypeInstance::fromJson($value, $definitions);
             } else {
                 $fieldValue = $serializedTypeInstance::fromJson($value);
             }
@@ -112,7 +125,8 @@ class StObject extends SerializedType
 
     public function toJson(): array|string
     {
-        $binaryParser = new BinaryParser($this->bytes->toString());
+        $definitions = $this->definitions ?? Definitions::getInstance();
+        $binaryParser = new BinaryParser($this->bytes->toString(), $definitions);
         $accumulator = [];
 
         while (!$binaryParser->end()) {
@@ -132,7 +146,7 @@ class StObject extends SerializedType
             if(is_array($node)) {
                 $accumulator[$fieldInstance->getName()] = $node;
             } else {
-                $mappedNode = Definitions::getInstance()->mapValueToSpecificField($fieldInstance->getName(), $node);
+                $mappedNode = $definitions->mapValueToSpecificField($fieldInstance->getName(), $node);
                 $accumulator[$fieldInstance->getName()] = (!empty($mappedNode)) ? $mappedNode : $node;
             }
         }

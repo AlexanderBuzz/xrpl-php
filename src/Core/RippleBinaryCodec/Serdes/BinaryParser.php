@@ -26,15 +26,32 @@ class BinaryParser
 {
     private Buffer $bytes;
 
+    private ?Definitions $definitions;
+
     /**
      *
      *
      * @param string $hexBytes
      * @throws Exception
      */
-    public function __construct(string $hexBytes)
+    public function __construct(string $hexBytes, ?Definitions $definitions = null)
     {
         $this->bytes = Buffer::from($hexBytes, 'hex');
+        $this->definitions = $definitions;
+    }
+
+    /**
+     * The definitions this parser reads field headers against.
+     *
+     * Defaults to the bundled XRP Ledger definitions. Another network passes
+     * its own set in, and it travels with the parser through the whole decode.
+     *
+     * @return Definitions
+     * @throws \Exception
+     */
+    public function getDefinitions(): Definitions
+    {
+        return $this->definitions ??= Definitions::getInstance();
     }
 
     /**
@@ -201,9 +218,9 @@ class BinaryParser
     public function readField(): FieldInstance
     {
         $fieldHeader = $this->readFieldHeader();
-        $fieldName = Definitions::getInstance()->getFieldNameFromHeader($fieldHeader);
+        $fieldName = $this->getDefinitions()->getFieldNameFromHeader($fieldHeader);
 
-        return Definitions::getInstance()->getFieldInstance($fieldName);
+        return $this->getDefinitions()->getFieldInstance($fieldName);
     }
 
     /**

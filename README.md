@@ -50,8 +50,40 @@ library resolves the overlap in favour of the XRP Ledger.
 - `hooksDefinitions.json` predates the current Xahau release and is missing
   `Remit`, `SetRemarks`, `Cron` and `CronSet`.
 
-A network aware `Definitions` instance that resolves this properly is planned
-for the next release.
+### Using your own definitions
+
+Since 2.1.0 the codec works against definitions handed in from outside, so a
+package for another network can supply its own `definitions.json` instead of the
+bundled one. Every entry point takes an optional `Definitions` instance and
+falls back to the XRP Ledger when it is omitted:
+
+```php
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
+
+$definitions = Definitions::fromFile('/path/to/xahau-definitions.json');
+// or Definitions::fromArray($decodedJson);
+
+$codec  = new BinaryCodec($definitions);
+$wallet = Wallet::fromSeed($seed, $definitions);
+$client = new JsonRpcClient('https://xahau.network', null, null, 3.0, $definitions);
+```
+
+A node serves its own definitions, so they can be fetched rather than vendored:
+
+```console
+curl -X POST https://xahau.network -H 'Content-Type: application/json' \
+  -d '{"method":"server_definitions","params":[{}]}'
+```
+
+The definitions travel through the whole encode and decode, including nested
+objects and arrays. They do not touch the shared default instance, so a process
+can talk to both networks at once.
+
+A dedicated Xahau package building on this is planned; the Xahau types will then
+move out of this library.
 
 ## Installation
 

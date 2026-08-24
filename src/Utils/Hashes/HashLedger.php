@@ -6,6 +6,7 @@ use Exception;
 use Hardcastle\XRPL_PHP\Core\HashPrefix;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
@@ -27,19 +28,28 @@ class HashLedger
     }
 
     /**
+     * Hash of a signed transaction.
+     *
+     * When given an array the blob that gets hashed is produced here, so the
+     * definitions decide the result - pass the ones the transaction was built
+     * with, otherwise the hash is silently wrong for another network.
+     *
      * @param array|string $tx
+     * @param Definitions|null $definitions
      * @return string
      * @throws Exception
      */
-    public static function hashSignedTx(array|string $tx): string
+    public static function hashSignedTx(array|string $tx, ?Definitions $definitions = null): string
     {
-        $_this = self::getInstance();
+        $binaryCodec = ($definitions === null)
+            ? self::getInstance()->binaryCodec
+            : new BinaryCodec($definitions);
 
         if (is_string($tx)) {
             $txBlob = $tx;
-            $txObject = $_this->binaryCodec->decode($tx);
+            $txObject = $binaryCodec->decode($tx);
         } else {
-            $txBlob = $_this->binaryCodec->encode($tx);
+            $txBlob = $binaryCodec->encode($tx);
             $txObject = $tx;
         }
 

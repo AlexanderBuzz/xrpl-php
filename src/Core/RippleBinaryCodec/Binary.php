@@ -10,14 +10,40 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec;
 
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
 class Binary
 {
+    protected ?Definitions $definitions = null;
+
+    /**
+     * The definitions this codec works against.
+     *
+     * Defaults to the bundled XRP Ledger definitions. A package for another
+     * network passes its own set into the constructor.
+     *
+     * @param Definitions|null $definitions
+     * @throws \Exception
+     */
+    public function __construct(?Definitions $definitions = null)
+    {
+        $this->definitions = $definitions;
+    }
+
+    /**
+     * @return Definitions
+     * @throws \Exception
+     */
+    public function getDefinitions(): Definitions
+    {
+        return $this->definitions ??= Definitions::getInstance();
+    }
+
     public function makeParser(string $bytes): BinaryParser
     {
-        return new BinaryParser($bytes);
+        return new BinaryParser($bytes, $this->getDefinitions());
     }
 
     /*

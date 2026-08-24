@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [2.1.0] - unreleased
+
+### Added
+- The binary codec works against definitions handed in from outside, so a package
+  for another network can supply its own `definitions.json`. `Definitions::fromArray()`
+  and `Definitions::fromFile()` build such a set, and `BinaryCodec`, `BinaryParser`,
+  `Wallet` and `JsonRpcClient` all take an optional `Definitions` instance. Omitting
+  it keeps the bundled XRP Ledger definitions, so existing code is unaffected.
+  The definitions travel through the whole encode and decode, including nested
+  objects and arrays, and never touch the shared default instance - one process can
+  talk to both networks at once.
+- `HashLedger::hashSignedTx()`, `Sugar\getLastLedgerSequence()` and
+  `Sugar\isAccountDelete()` take an optional `Definitions` instance as well, and
+  the call sites pass the ones of the client or wallet in hand.
+- README section "Using your own definitions".
+
+### Fixed
+- `Wallet::sign()` encoded against the wallet's definitions but hashed the result
+  through the default ones. Hashing decodes the blob to verify a signature is
+  present, and decoding resolves every field, so signing a transaction carrying a
+  field only the injected definitions know threw inside `sign()`.
+- `HashLedger::hashSignedTx()` produces the hashed blob itself when handed an
+  array. With the wrong definitions that yields a different blob and therefore a
+  wrong hash, with nothing to indicate it.
+
 ## [2.0.0] - 2026-08-24
 
 Brings the library to parity with rippled 3.3.0 / ripple-binary-codec 5.0.0. The

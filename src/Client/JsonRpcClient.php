@@ -25,6 +25,7 @@ use Hardcastle\XRPL_PHP\Models\BaseResponse;
 use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\Ledger\LedgerRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\SubmitResponse;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
@@ -60,7 +61,8 @@ class JsonRpcClient
         string $connectionUrl,
         ?float $feeCushion = null,
         ?string $maxFeeXrp = null,
-        private readonly float $timeout = 3.0
+        private readonly float $timeout = 3.0,
+        private ?Definitions $definitions = null
     ) {
         $this->connectionUrl = $this->getNetworkUrl($connectionUrl);
 
@@ -273,6 +275,20 @@ class JsonRpcClient
     /**
      * @return string
      */
+    /**
+     * The definitions transactions of this connection are encoded against.
+     *
+     * Defaults to the bundled XRP Ledger definitions; a client for another
+     * network is constructed with that network's set.
+     *
+     * @return Definitions
+     * @throws Exception
+     */
+    public function getDefinitions(): Definitions
+    {
+        return $this->definitions ??= Definitions::getInstance();
+    }
+
     public function getConnectionUrl(): string
     {
         return $this->connectionUrl;

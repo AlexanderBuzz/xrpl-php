@@ -32,7 +32,7 @@ class BinaryCodec extends Binary
             $jsonObject = json_encode($jsonObject);
         }
 
-        return StObject::fromJson($jsonObject)->toString();
+        return StObject::fromJson($jsonObject, $this->getDefinitions())->toString();
     }
 
     /**
@@ -148,6 +148,6 @@ class BinaryCodec extends Binary
      */
     private function isSigningField(string $fieldName): bool
     {
-        return Definitions::getInstance()->getFieldInstance($fieldName)->isSigningField();
+        return $this->getDefinitions()->getFieldInstance($fieldName)->isSigningField();
     }
 }
