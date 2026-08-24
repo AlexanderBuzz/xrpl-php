@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\Transaction\SubmitRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\SubmitResponse;
@@ -27,12 +28,12 @@ function submitRequest(
         throw new Exception('Transaction must be signed');
     }
 
-    $binaryCodec = new BinaryCodec();
+    $binaryCodec = new BinaryCodec($client->getDefinitions());
     $signedTxEncoded = $binaryCodec->encode($signedTransaction);
 
     $submitRequest = new SubmitRequest(
         txBlob: $signedTxEncoded,
-        failHard: isAccountDelete($signedTransaction) || $failHard
+        failHard: isAccountDelete($signedTransaction, $client->getDefinitions()) || $failHard
     );
 
     return $client->request($submitRequest);
@@ -128,7 +129,7 @@ function getSignedTx(
 ): array
 {
     if (is_string($transaction)) {
-        $binaryCodec = new BinaryCodec();
+        $binaryCodec = new BinaryCodec($client->getDefinitions());
         $tx = $binaryCodec->decode($transaction);
     } else if ($transaction instanceof Transaction) {
         $tx = $transaction->toArray();
@@ -157,10 +158,13 @@ function getSignedTx(
  * @param array|string $tx
  * @return int|null
  */
-function getLastLedgerSequence(array|string $tx): int|null
+function getLastLedgerSequence(array|string $tx, ?Definitions $definitions = null): int|null
 {
     if (is_string($tx)) {
-        $binaryCodec = new BinaryCodec();
+        // Decoding resolves every field in the blob, so a transaction from
+        // another network needs that network's definitions even though
+        // LastLedgerSequence itself carries the same ordinal everywhere.
+        $binaryCodec = new BinaryCodec($definitions);
         $tx = $binaryCodec->decode($tx);
     }
 
@@ -173,10 +177,10 @@ function getLastLedgerSequence(array|string $tx): int|null
  * @param array|string $tx
  * @return bool
  */
-function isAccountDelete(array|string $tx): bool
+function isAccountDelete(array|string $tx, ?Definitions $definitions = null): bool
 {
     if (is_string($tx)) {
-        $binaryCodec = new BinaryCodec();
+        $binaryCodec = new BinaryCodec($definitions);
         $tx = $binaryCodec->decode($tx);
     }
 
@@ -229,14 +233,14 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submitAndWait')) {
     {
         $signedTx = getSignedTx($client, $transaction, $autofill, $wallet);
 
-        $lastLedger = getLastLedgerSequence($signedTx);
+        $lastLedger = getLastLedgerSequence($signedTx, $client->getDefinitions());
         if(is_null($lastLedger)) {
             throw new Exception('Transaction must contain a LastLedgerSequence value for reliable submission.');
         }
 
         $response = submitRequest($client, $signedTx, $failHard)->wait();
 
-        $txHash = HashLedger::hashSignedTx($signedTx);
+        $txHash = HashLedger::hashSignedTx($signedTx, $client->getDefinitions());
 
         return waitForFinalTransactionOutcome(
             $client,

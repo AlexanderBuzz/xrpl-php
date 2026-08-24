@@ -270,7 +270,7 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\autofill')) {
     ): array
     {
         if (is_string($transaction)) {
-            $binaryCodec = new BinaryCodec();
+            $binaryCodec = new BinaryCodec($client->getDefinitions());
             $tx = $binaryCodec->decode($transaction);
         } else if ($transaction instanceof Transaction) {
             $tx = $transaction->toArray();

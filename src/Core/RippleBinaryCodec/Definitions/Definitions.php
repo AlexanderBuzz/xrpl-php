@@ -55,41 +55,20 @@ class Definitions
     /**
      * Definitions constructor.
      *
+     * Without arguments this loads the bundled XRP Ledger definitions and adds
+     * the Xahau ones on top. Pass a definitions array to build an instance for
+     * a different network - see fromArray() and fromFile().
+     *
+     * @param array|null $definitions A decoded definitions.json
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(?array $definitions = null)
     {
-        $path = getenv('XRPL_PHP_DEFINITIONS_FILE_PATH') ?: __DIR__ . "/definitions.json";
-        if (file_exists($path)) {
-            $fileContents = file_get_contents($path);
-        } else {
-            throw new Exception("Definitions file not found.");
-        }
+        $this->definitions = $definitions ?? self::loadDefaultDefinitions();
 
-        $this->definitions = json_decode($fileContents, true);
-
-        $hooksPath = __DIR__ . "/../../../Hooks/hooksDefinitions.json";
-        if (file_exists($hooksPath)) {
-            $hooksDefinitions = json_decode(file_get_contents($hooksPath), true);
-
-            // Xahau reuses ordinals that the XRP Ledger assigns to different
-            // transaction types and fields (e.g. URITokenMint and
-            // XChainAddClaimAttestation are both 45, Xahau's Blob and the
-            // XRPL's DIDDocument are both Blob:26). The Xahau definitions are
-            // therefore only added where the XRPL has nothing of that name -
-            // they never overwrite a mainline entry. Encoding Xahau
-            // transactions keeps working; decoding an ambiguous ordinal
-            // resolves to the XRPL name.
-            $this->definitions['TYPES'] += $hooksDefinitions['TYPES'];
-            $this->definitions['LEDGER_ENTRY_TYPES'] += $hooksDefinitions['LEDGER_ENTRY_TYPES'];
-            $this->definitions['TRANSACTION_RESULTS'] += $hooksDefinitions['TRANSACTION_RESULTS'] ?? [];
-            $this->definitions['TRANSACTION_TYPES'] += $hooksDefinitions['TRANSACTION_TYPES'] ?? [];
-
-            $knownFields = array_column($this->definitions['FIELDS'], 0);
-            foreach ($hooksDefinitions['FIELDS'] as $field) {
-                if (!in_array($field[0], $knownFields, true)) {
-                    $this->definitions['FIELDS'][] = $field;
-                }
+        foreach (['TYPES', 'LEDGER_ENTRY_TYPES', 'TRANSACTION_RESULTS', 'TRANSACTION_TYPES', 'FIELDS'] as $section) {
+            if (!isset($this->definitions[$section])) {
+                throw new Exception("Definitions are missing the section {$section}.");
             }
         }
 
@@ -130,6 +109,86 @@ class Definitions
             // mainline field that shares its ordinal (see the merge above).
             $this->fieldIdNameMap[$fieldHeader->getTypeCode() . ":" . $fieldHeader->getFieldCode()] ??= $fieldName;
         }
+    }
+
+
+    /**
+     * Build an instance from a decoded definitions.json.
+     *
+     * This is the entry point for other networks: a Xahau package passes its
+     * own definitions here instead of relying on the bundled ones.
+     *
+     * @param array $definitions
+     * @return Definitions
+     * @throws Exception
+     */
+    public static function fromArray(array $definitions): Definitions
+    {
+        return new Definitions($definitions);
+    }
+
+    /**
+     * Build an instance from a definitions.json file.
+     *
+     * @param string $path
+     * @return Definitions
+     * @throws Exception
+     */
+    public static function fromFile(string $path): Definitions
+    {
+        if (!file_exists($path)) {
+            throw new Exception("Definitions file not found: {$path}");
+        }
+
+        $definitions = json_decode(file_get_contents($path), true);
+        if (!is_array($definitions)) {
+            throw new Exception("Definitions file does not contain valid JSON: {$path}");
+        }
+
+        return new Definitions($definitions);
+    }
+
+    /**
+     * The bundled XRP Ledger definitions with the Xahau ones added on top.
+     *
+     * Xahau reuses ordinals that the XRP Ledger assigns to different
+     * transaction types and fields (e.g. URITokenMint and
+     * XChainAddClaimAttestation are both 45, Xahau's Blob and the XRPL's
+     * DIDDocument are both Blob:26). The Xahau definitions are therefore only
+     * added where the XRP Ledger has nothing of that name - they never
+     * overwrite a mainline entry. Encoding Xahau transactions keeps working;
+     * decoding an ambiguous ordinal resolves to the XRP Ledger name.
+     *
+     * @return array
+     * @throws Exception
+     */
+    private static function loadDefaultDefinitions(): array
+    {
+        $path = getenv('XRPL_PHP_DEFINITIONS_FILE_PATH') ?: __DIR__ . "/definitions.json";
+        if (!file_exists($path)) {
+            throw new Exception("Definitions file not found.");
+        }
+
+        $definitions = json_decode(file_get_contents($path), true);
+
+        $hooksPath = __DIR__ . "/../../../Hooks/hooksDefinitions.json";
+        if (file_exists($hooksPath)) {
+            $hooksDefinitions = json_decode(file_get_contents($hooksPath), true);
+
+            $definitions['TYPES'] += $hooksDefinitions['TYPES'];
+            $definitions['LEDGER_ENTRY_TYPES'] += $hooksDefinitions['LEDGER_ENTRY_TYPES'];
+            $definitions['TRANSACTION_RESULTS'] += $hooksDefinitions['TRANSACTION_RESULTS'] ?? [];
+            $definitions['TRANSACTION_TYPES'] += $hooksDefinitions['TRANSACTION_TYPES'] ?? [];
+
+            $knownFields = array_column($definitions['FIELDS'], 0);
+            foreach ($hooksDefinitions['FIELDS'] as $field) {
+                if (!in_array($field[0], $knownFields, true)) {
+                    $definitions['FIELDS'][] = $field;
+                }
+            }
+        }
+
+        return $definitions;
     }
 
     public static function getInstance(): Definitions

@@ -4,6 +4,7 @@ namespace Hardcastle\XRPL_PHP\Wallet;
 
 use Exception;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
@@ -33,9 +34,12 @@ class Wallet
         private readonly string $privateKey,
         private readonly ?string $seed,
         ?string $masterAddress = null,
+        ?Definitions $definitions = null,
     )
     {
-        $this->binaryCodec = new BinaryCodec();
+        // Signing runs through the binary codec, so a wallet for another
+        // network has to be built with that network's definitions.
+        $this->binaryCodec = new BinaryCodec($definitions);
 
         if (str_starts_with($publicKey, 'ED')) {
             $this->keyPairService = Ed25519KeyPairService::getInstance();
@@ -54,17 +58,20 @@ class Wallet
         }
     }
 
-    public static function generate(string $type = self::DEFAULT_ALGORITHM): Wallet
+    public static function generate(
+        string $type = self::DEFAULT_ALGORITHM,
+        ?Definitions $definitions = null
+    ): Wallet
     {
         $keyPairService = KeyPair::getKeyPairServiceByType($type);
         $seed = $keyPairService->generateSeed();
 
-        return Wallet::fromSeed($seed);
+        return Wallet::fromSeed($seed, $definitions);
     }
 
-    public static function fromSeed(string $seed): Wallet
+    public static function fromSeed(string $seed, ?Definitions $definitions = null): Wallet
     {
-        return self::deriveWallet($seed);
+        return self::deriveWallet($seed, $definitions);
     }
 
     /**
@@ -74,7 +81,7 @@ class Wallet
      * @return Wallet
      * @throws Exception
      */
-    private static function deriveWallet(string $seed): Wallet
+    private static function deriveWallet(string $seed, ?Definitions $definitions = null): Wallet
     {
         $decoded = CoreUtilities::decodeSeed($seed);
         $keyPairService = KeyPair::getKeyPairServiceByType($decoded['type']);
@@ -83,7 +90,9 @@ class Wallet
         return new Wallet(
             $keyPair->getPublicKey(),
             $keyPair->getPrivateKey(),
-            $seed
+            $seed,
+            null,
+            $definitions
         );
     }
 
@@ -140,7 +149,7 @@ class Wallet
 
         $this->checkTxSerialisation($serializedTx, $tx);
 
-        $hash = HashLedger::hashSignedTx($serializedTx);
+        $hash = HashLedger::hashSignedTx($serializedTx, $this->binaryCodec->getDefinitions());
 
         return [
             "tx_blob" => $serializedTx,

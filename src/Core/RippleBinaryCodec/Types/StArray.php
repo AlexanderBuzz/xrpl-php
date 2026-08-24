@@ -11,6 +11,7 @@
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
 use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
 
@@ -21,6 +22,9 @@ class StArray extends SerializedType
     public const ARRAY_END_MARKER_HEX = "F1";
 
     public const ARRAY_END_MARKER_NAME = "ArrayEndMarker";
+
+    /** @see StObject::$definitions */
+    protected ?Definitions $definitions = null;
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
@@ -41,27 +45,36 @@ class StArray extends SerializedType
 
         $binarySerializer->put(self::ARRAY_END_MARKER_HEX);
 
-        return new StArray($binarySerializer->getBytes());
+        $array = new StArray($binarySerializer->getBytes());
+        $array->definitions = $parser->getDefinitions();
+
+        return $array;
     }
 
-    public static function fromJson(string $serializedJson): SerializedType
+    public static function fromJson(string $serializedJson, ?Definitions $definitions = null): SerializedType
     {
         $json = json_decode($serializedJson);
         $bytes = Buffer::alloc(0);
 
         foreach($json as $item) {
-            $object = StObject::fromJson(json_encode($item));
+            $object = StObject::fromJson(json_encode($item), $definitions);
             $bytes->appendBuffer($object->toBytes());
         }
 
         $bytes->appendHex(self::ARRAY_END_MARKER_HEX);
 
-        return new StArray($bytes);
+        $array = new StArray($bytes);
+        $array->definitions = $definitions;
+
+        return $array;
     }
 
     public function toJson(): array|string
     {
-        $binaryParser = new BinaryParser($this->bytes->toString());
+        $binaryParser = new BinaryParser(
+            $this->bytes->toString(),
+            $this->definitions ?? Definitions::getInstance()
+        );
         $array = [];
 
         while (!$binaryParser->end()) {
