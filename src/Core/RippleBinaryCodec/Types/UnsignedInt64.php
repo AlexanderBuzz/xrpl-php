@@ -18,16 +18,66 @@ class UnsignedInt64 extends UnsignedInt
 {
     public const WIDTH = 8;
 
+    /**
+     * UInt64 is represented as a 16 character hex string in JSON, except for
+     * these MPToken amount fields, which rippled renders in base 10.
+     */
+    public const BASE_10_FIELDS = [
+        'MaximumAmount',
+        'OutstandingAmount',
+        'MPTAmount',
+        'LockedAmount',
+    ];
+
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt64
     {
         $hexValue = $parser->readUInt64()->toString();
         return new UnsignedInt64(Buffer::from($hexValue, 'hex'));
     }
 
+    /**
+     * Build a UInt64 from its JSON representation, which is a hex string
+     *
+     * @param string $serializedJson
+     * @return UnsignedInt64
+     * @throws \Exception
+     */
     public static function fromJson(string $serializedJson): UnsignedInt64
     {
-        $bigInteger = BigInteger::fromBase($serializedJson, 10);
+        if (!preg_match('/^[a-fA-F0-9]{1,16}$/', $serializedJson)) {
+            throw new \Exception("{$serializedJson} is not a valid hex-string");
+        }
+
+        return new UnsignedInt64(Buffer::from(str_pad($serializedJson, 16, '0', STR_PAD_LEFT), 'hex'));
+    }
+
+    /**
+     * Build a UInt64 from a base 10 string, used for the MPToken amount fields
+     *
+     * @param string $value
+     * @return UnsignedInt64
+     * @throws \Exception
+     */
+    public static function fromBase10(string $value): UnsignedInt64
+    {
+        if (!preg_match('/^[0-9]{1,20}$/', $value)) {
+            throw new \Exception("{$value} is not a valid base 10 string");
+        }
+
+        $bigInteger = BigInteger::fromBase($value, 10);
+
         return new UnsignedInt64(Buffer::from(str_pad($bigInteger->toBase(16), 16, '0', STR_PAD_LEFT), 'hex'));
+    }
+
+    /**
+     * Whether the given field is serialized as a base 10 string in JSON
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public static function isBase10Field(string $fieldName): bool
+    {
+        return in_array($fieldName, self::BASE_10_FIELDS, true);
     }
 
     public function toBytes(): Buffer
@@ -36,6 +86,26 @@ class UnsignedInt64 extends UnsignedInt
         $uint64HexStr = str_pad($hexStr, 16, "0", STR_PAD_LEFT);
 
         return Buffer::from($uint64HexStr, 'hex');
+    }
+
+    /**
+     * The JSON representation of a UInt64 is a 16 character hex string
+     *
+     * @return array|string|int
+     */
+    public function toJson(): array|string|int
+    {
+        return $this->toHex();
+    }
+
+    /**
+     * The base 10 representation, used for the MPToken amount fields
+     *
+     * @return string
+     */
+    public function toBase10(): string
+    {
+        return $this->value->toBase(10);
     }
 
     public function valueOf(): int|string

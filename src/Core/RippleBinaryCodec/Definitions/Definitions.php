@@ -25,6 +25,34 @@ class Definitions
     private array $fieldIdNameMap = [];
 
     /**
+     * Permissions that a DelegateSet transaction can grant on top of the
+     * transaction level permissions (which are the transaction type ordinal
+     * plus one). Mirrors granularPermissions in xrpl.js.
+     */
+    public const GRANULAR_PERMISSIONS = [
+        'TrustlineAuthorize' => 65537,
+        'TrustlineFreeze' => 65538,
+        'TrustlineUnfreeze' => 65539,
+        'AccountDomainSet' => 65540,
+        'AccountEmailHashSet' => 65541,
+        'AccountMessageKeySet' => 65542,
+        'AccountTransferRateSet' => 65543,
+        'AccountTickSizeSet' => 65544,
+        'PaymentMint' => 65545,
+        'PaymentBurn' => 65546,
+        'MPTokenIssuanceLock' => 65547,
+        'MPTokenIssuanceUnlock' => 65548,
+    ];
+
+    private array $delegatablePermissions = [];
+
+    /**
+     * Reverse lookups, built with "first definition wins" so that Xahau
+     * entries never shadow a mainline ordinal.
+     */
+    private array $reverseLookups = [];
+
+    /**
      * Definitions constructor.
      *
      * @throws Exception
@@ -43,17 +71,46 @@ class Definitions
         $hooksPath = __DIR__ . "/../../../Hooks/hooksDefinitions.json";
         if (file_exists($hooksPath)) {
             $hooksDefinitions = json_decode(file_get_contents($hooksPath), true);
-            $this->definitions['TYPES'] = array_merge($this->definitions['TYPES'], $hooksDefinitions['TYPES']);
-            $this->definitions['LEDGER_ENTRY_TYPES'] = array_merge($this->definitions['LEDGER_ENTRY_TYPES'], $hooksDefinitions['LEDGER_ENTRY_TYPES']);
-            $this->definitions['TRANSACTION_RESULTS'] = array_merge($this->definitions['TRANSACTION_RESULTS'], $hooksDefinitions['TRANSACTION_RESULTS'] ?? []);
-            $this->definitions['TRANSACTION_TYPES'] = array_merge($this->definitions['TRANSACTION_TYPES'], $hooksDefinitions['TRANSACTION_TYPES'] ?? []);
-            $this->definitions['FIELDS'] = array_merge($this->definitions['FIELDS'], $hooksDefinitions['FIELDS']);
+
+            // Xahau reuses ordinals that the XRP Ledger assigns to different
+            // transaction types and fields (e.g. URITokenMint and
+            // XChainAddClaimAttestation are both 45, Xahau's Blob and the
+            // XRPL's DIDDocument are both Blob:26). The Xahau definitions are
+            // therefore only added where the XRPL has nothing of that name -
+            // they never overwrite a mainline entry. Encoding Xahau
+            // transactions keeps working; decoding an ambiguous ordinal
+            // resolves to the XRPL name.
+            $this->definitions['TYPES'] += $hooksDefinitions['TYPES'];
+            $this->definitions['LEDGER_ENTRY_TYPES'] += $hooksDefinitions['LEDGER_ENTRY_TYPES'];
+            $this->definitions['TRANSACTION_RESULTS'] += $hooksDefinitions['TRANSACTION_RESULTS'] ?? [];
+            $this->definitions['TRANSACTION_TYPES'] += $hooksDefinitions['TRANSACTION_TYPES'] ?? [];
+
+            $knownFields = array_column($this->definitions['FIELDS'], 0);
+            foreach ($hooksDefinitions['FIELDS'] as $field) {
+                if (!in_array($field[0], $knownFields, true)) {
+                    $this->definitions['FIELDS'][] = $field;
+                }
+            }
         }
 
         $this->typeOrdinals = $this->definitions['TYPES'];
         $this->ledgerEntryTypes = $this->definitions['LEDGER_ENTRY_TYPES'];
         $this->transactionResults = $this->definitions['TRANSACTION_RESULTS'];
         $this->transactionTypes = $this->definitions['TRANSACTION_TYPES'];
+
+        // A DelegateSet permission is either a granular permission or a
+        // transaction type ordinal incremented by one.
+        $this->delegatablePermissions = self::GRANULAR_PERMISSIONS;
+        foreach ($this->transactionTypes as $name => $ordinal) {
+            $this->delegatablePermissions[$name] = $ordinal + 1;
+        }
+
+        $this->reverseLookups = [
+            'LedgerEntryType' => $this->buildReverseLookup($this->ledgerEntryTypes),
+            'TransactionResult' => $this->buildReverseLookup($this->transactionResults),
+            'TransactionType' => $this->buildReverseLookup($this->transactionTypes),
+            'PermissionValue' => $this->buildReverseLookup($this->delegatablePermissions),
+        ];
 
         foreach ($this->definitions['FIELDS'] as $field) {
             $fieldName = $field[0];
@@ -67,8 +124,11 @@ class Definitions
             $fieldHeader = new FieldHeader($this->typeOrdinals[$fieldInfo->getType()], $fieldInfo->getNth());
 
             $this->fieldInfoMap[$fieldName] = $fieldInfo;
-            $this->fieldIdNameMap[$fieldHeader->getTypeCode() . ":" . $fieldHeader->getFieldCode()] = $fieldName;
             $this->fieldHeaderMap[$fieldName] = $fieldHeader;
+
+            // First definition wins, so a Xahau field never shadows the
+            // mainline field that shares its ordinal (see the merge above).
+            $this->fieldIdNameMap[$fieldHeader->getTypeCode() . ":" . $fieldHeader->getFieldCode()] ??= $fieldName;
         }
     }
 
@@ -103,6 +163,10 @@ class Definitions
 
     public function getFieldInstance(string $fieldName): FieldInstance
     {
+        if (!isset($this->fieldInfoMap[$fieldName])) {
+            throw new Exception("Field $fieldName not found in definitions.");
+        }
+
         $fieldInfo = $this->fieldInfoMap[$fieldName];
         $fieldHeader = $this->getFieldHeaderFromName($fieldName);
 
@@ -121,30 +185,48 @@ class Definitions
             case "TransactionType":
                 $lookup = $this->transactionTypes;
                 break;
+            case "PermissionValue":
+                $lookup = $this->delegatablePermissions;
+                break;
             default:
                 return $value;
         }
 
-        //TODO: In case the value is not found, should an exception be thrown?
-        return $lookup[$value] ?? $value;
+        if (isset($lookup[$value])) {
+            return $lookup[$value];
+        }
+
+        // An unknown name would otherwise be cast to the ordinal 0, which
+        // silently turns e.g. an unknown transaction type into a Payment.
+        if (!preg_match('/^-?\d+$/', $value)) {
+            throw new Exception("Unknown {$fieldName}: {$value}");
+        }
+
+        return $value;
     }
 
     public function mapValueToSpecificField(string $fieldName, string|int $value): string
     {
-        switch ($fieldName) {
-            case "LedgerEntryType":
-                $lookup = array_flip($this->ledgerEntryTypes);
-                break;
-            case "TransactionResult":
-                $lookup = array_flip($this->transactionResults);
-                break;
-            case "TransactionType":
-                $lookup = array_flip($this->transactionTypes);
-                break;
-            default:
-                return "";
+        if (!isset($this->reverseLookups[$fieldName])) {
+            return "";
         }
 
-        return $lookup[(int)$value] ?? "";
+        return $this->reverseLookups[$fieldName][(int)$value] ?? "";
+    }
+
+    /**
+     * Build a value => name lookup where the first name wins
+     *
+     * @param array $lookup
+     * @return array
+     */
+    private function buildReverseLookup(array $lookup): array
+    {
+        $reversed = [];
+        foreach ($lookup as $name => $ordinal) {
+            $reversed[$ordinal] ??= $name;
+        }
+
+        return $reversed;
     }
 }

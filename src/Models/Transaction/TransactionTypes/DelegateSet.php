@@ -11,18 +11,16 @@
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Vector256;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/accountdelete.html
+ * https://xrpl.org/delegateset.html
  */
-class AccountDelete extends BaseTransaction
+class DelegateSet extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Destination' => AccountId::class,
-        'DestinationTag' => UnsignedInt32::class,
-        'CredentialIDs' => Vector256::class,
+        'Authorize' => AccountId::class,
+        'Permissions' => StArray::class,
     ];
 }

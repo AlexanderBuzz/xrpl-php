@@ -10,21 +10,16 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/ammcreate.html
+ * https://xrpl.org/batch.html
  */
-class AmmBid extends BaseTransaction
+class Batch extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Asset' => Issue::class,
-        'Asset2' => Issue::class,
-        'BidMin' => Amount::class,
-        'BidMax' => Amount::class,
-        'AuthAccounts' => StArray::class
+        'RawTransactions' => StArray::class,
+        'BatchSigners' => StArray::class,
     ];
 }

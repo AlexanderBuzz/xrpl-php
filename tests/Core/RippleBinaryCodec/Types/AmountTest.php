@@ -150,7 +150,7 @@ final class AmountTest extends TestCase
     public function testDecodeZeroCurrencyAmount(): void
     {
         $hex = "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001";
-        $json = "{\"currency\":\"USD\",\"value\":\"0.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
+        $json = "{\"currency\":\"USD\",\"value\":\"0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
 
         $this->assertEquals(
             json_decode($json, true),
@@ -161,7 +161,7 @@ final class AmountTest extends TestCase
     public function testEncodeLargeCurrencyAmount(): void
     {
         $hex = "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001";
-        $json = "{\"currency\":\"USD\",\"value\":\"1111111111111111.0\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
+        $json = "{\"currency\":\"USD\",\"value\":\"1111111111111111\",\"issuer\":\"rrrrrrrrrrrrrrrrrrrrBZbvji\"}";
 
         $this->assertEquals(
             json_decode($json, true),
@@ -172,7 +172,7 @@ final class AmountTest extends TestCase
     public function testEdgeCases(): void
     {
         $hex = "EC2386F26FC0FFFF00000000000000000000000058504D000000000005BF25234D58ED48A3E44BB7F3D39AA7834A2905";
-        $json = "{\"currency\":\"XPM\",\"value\":\"99999999999999990000000000000000000000000000000000000000000000000000000000000000000000000000000.0\",\"issuer\":\"rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa\"}";
+        $json = "{\"currency\":\"XPM\",\"value\":\"99999999999999990000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"issuer\":\"rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa\"}";
 
         $this->assertEquals(
             json_decode($json, true),
@@ -180,7 +180,7 @@ final class AmountTest extends TestCase
         );
 
         $hex = "D82386F26FC0FFF65045575045570000000000000000000000000000797EF64BE4DC6DCBFAF5A993E28765441EB1C802";
-        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"999999999999999.0\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
+        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"999999999999999\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
 
         $this->assertEquals(
             json_decode($json, true),
@@ -188,11 +188,119 @@ final class AmountTest extends TestCase
         );
 
         $hex = "D8438D7EA4C680005045575045570000000000000000000000000000797EF64BE4DC6DCBFAF5A993E28765441EB1C802";
-        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"1000000000000000.0\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
+        $json = "{\"currency\":\"5045575045570000000000000000000000000000\",\"value\":\"1000000000000000\",\"issuer\":\"rUnQi6wgpPEFxJ4qJA8jJJZ8HeLtVjNBCV\"}";
 
         $this->assertEquals(
             json_decode($json, true),
             Amount::fromHex($hex)->toJson()
         );
+    }
+
+
+    // --- MPT amounts (MPTokensV1) ----------------------------------------
+    //
+    // An MPT amount is 33 bytes: a leading byte with bit 0x20 set to mark it as
+    // MPT and 0x40 for a positive value, then a 64 bit value, then the 24 byte
+    // MPTokenIssuanceID. The reference fixtures of ripple-binary-codec predate
+    // the amendment and contain no MPT amount at all.
+
+    private const MPT_ISSUANCE_ID = '000004C463C52827307480341125DA0577DEFC38405B0E3E';
+
+    public function testEncodeMptAmount(): void
+    {
+        $json = json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '10',
+        ]);
+
+        $this->assertEquals(
+            '60000000000000000A' . self::MPT_ISSUANCE_ID,
+            Amount::fromJson($json)->toHex()
+        );
+    }
+
+    public function testDecodeMptAmount(): void
+    {
+        $hex = '60000000000000000A' . self::MPT_ISSUANCE_ID;
+
+        $this->assertEquals(
+            [
+                'value' => '10',
+                'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            ],
+            Amount::fromHex($hex)->toJson()
+        );
+    }
+
+    public function testMptAmountRoundtrip(): void
+    {
+        foreach (['0', '1', '9223372036854775807'] as $value) {
+            $json = json_encode([
+                'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+                'value' => $value,
+            ]);
+
+            $decoded = Amount::fromHex(Amount::fromJson($json)->toHex())->toJson();
+
+            $this->assertEquals($value, $decoded['value']);
+            $this->assertEquals(self::MPT_ISSUANCE_ID, $decoded['mpt_issuance_id']);
+        }
+    }
+
+    /**
+     * An MPT amount is an integer count of the smallest unit, so a decimal
+     * point is not a rounding question but an invalid amount.
+     */
+    public function testMptAmountRejectsDecimals(): void
+    {
+        $this->expectExceptionMessage('is an illegal amount');
+
+        Amount::fromJson(json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '10.5',
+        ]));
+    }
+
+    public function testMptAmountRejectsNegativeValue(): void
+    {
+        $this->expectExceptionMessage('is an illegal amount');
+
+        Amount::fromJson(json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '-1',
+        ]));
+    }
+
+    /**
+     * The most significant bit of the 64 bit value is reserved.
+     */
+    public function testMptAmountRejectsValueAboveMaxInt64(): void
+    {
+        $this->expectExceptionMessage('is an illegal amount');
+
+        Amount::fromJson(json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '9223372036854775808',
+        ]));
+    }
+
+    /**
+     * XRP, IOU and MPT are told apart by the two top bits of the first byte.
+     * MPT and XRP both have 0x80 clear, so 0x20 is what separates them.
+     */
+    public function testMptIsNotMistakenForXrp(): void
+    {
+        $mpt = Amount::fromHex('60000000000000000A' . self::MPT_ISSUANCE_ID)->toJson();
+        $xrp = Amount::fromHex('400000000000000A')->toJson();
+
+        $this->assertIsArray($mpt);
+        $this->assertIsString($xrp);
+    }
+
+    public function testRejectsUnknownAmountObject(): void
+    {
+        $this->expectExceptionMessage('Invalid type to construct an Amount');
+
+        Amount::fromJson(json_encode(['value' => '10', 'nonsense' => 'x']));
     }
 }

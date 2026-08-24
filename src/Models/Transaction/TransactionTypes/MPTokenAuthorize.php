@@ -10,18 +10,17 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash192;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/ammvote.html
+ * https://xrpl.org/mptokenauthorize.html
  */
-class AmmVote extends BaseTransaction
+class MPTokenAuthorize extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Asset' => Issue::class,
-        'Asset2' => Issue::class,
-        'TradingFee' => UnsignedInt16::class
+        'MPTokenIssuanceID' => Hash192::class,
+        'Holder' => AccountId::class,
     ];
 }

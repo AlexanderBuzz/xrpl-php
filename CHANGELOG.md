@@ -5,8 +5,133 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
-- No released changes yet.
+## [2.0.0] - 2026-08-24
+
+Brings the library to parity with rippled 3.3.0 / ripple-binary-codec 5.0.0. The
+binary codec is now verified against the official `codec-fixtures.json` of
+xrpl.js (34 transactions and 261 ledger objects, all encoding to the exact
+reference binary and decoding back to the reference JSON).
+
+### Fixed
+- **XChain transactions could not be serialized at all.** `SerializedType::getTypeByName()`
+  registered the bridge type as `XchainBridge`, while `definitions.json` spells it
+  `XChainBridge`, so all eight XChain transaction types failed with
+  `unsupported type XChainBridge`.
+- **AMM transactions were silently serialized as Payments.** The model classes were
+  named `AmmBid`, `AmmCreate`, … instead of `AMMBid`, `AMMCreate`, …, and an unknown
+  transaction type name was cast to the ordinal `0`. They are renamed, and an
+  unknown `TransactionType`, `LedgerEntryType`, `TransactionResult` or
+  `PermissionValue` now raises an exception instead of falling back to `0`.
+- **Xahau definitions shadowed XRPL definitions.** `hooksDefinitions.json` was merged
+  with `array_merge`, so Xahau entries overwrote mainline entries that share an
+  ordinal. Decoding produced `URITokenCreateSellOffer` for `XChainCreateBridge`,
+  `ObjectID` for `AMMID`, `OfferID` for `DomainID`, `EscrowID` for `VaultID`,
+  `Blob` for `DIDDocument` and `HookNamespaces` for `CredentialIDs`. Xahau entries
+  are now only added where the XRP Ledger has no entry of that name.
+  Encoding Xahau transactions is byte for byte unaffected. Decoding stays ambiguous
+  for the ordinals both networks use: `URITokenMint`, `URITokenBurn`, `URITokenBuy`,
+  `URITokenCreateSellOffer` and `URITokenCancelSellOffer` now decode to their XRPL
+  counterparts (`XChainAddClaimAttestation`, `XChainAddAccountCreateAttestation`,
+  `XChainModifyBridge`, `XChainCreateBridge`, `DIDSet`), and the Xahau `Blob` field
+  decodes as `DIDDocument`. Only a network aware `Definitions` instance can resolve
+  this; the previous behaviour resolved it the other way around and broke the XRPL.
+- `Vector256::toJson()` returned a JSON encoded string instead of an array, so every
+  ledger object with `Indexes`, `Hashes` or `Amendments` decoded incorrectly.
+- `UnsignedInt64::fromJson()` parsed its input as base 10, which made hex values such
+  as the `AssetPrice` of an `OracleSet` throw a `NumberFormatException`.
+- Token amounts were rendered with a trailing `.0` (`"10000.0"` instead of `"10000"`).
+- `NFTokenCreateOffer` declared `NFTokenId`, which does not exist in `definitions.json`;
+  the field is `NFTokenID`. Creating an NFT offer was impossible either way.
+- `PaymentChannelCreate` declared `ChancelAfter` instead of `CancelAfter`.
+- `CheckChancel` is renamed to `CheckCancel`, which makes the class autoloadable and
+  the transaction type usable.
+- `AMMDelete` declared `Amount`/`Amount2` instead of `Asset`/`Asset2`, `AMMWithdraw`
+  declared `LPTokenOut` instead of `LPTokenIn`, and `AMMDeposit` was missing `TradingFee`.
+- `"Path"` was mapped to `Issue::class` in the type map.
+- The Devnet JSON-RPC endpoint in `Networks` used the `wss://` scheme.
+- `autofill()` did not know that `AMMCreate` pays one owner reserve as its
+  transaction cost instead of the network fee, so every AMMCreate was rejected with
+  `telINSUF_FEE_P`. The owner reserve is now used for `AccountDelete` and
+  `AMMCreate` alike, and `maxFeeXrp` no longer caps it.
+- The `EscrowFinish` fee calculation computed the fulfillment size as
+  `strlen($tx['Fulfillment'] / 2)` instead of `strlen($tx['Fulfillment']) / 2`. The
+  hex string was cast to a number, so the size was always 1 and the fee too low.
+
+### Added
+- **MPTokensV1** (live on Mainnet): `MPTokenIssuanceCreate`, `MPTokenIssuanceDestroy`,
+  `MPTokenIssuanceSet`, `MPTokenAuthorize`. `Amount` and `Issue` now serialize MPT
+  values (`{"mpt_issuance_id": …, "value": …}`).
+- **Credentials** (live on Mainnet): `CredentialCreate`, `CredentialAccept`,
+  `CredentialDelete`, plus `CredentialIDs` on `Payment`, `AccountDelete`,
+  `EscrowFinish` and `PaymentChannelClaim`, and `AuthorizeCredentials` /
+  `UnauthorizeCredentials` on `DepositPreauth`.
+- **PermissionedDomains** (live on Mainnet): `PermissionedDomainSet`,
+  `PermissionedDomainDelete`.
+- **PermissionedDEX** (live on Mainnet): `DomainID` on `OfferCreate` and `Payment`.
+- **AMMClawback** and **NFTokenModify** (both live on Mainnet).
+- **Batch** and **DelegateSet** (amendments not yet enabled on Mainnet). `DelegateSet`
+  accepts granular permission names such as `AccountDomainSet` as well as transaction
+  level permissions.
+- New serialized types `Hash192` (for `MPTokenIssuanceID` and `ShareMPTID`) and
+  `Number` (STNumber, the 12 byte mantissa/exponent type used by the Vault and
+  Lending Protocol objects).
+- Missing common fields `NetworkID` and `Delegate` on `BaseTransaction`.
+- Missing fields on existing models: `Clawback.Holder`, `NFTokenMint.Amount`/
+  `Destination`/`Expiration`, `XChainClaim.DestinationTag`,
+  `XChainAddAccountCreateAttestation.XChainAccountCreateCount`/`SignatureReward`.
+- Tests: `CodecFixturesTest` (conformance against the xrpl.js reference fixtures),
+  `TransactionRoundtripTest` (encode/decode and signing for every affected type),
+  `LedgerObjectFixturesTest` (the new ledger object types, captured from Testnet
+  because the reference fixtures predate the amendments), `DefinitionsMergeTest`
+  (pins that Xahau definitions never shadow mainline ones), `NumberTest`,
+  `Hash192Test` and MPT amount cases in `AmountTest`.
+- Examples `examples/mptoken.php`, `examples/permissioned-domain.php`,
+  `examples/amm-clawback.php` and `examples/nftoken-modify.php`. All four were run
+  against Testnet; every transaction returned `tesSUCCESS`.
+
+### Security
+- `guzzlehttp/guzzle` was locked to 7.10.0, which carries 13 advisories including
+  one of high severity (CVE-2026-69246, noncanonical hosts bypassing host-based
+  checks). The constraint is raised from `^7.4` to `^7.15.2`, the first release in
+  which all of them are fixed, and the lock now holds 7.15.5 and psr7 2.13.1.
+  `composer audit` is clean.
+
+### Changed
+- The lock file was out of date since the buffer bump: it pinned
+  `hardcastle/buffer` 1.0.0 while composer.json required `^1.0.1`, so a fresh
+  `composer install` failed. Regenerated; buffer is now 1.0.1 and brick/math 0.14.8.
+- `composer.json` declares `"php": "^8.2"`. It only had `config.platform`, which is
+  a development setting and does not constrain installs. 8.2 is what CI tests.
+- `brick/math` is narrowed from `>=0.11 <0.18` to `>=0.11 <0.15`. The library uses
+  `BigDecimal::getIntegralPart()` and `getFractionalPart()`, which 0.15 removes and
+  0.16 reintroduces with different semantics. Resolution is unchanged in practice,
+  because `hardcastle/buffer` already caps brick/math at `^0.14` - the old upper
+  bound claimed a compatibility that does not exist.
+- **Breaking:** the JSON representation of a `UInt64` is now a 16 character hex
+  string, as rippled and the reference SDKs produce it, instead of a decimal string.
+  Fields `MaximumAmount`, `OutstandingAmount`, `MPTAmount` and `LockedAmount` stay
+  base 10. `UnsignedInt64::fromJson()` expects hex; use `UnsignedInt64::fromBase10()`
+  for decimal input.
+- **Breaking:** the AMM model classes are renamed from `Amm*` to `AMM*`. The old
+  names never produced a valid AMM transaction.
+- `Sugar\fetchAccountDeleteFee()` is deprecated in favour of
+  `Sugar\fetchOwnerReserveFee()`; the fee is not specific to AccountDelete. The old
+  function delegates to the new one and keeps working.
+- `definitions.json` is synchronized with ripple-binary-codec 5.0.0: added the fields
+  `ReferenceHolding`, `TakerGetsMPT` and `TakerPaysMPT`, the results `temBAD_MPT` and
+  `terLOCKED`, and renamed the types `UInt384`/`UInt512` to `Hash384`/`Hash512`.
+
+### Notes
+- `SingleAssetVault` and `LendingProtocol` are not enabled on Mainnet, so the
+  `Vault*` and `Loan*` transaction models are deliberately not implemented yet. The
+  codec supports their field types (`Number`, `Hash192`, MPT `Issue`), which is why
+  the reference `VaultCreate` fixture passes.
+- The two fee fixes above are not covered by a unit test: the fee path needs mocked
+  `fee`, `server_state`, `account_info` and `ledger` responses, and the existing mock
+  server routes by HTTP path rather than by RPC method. Both were verified against
+  Testnet instead - the validated AMMCreate carries `Fee: 200000`, the owner reserve.
+- The `ledgerData` group of the reference fixtures covers ledger headers, which this
+  library does not model; it is excluded from the conformance test.
 
 ## [1.1.0] - 2026-03-09
 ### Added

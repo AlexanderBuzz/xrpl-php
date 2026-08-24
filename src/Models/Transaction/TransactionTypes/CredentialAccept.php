@@ -10,18 +10,17 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/ammbid.html
+ * https://xrpl.org/credentialaccept.html
  */
-class AmmCreate extends BaseTransaction
+class CredentialAccept extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Amount' => Amount::class,
-        'Amount2' => Amount::class,
-        'TradingFee' => UnsignedInt16::class
+        'Issuer' => AccountId::class,
+        'CredentialType' => Blob::class,
     ];
 }

@@ -92,6 +92,8 @@ class MathUtilities
 
         $trimmed = rtrim($fp, '0');
 
-        return (strlen($trimmed) > 0) ? $ip . '.' . $trimmed  : $ip . '.0';
+        // A whole number is rendered without a fractional part, matching how
+        // rippled and the reference SDKs serialize token amounts.
+        return (strlen($trimmed) > 0) ? $ip . '.' . $trimmed : $ip;
     }
 }

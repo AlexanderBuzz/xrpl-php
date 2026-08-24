@@ -24,6 +24,7 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
 class Clawback extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Amount' => Amount::class
+        'Amount' => Amount::class,
+        'Holder' => AccountId::class,
     ];
 }

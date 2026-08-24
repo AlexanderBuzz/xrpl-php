@@ -30,6 +30,8 @@ class Amount extends SerializedType
 
     public const CURRENCY_AMOUNT_BYTE_LENGTH = 48;
 
+    public const MPT_AMOUNT_BYTE_LENGTH = 33;
+
     public const MAX_IOU_PRECISION = 16;
 
     public const MIN_IOU_EXPONENT = -96;
@@ -61,8 +63,14 @@ class Amount extends SerializedType
      */
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
     {
-        $isXRP = $parser->peek() & 0x80;
-        $numBytes = $isXRP ? self::CURRENCY_AMOUNT_BYTE_LENGTH : self::NATIVE_AMOUNT_BYTE_LENGTH;
+        $isIou = $parser->peek() & 0x80;
+        if ($isIou) {
+            return new Amount($parser->read(self::CURRENCY_AMOUNT_BYTE_LENGTH));
+        }
+
+        // At this point the amount is either XRP or MPT
+        $isMpt = $parser->peek() & 0x20;
+        $numBytes = $isMpt ? self::MPT_AMOUNT_BYTE_LENGTH : self::NATIVE_AMOUNT_BYTE_LENGTH;
 
         return new Amount($parser->read($numBytes));
     }
@@ -87,11 +95,25 @@ class Amount extends SerializedType
             return new Amount(Buffer::from($rawBytes));
         }
 
+        $json = json_decode($serializedJson, true);
+
+        if (!is_array($json)) {
+            throw new Exception('Invalid type to construct an Amount');
+        }
+
+        if (self::isMptAmountObject($json)) {
+            return self::mptFromJson($json);
+        }
+
+        if (!self::isIouAmountObject($json)) {
+            throw new Exception('Invalid type to construct an Amount');
+        }
+
         [
             'value' => $rawValue,
             'currency' => $rawCurrency,
             'issuer' => $rawIssuer
-        ] = json_decode($serializedJson, true);
+        ] = $json;
 
         $amount = Buffer::alloc(8);
 
@@ -144,6 +166,20 @@ class Amount extends SerializedType
             }
 
             return (string)$value;
+        } else if ($this->isMpt($rawBytes)) {
+            $parser = new BinaryParser($this->toHex());
+            $leadingByte = $parser->read(1);
+            $value = BigInteger::fromBase($parser->read(8)->toString(), 16);
+            $mptIssuanceId = Hash192::fromParser($parser);
+
+            if (!($leadingByte[0] & 0x40)) {
+                $value = $value->negated();
+            }
+
+            return [
+                'value' => (string)$value,
+                'mpt_issuance_id' => $mptIssuanceId->toJson()
+            ];
         } else {
             $binaryParser = new BinaryParser($this->toHex());
             $mantissa = $binaryParser->read(8);
@@ -165,9 +201,9 @@ class Amount extends SerializedType
             self::assertIouIsValid($value);
 
             return [
-                'value' => MathUtilities::trimAmountZeros($value),
                 'currency' => $currency->toJson(),
-                'issuer' => $issuer->toJson()
+                'issuer' => $issuer->toJson(),
+                'value' => MathUtilities::trimAmountZeros($value)
             ];
         }
     }
@@ -197,6 +233,97 @@ class Amount extends SerializedType
         }
 
         return false;
+    }
+
+    /**
+     * Type guard for an IOU amount object
+     *
+     * @param array $json
+     * @return bool
+     */
+    private static function isIouAmountObject(array $json): bool
+    {
+        $keys = array_keys($json);
+        sort($keys);
+
+        return count($keys) === 3
+            && $keys[0] === 'currency'
+            && $keys[1] === 'issuer'
+            && $keys[2] === 'value';
+    }
+
+    /**
+     * Type guard for an MPT amount object
+     *
+     * @param array $json
+     * @return bool
+     */
+    private static function isMptAmountObject(array $json): bool
+    {
+        $keys = array_keys($json);
+        sort($keys);
+
+        return count($keys) === 2
+            && $keys[0] === 'mpt_issuance_id'
+            && $keys[1] === 'value';
+    }
+
+    /**
+     * Build an MPT amount from its JSON representation
+     *
+     * @param array $json
+     * @return Amount
+     * @throws Exception
+     */
+    private static function mptFromJson(array $json): Amount
+    {
+        self::assertMptIsValid($json['value']);
+
+        $value = BigInteger::of($json['value']);
+
+        $leadingByte = 0x60;
+        if ($value->isNegative()) {
+            $leadingByte = 0x20;
+            $value = $value->abs();
+        }
+
+        $amount = Buffer::from(
+            str_pad($value->toBase(16), 16, '0', STR_PAD_LEFT),
+            'hex'
+        );
+        $mptIssuanceId = Hash192::fromJson($json['mpt_issuance_id'])->toBytes();
+
+        return new Amount(Buffer::concat([
+            Buffer::from([$leadingByte]),
+            $amount,
+            $mptIssuanceId
+        ]));
+    }
+
+    /**
+     * Validate an MPT amount value
+     *
+     * @param string $amount
+     * @return void
+     * @throws Exception
+     */
+    private static function assertMptIsValid(string $amount): void
+    {
+        if (str_contains($amount, ".")) {
+            throw new Exception($amount . ' is an illegal amount');
+        }
+
+        $value = BigInteger::of($amount);
+        if (!$value->isZero()) {
+            if ($value->isNegative()) {
+                throw new Exception($amount . ' is an illegal amount');
+            }
+
+            // The most significant bit of the 64 bit value is reserved
+            if ($value->isGreaterThan(BigInteger::of(2)->power(63)->minus(1))) {
+                throw new Exception($amount . ' is an illegal amount');
+            }
+        }
     }
 
     /**
@@ -262,8 +389,20 @@ class Amount extends SerializedType
      */
     private function isNative(array $bytes): bool
     {
-        // 1st bit in 1st byte is set to 0 for native XRP
-        return ($bytes[0] & 0x80) == 0;
+        // 1st bit in 1st byte is set to 0 for native XRP, the 3rd bit
+        // distinguishes XRP (0) from MPT (1)
+        return ($bytes[0] & 0x80) == 0 && ($bytes[0] & 0x20) == 0;
+    }
+
+    /**
+     * Test if this amount is in units of an MPT (Multi-Purpose Token)
+     *
+     * @param array $bytes
+     * @return bool
+     */
+    private function isMpt(array $bytes): bool
+    {
+        return ($bytes[0] & 0x80) == 0 && ($bytes[0] & 0x20) != 0;
     }
 
     /**
