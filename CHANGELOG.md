@@ -90,16 +90,14 @@ reference binary and decoding back to the reference JSON).
   against Testnet; every transaction returned `tesSUCCESS`.
 
 ### Security
-- `guzzlehttp/guzzle` was locked to 7.10.0, which carries 13 advisories including
-  one of high severity (CVE-2026-69246, noncanonical hosts bypassing host-based
-  checks). The constraint is raised from `^7.4` to `^7.15.2`, the first release in
-  which all of them are fixed, and the lock now holds 7.15.5 and psr7 2.13.1.
-  `composer audit` is clean.
+- The `guzzlehttp/guzzle` constraint `^7.4` allowed every release from 7.4.0 up to
+  7.15.1, all of which carry open advisories - among them CVE-2026-69246 (high,
+  noncanonical hosts bypassing host-based checks), fixed in 7.15.2. Consumers
+  resolving the dependency tree could therefore end up on a vulnerable version.
+  The constraint is raised to `^7.15.2`, the first release fixing all of them.
+  `composer audit` is clean against the resulting tree.
 
 ### Changed
-- The lock file was out of date since the buffer bump: it pinned
-  `hardcastle/buffer` 1.0.0 while composer.json required `^1.0.1`, so a fresh
-  `composer install` failed. Regenerated; buffer is now 1.0.1 and brick/math 0.14.8.
 - `composer.json` declares `"php": "^8.2"`. It only had `config.platform`, which is
   a development setting and does not constrain installs. 8.2 is what CI tests.
 - `brick/math` is narrowed from `>=0.11 <0.18` to `>=0.11 <0.15`. The library uses
