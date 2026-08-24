@@ -28,5 +28,8 @@ class NFTokenMint extends BaseTransaction
         'Issuer' => AccountId::class,
         'TransferFee' => UnsignedInt16::class,
         'URI' => Blob::class,
+        'Amount' => Amount::class,
+        'Destination' => AccountId::class,
+        'Expiration' => UnsignedInt32::class,
     ];
 }

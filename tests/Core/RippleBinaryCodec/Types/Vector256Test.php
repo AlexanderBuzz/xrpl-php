@@ -34,7 +34,7 @@ final class Vector256Test extends TestCase
    public function testDecode(): void
    {
        $this->assertEquals(
-           $this->json,
+           [self::VALUE1, self::VALUE2],
            Vector256::fromHex($this->hex)->toJson()
        );
    }

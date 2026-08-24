@@ -10,21 +10,18 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/ammwithdraw.html
+ * https://xrpl.org/ammvote.html
  */
-class AmmWithdraw extends BaseTransaction
+class AMMVote extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
         'Asset' => Issue::class,
         'Asset2' => Issue::class,
-        'Amount' => Amount::class,
-        'Amount2' => Amount::class,
-        'EPrice' => Amount::class,
-        'LPTokenOut' => Amount::class
+        'TradingFee' => UnsignedInt16::class
     ];
 }

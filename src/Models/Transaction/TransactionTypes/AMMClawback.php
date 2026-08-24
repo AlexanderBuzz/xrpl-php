@@ -10,15 +10,20 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Issue;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/checkchancel.html
+ * https://xrpl.org/ammclawback.html
  */
-class CheckChancel extends BaseTransaction
+class AMMClawback extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'CheckID' => Hash256::class
+        'Holder' => AccountId::class,
+        'Asset' => Issue::class,
+        'Asset2' => Issue::class,
+        'Amount' => Amount::class,
     ];
 }

@@ -1,0 +1,41 @@
+<?php declare(strict_types=1);
+/**
+ * XRPL-PHP
+ *
+ * Copyright (c) Alexander Busse | Hardcastle Technologies
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
+
+use Hardcastle\Buffer\Buffer;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
+
+/**
+ * 192 bit (24 byte) hash, used for MPTokenIssuanceID and ShareMPTID
+ */
+class Hash192 extends Hash
+{
+    public static int $width = 24;
+
+    public function __construct(?Buffer $bytes = null)
+    {
+        if (is_null($bytes)) {
+            $bytes = Buffer::alloc(static::$width);
+        }
+
+        parent::__construct($bytes, static::$width);
+    }
+
+    public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType
+    {
+        return new Hash192($parser->read(static::$width));
+    }
+
+    public static function fromJson(string $serializedJson): SerializedType
+    {
+        return new Hash192(Buffer::from($serializedJson, 'hex'));
+    }
+}

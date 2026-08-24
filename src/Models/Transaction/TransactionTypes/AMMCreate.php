@@ -11,20 +11,17 @@
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Hash256;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt16;
 
 /**
  * public API Methods / Transaction Methods
- * https://xrpl.org/offercreate.html
+ * https://xrpl.org/ammbid.html
  */
-class OfferCreate extends BaseTransaction
+class AMMCreate extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
-        'Expiration' => UnsignedInt32::class,
-        'OfferSequence' => UnsignedInt32::class,
-        'TakerGets' => Amount::class,
-        'TakerPays' => Amount::class,
-        'DomainID' => Hash256::class,
+        'Amount' => Amount::class,
+        'Amount2' => Amount::class,
+        'TradingFee' => UnsignedInt16::class
     ];
 }

@@ -13,6 +13,7 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Vector256;
 
 /**
  * public API Methods / Transaction Methods
@@ -25,5 +26,6 @@ class EscrowFinish extends BaseTransaction
         'OfferSequence' => UnsignedInt32::class,
         'Condition' => Blob::class,
         'Fulfillment' => Blob::class,
+        'CredentialIDs' => Vector256::class,
     ];
 }

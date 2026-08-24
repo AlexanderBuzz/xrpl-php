@@ -11,6 +11,7 @@
 namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
 
 /**
  * public API Methods / Transaction Methods
@@ -20,6 +21,8 @@ class DepositPreauth extends BaseTransaction
 {
     protected array $transactionTypeProperties = [
         'Authorize' => AccountId::class,
-        'Unauthorize' => AccountId::class
+        'Unauthorize' => AccountId::class,
+        'AuthorizeCredentials' => StArray::class,
+        'UnauthorizeCredentials' => StArray::class,
     ];
 }

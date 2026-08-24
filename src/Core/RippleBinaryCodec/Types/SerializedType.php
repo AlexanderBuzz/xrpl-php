@@ -104,9 +104,13 @@ abstract class SerializedType
             "Currency" => Currency::class,
             "Hash128" => Hash128::class,
             "Hash160" => Hash160::class,
+            "Hash192" => Hash192::class,
             "Hash256" => Hash256::class,
+            "Hash384" => UnsignedInt384::class,
+            "Hash512" => UnsignedInt512::class,
             "Issue" => Issue::class,
-            "Path" => Issue::class,
+            "Number" => Number::class,
+            "Path" => Path::class,
             "PathSet" => PathSet::class,
             "PathStep" => PathStep::class,
             "STArray" => StArray::class,
@@ -122,6 +126,9 @@ abstract class SerializedType
             "Int32" => SignedInt32::class,
             "Int64" => SignedInt64::class,
             "Vector256" => Vector256::class,
+            // "XChainBridge" is the spelling used by definitions.json, the
+            // lowercase variant is kept for backwards compatibility.
+            "XChainBridge" => XchainBridge::class,
             "XchainBridge" => XchainBridge::class
         ];
 

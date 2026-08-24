@@ -7,7 +7,7 @@ hood and getting into the nitty-gritty of XRPL development.
 [![Latest Stable Version](https://poser.pugx.org/hardcastle/xrpl_php/version.svg)](https://packagist.org/packages/hardcastle/xrpl_php)
 [![Total Downloads](https://poser.pugx.org/hardcastle/xrpl_php/d/total.svg)](https://packagist.org/packages/hardcastle/xrpl_php)
 [![PHPUnit](https://github.com/AlexanderBuzz/xrpl-php/actions/workflows/unit_test.yml/badge.svg)](https://phpunit.de/index.html)
-[![License](https://img.shields.io/badge/license-ISC-blue.svg)](http://opensource.org/licenses/ISC)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
@@ -16,7 +16,42 @@ hood and getting into the nitty-gritty of XRPL development.
 3. Sending requests to observe the ledger
 4. Creating and signing transactions (e.g. Payments) to modify the ledger state
 5. Parsing ledger data into more convenient formats
-6. Xahau Network Compatibility(Hooks, UNLReport, GenesisMint, etc.)
+6. Xahau Network Compatibility (Hooks, UNLReport, GenesisMint, etc.) — see [Xahau support](#xahau-support) for the current scope
+
+## Xahau support
+
+The library ships the Xahau transaction types alongside the XRP Ledger ones, but
+the two networks have drifted apart: Xahau kept its URIToken types on the
+ordinals 45–49 and moved everything the XRP Ledger added afterwards further up.
+`MPTokenIssuanceCreate`, for instance, is 54 on the XRP Ledger and 63 on Xahau.
+A single set of definitions cannot be correct for both networks, and this
+library resolves the overlap in favour of the XRP Ledger.
+
+**Works on Xahau:**
+
+- All classic transaction types — `Payment`, `AccountSet`, `TrustSet`,
+  `OfferCreate`/`OfferCancel`, `Escrow*`, `Check*`, `PaymentChannel*`,
+  `NFToken*`, `AMM*`, `Clawback`, `TicketCreate`, `SignerListSet`,
+  `DepositPreauth`, `AccountDelete`, `SetRegularKey`. These carry the same
+  ordinal on both networks.
+- The Xahau-specific types — `SetHook`, `Invoke`, `Import`, `ClaimReward`,
+  `GenesisMint`, `UNLReport`, `URIToken*`, `TicketCancel`.
+
+**Does not work on Xahau yet:**
+
+- Every type the XRP Ledger added from ordinal 41 onwards: `XChain*`, `DID*`,
+  `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*`, `NFTokenModify`.
+  These encode with the XRP Ledger ordinal, which means a different transaction
+  type on Xahau — without an error. **Do not submit them to Xahau.**
+- Decoding is ambiguous for the five shared ordinals: a Xahau `URITokenMint`
+  decodes as `XChainAddClaimAttestation`, and the Xahau `Blob` field decodes as
+  `DIDDocument`. The bytes are correct, only the names are read through the
+  XRP Ledger definitions.
+- `hooksDefinitions.json` predates the current Xahau release and is missing
+  `Remit`, `SetRemarks`, `Cron` and `CronSet`.
+
+A network aware `Definitions` instance that resolves this properly is planned
+for the next release.
 
 ## Installation
 
@@ -26,7 +61,13 @@ This library is installable via [Composer](https://getcomposer.org/):
 
 ## Requirements
 
-This library requires PHP 8.1 or later as well as the PHP extension [GMP](http://php.net/manual/en/book.gmp.php).
+This library requires PHP 8.2 or later and two PHP extensions:
+
+- [bcmath](https://www.php.net/manual/en/book.bc.php) — used directly for the
+  ledger's fixed point arithmetic.
+- [gmp](https://www.php.net/manual/en/book.gmp.php) — required by
+  `simplito/elliptic-php`, which does the secp256k1 signing. Composer will
+  refuse to install without it.
 
 ## Examples 
 
@@ -46,11 +87,17 @@ These examples show how to use key features:
 
 ```console
 php examples/client.php
-php examples/fundWallet.php
+php examples/faucet-wallet.php
 php examples/payment.php
 php examples/token-create.php // IOU + Token + CBDC - Wallet Matrix with Trustlines
+php examples/mptoken.php // Multi-Purpose Token: issue, authorize, send, claw back
+php examples/permissioned-domain.php // Credentials + PermissionedDomain + PermissionedDEX
+php examples/amm-clawback.php // Claw a token back out of an AMM pool
+php examples/nftoken-modify.php // Mint a mutable NFT and change its URI
 etc...
 ```
+
+All of these run against the Testnet and fund their own wallets from the faucet.
 
 ### Core Examples
 

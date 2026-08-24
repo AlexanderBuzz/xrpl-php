@@ -19,6 +19,14 @@ class Issue extends SerializedType
     protected static int $bytesLength = 20;
 
     /**
+     * An MPT issue is serialized as issuer account, the reserved "no account"
+     * placeholder and the little endian issuance sequence.
+     */
+    protected static int $mptBytesLength = 44;
+
+    protected const NO_ACCOUNT = '0000000000000000000000000000000000000001';
+
+    /**
      *  Class for serializing/Deserializing Issues
      *
      * @param Buffer|null $bytes
@@ -49,9 +57,15 @@ class Issue extends SerializedType
             return new Issue($currencyBuffer);
         }
 
-        $currencyAndIssuer = [$currencyBuffer, $parser->read(20)];
+        $issuerBuffer = $parser->read(20);
 
-        return new Issue(Buffer::concat($currencyAndIssuer));
+        // The "no account" placeholder in the issuer slot marks an MPT issue,
+        // whose issuance sequence follows in the next four bytes.
+        if (strtoupper($issuerBuffer->toString()) === self::NO_ACCOUNT) {
+            return new Issue(Buffer::concat([$currencyBuffer, $issuerBuffer, $parser->read(4)]));
+        }
+
+        return new Issue(Buffer::concat([$currencyBuffer, $issuerBuffer]));
     }
 
     /**
@@ -64,7 +78,22 @@ class Issue extends SerializedType
     public static function fromJson(string $serializedJson): SerializedType
     {
         $json = json_decode($serializedJson, true);
-        if (self::isIssueObject($json)) {
+        if (is_array($json) && self::isIssueObject($json)) {
+            if (isset($json['mpt_issuance_id'])) {
+                $mptIssuanceId = Hash192::fromJson($json['mpt_issuance_id'])->toBytes();
+
+                // The issuance sequence is big endian inside mpt_issuance_id
+                // but little endian on the wire.
+                $sequence = $mptIssuanceId->slice(0, 4)->toArray();
+                $issuerAccount = $mptIssuanceId->slice(4);
+
+                return new Issue(Buffer::concat([
+                    $issuerAccount,
+                    Buffer::from(self::NO_ACCOUNT, 'hex'),
+                    Buffer::from(array_reverse($sequence))
+                ]));
+            }
+
             $currencyBuffer = Currency::fromJson($json['currency'])->toBytes();
             if (empty($json['issuer'])) {
                 return new Issue($currencyBuffer);
@@ -86,6 +115,17 @@ class Issue extends SerializedType
      */
     public function toJson(): string|array
     {
+        if ($this->bytes->getLength() === self::$mptBytesLength) {
+            $issuerAccount = $this->bytes->slice(0, 20);
+            $sequence = array_reverse($this->bytes->slice(40, 44)->toArray());
+
+            return [
+                'mpt_issuance_id' => strtoupper(
+                    Buffer::concat([Buffer::from($sequence), $issuerAccount])->toString()
+                )
+            ];
+        }
+
         $binaryParser = new BinaryParser($this->toHex());
         $currency = Currency::fromParser($binaryParser);
 
@@ -115,7 +155,7 @@ class Issue extends SerializedType
         sort($keys);
 
         if (count($keys) === 1) {
-            return $keys[0] === 'currency';
+            return $keys[0] === 'currency' || $keys[0] === 'mpt_issuance_id';
         }
 
         return count($keys) === 2 && $keys[0] === 'currency' && $keys[1] === 'issuer';

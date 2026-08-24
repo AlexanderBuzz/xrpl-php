@@ -93,7 +93,13 @@ class StObject extends SerializedType
             }
 
             $serializedTypeInstance = SerializedType::getTypeByName($fieldInstance->getType());
-            $fieldValue = $serializedTypeInstance::fromJson($value);
+
+            if ($serializedTypeInstance instanceof UnsignedInt64 && UnsignedInt64::isBase10Field($key)) {
+                $fieldValue = UnsignedInt64::fromBase10((string)$value);
+            } else {
+                $fieldValue = $serializedTypeInstance::fromJson($value);
+            }
+
             $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
         }
 
@@ -115,7 +121,14 @@ class StObject extends SerializedType
                 break;
             }
 
-            $node = $binaryParser->readFieldValue($fieldInstance)->toJson();
+            $fieldValue = $binaryParser->readFieldValue($fieldInstance);
+
+            if ($fieldValue instanceof UnsignedInt64 && UnsignedInt64::isBase10Field($fieldInstance->getName())) {
+                $accumulator[$fieldInstance->getName()] = $fieldValue->toBase10();
+                continue;
+            }
+
+            $node = $fieldValue->toJson();
             if(is_array($node)) {
                 $accumulator[$fieldInstance->getName()] = $node;
             } else {

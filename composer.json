@@ -51,10 +51,11 @@
     }
   },
   "require": {
-    "brick/math": ">=0.11 <0.18" ,
+    "php": "^8.2",
+    "brick/math": ">=0.11 <0.15",
     "codedungeon/php-cli-colors": "^1.12",
     "ext-bcmath": "*",
-    "guzzlehttp/guzzle": "^7.4",
+    "guzzlehttp/guzzle": "^7.15.2",
     "php-ds/php-ds": "^1.4",
     "simplito/elliptic-php": "^1.0.12",
     "simplito/bn-php": "^1.1.4",

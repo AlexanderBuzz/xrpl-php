@@ -38,6 +38,19 @@ use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\DIDSet;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\DIDDelete;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\OracleSet;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\Clawback;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\AMMClawback;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\MPTokenIssuanceCreate;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\MPTokenIssuanceDestroy;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\MPTokenIssuanceSet;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\MPTokenAuthorize;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\CredentialCreate;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\CredentialAccept;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\CredentialDelete;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\PermissionedDomainSet;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\PermissionedDomainDelete;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\NFTokenModify;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\Batch;
+use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\DelegateSet;
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\TicketCancel;
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\URITokenMint;
 use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\URITokenBurn;
@@ -53,6 +66,12 @@ use Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes\UNLReport;
 
 final class TransactionTypesTest extends TestCase
 {
+    private const MPT_ISSUANCE_ID = '000004C463C52827307480341125DA0577DEFC38405B0E3E';
+
+    private const DOMAIN_ID = 'ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB';
+
+    private const NFTOKEN_ID = 'CDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCD';
+
     private array $commonFields = [
         'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
         'Fee' => '10',
@@ -315,5 +334,217 @@ final class TransactionTypesTest extends TestCase
     public function testUNLReportWithInt64(): void
     {
         $this->markTestIncomplete('The Issue #36 blob uses Int64 RewardAccumulator (11:9) which is not in official Xahau definitions.');
+    }
+
+    // --- MPTokensV1 -------------------------------------------------------
+
+    public function testMPTokenIssuanceCreate(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'MPTokenIssuanceCreate',
+            'AssetScale' => 2,
+            'TransferFee' => 314,
+            'MaximumAmount' => '100000000',
+            'MPTokenMetadata' => '4D65746164617461',
+        ]);
+        $model = new MPTokenIssuanceCreate($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testMPTokenIssuanceDestroy(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'MPTokenIssuanceDestroy',
+            'MPTokenIssuanceID' => self::MPT_ISSUANCE_ID,
+        ]);
+        $model = new MPTokenIssuanceDestroy($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testMPTokenIssuanceSet(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'MPTokenIssuanceSet',
+            'MPTokenIssuanceID' => self::MPT_ISSUANCE_ID,
+            'Holder' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+        ]);
+        $model = new MPTokenIssuanceSet($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testMPTokenAuthorize(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'MPTokenAuthorize',
+            'MPTokenIssuanceID' => self::MPT_ISSUANCE_ID,
+        ]);
+        $model = new MPTokenAuthorize($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    // --- Credentials ------------------------------------------------------
+
+    public function testCredentialCreate(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'CredentialCreate',
+            'Subject' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'CredentialType' => '4B5943',
+            'Expiration' => 789,
+            'URI' => '68747470733A2F2F6578616D706C652E636F6D',
+        ]);
+        $model = new CredentialCreate($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testCredentialAccept(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'CredentialAccept',
+            'Issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'CredentialType' => '4B5943',
+        ]);
+        $model = new CredentialAccept($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testCredentialDelete(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'CredentialDelete',
+            'Subject' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'CredentialType' => '4B5943',
+        ]);
+        $model = new CredentialDelete($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    // --- PermissionedDomains ----------------------------------------------
+
+    public function testPermissionedDomainSet(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'PermissionedDomainSet',
+            'AcceptedCredentials' => [
+                [
+                    'Credential' => [
+                        'Issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+                        'CredentialType' => '4B5943',
+                    ]
+                ]
+            ],
+        ]);
+        $model = new PermissionedDomainSet($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testPermissionedDomainDelete(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'PermissionedDomainDelete',
+            'DomainID' => self::DOMAIN_ID,
+        ]);
+        $model = new PermissionedDomainDelete($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    // --- PermissionedDEX --------------------------------------------------
+
+    public function testOfferCreateWithDomainId(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'OfferCreate',
+            'TakerGets' => '1000000',
+            'TakerPays' => [
+                'currency' => 'USD',
+                'issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+                'value' => '100'
+            ],
+            'DomainID' => self::DOMAIN_ID,
+        ]);
+        $model = new OfferCreate($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    // --- Prio B -----------------------------------------------------------
+
+    public function testAMMClawback(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'AMMClawback',
+            'Holder' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'Asset' => ['currency' => 'USD', 'issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh'],
+            'Asset2' => ['currency' => 'XRP'],
+            'Amount' => [
+                'currency' => 'USD',
+                'issuer' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+                'value' => '10'
+            ],
+        ]);
+        $model = new AMMClawback($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testNFTokenModify(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'NFTokenModify',
+            'NFTokenID' => self::NFTOKEN_ID,
+            'Owner' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'URI' => '68747470733A2F2F6578616D706C652E636F6D',
+        ]);
+        $model = new NFTokenModify($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testDelegateSet(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'DelegateSet',
+            'Authorize' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+            'Permissions' => [
+                ['Permission' => ['PermissionValue' => 'Payment']],
+                ['Permission' => ['PermissionValue' => 'AccountDomainSet']],
+            ],
+        ]);
+        $model = new DelegateSet($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    public function testBatch(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'Batch',
+            'RawTransactions' => [
+                [
+                    'RawTransaction' => [
+                        'TransactionType' => 'Payment',
+                        'Account' => 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+                        'Destination' => 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
+                        'Amount' => '1000',
+                        'Fee' => '0',
+                        'Sequence' => 2,
+                        'SigningPubKey' => '',
+                        'Flags' => 1073741824,
+                    ]
+                ]
+            ],
+        ]);
+        $model = new Batch($tx);
+        $this->assertEquals($tx, $model->toArray());
+    }
+
+    /**
+     * The class used to be misspelled CheckChancel, which made CheckCancel
+     * unusable altogether.
+     */
+    public function testCheckCancel(): void
+    {
+        $tx = array_merge($this->commonFields, [
+            'TransactionType' => 'CheckCancel',
+            'CheckID' => self::NFTOKEN_ID,
+        ]);
+        $model = new CheckCancel($tx);
+        $this->assertEquals($tx, $model->toArray());
     }
 }

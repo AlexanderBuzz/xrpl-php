@@ -29,7 +29,7 @@ class Networks
         ],
         'devnet' => [
             'label' => 'XRPL Devnet',
-            'jsonRpcUrl' => 'wss://s.devnet.rippletest.net:51234',
+            'jsonRpcUrl' => 'https://s.devnet.rippletest.net:51234',
             'wsUrl' => 'wss://s.devnet.rippletest.net:51233',
             'networkId' => 2
         ],

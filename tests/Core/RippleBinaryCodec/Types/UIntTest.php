@@ -177,6 +177,9 @@ final class UIntTest extends TestCase
         );
     }
 
+    /**
+     * The JSON representation of a UInt64 is a hex string, not a decimal one.
+     */
     public function testEncodeUInt64(): void
     {
         $this->assertEquals(
@@ -186,27 +189,61 @@ final class UIntTest extends TestCase
 
         $this->assertEquals(
             '000000000000000F',
-            UnsignedInt64::fromJson("15")->toString()
+            UnsignedInt64::fromJson("F")->toString()
         );
 
         $this->assertEquals(
             '000000000000FFFF',
-            UnsignedInt64::fromJson("65535")->toString()
+            UnsignedInt64::fromJson("FFFF")->toString()
         );
 
         $this->assertEquals(
             '00000000FFFFFFFF',
-            UnsignedInt64::fromJson("4294967295")->toString()
+            UnsignedInt64::fromJson("FFFFFFFF")->toString()
         );
 
         $this->assertEquals(
             '00000000000000FF',
-            UnsignedInt64::fromJson("255")->toString()
+            UnsignedInt64::fromJson("FF")->toString()
         );
 
         $this->assertEquals(
             'FFFFFFFFFFFFFFFF',
-            UnsignedInt64::fromJson("18446744073709551615")->toString()
+            UnsignedInt64::fromJson("FFFFFFFFFFFFFFFF")->toString()
+        );
+    }
+
+    public function testUInt64JsonIsHex(): void
+    {
+        $this->assertEquals(
+            '00000000000001E2',
+            UnsignedInt64::fromHex('00000000000001E2')->toJson()
+        );
+    }
+
+    public function testRejectsNonHexJson(): void
+    {
+        $this->expectException(\Exception::class);
+
+        UnsignedInt64::fromJson("18446744073709551615");
+    }
+
+    /**
+     * The MPToken amount fields are the exception, rippled renders them base 10.
+     */
+    public function testEncodeBase10UInt64(): void
+    {
+        $this->assertTrue(UnsignedInt64::isBase10Field('MaximumAmount'));
+        $this->assertFalse(UnsignedInt64::isBase10Field('XChainClaimID'));
+
+        $this->assertEquals(
+            'FFFFFFFFFFFFFFFF',
+            UnsignedInt64::fromBase10("18446744073709551615")->toString()
+        );
+
+        $this->assertEquals(
+            "18446744073709551615",
+            UnsignedInt64::fromHex('FFFFFFFFFFFFFFFF')->toBase10()
         );
     }
 }

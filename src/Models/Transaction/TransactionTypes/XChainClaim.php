@@ -12,6 +12,7 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\XchainBridge;
 
@@ -26,5 +27,6 @@ class XChainClaim extends BaseTransaction
         'XChainClaimID' => UnsignedInt64::class,
         'Amount' => Amount::class,
         'Destination' => AccountId::class,
+        'DestinationTag' => UnsignedInt32::class,
     ];
 }

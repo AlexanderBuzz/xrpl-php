@@ -13,6 +13,7 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Amount;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\Blob;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt8;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\XchainBridge;
 
@@ -32,5 +33,7 @@ class XChainAddAccountCreateAttestation extends BaseTransaction
         'AttestationSignerAccount' => AccountId::class,
         'WasLockingChainSend' => UnsignedInt8::class,
         'Destination' => AccountId::class,
+        'XChainAccountCreateCount' => UnsignedInt64::class,
+        'SignatureReward' => Amount::class,
     ];
 }

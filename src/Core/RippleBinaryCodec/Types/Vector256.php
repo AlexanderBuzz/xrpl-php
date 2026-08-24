@@ -67,6 +67,6 @@ class Vector256 extends SerializedType
             $result[] = strtoupper($this->bytes->slice($i, $i + 32)->toString());
         }
 
-        return json_encode($result);
+        return $result;
     }
 }

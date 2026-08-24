@@ -17,6 +17,11 @@ use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerStateRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
+ * Transaction types whose cost is one owner reserve rather than the network fee.
+ */
+const OWNER_RESERVE_FEE_TYPES = ['AccountDelete', 'AMMCreate'];
+
+/**
  * @param array $tx
  * @return void
  * @throws Exception
@@ -128,11 +133,14 @@ function setNextValidSequenceNumber (JsonRpcClient $client, array &$tx): void
 }
 
 /**
+ * The owner reserve, which AccountDelete and AMMCreate have to pay as their
+ * transaction cost instead of the ordinary network fee.
+ *
  * @param JsonRpcClient $client
  * @return BigDecimal
  * @throws MathException
  */
-function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
+function fetchOwnerReserveFee (JsonRpcClient $client): BigDecimal
 {
     $serverStateRequest = new ServerStateRequest();
 
@@ -141,10 +149,21 @@ function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
     $fee = $serverStateResponse->getResult()['state']['validated_ledger']['reserve_inc'] ?? null;
 
     if (is_null($fee)) {
-        throw new Exception('Address includes a tag that does not match the tag specified in the transaction');
+        throw new Exception('Could not read the owner reserve from server_state');
     }
 
     return BigDecimal::of($fee);
+}
+
+/**
+ * @param JsonRpcClient $client
+ * @return BigDecimal
+ * @throws MathException
+ * @deprecated Use fetchOwnerReserveFee(), the fee is not specific to AccountDelete
+ */
+function fetchAccountDeleteFee (JsonRpcClient $client): BigDecimal
+{
+    return fetchOwnerReserveFee($client);
 }
 
 /**
@@ -163,13 +182,14 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int
 
     if ($tx['TransactionType'] === 'EscrowFinish' && isset($tx['Fulfillment']) && !is_null($tx['Fulfillment'])) {
         // 10 drops × (33 + (Fulfillment size in bytes / 16))
-        $fulfillmentBytesSize = ceil(strlen($tx['Fulfillment'] / 2));
+        $fulfillmentBytesSize = ceil(strlen($tx['Fulfillment']) / 2);
         $product = BigDecimal::of(scaleValue($netFeeDrops, 33 + $fulfillmentBytesSize / 16));
         $baseFee = $product->toScale(0, RoundingMode::CEILING);
     }
 
-    if ($tx['TransactionType'] === 'AccountDelete') {
-        $baseFee = fetchAccountDeleteFee($client);
+    // Both burn one owner reserve instead of paying the ordinary network fee
+    if (in_array($tx['TransactionType'], OWNER_RESERVE_FEE_TYPES, true)) {
+        $baseFee = fetchOwnerReserveFee($client);
     }
 
     /*
@@ -180,8 +200,11 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int
         $baseFee = BigDecimal::sum($baseFee, scaleValue($netFeeDrops, 1 + $signersCount));
     }
 
+    // The owner reserve is a protocol requirement, so maxFeeXrp must not cap it
     $maxFeeDrops = xrpToDrops($client->getMaxFeeXrp());
-    $totalFee = ($tx['TransactionType'] === 'AccountDelete') ? $baseFee : BigDecimal::min($baseFee, $maxFeeDrops);
+    $totalFee = in_array($tx['TransactionType'], OWNER_RESERVE_FEE_TYPES, true)
+        ? $baseFee
+        : BigDecimal::min($baseFee, $maxFeeDrops);
 
     // Round up baseFee and return it as a string
     $tx['Fee'] = (string) $totalFee->toScale(0, RoundingMode::CEILING);

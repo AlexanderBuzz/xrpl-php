@@ -26,7 +26,7 @@ class PaymentChannelCreate extends BaseTransaction
         'Destination' => AccountId::class,
         'SettleDelay' => UnsignedInt32::class,
         'PublicKey' => Blob::class,
-        'ChancelAfter' => UnsignedInt32::class,
+        'CancelAfter' => UnsignedInt32::class,
         'DestinationTag' => UnsignedInt32::class,
     ];
 }
