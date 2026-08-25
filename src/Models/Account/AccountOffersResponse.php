@@ -10,7 +10,7 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Account;
 
-use Hardcastle\XRPL_PHP\Models\BaseRequest;
+use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
 /**
  * public API Methods / Ledger Methods
