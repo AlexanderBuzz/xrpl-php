@@ -5,6 +5,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Base class of the signed integer types, stored in two's complement.
+ */
 abstract class SignedInt extends SerializedType
 {
     protected BigInteger $value;

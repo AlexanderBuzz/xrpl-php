@@ -10,7 +10,7 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 /**
- *
+ * Computes the hashes rippled uses, above all the id of a signed transaction.
  */
 class HashLedger
 {
@@ -18,6 +18,9 @@ class HashLedger
 
     private readonly BinaryCodec $binaryCodec;
 
+    /**
+     * The shared instance.
+     */
     public static function getInstance(): HashLedger
     {
         if (self::$instance === null) {

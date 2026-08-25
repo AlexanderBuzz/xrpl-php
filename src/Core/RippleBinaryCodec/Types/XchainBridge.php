@@ -14,6 +14,10 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * The four part description of a cross-chain bridge: the door account and the
+ * asset on each of the two chains.
+ */
 class XchainBridge extends SerializedType
 {
     public const TYPE_ORDER = [

@@ -10,6 +10,12 @@
 
 namespace Hardcastle\XRPL_PHP\Models;
 
+/**
+ * Base of every request object.
+ *
+ * Turns its own public properties into the params of a JSON-RPC call, so a
+ * request is written by declaring fields rather than by assembling an array.
+ */
 abstract class BaseRequest
 {
     protected string $command;

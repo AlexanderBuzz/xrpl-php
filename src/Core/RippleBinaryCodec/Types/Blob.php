@@ -17,6 +17,11 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 use function MongoDB\BSON\fromJSON;
 
+/**
+ * Arbitrary bytes of variable length, such as a Memo, a URI or a signature.
+ *
+ * The length is not part of the value; it is written by the field header.
+ */
 class Blob extends SerializedType
 {
     public function __construct(?Buffer $bytes = null)

@@ -14,6 +14,9 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
+/**
+ * Turns bytes into JSON, and holds the definitions the codec works against.
+ */
 class Binary
 {
     protected ?Definitions $definitions = null;
@@ -41,6 +44,9 @@ class Binary
         return $this->definitions ??= Definitions::getInstance();
     }
 
+    /**
+     * A parser over the given bytes, carrying this codec's definitions.
+     */
     public function makeParser(string $bytes): BinaryParser
     {
         return new BinaryParser($bytes, $this->getDefinitions());
@@ -73,8 +79,9 @@ class Binary
 
     }
     */
-
     /**
+     * Read one object out of a parser and return its JSON form.
+     *
      * @param BinaryParser $parser
      */
     public function readJson(BinaryParser $parser): array|int|string //xrpl.js: JsonObject, defined in serialized-type.js
@@ -104,6 +111,9 @@ class Binary
     }
     */
 
+    /**
+     * Decode a hex string into the JSON form of the object it holds.
+     */
     public function binaryToJson(string $bytes): array
     {
         $parser = $this->makeParser($bytes);

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.15.1@28dc127af1b5aecd52314f6f645bafc10d0e11f9">
+  <file src="src/Client/AccountReader.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$marker]]></code>
+      <code><![CDATA[!$marker]]></code>
+      <code><![CDATA[!$peer]]></code>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$limit]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Client/Autofiller.php">
+    <DeprecatedConstant>
+      <code><![CDATA[RoundingMode::CEILING]]></code>
+      <code><![CDATA[RoundingMode::CEILING]]></code>
+    </DeprecatedConstant>
+    <InvalidOperand>
+      <code><![CDATA[$fulfillmentBytesSize / 16]]></code>
+      <code><![CDATA[33 + $fulfillmentBytesSize / 16]]></code>
+    </InvalidOperand>
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[getResult]]></code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="src/Client/Faucet.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode([
+                'destination' => $walletToFund->getClassicAddress(),
+                'xrpAmount' => $amount ?? '100',
+            ])]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Client/FeeCalculator.php">
+    <DeprecatedConstant>
+      <code><![CDATA[RoundingMode::UP]]></code>
+    </DeprecatedConstant>
+  </file>
+  <file src="src/Client/JsonRpcClient.php">
+    <UnusedMethod>
+      <code><![CDATA[getCollectKeyFromCommand]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$timeout]]></code>
+    </UnusedProperty>
+    <UnusedVariable>
+      <code><![CDATA[$reason]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Core/CoreUtilities.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$address]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Core/MathUtilities.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$input]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Core/RippleAddressCodec/AddressCodec.php">
+    <MissingParamType>
+      <code><![CDATA[$tag]]></code>
+    </MissingParamType>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$accountId]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="src/Core/RippleAddressCodec/BaseX.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[$b256[$it4++]]]></code>
+      <code><![CDATA[$b256[$it4]]]></code>
+      <code><![CDATA[$b58[$it2]]]></code>
+      <code><![CDATA[$b58[$it2]]]></code>
+    </InvalidArrayOffset>
+    <InvalidOperand>
+      <code><![CDATA[($pend - $pbegin) * $this->inverseFactor]]></code>
+      <code><![CDATA[((strlen($source) - $psz) * $this->factor) + 1]]></code>
+      <code><![CDATA[(strlen($source) - $psz) * $this->factor]]></code>
+    </InvalidOperand>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int)abs($carry % 256)]]></code>
+      <code><![CDATA[(int)abs($this->base * $b256[$it3])]]></code>
+      <code><![CDATA[(int)abs(256 * $b58[$it1])]]></code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="src/Core/RippleAddressCodec/Codec.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$options['expectedLength']]]></code>
+      <code><![CDATA[$options['expectedLength']]]></code>
+      <code><![CDATA[$types]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedForeachValue>
+      <code><![CDATA[$version]]></code>
+    </UnusedForeachValue>
+    <UnusedProperty>
+      <code><![CDATA[$alphabet]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Binary.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->readJson($parser)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/BinaryCodec.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$jsonObject]]></code>
+      <code><![CDATA[hex2bin($binaryString)]]></code>
+    </PossiblyFalseArgument>
+    <UnusedForeachValue>
+      <code><![CDATA[$value]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Definitions/Definitions.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[file_get_contents($hooksPath)]]></code>
+      <code><![CDATA[file_get_contents($path)]]></code>
+      <code><![CDATA[file_get_contents($path)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->ledgerEntryTypes]]></code>
+      <code><![CDATA[$this->transactionResults]]></code>
+      <code><![CDATA[$this->typeOrdinals[$fieldInfo->getType()]]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$this->typeOrdinals[$fieldInfo->getType()]]]></code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$this->definitions['FIELDS']]]></code>
+      <code><![CDATA[$this->transactionTypes]]></code>
+    </PossiblyNullIterator>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$this->definitions['FIELDS']]]></code>
+      <code><![CDATA[$this->definitions['LEDGER_ENTRY_TYPES']]]></code>
+      <code><![CDATA[$this->definitions['TRANSACTION_RESULTS']]]></code>
+      <code><![CDATA[$this->definitions['TRANSACTION_TYPES']]]></code>
+      <code><![CDATA[$this->definitions['TYPES']]]></code>
+    </PossiblyUndefinedArrayOffset>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[getenv('XRPL_PHP_DEFINITIONS_FILE_PATH')]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedProperty>
+      <code><![CDATA[$definitions]]></code>
+      <code><![CDATA[$typeOrdinals]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Definitions/FieldInstance.php">
+    <InvalidReturnType>
+      <code><![CDATA[FieldInstance]]></code>
+    </InvalidReturnType>
+    <UnusedProperty>
+      <code><![CDATA[$associatedType]]></code>
+      <code><![CDATA[$isSerialized]]></code>
+      <code><![CDATA[$nth]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Serdes/BinaryParser.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$customEnd]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/Amount.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[BigDecimal::of("1e-6")]]></code>
+      <code><![CDATA[BigDecimal::of("1e17")]]></code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/Path.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$serializedJson]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/PathSet.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$serializedJson]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/SignedInt.php">
+    <UndefinedConstant>
+      <code><![CDATA[static::WIDTH]]></code>
+    </UndefinedConstant>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/StArray.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($item)]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Core/RippleBinaryCodec/Types/StObject.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyUndefinedVariable>
+      <code><![CDATA[$tagName]]></code>
+    </PossiblyUndefinedVariable>
+    <UnusedForeachValue>
+      <code><![CDATA[$value]]></code>
+    </UnusedForeachValue>
+    <UnusedMethod>
+      <code><![CDATA[handleXAddress]]></code>
+    </UnusedMethod>
+    <UnusedVariable>
+      <code><![CDATA[$isUnlModify]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$xAddressDecoded]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Core/RippleKeyPairs/AbstractKeyPairService.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$type]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Core/RippleKeyPairs/Ed25519KeyPairService.php">
+    <RedundantCondition>
+      <code><![CDATA[is_string($seed)]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Core/RippleKeyPairs/KeyPairServiceInterface.php">
+    <UnusedDocblockParam>
+      <code><![CDATA[$type]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="src/Core/RippleKeyPairs/Secp256k1KeyPairService.php">
+    <RedundantCondition>
+      <code><![CDATA[is_string($seed)]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Core/Stablecoin/Stablecoin.php">
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Exceptions/XrplException.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($this->data)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Models/Account/AccountOffersResponse.php">
+    <UndefinedClass>
+      <code><![CDATA[BaseResponse]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Models/BaseRequest.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->getBody())]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidFalsableReturnType>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Models/Transaction/TransactionTypes/BaseTransaction.php">
+    <MissingTemplateParam>
+      <code><![CDATA[ArrayAccess]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Polyfill.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$dec]]></code>
+      <code><![CDATA[$dec]]></code>
+      <code><![CDATA[strval($len - $i)]]></code>
+      <code><![CDATA[strval(hexdec($hex[$i - 1]))]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidReturnStatement>
+      <code><![CDATA[$dec]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[array_shift($unpacked)]]></code>
+    </NullableReturnStatement>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$unpacked]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Wallet/Wallet.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$multisign]]></code>
+      <code><![CDATA[$multisignAddress]]></code>
+      <code><![CDATA[$multisignAddress]]></code>
+      <code><![CDATA[$signAs]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="tests/Core/MathUtilitiesTest.php">
+    <UnusedParam>
+      <code><![CDATA[$exponent]]></code>
+      <code><![CDATA[$precision]]></code>
+      <code><![CDATA[$precision]]></code>
+      <code><![CDATA[$precision]]></code>
+      <code><![CDATA[$withZeros]]></code>
+      <code><![CDATA[$withZeros]]></code>
+    </UnusedParam>
+  </file>
+  <file src="tests/Core/RippleAddressCodec/AddressCodecTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleAddressCodec/BaseXTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[unpack('C*', "Hello World")]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/BinaryCodecTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/BinaryParserTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/CodecFixturesTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+      <code><![CDATA[file_get_contents(__DIR__ . "/codec-fixtures.json")]]></code>
+      <code><![CDATA[json_encode($case['json'])]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Definitions/DefinitionsMergeTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($tx)]]></code>
+      <code><![CDATA[json_encode([
+                'TransactionType' => $type,
+                'Account' => self::ACCOUNT,
+                'Fee' => '10',
+                'Sequence' => 1,
+            ])]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Definitions/InjectableDefinitionsTest.php">
+    <DeprecatedFunction>
+      <code><![CDATA[getLastLedgerSequence($blob, $definitions)]]></code>
+      <code><![CDATA[isAccountDelete($blob, $definitions)]]></code>
+    </DeprecatedFunction>
+    <PossiblyFalseArgument>
+      <code><![CDATA[file_get_contents(self::DEFINITIONS_PATH)]]></code>
+      <code><![CDATA[file_get_contents(self::DEFINITIONS_PATH)]]></code>
+      <code><![CDATA[json_encode($tx)]]></code>
+      <code><![CDATA[json_encode($tx)]]></code>
+      <code><![CDATA[json_encode(self::payment())]]></code>
+      <code><![CDATA[json_encode(self::payment())]]></code>
+      <code><![CDATA[json_encode(self::payment())]]></code>
+      <code><![CDATA[json_encode(self::payment())]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/LedgerObjectFixturesTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[file_get_contents(__DIR__ . "/ledger-object-fixtures.json")]]></code>
+      <code><![CDATA[json_encode($case['json'])]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/AmountTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$json]]></code>
+      <code><![CDATA[$json]]></code>
+      <code><![CDATA[json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '-1',
+        ])]]></code>
+      <code><![CDATA[json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '10.5',
+        ])]]></code>
+      <code><![CDATA[json_encode([
+            'mpt_issuance_id' => self::MPT_ISSUANCE_ID,
+            'value' => '9223372036854775808',
+        ])]]></code>
+      <code><![CDATA[json_encode(['value' => '10', 'nonsense' => 'x'])]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$decoded['mpt_issuance_id']]]></code>
+      <code><![CDATA[$decoded['value']]]></code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$decoded['mpt_issuance_id']]]></code>
+      <code><![CDATA[$decoded['value']]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/PathSetTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$serializedJson]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/PathStepTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$serializedJson]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/PathTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$serializedJson]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/StArrayTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+      <code><![CDATA[json_encode($this->json)]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/StObjectTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+      <code><![CDATA[json_encode($this->json)]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/UIntTest.php">
+    <UndefinedMethod>
+      <code><![CDATA[toBase10]]></code>
+    </UndefinedMethod>
+    <UnusedVariable>
+      <code><![CDATA[$bigInteger]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/Vector256Test.php">
+    <PossiblyFalsePropertyAssignmentValue>
+      <code><![CDATA[json_encode([self::VALUE1, self::VALUE2])]]></code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="tests/Core/RippleBinaryCodec/Types/XchainBridgeTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($this->json)]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Core/RippleKeyPairs/KeyPairTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$raw]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Integration/BasicIntegrationTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$body]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/Integration/FundWalletTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$body]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/MockRippled/MockRippledResponse.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$content]]></code>
+      <code><![CDATA[$responseJson]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyFalsePropertyAssignmentValue>
+      <code><![CDATA[$requestJson]]></code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="tests/MockRippled/RpcMethodResponse.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[json_encode($this->resultsByMethod)]]></code>
+      <code><![CDATA[json_encode([
+            'result' => $result + ['status' => 'success'],
+        ])]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="tests/Models/Transaction/BaseTransactionTest.php">
+    <UnusedVariable>
+      <code><![CDATA[$paymentTransaction]]></code>
+      <code><![CDATA[$paymentTransaction]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="tests/Models/Transaction/TransactionRoundtripTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[json_encode($model->toArray())]]></code>
+      <code><![CDATA[json_encode([
+            'TransactionType' => 'AmmCreate',
+            'Account' => self::ACCOUNT,
+            'Fee' => '10',
+            'Sequence' => 1,
+        ])]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/PolyfillTest.php">
+    <MissingReturnType>
+      <code><![CDATA[needsBcmathExtension]]></code>
+      <code><![CDATA[testBcdechex]]></code>
+      <code><![CDATA[testBchexdec]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/Sugar/SubmitTest.php">
+    <DeprecatedFunction>
+      <code><![CDATA[getLastLedgerSequence($blob)]]></code>
+      <code><![CDATA[getLastLedgerSequence($this->unsignedPayment())]]></code>
+      <code><![CDATA[getLastLedgerSequence($tx)]]></code>
+      <code><![CDATA[getSignedTx($this->client, $signed)]]></code>
+      <code><![CDATA[getSignedTx($this->client, $this->unsignedPayment())]]></code>
+      <code><![CDATA[getSignedTx($this->client, $this->unsignedPayment(), false, $this->wallet)]]></code>
+      <code><![CDATA[getSignedTx($this->client, $tx, true, $this->wallet)]]></code>
+      <code><![CDATA[isAccountDelete($delete)]]></code>
+      <code><![CDATA[isAccountDelete($this->unsignedPayment())]]></code>
+      <code><![CDATA[isAccountDelete($this->wallet->sign($delete)['tx_blob'])]]></code>
+      <code><![CDATA[isSigned($result)]]></code>
+      <code><![CDATA[isSigned($this->signedPayment())]]></code>
+      <code><![CDATA[isSigned($this->unsignedPayment())]]></code>
+      <code><![CDATA[submitRequest($this->client, $this->unsignedPayment())]]></code>
+    </DeprecatedFunction>
+  </file>
+</files>

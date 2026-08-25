@@ -5,12 +5,23 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 use Ds\Hashable;
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * The type and field ordinal that identify a field on the wire.
+ *
+ * Together these two numbers form the header byte or bytes that precede every
+ * field value.
+ */
 class FieldHeader implements Hashable
 {
     public function __construct(private int $typeCode, private int $fieldCode)
     {
     }
 
+    /**
+     * The header as it is written to the stream.
+     * Type and field ordinal share one byte where both are below 16, and spill
+     * into extra bytes otherwise.
+     */
     public function toBytes(): Buffer
     {
         $header = [];
@@ -74,6 +85,9 @@ class FieldHeader implements Hashable
         return $this->typeCode . ":" . $this->fieldCode;
     }
 
+    /**
+     * Whether two headers name the same field.
+     */
     public function equals($obj): bool
     {
         return ($this->typeCode === $obj->getTypeCode() && $this->fieldCode === $obj->getFieldCode());

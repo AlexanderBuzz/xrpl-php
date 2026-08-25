@@ -13,6 +13,12 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An unsigned 192 bit integer.
+ *
+ * Note that definitions.json calls the 24 byte type Hash192, which is handled
+ * by the Hash192 class; this one is kept for callers that ask for UInt192.
+ */
 class UnsignedInt192 extends UnsignedInt
 {
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt192

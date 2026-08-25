@@ -5,7 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [2.1.0] - unreleased
+## [2.2.0] - unreleased
+
+### Added
+- Object form of the Sugar functions: `Autofiller`, `Submitter`, `AccountReader`,
+  `OrderbookReader`, `FeeCalculator` and `Faucet` hold the client instead of taking
+  it as a first argument. `JsonRpcClient` delegates to them and no longer imports a
+  function from `Sugar`.
+- `JsonRpcClient::autofill()` accepts `$signersCount`, which the multi-signing fee
+  path needed but could not be reached from the client.
+- `RpcMethodResponse`, a mock that serves rippled responses keyed by JSON-RPC method.
+  The previous mock routed by URL path, which the client never varies, so nothing
+  reaching rippled through the normal code path could be mocked.
+- Tests: `FeeCalculationTest`, `SubmitTest`, `MathUtilitiesTest` and
+  `SubmitAndWaitTest`. The last one runs against the Testnet, carries the group
+  `integration-slow` and is excluded in CI; run it with
+  `vendor/bin/phpunit --group integration-slow`.
+- A Psalm baseline plus a configuration suited to a library, and Psalm in CI.
+
+### Fixed
+- `Sugar\getSignedTx()` returned the `tx_blob`/`hash` envelope of `Wallet::sign()`
+  while every caller expects a transaction array, so `submit()` and `submitAndWait()`
+  always failed with "Transaction must be signed" when given an unsigned transaction
+  and a wallet - the reason both take a `$wallet` at all.
+- The AccountDelete blocker check never ran, being guarded by
+  `!isset($tx['TransactionType'])` rather than a comparison against AccountDelete,
+  and would not have fired either, counting blockers as `$objects['length']` - a
+  JavaScript idiom that is an undefined key in PHP.
+- `DROPS_PER_XRP` was the float `1000000.0`, and `base_fee_xrp` arrives from rippled
+  as a JSON number; both reached brick/math as floats.
+- `MathUtilities` used `BigDecimal::getIntegralPart()` and `getFractionalPart()`,
+  which brick/math 0.15 removes and 0.16 reintroduces with a different meaning.
+  `exactlyDividedBy()` is renamed to `dividedByExact()`. The test suite runs without
+  deprecations again.
+- `AccountOffersResponse` imported `BaseRequest` while extending `BaseResponse`, so
+  the class could not be autoloaded at all.
+- `docker-compose.linux.yml` mounted `php.ini` twice and `xdebug.ini` not at all.
+
+### Changed
+- `JsonRpcClient::autofill()` no longer takes the transaction by reference. It was
+  never written through, and the reference only forced callers to assign the array
+  to a variable first. Existing calls keep working.
+- The Sugar functions are marked `@deprecated` and delegate to the classes above.
+  They emit no runtime warning yet; that follows once the object form has settled.
+- `containers/php/` becomes `docker/`, and the three compose files become one.
+  The platform differences move into `.env` (`DOCKER_UID`, `DOCKER_GID`) and an
+  `extra_hosts` entry, so the same `xdebug.ini` works on Linux and macOS.
+  `xdebug-mac.ini` and `xdebug-linux.ini` are gone; no compose file mounted them.
+- `examples/custom_currency_codes.php` and `examples/xrpBalance.php` are renamed to
+  kebab-case, matching every other example.
+- Documentation: every class now has a description, and the share of documented
+  public methods rises from 18 to 47 per cent. The contract the 29 serialized types
+  share is described once on `SerializedType` rather than repeated per subclass.
+
+### Removed
+- The dead stubs `Sugar\formatBalances()`, `Sugar\getUpdatedBalance()` and
+  `Sugar\getHttpOptions()`. Two of them raised a `TypeError` when called; none was
+  referenced.
+
+## [2.1.0] - 2026-08-24
 
 ### Added
 - The binary codec works against definitions handed in from outside, so a package

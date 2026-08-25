@@ -31,8 +31,10 @@ class Ctid
     {
         $this->internal = Buffer::from($ctidAsHex, 'hex');
     }
-
     /**
+     * Build a CTID from a ledger sequence, the index of the transaction in it and
+     * the network id.
+     *
      * @param int $ledgerIndex
      * @param int $transactionIndex
      * @param int $networkId
@@ -49,8 +51,9 @@ class Ctid
 
         return new Ctid($ledgerIndexHex . $transactionIndexHex . $networkId);
     }
-
     /**
+     * Read a CTID string back into its three parts.
+     *
      * @param string $ctidAsHex
      * @return Ctid
      * @throws Exception

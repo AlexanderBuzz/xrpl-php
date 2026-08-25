@@ -16,6 +16,9 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
+/**
+ * A sequence of Hash256 values, such as Indexes, Amendments or CredentialIDs.
+ */
 class Vector256 extends SerializedType
 {
     protected static int $width = 32;

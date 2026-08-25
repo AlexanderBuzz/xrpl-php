@@ -13,6 +13,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An unsigned 96 bit integer.
+ */
 class UnsignedInt96 extends UnsignedInt
 {
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt96

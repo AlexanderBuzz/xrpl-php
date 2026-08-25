@@ -14,6 +14,9 @@ use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An unsigned 16 bit integer, such as TransactionType or TransferFee.
+ */
 class UnsignedInt16 extends UnsignedInt
 {
     public const WIDTH = 2;

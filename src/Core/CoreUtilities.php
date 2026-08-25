@@ -14,12 +14,19 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
+/**
+ * Address helpers used across the library: validation, and conversion between
+ * classic addresses and X-addresses.
+ */
 class CoreUtilities
 {
     private static ?CoreUtilities $instance = null;
 
     private readonly AddressCodec $addressCodec;
 
+    /**
+     * The shared instance.
+     */
     public static function getInstance(): CoreUtilities
     {
         if (self::$instance === null) {
@@ -29,6 +36,10 @@ class CoreUtilities
         return self::$instance;
     }
 
+    /**
+     * The classic address of an account, whichever form was given.
+     * An X-address carrying a tag is rejected, because the tag would be lost.
+     */
     public static function ensureClassicAddress(string $account): string
     {
         $_this = self::getInstance();
@@ -52,8 +63,9 @@ class CoreUtilities
 
         return $account;
     }
-
     /**
+     * Whether this is a well formed classic address, checksum included.
+     *
      * @param null|string $address
      */
     public static function isValidClassicAddress(string|null $address): bool
@@ -63,6 +75,9 @@ class CoreUtilities
         return $_this->addressCodec->isValidClassicAddress($address);
     }
 
+    /**
+     * Whether this is a well formed X-address.
+     */
     public static function isValidXAddress(string $address): bool
     {
         $_this = self::getInstance();
@@ -70,6 +85,10 @@ class CoreUtilities
         return $_this->addressCodec->isValidXAddress($address);
     }
 
+    /**
+     * Combine a classic address and a destination tag into one X-address.
+     * The point of the format is that the tag can no longer be forgotten.
+     */
     public static function classicAddressToXAddress(string $xAddress, mixed $tag, bool $isTestnet = false): string
     {
         $_this = self::getInstance();
@@ -77,14 +96,18 @@ class CoreUtilities
         return $_this->addressCodec->classicAddressToXAddress($xAddress, $tag, $isTestnet);
     }
 
+    /**
+     * Split an X-address back into its classic address and its tag.
+     */
     public static function xAddressToClassicAddress(string $xAddress): array
     {
         $_this = self::getInstance();
 
         return $_this->addressCodec->xAddressToClassicAddress($xAddress);
     }
-
     /**
+     * The account address a public key belongs to.
+     *
      * @param Buffer|string $publicKey
      * @return string
      * @throws Exception Error
@@ -101,8 +124,9 @@ class CoreUtilities
 
         return $_this->addressCodec->encodeAccountId($publicKeyHash);
     }
-
     /**
+     * Encode raw entropy as a seed string, marking which algorithm it is for.
+     *
      * @throws Exception Error
      */
     public static function encodeSeed(Buffer $entropy, string $type): string
@@ -110,8 +134,9 @@ class CoreUtilities
         $_this = self::getInstance();
         return $_this->addressCodec->encodeSeed($entropy, $type);
     }
-
     /**
+     * Read a seed string back into its entropy and its algorithm.
+     *
      * @throws Exception Error
      */
     public static function decodeSeed(string $seed): array

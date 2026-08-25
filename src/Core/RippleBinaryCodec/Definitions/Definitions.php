@@ -4,6 +4,14 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
 use Exception;
 
+/**
+ * The field, type and enum tables the codec works against, read from
+ * definitions.json.
+ *
+ * Maps field names to their ordinal and back, which is what makes a transaction
+ * serializable. Other networks supply their own set; see fromArray() and
+ * fromFile().
+ */
 class Definitions
 {
     public static ?Definitions $instance = null;

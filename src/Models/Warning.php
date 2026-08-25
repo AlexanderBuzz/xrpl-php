@@ -10,6 +10,9 @@
 
 namespace Hardcastle\XRPL_PHP\Models;
 
+/**
+ * A warning rippled attaches to an otherwise successful response.
+ */
 class Warning
 {
 

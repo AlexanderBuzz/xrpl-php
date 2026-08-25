@@ -24,4 +24,7 @@ jobs:
           version: latest
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit ./tests
+        run: vendor/bin/phpunit ./tests --exclude-group integration-slow
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --config=psalm.xml --no-progress

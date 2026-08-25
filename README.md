@@ -143,18 +143,30 @@ etc...
 
 ### Run the project via Docker
 
-1. In the project directory, start the project and open a shell:
+1. Tell the container which user to run as, so the files it writes belong to
+   you. The values differ between Linux and macOS, so they come from `.env`:
+
+```console
+printf 'DOCKER_UID=%s\nDOCKER_GID=%s\n' "$(id -u)" "$(id -g)" > .env
+```
+
+2. Start the project and open a shell:
 
 ```console
 docker compose up -d
-docker compose exec -u 0 php bash
+docker compose exec php bash
 ```
 
-2. In the container shell, install the composer dependencies:
+3. In the container shell, install the composer dependencies:
 
 ```console
 composer install
 ```
+
+The image is built from `docker/`. Xdebug is preconfigured to reach the host on
+port 9090 via `host.docker.internal`, which works on Linux as well because the
+compose file maps it to the host gateway. For anything else that is specific to
+your machine, add a `docker-compose.override.yml`; it is gitignored.
 
 ### Run Tests
 

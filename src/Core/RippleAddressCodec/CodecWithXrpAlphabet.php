@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * The base58 codec bound to the XRP Ledger's own alphabet, which differs from
+ * the Bitcoin one.
+ */
 class CodecWithXrpAlphabet extends Codec
 {
     public const ACCOUNT_ID = 0; // Account address (20 bytes)
@@ -31,8 +35,9 @@ class CodecWithXrpAlphabet extends Codec
     {
         parent::__construct(Utils::XRPL_ALPHABET);
     }
-
     /**
+     * Encode entropy as a seed, marking the algorithm it belongs to.
+     *
      * @param Buffer $entropy
      * @param string $type
      * @return string
@@ -52,8 +57,9 @@ class CodecWithXrpAlphabet extends Codec
 
         return $this->encode($entropy, $options);
     }
-
     /**
+     * Decode a seed into its entropy and its algorithm.
+     *
      * @param string $seed
      * @param array $options
      * @return array
@@ -69,8 +75,9 @@ class CodecWithXrpAlphabet extends Codec
 
         return $this->decode($seed, $options);
     }
-
     /**
+     * Encode a 20 byte account id as a classic address.
+     *
      * @param Buffer $bytes
      * @return string
      */
@@ -82,8 +89,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return $this->encode($bytes, $options);
     }
-
     /**
+     * Decode a classic address into its 20 byte account id.
+     *
      * @param string $accountId
      * @return Buffer
      * @throws \Exception
@@ -96,8 +104,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return Buffer::from($this->decode($accountId, $options)['bytes']);
     }
-
     /**
+     * Encode a validator's public key.
+     *
      * @param Buffer $bytes
      * @return string
      */
@@ -109,8 +118,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return $this->encode($bytes, $options);
     }
-
     /**
+     * Decode a validator's public key.
+     *
      * @param string $base58string
      * @return Buffer
      * @throws \Exception
@@ -123,8 +133,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return Buffer::from($this->decode($base58string, $options)['bytes']);
     }
-
     /**
+     * Encode an account's public key.
+     *
      * @param Buffer $bytes
      * @return string
      */
@@ -136,8 +147,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return $this->encode($bytes, $options);
     }
-
     /**
+     * Decode an account's public key.
+     *
      * @param string $base58string
      * @return Buffer
      * @throws \Exception
@@ -150,8 +162,9 @@ class CodecWithXrpAlphabet extends Codec
         ];
         return Buffer::from($this->decode($base58string, $options)['bytes']);
     }
-
     /**
+     * Whether the string decodes as a classic address with a valid checksum.
+     *
      * @param string $address
      * @return bool
      */

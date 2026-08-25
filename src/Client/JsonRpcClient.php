@@ -29,16 +29,14 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
-use function Hardcastle\XRPL_PHP\Sugar\autofill;
-use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
-use function Hardcastle\XRPL_PHP\Sugar\getXrpBalance;
-use function Hardcastle\XRPL_PHP\Sugar\getBalances;
-use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
-use function Hardcastle\XRPL_PHP\Sugar\getOrderbook;
-use function Hardcastle\XRPL_PHP\Sugar\getTransactions;
-use function Hardcastle\XRPL_PHP\Sugar\submit;
-use function Hardcastle\XRPL_PHP\Sugar\submitAndWait;
 
+/**
+ * A connection to a rippled server over JSON-RPC.
+ *
+ * Beyond issuing requests it offers the operations most callers need -
+ * autofill, submit, balances, transaction history - each delegating to a class
+ * of its own.
+ */
 class JsonRpcClient
 {
     private const DEFAULT_FEE_CUSHION = 1.2;
@@ -57,6 +55,11 @@ class JsonRpcClient
 
     private readonly string $maxFeeXrp;
 
+    /**
+     * Open a connection to a rippled server.
+     * The URL may be a short network name such as 'testnet' instead of an address.
+     * Pass definitions to talk to a network other than the XRP Ledger.
+     */
     public function __construct(
         string $connectionUrl,
         ?float $feeCushion = null,
@@ -107,6 +110,10 @@ class JsonRpcClient
      * @param BaseRequest $request
      * @param bool|null $returnRawResponse
      * @return PromiseInterface
+     */
+    /**
+     * Issue a request and get a promise for the typed response.
+     * Use syncRequest() when the answer is needed right away.
      */
     public function request(BaseRequest $request, ?bool $returnRawResponse = false): PromiseInterface
     {
@@ -316,10 +323,13 @@ class JsonRpcClient
      */
     public function getXrpBalance(string $address): string
     {
-        return getXrpBalance($this, $address);
+        return (new AccountReader($this))->getXrpBalance($address);
     }
-
     /**
+     * Every balance an account holds: XRP and all its trust lines.
+     * Pages through the ledger until there is nothing left, so a large account
+     * causes several round trips.
+     *
      * @param string $address
      * @param string|null $ledgerHash
      * @param string|null $ledgerIndex
@@ -336,10 +346,12 @@ class JsonRpcClient
         ?int $limit = null
     ): array
     {
-        return getBalances($this, $address, $ledgerHash, $ledgerIndex, $peer, $limit);
+        return (new AccountReader($this))->getBalances($address, $ledgerHash, $ledgerIndex, $peer, $limit);
     }
-
     /**
+     * The transaction history of an account, newest first unless $forward is set.
+     * Pages through the ledger the same way getBalances() does.
+     *
      * @param string $address
      * @param int|null $ledgerIndexMin
      * @param int|null $ledgerIndexMax
@@ -364,10 +376,11 @@ class JsonRpcClient
         mixed $marker = null
     ): array
     {
-        return getTransactions($this, $address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
+        return (new AccountReader($this))->getTransactions($address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
     }
-
     /**
+     * The offers standing in one order book of the decentralized exchange.
+     *
      * @param array $takerGets
      * @param array $takerPays
      * @param string|null $ledgerHash
@@ -386,7 +399,7 @@ class JsonRpcClient
         ?string $taker = null
     ): array
     {
-        return getOrderbook($this, $takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
+        return (new OrderbookReader($this))->getOrderbook($takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
     }
 
     /**
@@ -397,11 +410,11 @@ class JsonRpcClient
      */
     public function getFeeXrp(?int $cushion = null): string
     {
-        return getFeeXrp($this, $cushion);
+        return (new FeeCalculator($this))->getFeeXrp($cushion === null ? null : (float)$cushion);
     }
-
     /**
-     *
+     * Ask a test network faucet for a funded wallet.
+     * Generates one if none is given, and waits until the funds have arrived.
      *
      * @param Wallet|null $wallet
      * @param string|null $faucetHost
@@ -409,28 +422,34 @@ class JsonRpcClient
      */
     public function fundWallet(?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
-        return fundWallet($this, $wallet, $faucetHost)['wallet'];
+        return (new Faucet($this))->fundWallet($wallet, $faucetHost)['wallet'];
     }
 
     /**
+     * Fill in Sequence, Fee and LastLedgerSequence where the transaction does
+     * not carry them already.
      *
+     * The transaction used to be taken by reference although it was never
+     * modified, which forced callers to pass a variable. It is passed by value
+     * now; existing calls keep working.
      *
      * @param Transaction|array $transaction
+     * @param int|null $signersCount Number of signatures a multi-signed transaction will carry
      * @return array
+     * @throws Exception
      */
-    public function autofill(Transaction|array &$transaction): array
+    public function autofill(Transaction|array $transaction, ?int $signersCount = null): array
     {
-        return autofill($this, $transaction);
+        return (new Autofiller($this))->autofill($transaction, $signersCount);
     }
-
     /**
-     *
+     * Submit a transaction and return the server's preliminary opinion.
+     * That opinion is not an outcome; use submitAndWait() when it matters.
      *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
      * @return SubmitResponse
      * @throws Exception
      */
@@ -441,17 +460,17 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): SubmitResponse
     {
-        return submit($this, $transaction, $autofill, $failHard, $wallet);
+        return (new Submitter($this))->submit($transaction, $autofill, $failHard, $wallet);
     }
-
     /**
-     *
+     * Submit a transaction and wait until its outcome is final.
+     * Polls until the transaction is in a validated ledger, or until its
+     * LastLedgerSequence has passed and it never can be.
      *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
      * @return TxResponse
      * @throws Exception
      */
@@ -462,7 +481,7 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): TxResponse
     {
-        return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
+        return (new Submitter($this))->submitAndWait($transaction, $autofill, $failHard, $wallet);
     }
 
     /**

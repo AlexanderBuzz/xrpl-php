@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Models\Utility;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * A raw JSON response, used where no typed model applies.
+ */
 class JsonResponse extends BaseResponse
 {
 

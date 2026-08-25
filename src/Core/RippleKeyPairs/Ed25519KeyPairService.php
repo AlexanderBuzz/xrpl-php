@@ -6,6 +6,10 @@ use Elliptic\EdDSA;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
+/**
+ * Ed25519 signing. The default for new wallets; its public keys are marked by a
+ * leading ED byte.
+ */
 class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {
     private static ?Ed25519KeyPairService $instance = null;
@@ -20,6 +24,9 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         parent::__construct();
     }
 
+    /**
+     * The shared instance.
+     */
     public static function getInstance(): Ed25519KeyPairService
     {
         if (self::$instance === null) {
@@ -29,6 +36,9 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return self::$instance;
     }
 
+    /**
+     * A new random seed for this algorithm.
+     */
     public function generateSeed(?Buffer $entropy = null): string
     {
         if (is_null($entropy)) {
@@ -38,6 +48,11 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return $this->addressCodec->encodeSeed($entropy, 'ed25519');
     }
 
+    /**
+     * Derive the key pair a seed stands for.
+     * The public key is prefixed with ED, which is how the ledger tells the two
+     * algorithms apart.
+     */
     public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int  $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
@@ -54,6 +69,9 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return new KeyPair($publicKey, $privateKey);
     }
 
+    /**
+     * Sign a message.
+     */
     public function sign(Buffer|string $message, string $privateKey): string
     {
         if ($message instanceof Buffer) {
@@ -65,6 +83,9 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
         return $signed->toHex();
     }
 
+    /**
+     * Check a signature against a message and a public key.
+     */
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
         if ($message instanceof Buffer) {

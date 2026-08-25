@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * The answer to a submit: rippled's preliminary opinion of a transaction, not
+ * its outcome.
+ */
 class SubmitResponse extends BaseResponse
 {
 

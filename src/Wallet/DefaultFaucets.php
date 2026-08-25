@@ -5,6 +5,10 @@ namespace Hardcastle\XRPL_PHP\Wallet;
 use Exception;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 
+/**
+ * The faucet endpoints of the test networks, and which one belongs to a given
+ * connection.
+ */
 class DefaultFaucets
 {
     const FAUCET_NETWORK = [

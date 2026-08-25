@@ -5,51 +5,37 @@ namespace Hardcastle\XRPL_PHP\Sugar;
 use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Client\Submitter;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
-use Hardcastle\XRPL_PHP\Models\ErrorResponse;
-use Hardcastle\XRPL_PHP\Models\Transaction\SubmitRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\SubmitResponse;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
-use Hardcastle\XRPL_PHP\Models\Transaction\TxRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
-use Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
-const LEDGER_CLOSE_TIME = 3; //Seconds
+/**
+ * Thin wrappers around Hardcastle\XRPL_PHP\Client\Submitter.
+ *
+ * The logic moved into that class; these functions remain so that existing
+ * code keeps working. They will be removed in a future major version.
+ */
 
+const LEDGER_CLOSE_TIME = Submitter::LEDGER_CLOSE_TIME;
+
+/**
+ * @deprecated Use Submitter::submitRequest()
+ * @throws Exception
+ */
 function submitRequest(
     JsonRpcClient $client,
     array $signedTransaction,
     ?bool $failHard = false
 ): PromiseInterface
 {
-    if (!isSigned($signedTransaction)) {
-        throw new Exception('Transaction must be signed');
-    }
-
-    $binaryCodec = new BinaryCodec($client->getDefinitions());
-    $signedTxEncoded = $binaryCodec->encode($signedTransaction);
-
-    $submitRequest = new SubmitRequest(
-        txBlob: $signedTxEncoded,
-        failHard: isAccountDelete($signedTransaction, $client->getDefinitions()) || $failHard
-    );
-
-    return $client->request($submitRequest);
+    return (new Submitter($client))->submitRequest($signedTransaction, $failHard);
 }
 
 /**
- * The core logic of reliable submission. This polls the ledger until the result of the
- * transaction can be considered final, meaning it has either been included in a
- * validated ledger, or the transaction's lastLedgerSequence has been surpassed by the
- * latest ledger sequence (meaning it will never be included in a validated ledger).
- *
- * @param JsonRpcClient $client
- * @param string $txHash
- * @param int $lastLedger
- * @param string $submissionResult
- * @return TxResponse
+ * @deprecated Use Submitter::waitForFinalTransactionOutcome()
  * @throws Exception
  */
 function waitForFinalTransactionOutcome(
@@ -59,66 +45,19 @@ function waitForFinalTransactionOutcome(
     string $submissionResult
 ): TxResponse
 {
-    sleep(LEDGER_CLOSE_TIME);
-
-    $latestLedger = $client->getLedgerIndex();
-
-    if ($lastLedger < $latestLedger) {
-        throw new Exception("The latest ledger sequence {$latestLedger} is greater than the transaction's LastLedgerSequence ({$lastLedger})."
-            . PHP_EOL ."Preliminary result: {$submissionResult}");
-    }
-
-    $txRequest = new TxRequest($txHash);
-    $txResponse = $client->request($txRequest)->wait();
-
-    if ($txResponse instanceof ErrorResponse) {
-        if ($txResponse->getError() === 'txnNotFound') {
-            return waitForFinalTransactionOutcome(
-                $client,
-                $txHash,
-                $lastLedger,
-                $submissionResult
-            );
-        }
-
-        throw new Exception ("{$txResponse->getError()}"
-            . PHP_EOL . "Preliminary result: {$submissionResult}"
-            . PHP_EOL . "Full error details: " .print_r($txResponse, true)
-        );
-    }
-
-    if ($txResponse->getResult()['validated']) {
-        return $txResponse;
-    }
-
-    //print_r($txResponse);
-
-    return waitForFinalTransactionOutcome(
-      $client,
-      $txHash,$lastLedger,
-      $submissionResult
-    );
+    return (new Submitter($client))->waitForFinalTransactionOutcome($txHash, $lastLedger, $submissionResult);
 }
 
 /**
- * Checks if the transaction has been signed
- *
- * @param array $tx
- * @return bool
+ * @deprecated Use Submitter::isSigned()
  */
 function isSigned(array $tx): bool
 {
-    return (!empty($tx['SigningPubKey']) || !empty($tx['TxnSignature']));
+    return Submitter::isSigned($tx);
 }
 
 /**
- * Initializes a transaction for a submit request
- *
- * @param JsonRpcClient $client
- * @param Transaction|string|array $transaction
- * @param bool|null $autofill
- * @param Wallet|null $wallet
- * @return array
+ * @deprecated Use Submitter::getSignedTx()
  * @throws Exception
  */
 function getSignedTx(
@@ -128,74 +67,31 @@ function getSignedTx(
     ?Wallet $wallet = null
 ): array
 {
-    if (is_string($transaction)) {
-        $binaryCodec = new BinaryCodec($client->getDefinitions());
-        $tx = $binaryCodec->decode($transaction);
-    } else if ($transaction instanceof Transaction) {
-        $tx = $transaction->toArray();
-    } else {
-        $tx = $transaction;
-    }
-
-    if (isSigned($tx)) {
-        return $tx;
-    }
-
-    if(is_null($wallet)) {
-        throw new Exception('Wallet must be provided when submitting an unsigned transaction');
-    }
-
-    if ($autofill) {
-        $tx = autofill($client, $tx);
-    }
-
-    return $wallet->sign($tx);
+    return (new Submitter($client))->getSignedTx($transaction, $autofill, $wallet);
 }
 
 /**
- * Checks if there is a LastLedgerSequence as a part of the transaction
- *
- * @param array|string $tx
- * @return int|null
+ * @deprecated Use Submitter::getLastLedgerSequence()
+ * @throws Exception
  */
 function getLastLedgerSequence(array|string $tx, ?Definitions $definitions = null): int|null
 {
-    if (is_string($tx)) {
-        // Decoding resolves every field in the blob, so a transaction from
-        // another network needs that network's definitions even though
-        // LastLedgerSequence itself carries the same ordinal everywhere.
-        $binaryCodec = new BinaryCodec($definitions);
-        $tx = $binaryCodec->decode($tx);
-    }
-
-    return (isset($tx['LastLedgerSequence'])) ? (int)$tx['LastLedgerSequence'] : null;
+    return Submitter::getLastLedgerSequence($tx, $definitions);
 }
 
 /**
- * Checks if the transaction is an AccountDelete transaction
- *
- * @param array|string $tx
- * @return bool
+ * @deprecated Use Submitter::isAccountDelete()
+ * @throws Exception
  */
 function isAccountDelete(array|string $tx, ?Definitions $definitions = null): bool
 {
-    if (is_string($tx)) {
-        $binaryCodec = new BinaryCodec($definitions);
-        $tx = $binaryCodec->decode($tx);
-    }
-
-    return($tx['TransactionType'] === 'AccountDelete');
+    return Submitter::isAccountDelete($tx, $definitions);
 }
 
 if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submit')) {
 
     /**
-     * @param JsonRpcClient $client
-     * @param Transaction|array|string $transaction
-     * @param bool|null $autofill
-     * @param bool|null $failHard
-     * @param Wallet|null $wallet
-     * @return SubmitResponse
+     * @deprecated Use JsonRpcClient::submit() or Submitter::submit()
      * @throws Exception
      */
     function submit(
@@ -206,21 +102,14 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submit')) {
         ?Wallet $wallet
     ): SubmitResponse
     {
-        $signedTx = getSignedTx($client, $transaction, $autofill, $wallet);
-
-        return submitRequest($client, $signedTx, $failHard)->wait();
+        return (new Submitter($client))->submit($transaction, $autofill, $failHard, $wallet);
     }
 }
 
 if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submitAndWait')) {
 
     /**
-     * @param JsonRpcClient $client
-     * @param Transaction|array|string $transaction
-     * @param bool|null $autofill
-     * @param bool|null $failHard
-     * @param Wallet|null $wallet
-     * @return TxResponse
+     * @deprecated Use JsonRpcClient::submitAndWait() or Submitter::submitAndWait()
      * @throws Exception
      */
     function submitAndWait(
@@ -231,22 +120,6 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\submitAndWait')) {
         ?Wallet $wallet = null
     ): TxResponse
     {
-        $signedTx = getSignedTx($client, $transaction, $autofill, $wallet);
-
-        $lastLedger = getLastLedgerSequence($signedTx, $client->getDefinitions());
-        if(is_null($lastLedger)) {
-            throw new Exception('Transaction must contain a LastLedgerSequence value for reliable submission.');
-        }
-
-        $response = submitRequest($client, $signedTx, $failHard)->wait();
-
-        $txHash = HashLedger::hashSignedTx($signedTx, $client->getDefinitions());
-
-        return waitForFinalTransactionOutcome(
-            $client,
-            $txHash,
-            $lastLedger,
-            $response->getResult()['engine_result']
-        );
+        return (new Submitter($client))->submitAndWait($transaction, $autofill, $failHard, $wallet);
     }
 }

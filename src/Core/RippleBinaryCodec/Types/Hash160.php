@@ -15,6 +15,9 @@ use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * A 160 bit (20 byte) hash. Used by the currency and issuer fields of an order book directory.
+ */
 class Hash160 extends Hash
 {
     public static int $width = 20;

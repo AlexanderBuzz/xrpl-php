@@ -8,6 +8,10 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
+/**
+ * secp256k1 signing, the algorithm the ledger started with and still the one
+ * behind most existing accounts.
+ */
 class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {
     private static ?Secp256k1KeyPairService $instance = null;
@@ -22,6 +26,9 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         parent::__construct();
     }
 
+    /**
+     * The shared instance.
+     */
     public static function getInstance(): Secp256k1KeyPairService
     {
         if (self::$instance === null) {
@@ -31,6 +38,9 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return self::$instance;
     }
 
+    /**
+     * A new random seed for this algorithm.
+     */
     public function generateSeed(?Buffer $entropy = null): string
     {
         if (is_null($entropy)) {
@@ -40,6 +50,11 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return $this->addressCodec->encodeSeed($entropy, 'secp256k1');
     }
 
+    /**
+     * Derive the key pair a seed stands for.
+     * secp256k1 goes through an intermediate root key and a sequence, so the same
+     * seed can yield further pairs; the ledger uses the first.
+     */
     public function deriveKeyPair(Buffer|string $seed, bool $validator = false, int $accountIndex = 0): KeyPair
     {
         if (is_string($seed)) {
@@ -56,6 +71,9 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         );
     }
 
+    /**
+     * Sign a message, returning a DER encoded signature.
+     */
     public function sign(Buffer|string $message, string $privateKey): string
     {
         $messageBytes = ($message instanceof Buffer) ? $message->toUtf8() : $message;
@@ -71,6 +89,9 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         return strtoupper($signed);
     }
 
+    /**
+     * Check a signature against a message and a public key.
+     */
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
         $messageBytes = ($message instanceof Buffer) ? $message->toUtf8() : $message;

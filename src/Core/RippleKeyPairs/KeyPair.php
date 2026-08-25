@@ -4,6 +4,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleKeyPairs;
 
 use Exception;
 
+/**
+ * A public and private key pair, and the entry point for choosing an algorithm.
+ */
 class KeyPair
 {
     public const EDDSA = 'ed25519';
@@ -46,6 +49,9 @@ class KeyPair
         $this->privateKey = $privateKey;
     }
 
+    /**
+     * The pair as a plain array of public and private key.
+     */
     public function toArray(): array
     {
         return [
@@ -53,8 +59,9 @@ class KeyPair
             'privateKey' => $this->getPrivateKey(),
         ];
     }
-
     /**
+     * The signing implementation for an algorithm name.
+     *
      * @throws Exception Error
      */
     public static function getKeyPairServiceByType(string $type = self::EDDSA): KeyPairServiceInterface

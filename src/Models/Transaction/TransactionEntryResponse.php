@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * A transaction as it was recorded in one specific ledger.
+ */
 class TransactionEntryResponse extends BaseResponse
 {
 

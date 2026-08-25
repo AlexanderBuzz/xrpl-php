@@ -14,6 +14,13 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An asset, without an amount: XRP, an issued token or an MPT.
+ *
+ * XRP is 20 bytes of currency code, a token adds the 20 byte issuer, and an
+ * MPT is 44 bytes carrying the issuer, a reserved placeholder and the issuance
+ * sequence in little endian.
+ */
 class Issue extends SerializedType
 {
     protected static int $bytesLength = 20;

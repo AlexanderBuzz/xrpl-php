@@ -72,6 +72,10 @@ class FieldInstance
         return $this->ordinal;
     }
 
+    /**
+     * Build the ordinal the codec sorts fields by, which is the type code followed
+     * by the field code.
+     */
     public function buildField(string $name, FieldInfo $fieldInfo, int $typeOrdinal): FieldInstance
     {
 

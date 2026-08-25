@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Core;
 
 use Exception;
 
+/**
+ * The known networks and their endpoints, so that 'testnet' can be written
+ * instead of a URL.
+ */
 class Networks
 {
     private const NETWORKS = [
@@ -46,8 +50,9 @@ class Networks
             'networkId' => 21338
         ],
     ];
-
     /**
+     * Look up a network by its short name, such as 'testnet'.
+     *
      * @param string $identifier
      * @return array
      * @throws Exception
@@ -60,8 +65,9 @@ class Networks
 
         throw new Exception('Network not found');
     }
-
     /**
+     * Look up a network by the NetworkID transactions on it carry.
+     *
      * @param int $networkId
      * @return array
      * @throws Exception
