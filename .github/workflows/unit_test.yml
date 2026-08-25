@@ -25,3 +25,6 @@ jobs:
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit ./tests
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --config=psalm.xml --no-progress

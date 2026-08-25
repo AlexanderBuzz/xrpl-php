@@ -2,6 +2,10 @@
 <psalm
     errorLevel="2"
     resolveFromConfigFile="true"
+    errorBaseline="psalm-baseline.xml"
+    findUnusedBaselineEntry="false"
+   
+   
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -13,4 +17,31 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <!--
+            This is a library: its public surface is used by consumers, not
+            from within the repository. Psalm cannot see those callers, so
+            every model class, every request object and most public methods
+            look unreachable to it. Reporting them drowns out real findings.
+        -->
+        <UnusedClass errorLevel="suppress" />
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+        <PossiblyUnusedParam errorLevel="suppress" />
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
+
+        <!--
+            Consumers extend these classes - BaseTransaction is the base of
+            every transaction model, including those in other packages - so
+            making them final would break the library on purpose.
+        -->
+        <ClassMustBeFinal errorLevel="suppress" />
+
+        <!--
+            #[\Override] only exists from PHP 8.3, and this library supports
+            ^8.2. Adding it would be dead decoration on the version CI builds.
+        -->
+        <MissingOverrideAttribute errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
