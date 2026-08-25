@@ -25,7 +25,8 @@ final class FeeCalculationTest extends TestCase
     /** The owner reserve rippled reports, in drops */
     private const RESERVE_INC = '2000000';
 
-    private const BASE_FEE_XRP = '0.00001';
+    // rippled sends this as a JSON number, not a string
+    private const BASE_FEE_XRP = 0.00001;
 
     private const LEDGER_INDEX = 2908714;
 

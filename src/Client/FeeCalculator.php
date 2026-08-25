@@ -48,7 +48,9 @@ class FeeCalculator
 
         $loadFactor = $serverInfo['load_factor'] ?? 1;
 
-        $fee = BigDecimal::of($baseFee)
+        // rippled sends base_fee_xrp as a JSON number, so it arrives as a
+        // float. brick/math wants it as a string.
+        $fee = BigDecimal::of((string)$baseFee)
             ->multipliedBy((string)$loadFactor)
             ->multipliedBy((string)$feeCushion);
 

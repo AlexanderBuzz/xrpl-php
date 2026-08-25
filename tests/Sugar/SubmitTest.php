@@ -57,7 +57,7 @@ final class SubmitTest extends TestCase
         self::$server->setDefaultResponse(new RpcMethodResponse([
             'server_info' => [
                 'info' => [
-                    'validated_ledger' => ['base_fee_xrp' => '0.00001'],
+                    'validated_ledger' => ['base_fee_xrp' => 0.00001],
                     'load_factor' => 1,
                 ],
             ],
