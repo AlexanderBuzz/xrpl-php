@@ -1,9 +1,24 @@
 services:
   php:
     build:
-      context: containers/php
+      context: docker
     volumes:
       - .:/app
+      - ~/.composer/cache:/.composer/cache
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/docker-php.ini
+      - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    # Files the container writes should belong to the host user. Set DOCKER_UID
+    # and DOCKER_GID in .env; see the README. The defaults match a typical
+    # Linux desktop, macOS usually needs 501:20.
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    # Lets xdebug.client_host=host.docker.internal resolve on Linux too, where
+    # Docker does not provide that name by itself.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    tmpfs:
+      - /tmp:mode=1777
+    environment:
+      PHP_IDE_CONFIG: "serverName=docker"
 
   rippled:
     container_name: rippled
