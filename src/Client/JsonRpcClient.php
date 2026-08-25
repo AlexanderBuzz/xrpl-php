@@ -30,11 +30,7 @@ use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as T
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
-use function Hardcastle\XRPL_PHP\Sugar\getXrpBalance;
-use function Hardcastle\XRPL_PHP\Sugar\getBalances;
 use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
-use function Hardcastle\XRPL_PHP\Sugar\getOrderbook;
-use function Hardcastle\XRPL_PHP\Sugar\getTransactions;
 
 class JsonRpcClient
 {
@@ -313,7 +309,7 @@ class JsonRpcClient
      */
     public function getXrpBalance(string $address): string
     {
-        return getXrpBalance($this, $address);
+        return (new AccountReader($this))->getXrpBalance($address);
     }
 
     /**
@@ -333,7 +329,7 @@ class JsonRpcClient
         ?int $limit = null
     ): array
     {
-        return getBalances($this, $address, $ledgerHash, $ledgerIndex, $peer, $limit);
+        return (new AccountReader($this))->getBalances($address, $ledgerHash, $ledgerIndex, $peer, $limit);
     }
 
     /**
@@ -361,7 +357,7 @@ class JsonRpcClient
         mixed $marker = null
     ): array
     {
-        return getTransactions($this, $address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
+        return (new AccountReader($this))->getTransactions($address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
     }
 
     /**
@@ -383,7 +379,7 @@ class JsonRpcClient
         ?string $taker = null
     ): array
     {
-        return getOrderbook($this, $takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
+        return (new OrderbookReader($this))->getOrderbook($takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
     }
 
     /**
