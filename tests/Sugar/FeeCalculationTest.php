@@ -76,13 +76,12 @@ final class FeeCalculationTest extends TestCase
      */
     public function testOrdinaryTransactionPaysTheNetworkFee(): void
     {
-        $request = [
+        $tx = $this->client->autofill([
             'TransactionType' => 'Payment',
             'Account' => self::ACCOUNT,
             'Destination' => self::DESTINATION,
             'Amount' => '1000',
-        ];
-        $tx = $this->client->autofill($request);
+        ]);
 
         $this->assertEquals('12', $tx['Fee']);
     }
@@ -93,26 +92,24 @@ final class FeeCalculationTest extends TestCase
      */
     public function testAmmCreatePaysTheOwnerReserve(): void
     {
-        $request = [
+        $tx = $this->client->autofill([
             'TransactionType' => 'AMMCreate',
             'Account' => self::ACCOUNT,
             'Amount' => '1000',
             'Amount2' => ['currency' => 'USD', 'issuer' => self::DESTINATION, 'value' => '10'],
             'TradingFee' => 10,
-        ];
-        $tx = $this->client->autofill($request);
+        ]);
 
         $this->assertEquals(self::RESERVE_INC, $tx['Fee']);
     }
 
     public function testAccountDeletePaysTheOwnerReserve(): void
     {
-        $request = [
+        $tx = $this->client->autofill([
             'TransactionType' => 'AccountDelete',
             'Account' => self::ACCOUNT,
             'Destination' => self::DESTINATION,
-        ];
-        $tx = $this->client->autofill($request);
+        ]);
 
         $this->assertEquals(self::RESERVE_INC, $tx['Fee']);
     }
@@ -125,14 +122,13 @@ final class FeeCalculationTest extends TestCase
     {
         $client = new JsonRpcClient(self::$server->getServerRoot(), null, '0.1');
 
-        $request = [
+        $tx = $client->autofill([
             'TransactionType' => 'AMMCreate',
             'Account' => self::ACCOUNT,
             'Amount' => '1000',
             'Amount2' => ['currency' => 'USD', 'issuer' => self::DESTINATION, 'value' => '10'],
             'TradingFee' => 10,
-        ];
-        $tx = $client->autofill($request);
+        ]);
 
         $this->assertEquals(self::RESERVE_INC, $tx['Fee']);
     }
@@ -144,13 +140,12 @@ final class FeeCalculationTest extends TestCase
     {
         $client = new JsonRpcClient(self::$server->getServerRoot(), null, '0.000005');
 
-        $request = [
+        $tx = $client->autofill([
             'TransactionType' => 'Payment',
             'Account' => self::ACCOUNT,
             'Destination' => self::DESTINATION,
             'Amount' => '1000',
-        ];
-        $tx = $client->autofill($request);
+        ]);
 
         $this->assertEquals('5', $tx['Fee']);
     }
@@ -167,14 +162,13 @@ final class FeeCalculationTest extends TestCase
         // -> 12 x (33 + 16/16) = 408
         $fulfillment = str_repeat('A0', 16);
 
-        $request = [
+        $tx = $this->client->autofill([
             'TransactionType' => 'EscrowFinish',
             'Account' => self::ACCOUNT,
             'Owner' => self::DESTINATION,
             'OfferSequence' => 7,
             'Fulfillment' => $fulfillment,
-        ];
-        $tx = $this->client->autofill($request);
+        ]);
 
         $this->assertEquals('408', $tx['Fee']);
     }
@@ -185,23 +179,21 @@ final class FeeCalculationTest extends TestCase
      */
     public function testLargerFulfillmentCostsMore(): void
     {
-        $request = [
+        $small = $this->client->autofill([
             'TransactionType' => 'EscrowFinish',
             'Account' => self::ACCOUNT,
             'Owner' => self::DESTINATION,
             'OfferSequence' => 7,
             'Fulfillment' => str_repeat('A0', 16),
-        ];
-        $small = $this->client->autofill($request);
+        ]);
 
-        $request = [
+        $large = $this->client->autofill([
             'TransactionType' => 'EscrowFinish',
             'Account' => self::ACCOUNT,
             'Owner' => self::DESTINATION,
             'OfferSequence' => 7,
             'Fulfillment' => str_repeat('A0', 256),
-        ];
-        $large = $this->client->autofill($request);
+        ]);
 
         $this->assertGreaterThan((int)$small['Fee'], (int)$large['Fee']);
     }
@@ -211,15 +203,80 @@ final class FeeCalculationTest extends TestCase
      */
     public function testAutofillSetsSequenceAndLastLedgerSequence(): void
     {
-        $request = [
+        $tx = $this->client->autofill([
             'TransactionType' => 'Payment',
             'Account' => self::ACCOUNT,
             'Destination' => self::DESTINATION,
             'Amount' => '1000',
-        ];
-        $tx = $this->client->autofill($request);
+        ]);
 
         $this->assertEquals(self::SEQUENCE, $tx['Sequence']);
         $this->assertEquals(self::LEDGER_INDEX + 20, $tx['LastLedgerSequence']);
+    }
+
+    /**
+     * An account holding Escrows, PayChannels, RippleStates or Checks cannot be
+     * deleted. The check was unreachable: it was guarded by
+     * `!isset($tx['TransactionType'])` instead of a comparison against
+     * AccountDelete, and it counted blockers with the JavaScript idiom
+     * `$objects['length']`, which is an undefined key in PHP.
+     */
+    public function testAccountDeleteIsRejectedWhenBlockersExist(): void
+    {
+        self::$server->setDefaultResponse(new RpcMethodResponse([
+            'server_info' => [
+                'info' => [
+                    'validated_ledger' => ['base_fee_xrp' => self::BASE_FEE_XRP],
+                    'load_factor' => 1,
+                ],
+            ],
+            'server_state' => [
+                'state' => ['validated_ledger' => ['reserve_inc' => self::RESERVE_INC]],
+            ],
+            'account_info' => ['account_data' => ['Sequence' => self::SEQUENCE]],
+            'ledger' => ['ledger_index' => self::LEDGER_INDEX],
+            'account_objects' => [
+                'account_objects' => [
+                    ['LedgerEntryType' => 'Escrow'],
+                ],
+            ],
+        ]));
+
+        $this->expectExceptionMessage('cannot be deleted');
+
+        $this->client->autofill([
+            'TransactionType' => 'AccountDelete',
+            'Account' => self::ACCOUNT,
+            'Destination' => self::DESTINATION,
+        ]);
+    }
+
+    /**
+     * The blocker lookup must not run for other transaction types.
+     */
+    public function testOtherTypesAreNotCheckedForBlockers(): void
+    {
+        self::$server->setDefaultResponse(new RpcMethodResponse([
+            'server_info' => [
+                'info' => [
+                    'validated_ledger' => ['base_fee_xrp' => self::BASE_FEE_XRP],
+                    'load_factor' => 1,
+                ],
+            ],
+            'account_info' => ['account_data' => ['Sequence' => self::SEQUENCE]],
+            'ledger' => ['ledger_index' => self::LEDGER_INDEX],
+            'account_objects' => [
+                'account_objects' => [['LedgerEntryType' => 'Escrow']],
+            ],
+        ]));
+
+        $tx = $this->client->autofill([
+            'TransactionType' => 'Payment',
+            'Account' => self::ACCOUNT,
+            'Destination' => self::DESTINATION,
+            'Amount' => '1000',
+        ]);
+
+        $this->assertEquals('12', $tx['Fee']);
     }
 }

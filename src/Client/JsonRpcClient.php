@@ -29,7 +29,6 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
-use function Hardcastle\XRPL_PHP\Sugar\autofill;
 use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
 use function Hardcastle\XRPL_PHP\Sugar\getXrpBalance;
 use function Hardcastle\XRPL_PHP\Sugar\getBalances;
@@ -413,14 +412,21 @@ class JsonRpcClient
     }
 
     /**
+     * Fill in Sequence, Fee and LastLedgerSequence where the transaction does
+     * not carry them already.
      *
+     * The transaction used to be taken by reference although it was never
+     * modified, which forced callers to pass a variable. It is passed by value
+     * now; existing calls keep working.
      *
      * @param Transaction|array $transaction
+     * @param int|null $signersCount Number of signatures a multi-signed transaction will carry
      * @return array
+     * @throws Exception
      */
-    public function autofill(Transaction|array &$transaction): array
+    public function autofill(Transaction|array $transaction, ?int $signersCount = null): array
     {
-        return autofill($this, $transaction);
+        return (new Autofiller($this))->autofill($transaction, $signersCount);
     }
 
     /**
