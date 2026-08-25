@@ -35,8 +35,6 @@ use function Hardcastle\XRPL_PHP\Sugar\getBalances;
 use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
 use function Hardcastle\XRPL_PHP\Sugar\getOrderbook;
 use function Hardcastle\XRPL_PHP\Sugar\getTransactions;
-use function Hardcastle\XRPL_PHP\Sugar\submit;
-use function Hardcastle\XRPL_PHP\Sugar\submitAndWait;
 
 class JsonRpcClient
 {
@@ -447,7 +445,7 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): SubmitResponse
     {
-        return submit($this, $transaction, $autofill, $failHard, $wallet);
+        return (new Submitter($this))->submit($transaction, $autofill, $failHard, $wallet);
     }
 
     /**
@@ -468,7 +466,7 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): TxResponse
     {
-        return submitAndWait($this, $transaction, $autofill, $failHard, $wallet);
+        return (new Submitter($this))->submitAndWait($transaction, $autofill, $failHard, $wallet);
     }
 
     /**
