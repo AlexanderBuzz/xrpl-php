@@ -44,7 +44,9 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getFeeXrp')) {
            $serverInfo['load_factor'] = 1;
        }
 
-       $fee = $baseFeeXrp->multipliedBy($serverInfo['load_factor'])->multipliedBy($feeCushion);
+       $fee = $baseFeeXrp
+           ->multipliedBy((string)$serverInfo['load_factor'])
+           ->multipliedBy((string)$feeCushion);
 
        $fee = BigDecimal::min($fee, $client->getMaxFeeXrp());
 

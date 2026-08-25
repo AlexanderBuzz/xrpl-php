@@ -56,44 +56,65 @@ class MathUtilities
      */
     public static function getBigDecimalPrecision(BigDecimal $number, bool $include_zeros = false): int
     {
-        $absNumber = $number->abs(); // Get the absolute value
-        $integralPart = $absNumber->getIntegralPart();
-        $fractionalPart = $absNumber->getFractionalPart();
+        [$integralPart, $fractionalPart] = self::splitDecimal($number->abs());
 
-        if ($include_zeros) {
-            $combined = $integralPart . $fractionalPart;
-        } else {
-            $combined = rtrim($integralPart . $fractionalPart, '0');
+        $combined = $integralPart . $fractionalPart;
+        if (!$include_zeros) {
+            $combined = rtrim($combined, '0');
         }
 
         return strlen($combined);
-
     }
 
     /**
+     * The power of ten of the most significant digit.
+     *
      * @param BigDecimal $number
      * @return int
      */
-    public static function getBigDecimalExponent(BigDecimal $number):int
+    public static function getBigDecimalExponent(BigDecimal $number): int
     {
-        if (str_starts_with('0', $number->abs()->getIntegralPart())) {
-            $fractional = $number->abs()->getFractionalPart();
+        [$integralPart, $fractionalPart] = self::splitDecimal($number->abs());
 
-            return -1 * (strlen($number->abs()->getFractionalPart()) - strlen(ltrim($fractional, '0')) + 1);
+        // Below one the exponent is negative and counts the leading zeros of
+        // the fractional part.
+        if ($integralPart === '0') {
+            return -1 * (strlen($fractionalPart) - strlen(ltrim($fractionalPart, '0')) + 1);
         }
 
-        return strlen($number->abs()->getIntegralPart()) - 1;
+        return strlen($integralPart) - 1;
     }
 
     public static function trimAmountZeros(BigDecimal $amount): string
     {
-        $ip = $amount->getIntegralPart();
-        $fp = $amount->getFractionalPart();
+        [$integralPart, $fractionalPart] = self::splitDecimal($amount);
 
-        $trimmed = rtrim($fp, '0');
+        $trimmed = rtrim($fractionalPart, '0');
 
         // A whole number is rendered without a fractional part, matching how
         // rippled and the reference SDKs serialize token amounts.
-        return (strlen($trimmed) > 0) ? $ip . '.' . $trimmed : $ip;
+        return (strlen($trimmed) > 0) ? $integralPart . '.' . $trimmed : $integralPart;
+    }
+
+    /**
+     * Split a decimal into its integral and fractional digits.
+     *
+     * This replaces BigDecimal::getIntegralPart() and getFractionalPart(),
+     * which brick/math 0.15 removes and 0.16 reintroduces with a different
+     * meaning. The string form of a BigDecimal is exactly those two parts
+     * joined by a dot, so the split reproduces them including the sign on the
+     * integral part.
+     *
+     * @param BigDecimal $number
+     * @return array{0: string, 1: string}
+     */
+    private static function splitDecimal(BigDecimal $number): array
+    {
+        $decimal = (string)$number;
+        $separator = strpos($decimal, '.');
+
+        return ($separator === false)
+            ? [$decimal, '']
+            : [substr($decimal, 0, $separator), substr($decimal, $separator + 1)];
     }
 }

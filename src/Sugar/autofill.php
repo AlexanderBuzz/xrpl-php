@@ -218,7 +218,9 @@ function calculateFeePerTransactionType (JsonRpcClient $client, array &$tx, ?int
  */
 function scaleValue (string $value, int|float $multiplier): BigDecimal
 {
-    return BigDecimal::of($value)->multipliedBy($multiplier);
+    // brick/math deprecates passing floats; the multipliers here are exact
+    // binary fractions, so the string form is lossless.
+    return BigDecimal::of($value)->multipliedBy((string)$multiplier);
 }
 
 /**

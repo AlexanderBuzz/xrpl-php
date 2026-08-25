@@ -6,7 +6,7 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Exception;
 
-const DROPS_PER_XRP = 1000000.0;
+const DROPS_PER_XRP = 1000000;
 const MAX_FRACTION_LENGTH = 6;
 const SANITY_CHECK = "/^-?[0-9.]+$/u";
 
@@ -30,7 +30,7 @@ if (! function_exists('Hardcastle\XRPL_PHP\Sugar\dropsToXrp')) {
             throw new Exception("dropsToXrp: failed sanity check - value \"{$drops}\" does not match (^-?[0-9]+$).");
         }
 
-        return (string) BigDecimal::of($drops)->exactlyDividedBy(DROPS_PER_XRP);
+        return (string) BigDecimal::of($drops)->dividedByExact(DROPS_PER_XRP);
     }
 }
 
