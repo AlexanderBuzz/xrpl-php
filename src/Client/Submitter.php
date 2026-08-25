@@ -66,10 +66,16 @@ class Submitter
     }
 
     /**
+     * Submit a transaction and return as soon as the server has taken it.
+     *
+     * The result is rippled's preliminary opinion, not an outcome: a
+     * tesSUCCESS here can still fail once the transaction is applied. Use
+     * submitAndWait() when the outcome matters.
+     *
      * @param Transaction|array|string $transaction
-     * @param bool|null $autofill
-     * @param bool|null $failHard
-     * @param Wallet|null $wallet
+     * @param bool|null $autofill Fill in Sequence, Fee and LastLedgerSequence first
+     * @param bool|null $failHard Refuse to retry the transaction in later ledgers
+     * @param Wallet|null $wallet Required unless the transaction is already signed
      * @return SubmitResponse
      * @throws Exception
      */
@@ -207,6 +213,11 @@ class Submitter
     }
 
     /**
+     * Whether a transaction carries a signature.
+     *
+     * A single-signed transaction has a SigningPubKey, a multi-signed one has
+     * Signers and an empty SigningPubKey, so either field is enough.
+     *
      * @param array $tx
      * @return bool
      */
@@ -216,8 +227,11 @@ class Submitter
     }
 
     /**
+     * The ledger after which the transaction can no longer be included, or
+     * null if it carries no such limit.
+     *
      * @param array|string $tx A transaction array or a tx_blob
-     * @param Definitions|null $definitions
+     * @param Definitions|null $definitions Needed to decode a blob of another network
      * @return int|null
      * @throws Exception
      */
@@ -234,8 +248,13 @@ class Submitter
     }
 
     /**
+     * Whether this is an AccountDelete.
+     *
+     * Those are submitted with failHard, because a deletion that is retried in
+     * a later ledger would burn the owner reserve again.
+     *
      * @param array|string $tx A transaction array or a tx_blob
-     * @param Definitions|null $definitions
+     * @param Definitions|null $definitions Needed to decode a blob of another network
      * @return bool
      * @throws Exception
      */

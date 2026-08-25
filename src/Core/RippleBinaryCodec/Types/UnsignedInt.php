@@ -13,6 +13,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Base class of the unsigned integer types.
+ */
 abstract class UnsignedInt extends SerializedType
 {
     protected BigInteger $value;

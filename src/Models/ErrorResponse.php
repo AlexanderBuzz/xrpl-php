@@ -10,6 +10,9 @@
 
 namespace Hardcastle\XRPL_PHP\Models;
 
+/**
+ * A response rippled rejected, carrying the error code it returned.
+ */
 class ErrorResponse
 {
     protected string $type = 'response';

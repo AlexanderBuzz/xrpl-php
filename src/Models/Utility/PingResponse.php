@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Models\Utility;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * The answer to a ping, used to check that a server responds.
+ */
 class PingResponse extends BaseResponse
 {
 

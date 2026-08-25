@@ -11,7 +11,8 @@
 namespace Hardcastle\XRPL_PHP\Core;
 
 /**
- *
+ * The four byte prefixes rippled puts in front of data before hashing it, so
+ * that a transaction hash can never collide with a ledger hash.
  */
 class HashPrefix
 {

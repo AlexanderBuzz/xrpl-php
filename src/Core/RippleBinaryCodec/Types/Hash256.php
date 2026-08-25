@@ -15,6 +15,9 @@ use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * A 256 bit (32 byte) hash - transaction ids, ledger indexes and most object references.
+ */
 class Hash256 extends Hash
 {
     protected static int $width = 32;

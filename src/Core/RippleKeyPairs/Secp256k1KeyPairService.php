@@ -8,6 +8,10 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
+/**
+ * secp256k1 signing, the algorithm the ledger started with and still the one
+ * behind most existing accounts.
+ */
 class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {
     private static ?Secp256k1KeyPairService $instance = null;

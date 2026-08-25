@@ -16,6 +16,13 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
+/**
+ * Encodes transactions to their binary form and back.
+ *
+ * encode() produces what gets submitted, encodeForSigning() the reduced form
+ * that a signature covers - fields marked as not being signing fields, such as
+ * TxnSignature and BatchSigners, are left out of it.
+ */
 class BinaryCodec extends Binary
 {
     const TRANSACTION_SIGN = '53545800';

@@ -15,6 +15,13 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
 
+/**
+ * An array of objects, such as Memos, Signers or the AmountEntry list of a Remit.
+ *
+ * Each element is an STObject; the array is terminated by a marker byte. Along
+ * with STObject this is one of the two types that resolve field names, so it
+ * carries the definitions of the network it was parsed with.
+ */
 class StArray extends SerializedType
 {
     public const ARRAY_END_MARKER = 0xf1;

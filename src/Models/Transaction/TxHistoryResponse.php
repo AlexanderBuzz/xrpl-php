@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * A page of the server's transaction history.
+ */
 class TxHistoryResponse extends BaseResponse
 {
 

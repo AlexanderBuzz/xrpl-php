@@ -14,6 +14,12 @@ use BI\BigInteger;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * Base class of the fixed width hash types.
+ *
+ * The width is fixed per subclass and enforced on construction: a value of the
+ * wrong length would shift every field that follows it.
+ */
 abstract class Hash extends SerializedType
 {
     protected static int $width;

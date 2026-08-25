@@ -14,6 +14,12 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An account, 20 bytes on the wire.
+ *
+ * The JSON form is the familiar base58 classic address; the bytes are the
+ * RIPEMD160 of the SHA256 of the public key, which is what the address encodes.
+ */
 class AccountId extends Hash160
 {
     private const HEX_REGEX = "/^[A-F0-9]{40}$/";

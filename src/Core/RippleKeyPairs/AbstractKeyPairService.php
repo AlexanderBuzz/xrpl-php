@@ -7,6 +7,10 @@ use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 use Hardcastle\XRPL_PHP\Core\CoreUtilities;
 
+/**
+ * Behaviour shared by the signing algorithms, such as deriving an address from a
+ * public key.
+ */
 class AbstractKeyPairService
 {
     protected const PREFIX_ED25519 = 'ED';

@@ -10,6 +10,9 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 
+/**
+ * Byte and array helpers shared by the address codec.
+ */
 class Utils
 {
     const XRPL_ALPHABET = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz";

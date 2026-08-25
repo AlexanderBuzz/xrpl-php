@@ -16,6 +16,12 @@ use Hardcastle\XRPL_PHP\Exceptions\XrplException;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger;
 
+/**
+ * A key pair with the ability to sign.
+ *
+ * Signing runs through the binary codec, so a wallet for another network has to
+ * be constructed with that network's definitions.
+ */
 class Wallet
 {
 

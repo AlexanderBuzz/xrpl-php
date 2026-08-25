@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Models\Transaction;
 
 use Hardcastle\XRPL_PHP\Models\BaseResponse;
 
+/**
+ * A looked up transaction, including whether it is in a validated ledger.
+ */
 class TxResponse extends BaseResponse
 {
 

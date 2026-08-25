@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Encodes and decodes the address forms of the XRP Ledger: classic addresses,
+ * X-addresses, seeds and public keys.
+ */
 class AddressCodec extends CodecWithXrpAlphabet
 {
     public const PREFIX_BYTES = [

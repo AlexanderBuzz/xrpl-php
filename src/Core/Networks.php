@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Core;
 
 use Exception;
 
+/**
+ * The known networks and their endpoints, so that 'testnet' can be written
+ * instead of a URL.
+ */
 class Networks
 {
     private const NETWORKS = [

@@ -30,6 +30,13 @@ use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as T
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
+/**
+ * A connection to a rippled server over JSON-RPC.
+ *
+ * Beyond issuing requests it offers the operations most callers need -
+ * autofill, submit, balances, transaction history - each delegating to a class
+ * of its own.
+ */
 class JsonRpcClient
 {
     private const DEFAULT_FEE_CUSHION = 1.2;

@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Core\Stablecoin;
 
 use Exception;
 
+/**
+ * Ripple USD, with its issuers on Mainnet and Testnet.
+ */
 class RLUSD extends Stablecoin {
     private const SETTINGS = [
         'mainnet' => [

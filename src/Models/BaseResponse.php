@@ -10,6 +10,9 @@
 
 namespace Hardcastle\XRPL_PHP\Models;
 
+/**
+ * Base of every response object, wrapping rippled's result envelope.
+ */
 abstract class BaseResponse
 {
     protected int|string|null $id = null;

@@ -16,6 +16,29 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
 /**
+ * Base class of every type the binary codec knows.
+ *
+ * A serialized type is a wrapper around the bytes of one field as they appear
+ * on the wire. Every subclass implements the same four operations, so the rest
+ * of the codec can treat them interchangeably:
+ *
+ *   fromParser()  reads an instance out of a byte stream, advancing the parser
+ *                 past it. Variable length fields receive the length that the
+ *                 field header announced as $lengthHint.
+ *   fromJson()    builds an instance from the JSON form rippled uses for that
+ *                 field - usually a string, an array for the composite types.
+ *   toJson()      the reverse, and the shape rippled expects to receive.
+ *   toBytes()     the raw bytes, which is what actually gets signed.
+ *
+ * fromJson() and toJson() are not symmetric with the PHP type system: a
+ * Hash256 takes and returns a hex string, an Amount takes and returns either a
+ * string of drops or an array, and STObject nests. What they are symmetric in
+ * is the round trip - decode(encode($x)) has to equal $x.
+ *
+ * Only STObject and STArray resolve field names, so only those two need to
+ * know which network's definitions apply; the rest serialize their own bytes
+ * and are network agnostic.
+ *
  * JavaScript:
  * https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-binary-codec/src/types/serialized-type.ts
  *
@@ -35,6 +58,7 @@ abstract class SerializedType
     }
 
     /**
+     * Append these bytes to a list being assembled.
      *
      * @param BytesList $list
      * @return void
@@ -45,6 +69,8 @@ abstract class SerializedType
     }
 
     /**
+     * The raw bytes of this value, as they appear on the wire.
+     *
      * @return Buffer
      */
     public function toBytes(): Buffer
@@ -53,6 +79,8 @@ abstract class SerializedType
     }
 
     /**
+     * The bytes as an uppercase hex string.
+     *
      * @return string
      */
     public function toHex(): string
@@ -61,6 +89,11 @@ abstract class SerializedType
     }
 
     /**
+     * The JSON form rippled uses for this field.
+     *
+     * Types that carry no structure of their own fall back to hex, which is
+     * how rippled renders them too.
+     *
      * @return array|string|int
      */
     public function toJson(): array|string|int
@@ -77,6 +110,7 @@ abstract class SerializedType
     }
 
     /**
+     * Read an instance out of a hex string.
      *
      * @param string $hex
      * @return SerializedType
@@ -89,9 +123,12 @@ abstract class SerializedType
     }
 
     /**
+     * The class that handles a type named in definitions.json.
      *
+     * Returns an empty instance, which the codec then uses as a factory - the
+     * static fromParser() and fromJson() are reached through it.
      *
-     * @param string $name
+     * @param string $name A key of the TYPES section of definitions.json
      * @return SerializedType
      * @throws Exception
      */
@@ -140,8 +177,21 @@ abstract class SerializedType
         return new $typeMap[$name]();
     }
 
+    /**
+     * Read an instance from a byte stream, advancing the parser past it.
+     *
+     * @param BinaryParser $parser
+     * @param int|null $lengthHint Byte count for variable length fields
+     * @return SerializedType
+     */
     abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
+    /**
+     * Build an instance from the JSON form rippled uses for this field.
+     *
+     * @param string $serializedJson A scalar, or a JSON encoded array for the composite types
+     * @return SerializedType
+     */
     abstract static function fromJson(string $serializedJson): SerializedType;
 
 }

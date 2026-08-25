@@ -12,6 +12,10 @@ namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * The base58 codec bound to the XRP Ledger's own alphabet, which differs from
+ * the Bitcoin one.
+ */
 class CodecWithXrpAlphabet extends Codec
 {
     public const ACCOUNT_ID = 0; // Account address (20 bytes)

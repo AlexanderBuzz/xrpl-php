@@ -10,6 +10,10 @@
 
 namespace Hardcastle\XRPL_PHP\Models\Common;
 
+/**
+ * An amount as it appears in a request or response, in contrast to the binary
+ * codec's Amount which deals in bytes.
+ */
 class Amount
 {
     public function __construct(

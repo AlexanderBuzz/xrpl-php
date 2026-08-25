@@ -6,6 +6,10 @@ use Elliptic\EdDSA;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 
+/**
+ * Ed25519 signing. The default for new wallets; its public keys are marked by a
+ * leading ED byte.
+ */
 class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairServiceInterface
 {
     private static ?Ed25519KeyPairService $instance = null;

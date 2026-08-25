@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Core\Stablecoin;
 
 use Exception;
 
+/**
+ * Base class for the well known stablecoins, holding their issuer per network.
+ */
 abstract class Stablecoin
 {
 

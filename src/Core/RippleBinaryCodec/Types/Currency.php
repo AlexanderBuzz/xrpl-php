@@ -15,6 +15,13 @@ use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * A currency code, 20 bytes on the wire.
+ *
+ * Renders as "XRP" for the native asset, as a three character code where the
+ * bytes allow it, and otherwise as the full 40 character hex - which is how
+ * non-standard codes are carried.
+ */
 class Currency extends Hash160
 {
     private const XRP_HEX_REGEX = '/^0{40}$/';

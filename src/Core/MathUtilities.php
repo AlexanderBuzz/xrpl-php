@@ -13,6 +13,12 @@ namespace Hardcastle\XRPL_PHP\Core;
 use Brick\Math\BigDecimal;
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Decimal and hashing helpers.
+ *
+ * The decimal functions exist because token amounts carry more precision than
+ * a PHP float can hold, so everything goes through brick/math.
+ */
 class MathUtilities
 {
     public static function unsignedRightShift(int $value, int $steps): int

@@ -49,6 +49,13 @@ class Autofiller
     }
 
     /**
+     * Fill in what a transaction needs before it can be signed.
+     *
+     * Only fields the transaction does not carry already are touched, so a
+     * caller can pin any of them by setting it beforehand. Empty SourceTag and
+     * DestinationTag entries are removed, because rippled treats a present tag
+     * of 0 differently from an absent one.
+     *
      * @param Transaction|string|array $transaction A model, a tx_blob or an array
      * @param int|null $signersCount Number of signatures a multi-signed transaction will carry
      * @return array
@@ -119,6 +126,12 @@ class Autofiller
     }
 
     /**
+     * Replace one X-address field with its classic address, and write the tag
+     * it carries into the matching tag field.
+     *
+     * An X-address encodes the destination tag, so a tag given separately has
+     * to agree with it.
+     *
      * @param array $tx
      * @param string $accountField
      * @param string $tagField
@@ -141,9 +154,14 @@ class Autofiller
     }
 
     /**
-     * @param string $account
-     * @param int|null $expectedTag
-     * @return array
+     * Split an address into its classic form and its tag.
+     *
+     * A classic address is returned unchanged together with the tag that was
+     * passed in, so callers do not have to know which form they hold.
+     *
+     * @param string $account A classic address or an X-address
+     * @param int|null $expectedTag Has to match the tag inside an X-address
+     * @return array{classicAccount: string, tag: int|false|null}
      * @throws Exception
      */
     public static function getClassicAccountAndTag(string $account, ?int $expectedTag = null): array
@@ -167,6 +185,11 @@ class Autofiller
     }
 
     /**
+     * Rewrite one address field to its classic form, ignoring any tag.
+     *
+     * Used for the fields that name an account without addressing a payment to
+     * it, such as Authorize, Owner and RegularKey.
+     *
      * @param array $tx
      * @param string $fieldName
      * @return void
@@ -183,6 +206,11 @@ class Autofiller
     }
 
     /**
+     * Set Sequence to the account's next one.
+     *
+     * Read from the current ledger rather than the validated one, so that
+     * transactions submitted back to back do not reuse a sequence.
+     *
      * @param array $tx
      * @return void
      * @throws Exception
@@ -223,8 +251,15 @@ class Autofiller
     }
 
     /**
+     * Set Fee to what this transaction type costs.
+     *
+     * Usually the network fee, but AccountDelete and AMMCreate burn one owner
+     * reserve instead, and EscrowFinish pays a surcharge that grows with the
+     * size of its fulfillment. Multi-signing adds one network fee per
+     * signature.
+     *
      * @param array $tx
-     * @param int|null $signersCount
+     * @param int|null $signersCount Number of signatures the transaction will carry
      * @return void
      * @throws MathException
      */
@@ -263,6 +298,8 @@ class Autofiller
     }
 
     /**
+     * Multiply a decimal string by a factor.
+     *
      * @param string $value
      * @param int|float $multiplier
      * @return BigDecimal
@@ -276,6 +313,12 @@ class Autofiller
     }
 
     /**
+     * Set LastLedgerSequence, the ledger after which the transaction can no
+     * longer be included.
+     *
+     * Without it a transaction could sit in the queue indefinitely, and
+     * reliable submission would have no point at which to stop waiting.
+     *
      * @param array $tx
      * @return void
      */

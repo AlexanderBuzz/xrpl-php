@@ -15,6 +15,9 @@ use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * A 128 bit (16 byte) hash. Used by EmailHash.
+ */
 class Hash128 extends Hash
 {
     protected static int $width = 16;

@@ -14,6 +14,9 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
 
+/**
+ * Turns bytes into JSON, and holds the definitions the codec works against.
+ */
 class Binary
 {
     protected ?Definitions $definitions = null;

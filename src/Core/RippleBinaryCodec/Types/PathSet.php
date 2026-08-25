@@ -14,6 +14,12 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
+/**
+ * The alternative paths offered for a cross-currency payment.
+ *
+ * At most six paths, each a sequence of steps, terminated on the wire by a
+ * marker byte.
+ */
 class PathSet extends SerializedType
 {
     public const PATHSET_END_BYTE = 0x00;

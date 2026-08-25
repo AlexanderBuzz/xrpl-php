@@ -14,6 +14,13 @@ use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An unsigned 64 bit integer.
+ *
+ * Rendered as a 16 character hex string in JSON, unlike the smaller widths
+ * which are numbers. The MPToken amount fields are the exception and use base
+ * 10; see BASE_10_FIELDS.
+ */
 class UnsignedInt64 extends UnsignedInt
 {
     public const WIDTH = 8;

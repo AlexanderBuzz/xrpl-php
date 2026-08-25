@@ -6,6 +6,10 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Hardcastle\XRPL_PHP\Core\CoreUtilities;
 
+/**
+ * What an algorithm has to provide: generate a seed, derive a key pair from it,
+ * sign and verify.
+ */
 interface KeyPairServiceInterface
 {
     /**

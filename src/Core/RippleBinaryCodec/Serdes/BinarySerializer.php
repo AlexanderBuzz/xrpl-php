@@ -15,6 +15,9 @@ use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
+/**
+ * Assembles a byte stream, writing field headers, lengths and values in order.
+ */
 class BinarySerializer
 {
     public function __construct(private readonly Buffer $bytes)

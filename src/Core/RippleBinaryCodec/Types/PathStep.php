@@ -14,6 +14,12 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
+/**
+ * One hop of a payment path.
+ *
+ * A step names an account to ride through, a currency to convert into, or an
+ * issuer - which of the three is present is encoded in a leading type byte.
+ */
 class PathStep extends SerializedType
 {
     const TYPE_ACCOUNT = 0x01;

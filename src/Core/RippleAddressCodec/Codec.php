@@ -13,6 +13,10 @@ namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 use Exception;
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Base58 encoding with a four byte checksum and a version prefix, which is what
+ * makes a mistyped address detectable rather than merely wrong.
+ */
 class Codec
 {
     private readonly BaseX $baseCodec;

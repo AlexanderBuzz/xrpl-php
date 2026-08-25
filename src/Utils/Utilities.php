@@ -4,6 +4,9 @@ namespace Hardcastle\XRPL_PHP\Utils;
 
 use Hardcastle\Buffer\Buffer;
 
+/**
+ * Assorted helpers that have no better home yet.
+ */
 class Utilities
 {
     public const HEX_REGEX = '/^[A-F0-9a-f]+$/';

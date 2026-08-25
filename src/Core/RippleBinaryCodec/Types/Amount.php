@@ -20,6 +20,14 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 define('MAX_DROPS', BigDecimal::of("1e17"));
 define('MIN_XRP', BigDecimal::of("1e-6"));
 
+/**
+ * An amount of XRP, of an issued token or of an MPT.
+ *
+ * The three are told apart by the top bits of the first byte and differ in
+ * length: 8 bytes for XRP, 48 for a token (mantissa, currency, issuer) and 33
+ * for an MPT (value plus the 24 byte issuance id). XRP is a plain integer
+ * count of drops, a token value is a signed decimal with its own exponent.
+ */
 class Amount extends SerializedType
 {
     public const DEFAULT_AMOUNT_HEX = "4000000000000000";

@@ -13,6 +13,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleAddressCodec;
 use Hardcastle\Buffer\Buffer;
 use SplFixedArray;
 
+/**
+ * Base conversion for arbitrary alphabets, the machinery behind base58.
+ */
 class BaseX
 {
     private const SIZE = 256;

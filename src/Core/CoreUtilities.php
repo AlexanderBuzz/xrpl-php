@@ -14,6 +14,10 @@ use Exception;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleAddressCodec\AddressCodec;
 
+/**
+ * Address helpers used across the library: validation, and conversion between
+ * classic addresses and X-addresses.
+ */
 class CoreUtilities
 {
     private static ?CoreUtilities $instance = null;

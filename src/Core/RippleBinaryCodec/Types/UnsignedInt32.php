@@ -14,6 +14,9 @@ use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * An unsigned 32 bit integer - Sequence, Flags, Expiration and most counters.
+ */
 class UnsignedInt32 extends UnsignedInt
 {
     public const WIDTH = 4;

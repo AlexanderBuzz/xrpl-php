@@ -12,6 +12,9 @@ namespace Hardcastle\XRPL_PHP\Core\Stablecoin;
 
 use Exception;
 
+/**
+ * Circle USD, with its issuers on Mainnet and Testnet.
+ */
 class USDC extends Stablecoin {
     private const SETTINGS = [
         'mainnet' => [

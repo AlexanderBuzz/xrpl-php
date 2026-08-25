@@ -4,6 +4,9 @@ namespace Hardcastle\XRPL_PHP\Core\RippleKeyPairs;
 
 use Exception;
 
+/**
+ * A public and private key pair, and the entry point for choosing an algorithm.
+ */
 class KeyPair
 {
     public const EDDSA = 'ed25519';

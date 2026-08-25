@@ -6,6 +6,9 @@ use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 
+/**
+ * A signed 64 bit integer.
+ */
 class SignedInt64 extends SignedInt
 {
     public const WIDTH = 8;

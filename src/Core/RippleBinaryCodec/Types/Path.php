@@ -15,6 +15,9 @@ use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BytesList;
 
+/**
+ * One path a payment can take, a sequence of steps.
+ */
 class Path extends SerializedType
 {
     public function __construct(?Buffer $bytes = null)

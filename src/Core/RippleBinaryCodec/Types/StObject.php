@@ -18,6 +18,13 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinaryParser;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes\BinarySerializer;
 use Hardcastle\XRPL_PHP\Core\CoreUtilities;
 
+/**
+ * A nested object, and the outermost container of every transaction.
+ *
+ * Fields are written in the order of their definitions ordinal, not the order
+ * they were given in, because the signature covers the canonical ordering.
+ * Along with STArray this is one of the two types that resolve field names.
+ */
 class StObject extends SerializedType
 {
     public const OBJECT_END_MARKER_HEX = "E1";
