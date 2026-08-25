@@ -29,8 +29,6 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxResponse;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
-use function Hardcastle\XRPL_PHP\Sugar\fundWallet;
-use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
 
 class JsonRpcClient
 {
@@ -390,7 +388,7 @@ class JsonRpcClient
      */
     public function getFeeXrp(?int $cushion = null): string
     {
-        return getFeeXrp($this, $cushion);
+        return (new FeeCalculator($this))->getFeeXrp($cushion === null ? null : (float)$cushion);
     }
 
     /**
@@ -402,7 +400,7 @@ class JsonRpcClient
      */
     public function fundWallet(?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
-        return fundWallet($this, $wallet, $faucetHost)['wallet'];
+        return (new Faucet($this))->fundWallet($wallet, $faucetHost)['wallet'];
     }
 
     /**

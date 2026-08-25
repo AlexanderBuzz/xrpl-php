@@ -2,55 +2,22 @@
 
 namespace Hardcastle\XRPL_PHP\Sugar;
 
-use Brick\Math\BigDecimal;
-use Brick\Math\RoundingMode;
 use Exception;
+use Hardcastle\XRPL_PHP\Client\FeeCalculator;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
-use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerInfoRequest;
+
+/**
+ * Thin wrapper around Hardcastle\XRPL_PHP\Client\FeeCalculator.
+ */
 
 if (! function_exists('Hardcastle\XRPL_PHP\Sugar\getFeeXrp')) {
 
     /**
-     *  Calculates the current transaction fee for the ledger.
-     * Note: This is a public API that can be called directly.
-     *
-     * @param JsonRpcClient $client
-     * @param int|null $cushion
-     * @return string
-     * @throws \Brick\Math\Exception\MathException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
+     * @deprecated Use JsonRpcClient::getFeeXrp() or FeeCalculator::getFeeXrp()
+     * @throws Exception
      */
-    function getFeeXrp(
-        JsonRpcClient $client,
-        ?int $cushion = null
-    ): string
+    function getFeeXrp(JsonRpcClient $client, ?int $cushion = null): string
     {
-       $feeCushion = $cushion ?? $client->getFeeCushion();
-
-       $serverInfoRequest = new ServerInfoRequest();
-
-       $serverInfoResponse = $client->request($serverInfoRequest)->wait();
-
-       $serverInfo = $serverInfoResponse->getResult()['info'];
-
-       $baseFee = $serverInfo['validated_ledger']['base_fee_xrp'] ?? null;
-
-       if(is_null($baseFee)) {
-           throw new Exception('getFeeXrp: Could not get base_fee_xrp from server_info');
-       }
-
-       $baseFeeXrp = BigDecimal::of($baseFee);
-       if(is_null($serverInfo['load_factor'])) {
-           $serverInfo['load_factor'] = 1;
-       }
-
-       $fee = $baseFeeXrp
-           ->multipliedBy((string)$serverInfo['load_factor'])
-           ->multipliedBy((string)$feeCushion);
-
-       $fee = BigDecimal::min($fee, $client->getMaxFeeXrp());
-
-       //Round fee to 6 decimal places
-       return $fee->toScale(6, RoundingMode::UP);
+        return (new FeeCalculator($client))->getFeeXrp($cushion === null ? null : (float)$cushion);
     }
 }

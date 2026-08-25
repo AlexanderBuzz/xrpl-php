@@ -22,7 +22,6 @@ use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerStateRequest;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
-use function Hardcastle\XRPL_PHP\Sugar\getFeeXrp;
 use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
 /**
@@ -231,7 +230,7 @@ class Autofiller
      */
     public function calculateFeePerTransactionType(array &$tx, ?int $signersCount = 0): void
     {
-        $netFeeXrp = getFeeXrp($this->client);
+        $netFeeXrp = (new FeeCalculator($this->client))->getFeeXrp();
         $netFeeDrops = xrpToDrops($netFeeXrp);
         $baseFee = BigDecimal::of($netFeeDrops);
 
