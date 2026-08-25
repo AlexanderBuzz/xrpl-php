@@ -55,6 +55,11 @@ class JsonRpcClient
 
     private readonly string $maxFeeXrp;
 
+    /**
+     * Open a connection to a rippled server.
+     * The URL may be a short network name such as 'testnet' instead of an address.
+     * Pass definitions to talk to a network other than the XRP Ledger.
+     */
     public function __construct(
         string $connectionUrl,
         ?float $feeCushion = null,
@@ -105,6 +110,10 @@ class JsonRpcClient
      * @param BaseRequest $request
      * @param bool|null $returnRawResponse
      * @return PromiseInterface
+     */
+    /**
+     * Issue a request and get a promise for the typed response.
+     * Use syncRequest() when the answer is needed right away.
      */
     public function request(BaseRequest $request, ?bool $returnRawResponse = false): PromiseInterface
     {
@@ -316,8 +325,11 @@ class JsonRpcClient
     {
         return (new AccountReader($this))->getXrpBalance($address);
     }
-
     /**
+     * Every balance an account holds: XRP and all its trust lines.
+     * Pages through the ledger until there is nothing left, so a large account
+     * causes several round trips.
+     *
      * @param string $address
      * @param string|null $ledgerHash
      * @param string|null $ledgerIndex
@@ -336,8 +348,10 @@ class JsonRpcClient
     {
         return (new AccountReader($this))->getBalances($address, $ledgerHash, $ledgerIndex, $peer, $limit);
     }
-
     /**
+     * The transaction history of an account, newest first unless $forward is set.
+     * Pages through the ledger the same way getBalances() does.
+     *
      * @param string $address
      * @param int|null $ledgerIndexMin
      * @param int|null $ledgerIndexMax
@@ -364,8 +378,9 @@ class JsonRpcClient
     {
         return (new AccountReader($this))->getTransactions($address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
     }
-
     /**
+     * The offers standing in one order book of the decentralized exchange.
+     *
      * @param array $takerGets
      * @param array $takerPays
      * @param string|null $ledgerHash
@@ -397,9 +412,9 @@ class JsonRpcClient
     {
         return (new FeeCalculator($this))->getFeeXrp($cushion === null ? null : (float)$cushion);
     }
-
     /**
-     *
+     * Ask a test network faucet for a funded wallet.
+     * Generates one if none is given, and waits until the funds have arrived.
      *
      * @param Wallet|null $wallet
      * @param string|null $faucetHost
@@ -427,15 +442,14 @@ class JsonRpcClient
     {
         return (new Autofiller($this))->autofill($transaction, $signersCount);
     }
-
     /**
-     *
+     * Submit a transaction and return the server's preliminary opinion.
+     * That opinion is not an outcome; use submitAndWait() when it matters.
      *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
      * @return SubmitResponse
      * @throws Exception
      */
@@ -448,15 +462,15 @@ class JsonRpcClient
     {
         return (new Submitter($this))->submit($transaction, $autofill, $failHard, $wallet);
     }
-
     /**
-     *
+     * Submit a transaction and wait until its outcome is final.
+     * Polls until the transaction is in a validated ledger, or until its
+     * LastLedgerSequence has passed and it never can be.
      *
      * @param Transaction|string|array $transaction
      * @param bool|null $autofill
      * @param bool|null $failHard
      * @param Wallet|null $wallet
-     *
      * @return TxResponse
      * @throws Exception
      */

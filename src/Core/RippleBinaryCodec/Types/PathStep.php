@@ -105,6 +105,9 @@ class PathStep extends SerializedType
         return $result;
     }
 
+    /**
+     * Whether an array has the shape of a path step.
+     */
     public static function isPathStep(array $testSubject):  bool
     {
         return (

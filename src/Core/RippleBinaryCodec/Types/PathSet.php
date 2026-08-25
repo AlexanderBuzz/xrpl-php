@@ -82,6 +82,9 @@ class PathSet extends SerializedType
         return $result;
     }
 
+    /**
+     * Whether an array has the shape of a path set.
+     */
     public static function isPathSet(mixed $testSubject): bool
     {
         return (

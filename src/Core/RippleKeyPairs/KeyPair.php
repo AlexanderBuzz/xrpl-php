@@ -49,6 +49,9 @@ class KeyPair
         $this->privateKey = $privateKey;
     }
 
+    /**
+     * The pair as a plain array of public and private key.
+     */
     public function toArray(): array
     {
         return [
@@ -56,8 +59,9 @@ class KeyPair
             'privateKey' => $this->getPrivateKey(),
         ];
     }
-
     /**
+     * The signing implementation for an algorithm name.
+     *
      * @throws Exception Error
      */
     public static function getKeyPairServiceByType(string $type = self::EDDSA): KeyPairServiceInterface

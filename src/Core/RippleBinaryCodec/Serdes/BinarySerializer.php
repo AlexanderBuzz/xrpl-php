@@ -24,16 +24,26 @@ class BinarySerializer
     {
     }
 
+    /**
+     * Append raw hex to the stream.
+     */
     public function put(string $hexBytes): void
     {
         $this->bytes->appendHex($hexBytes);
     }
 
+    /**
+     * Append the bytes of a serialized value.
+     */
     public function write(Buffer $bytes): void
     {
         $this->bytes->appendBuffer($bytes);
     }
 
+    /**
+     * Append a field: its header, a length prefix where the field needs one, and
+     * the value itself.
+     */
     public function writeFieldAndValue(FieldInstance $field, SerializedType $value): void
     {
         $fieldHeaderHex = $field->getHeader()->toBytes()->toString();
@@ -46,6 +56,9 @@ class BinarySerializer
         }
     }
 
+    /**
+     * Append a value preceded by its length, for the variable length fields.
+     */
     public function writeLengthEncoded(SerializedType $value): void
     {
         $buffer = $value->toBytes();

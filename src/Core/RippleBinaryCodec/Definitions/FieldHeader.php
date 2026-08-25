@@ -17,6 +17,11 @@ class FieldHeader implements Hashable
     {
     }
 
+    /**
+     * The header as it is written to the stream.
+     * Type and field ordinal share one byte where both are below 16, and spill
+     * into extra bytes otherwise.
+     */
     public function toBytes(): Buffer
     {
         $header = [];
@@ -80,6 +85,9 @@ class FieldHeader implements Hashable
         return $this->typeCode . ":" . $this->fieldCode;
     }
 
+    /**
+     * Whether two headers name the same field.
+     */
     public function equals($obj): bool
     {
         return ($this->typeCode === $obj->getTypeCode() && $this->fieldCode === $obj->getFieldCode());

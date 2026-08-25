@@ -21,6 +21,9 @@ use Hardcastle\Buffer\Buffer;
  */
 class MathUtilities
 {
+    /**
+     * A right shift that does not carry the sign, the way JavaScript's >>> works.
+     */
     public static function unsignedRightShift(int $value, int $steps): int
     {
         if ($steps === 0) {
@@ -30,6 +33,9 @@ class MathUtilities
         return ($value >> $steps) & ~(1 << (8 * PHP_INT_SIZE - 1) >> ($steps - 1));
     }
 
+    /**
+     * The account id of a public key: RIPEMD160 over its SHA256.
+     */
     public static function computePublicKeyHash(Buffer $bytes): Buffer
     {
         $hash256 = hash('sha256', $bytes->toUtf8(), true);
@@ -38,6 +44,9 @@ class MathUtilities
         return Buffer::from($hash160);
     }
 
+    /**
+     * The first half of a SHA512, which is how the ledger builds its hashes.
+     */
     public static function sha512Half(Buffer|string $input): Buffer
     {
         if ($input instanceof Buffer) {
@@ -91,6 +100,10 @@ class MathUtilities
         return strlen($integralPart) - 1;
     }
 
+    /**
+     * Render a token amount without trailing zeros, and without a fractional part
+     * when there is none left.
+     */
     public static function trimAmountZeros(BigDecimal $amount): string
     {
         [$integralPart, $fractionalPart] = self::splitDecimal($amount);

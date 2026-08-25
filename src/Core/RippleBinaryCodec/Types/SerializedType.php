@@ -187,10 +187,11 @@ abstract class SerializedType
     abstract static function fromParser(BinaryParser $parser, ?int $lengthHint = null): SerializedType;
 
     /**
-     * Build an instance from the JSON form rippled uses for this field.
+     * Build an instance from the JSON form rippled uses for this field: a
+     * scalar, or a JSON encoded array for the composite types.
      *
-     * @param string $serializedJson A scalar, or a JSON encoded array for the composite types
-     * @return SerializedType
+     * Some subclasses widen the parameter to accept an int as well, so the
+     * type is deliberately left to the signatures rather than pinned here.
      */
     abstract static function fromJson(string $serializedJson): SerializedType;
 

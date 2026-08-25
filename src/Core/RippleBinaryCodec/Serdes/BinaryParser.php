@@ -53,9 +53,8 @@ class BinaryParser
     {
         return $this->definitions ??= Definitions::getInstance();
     }
-
     /**
-     *
+     * The next byte without consuming it.
      *
      * @return int
      * @throws Exception
@@ -68,9 +67,8 @@ class BinaryParser
 
         throw new \Exception('Buffer is empty');
     }
-
     /**
-     *
+     * Discard the next $n bytes.
      *
      * @param int $number
      * @return void
@@ -84,9 +82,8 @@ class BinaryParser
             throw new Exception('Trying to skip more elements than the buffer has');
         }
     }
-
     /**
-     *
+     * Consume and return the next $n bytes.
      *
      * @param int $number
      * @return Buffer
@@ -103,9 +100,8 @@ class BinaryParser
 
         throw new Exception('Trying to read more elements than the buffer has');
     }
-
     /**
-     *
+     * Consume $n bytes and read them as a big endian unsigned integer.
      *
      * @param int $number
      * @return Buffer
@@ -121,13 +117,15 @@ class BinaryParser
         throw new Exception('Invalid number');
     }
 
+    /**
+     * Consume one byte as an unsigned integer.
+     */
     public function readUInt8(): Buffer
     {
         return $this->readUIntN(1);
     }
-
     /**
-     *
+     * Consume two bytes as an unsigned integer.
      *
      * @return Buffer
      * @throws Exception
@@ -136,9 +134,8 @@ class BinaryParser
     {
         return $this->readUIntN(2);
     }
-
     /**
-     *
+     * Consume four bytes as an unsigned integer.
      *
      * @return Buffer
      * @throws Exception
@@ -147,9 +144,8 @@ class BinaryParser
     {
         return $this->readUIntN(4);
     }
-
     /**
-     *
+     * Consume eight bytes as an unsigned integer.
      *
      * @return Buffer
      * @throws Exception
@@ -158,9 +154,8 @@ class BinaryParser
     {
         return $this->readUIntN(8);
     }
-
     /**
-     *
+     * Whether the stream is exhausted.
      *
      * @param int|null $customEnd
      * @return bool
@@ -179,9 +174,10 @@ class BinaryParser
 
         return false;
     }
-
     /**
-     *
+     * Read the type and field ordinal that introduce the next field.
+     * Both are packed into one byte where they are small enough, and spill into
+     * following bytes otherwise, which is why this is not a fixed width read.
      *
      * @return FieldHeader
      * @throws Exception
@@ -208,9 +204,8 @@ class BinaryParser
 
         return new FieldHeader($typeCode, $nth);
     }
-
     /**
-     *
+     * Read the next field header and resolve it to a field of the definitions.
      *
      * @return FieldInstance
      * @throws Exception
@@ -222,9 +217,8 @@ class BinaryParser
 
         return $this->getDefinitions()->getFieldInstance($fieldName);
     }
-
     /**
-     *
+     * Read one value of the given type from the stream.
      *
      * @param SerializedType $type
      * @return SerializedType
@@ -234,11 +228,18 @@ class BinaryParser
         return $type->fromParser($this);
     }
 
+    /**
+     * The type class that handles a field's values.
+     */
     public function typeForField(FieldInstance $field): SerializedType
     {
         return SerializedType::getTypeByName($field->getType());
     }
 
+    /**
+     * Read the value belonging to a field, taking its length from the stream first
+     * where the field is variable length.
+     */
     public function readFieldValue(FieldInstance $field): SerializedType
     {
         $type = SerializedType::getTypeByName($field->getType());
@@ -250,9 +251,9 @@ class BinaryParser
             return $type->fromParser($this);
         }
     }
-
     /**
-     *
+     * Read the length prefix of a variable length field.
+     * The prefix is one to three bytes; which it is follows from the first one.
      *
      * @return int
      * @throws Exception

@@ -26,11 +26,17 @@ class Codec
         $this->baseCodec = new BaseX($this->alphabet);
     }
 
+    /**
+     * Encode bytes with a version prefix and a checksum.
+     */
     public function encode(Buffer $bytes, array $options): string
     {
         return $this->encodeVersioned($bytes, $options['versions'], $options['expectedLength']);
     }
 
+    /**
+     * Decode a string, verifying its checksum and stripping the version prefix.
+     */
     public function decode(string $base58String, array $options): array
     {
         $withoutSum = $this->decodeChecked($base58String);
@@ -70,12 +76,19 @@ class Codec
         throw new Exception('Unknown version');
     }
 
+    /**
+     * Append a four byte checksum and encode the result.
+     */
     public function encodeChecked(Buffer $bytes): string
     {
         $check = $this->sha256($this->sha256($bytes))->slice(0,4);
         return $this->encodeRaw(Buffer::concat([$bytes, $check]));
     }
 
+    /**
+     * Decode and verify the four byte checksum, so that a mistyped character is
+     * caught rather than silently accepted.
+     */
     public function decodeChecked(string $base58string): Buffer
     {
         $buffer = $this->decodeRaw($base58string);

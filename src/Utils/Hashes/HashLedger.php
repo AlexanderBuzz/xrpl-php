@@ -18,6 +18,9 @@ class HashLedger
 
     private readonly BinaryCodec $binaryCodec;
 
+    /**
+     * The shared instance.
+     */
     public static function getInstance(): HashLedger
     {
         if (self::$instance === null) {

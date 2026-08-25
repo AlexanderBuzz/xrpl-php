@@ -13,6 +13,9 @@ class Utilities
     public const UPPERCASE_HEX_REGEX = '/^[A-F0-9]+$/';
     public const ISSUED_CURRENCY_SIZE = 3;
 
+    /**
+     * Whether the string consists only of hex digits.
+     */
     public static function isHex(string $str, bool $checkUppercase = false): bool
     {
         if ($checkUppercase) {
@@ -22,6 +25,10 @@ class Utilities
         return (bool)  preg_match(self::HEX_REGEX, $str);
     }
 
+    /**
+     * Pad a three character currency code to the 40 character hex form the ledger
+     * stores it in.
+     */
     public static function isoToHex(string $iso): string
     {
         $bytes = Buffer::alloc(20);
@@ -33,6 +40,9 @@ class Utilities
         return $bytes->toString();
     }
 
+    /**
+     * Whether an amount describes an issued token rather than XRP.
+     */
     public static function isIssuedCurrency(mixed $input): bool
     {
         return (

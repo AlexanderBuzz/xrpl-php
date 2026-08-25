@@ -26,6 +26,9 @@ class AbstractKeyPairService
         $this->addressCodec = new AddressCodec();
     }
 
+    /**
+     * The account address belonging to a public key.
+     */
     public function deriveAddress(Buffer|string $publicKey): string
     {
         //TODO: Check if this works properly

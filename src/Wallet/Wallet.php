@@ -35,6 +35,10 @@ class Wallet
 
     private string $classicAddress;
 
+    /**
+     * Build a wallet from an existing key pair.
+     * Use generate() or fromSeed() unless the keys already exist elsewhere.
+     */
     public function __construct(
         string $publicKey,
         private readonly string $privateKey,
@@ -64,6 +68,9 @@ class Wallet
         }
     }
 
+    /**
+     * Create a wallet from a fresh random seed.
+     */
     public static function generate(
         string $type = self::DEFAULT_ALGORITHM,
         ?Definitions $definitions = null
@@ -75,6 +82,11 @@ class Wallet
         return Wallet::fromSeed($seed, $definitions);
     }
 
+    /**
+     * Restore a wallet from its seed.
+     * The algorithm follows from the seed itself, so a secp256k1 and an Ed25519
+     * seed both work here.
+     */
     public static function fromSeed(string $seed, ?Definitions $definitions = null): Wallet
     {
         return self::deriveWallet($seed, $definitions);

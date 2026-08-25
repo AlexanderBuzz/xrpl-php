@@ -60,6 +60,10 @@ class BaseX
         $this->inverseFactor = log(256) / log($this->base);     //1.365658237309761
     }
 
+    /**
+     * Encode bytes in this alphabet, keeping leading zero bytes as leading zero
+     * characters.
+     */
     public function encode(Buffer $bytes): string
     {
         $zeroes = 0;
@@ -102,6 +106,9 @@ class BaseX
         return $str;
     }
 
+    /**
+     * Decode a string, raising if it holds a character outside the alphabet.
+     */
     public function decode(string $string): Buffer
     {
         $buffer = $this->decodeUnsafe($string);
@@ -112,6 +119,9 @@ class BaseX
         return $buffer;
     }
 
+    /**
+     * Decode a string, returning null instead of raising on invalid input.
+     */
     public function decodeUnsafe(string $source): ?Buffer
     {
         if (strlen($source) === 0) {

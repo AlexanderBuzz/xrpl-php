@@ -29,8 +29,9 @@ class AddressCodec extends CodecWithXrpAlphabet
     {
         parent::__construct(Utils::XRPL_ALPHABET);
     }
-
     /**
+     * Combine a classic address, a tag and the network into an X-address.
+     *
      * @psalm-param 4294967295 $tag
      */
     public function classicAddressToXAddress(string $classicAddress, int $tag, bool $isTestnet = false): string
@@ -39,6 +40,9 @@ class AddressCodec extends CodecWithXrpAlphabet
         return $this->encodeXAddress($accountBuffer, $tag, $isTestnet);
     }
 
+    /**
+     * Encode the parts of an X-address into its string form.
+     */
     public function encodeXAddress(Buffer $accountId, $tag, bool $test = false): string
     {
         $flag = $tag === false ? 0 : ($tag <= self::MAX_32_BIT_UNSIGNED_INT ? 1 : 2);
@@ -65,6 +69,9 @@ class AddressCodec extends CodecWithXrpAlphabet
         return $this->encodeChecked(Buffer::from(join('', $hex), 'hex'));
     }
 
+    /**
+     * Split an X-address into its classic address, tag and network.
+     */
     public function xAddressToClassicAddress(string $xAddress): array
     {
         [$accountId, $tag, $test] = array_values($this->decodeXAddress($xAddress));
@@ -76,6 +83,9 @@ class AddressCodec extends CodecWithXrpAlphabet
         ];
     }
 
+    /**
+     * Decode an X-address into its raw parts.
+     */
     public function decodeXAddress(string $xAddress): array
     {
         $decoded = $this->decodeChecked($xAddress);
@@ -89,6 +99,9 @@ class AddressCodec extends CodecWithXrpAlphabet
         ];
     }
 
+    /**
+     * Whether the string decodes as an X-address.
+     */
     public function isValidXAddress(string $xAddress): bool
     {
         try {
