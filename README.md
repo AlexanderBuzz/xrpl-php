@@ -34,7 +34,7 @@ This library requires PHP 8.2 or later and two PHP extensions:
   `simplito/elliptic-php`, which does the secp256k1 signing. Composer will
   refuse to install without it.
 
-## Examples 
+## Examples
 
 ### The "Quickstart" Examples
 
@@ -59,7 +59,11 @@ php examples/mptoken.php // Multi-Purpose Token: issue, authorize, send, claw ba
 php examples/permissioned-domain.php // Credentials + PermissionedDomain + PermissionedDEX
 php examples/amm-clawback.php // Claw a token back out of an AMM pool
 php examples/nftoken-modify.php // Mint a mutable NFT and change its URI
-etc...
+php examples/rlusd.php // Trust line and payment in Ripple USD
+php examples/custom-currency-codes.php // Currency codes beyond the three character form
+php examples/payment-with-destination-tag.php
+php examples/xrp-balance.php
+php examples/provoke-error.php // What an error response looks like
 ```
 
 All of these run against the Testnet and fund their own wallets from the faucet.
@@ -74,50 +78,9 @@ php examples/internal/binary-codec.php
 etc...
 ```
 
-### Run the project via Docker
-
-1. Tell the container which user to run as, so the files it writes belong to
-   you. The values differ between Linux and macOS, so they come from `.env`:
-
-```console
-printf 'DOCKER_UID=%s\nDOCKER_GID=%s\n' "$(id -u)" "$(id -g)" > .env
-```
-
-2. Start the project and open a shell:
-
-```console
-docker compose up -d
-docker compose exec php bash
-```
-
-3. In the container shell, install the composer dependencies:
-
-```console
-composer install
-```
-
-The image is built from `docker/`. Xdebug is preconfigured to reach the host on
-port 9090 via `host.docker.internal`, which works on Linux as well because the
-compose file maps it to the host gateway. For anything else that is specific to
-your machine, add a `docker-compose.override.yml`; it is gitignored.
-
-### Run Tests
-
-You can run the tests with the following command:
-
-```console
-./vendor/bin/phpunit tests
-```
-
-You can perform static code analysis with psalm with the following command:
-
-```console
-./vendor/bin/psalm --config=psalm.xml
-```
-
 ## Try it yourself
 
-### Issuing an [Account Info request](https://xrpl.org/account_info.html):
+### Issuing an [account_objects request](https://xrpl.org/account_objects.html)
 
 ```php
 require __DIR__.'/../vendor/autoload.php';
@@ -137,49 +100,75 @@ $request = new AccountObjectsRequest(
     deletionBlockersOnly: true
 );
 
-// Using synchronous request
+// Synchronous
 $response = $client->syncRequest($request);
-$json = json_decode($response->getBody());
-print_r($json);
+print_r($response->getResult());
 
-// Using asynchronous request
+// Asynchronous - the promise resolves to the same response object
 // $response = $client->request($request)->wait();
-// $json = json_decode($response->getBody());
-// print_r($json);
+// print_r($response->getResult());
 ```
 
-### Making a payment:
+### Making a payment
 
 ```php
 // Use your own credentials here:
-$testnetStandbyAccountSeed = 'sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k';
-$testnetStandbyAccountAddress = 'raJNboPDvjLrYZropPFrxvz2Qm7A9guEVd';
-$standbyWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
-
-// Use your own credentials here:
-$testnetOperationalAccountSeed = 'sEdVHf8rNEaRveJw4NdVKxm3iYWFuRb';
-$testnetOperationalAccountAddress = 'rEQ3ik2kmAvajqpFweKgDghJFZQGpXxuRN';
-$operationalWallet = Wallet::fromSeed($testnetStandbyAccountSeed);
+$senderWallet = Wallet::fromSeed('sEdTcvQ9k4UUEHD9y947QiXEs93Fp2k');
+$destination  = 'rEQ3ik2kmAvajqpFweKgDghJFZQGpXxuRN';
 
 $client = new JsonRpcClient("https://s.altnet.rippletest.net:51234");
 
 $tx = [
     "TransactionType" => "Payment",
-    "Account" => $testnetStandbyAccountAddress,
-    "Amount" => xrpToDrops("100"),
-    "Destination" => $testnetOperationalAccountAddress
+    "Account" => $senderWallet->getAddress(),
+    "Amount" => xrpToDrops("10"),
+    "Destination" => $destination
 ];
-$autofilledTx = $client->autofill($tx);
-$signedTx = $standbyWallet->sign($autofilledTx);
 
-$txResponse = $client->submitAndWait($signedTx['tx_blob']);
+// Fills in Sequence, Fee and LastLedgerSequence, signs, submits, and waits
+// until the transaction is in a validated ledger.
+$txResponse = $client->submitAndWait($tx, autofill: true, wallet: $senderWallet);
 $result = $txResponse->getResult();
-if ($result['meta']['TransactionResult'] === 'tecUNFUNDED_PAYMENT') {
-    print_r("Error: The sending account is unfunded! TxHash: {$result['hash']}" . PHP_EOL);
+
+// A tec result still reaches the ledger, so the code has to be checked -
+// submitAndWait() returning is not by itself a success.
+if ($result['meta']['TransactionResult'] !== 'tesSUCCESS') {
+    print_r("Payment failed with {$result['meta']['TransactionResult']}! TxHash: {$result['hash']}" . PHP_EOL);
 } else {
-    print_r("Token payment done! TxHash: {$result['hash']}" . PHP_EOL);
+    print_r("Payment done! TxHash: {$result['hash']}" . PHP_EOL);
 }
 ```
+
+Signing yourself and submitting the blob works just as well, and is what the
+files in `examples/` do:
+
+```php
+$signedTx = $senderWallet->sign($client->autofill($tx));
+$txResponse = $client->submitAndWait($signedTx['tx_blob']);
+```
+
+### The objects behind the client
+
+`JsonRpcClient` is a facade. Behind each of its operations sits a class that can
+also be used on its own:
+
+| Class | What it does |
+|---|---|
+| `Autofiller` | fills in Sequence, Fee and LastLedgerSequence |
+| `Submitter` | submits transactions and polls for their outcome |
+| `AccountReader` | balances and transaction history |
+| `OrderbookReader` | the offers in one order book |
+| `FeeCalculator` | the current network fee |
+| `Faucet` | funds a wallet on a test network |
+
+```php
+$balances = (new AccountReader($client))->getBalances($address);
+// same as
+$balances = $client->getBalances($address);
+```
+
+The functions in the `Hardcastle\XRPL_PHP\Sugar` namespace do the same and keep
+working, but they are deprecated as of 2.2.0 and delegate to these classes.
 
 ## Xahau support
 
@@ -245,5 +234,75 @@ The definitions travel through the whole encode and decode, including nested
 objects and arrays. They do not touch the shared default instance, so a process
 can talk to both networks at once.
 
+### Replacing what the client works with
+
+The definitions decide how a transaction is encoded, but not everything a network
+does differently. Xahau prices a transaction individually, because hooks may
+fire, so the XRP Ledger's fee formula produces too low a fee there.
+
+Since 2.3.0 the client exposes the objects it works with, and a subclass can
+substitute one:
+
+```php
+use Hardcastle\XRPL_PHP\Client\Autofiller;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+
+class XahauClient extends JsonRpcClient
+{
+    public function getAutofiller(): Autofiller
+    {
+        return new XahauAutofiller($this);
+    }
+}
+```
+
+The replacement is used wherever that object is reached, including
+`submitAndWait()`, which autofills through the `Submitter` rather than through
+the client. The same works for `getSubmitter()`, `getAccountReader()`,
+`getOrderbookReader()`, `getFeeCalculator()` and `getFaucet()`.
+
 A dedicated Xahau package building on this is planned; the Xahau types will then
 move out of this library.
+
+## Development
+
+### Running the project via Docker
+
+1. Tell the container which user to run as, so the files it writes belong to
+   you. The values differ between Linux and macOS, so they come from `.env`:
+
+```console
+printf 'DOCKER_UID=%s\nDOCKER_GID=%s\n' "$(id -u)" "$(id -g)" > .env
+```
+
+2. Start the project and open a shell:
+
+```console
+docker compose up -d
+docker compose exec php bash
+```
+
+3. In the container shell, install the composer dependencies:
+
+```console
+composer install
+```
+
+The image is built from `docker/`. Xdebug is preconfigured to reach the host on
+port 9090 via `host.docker.internal`, which works on Linux as well because the
+compose file maps it to the host gateway. For anything else that is specific to
+your machine, add a `docker-compose.override.yml`; it is gitignored.
+
+### Running the tests
+
+You can run the tests with the following command:
+
+```console
+./vendor/bin/phpunit tests
+```
+
+You can perform static code analysis with psalm with the following command:
+
+```console
+./vendor/bin/psalm --config=psalm.xml
+```

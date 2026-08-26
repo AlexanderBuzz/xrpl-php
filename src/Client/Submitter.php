@@ -203,7 +203,7 @@ class Submitter
         }
 
         if ($autofill) {
-            $tx = (new Autofiller($this->client))->autofill($tx);
+            $tx = $this->client->getAutofiller()->autofill($tx);
         }
 
         // Wallet::sign() returns a tx_blob/hash envelope, while every caller

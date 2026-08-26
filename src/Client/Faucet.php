@@ -53,7 +53,7 @@ class Faucet
             ? $wallet
             : Wallet::generate();
 
-        $accountReader = new AccountReader($this->client);
+        $accountReader = $this->client->getAccountReader();
 
         $startingBalance = 0.0;
         try {
@@ -96,7 +96,7 @@ class Faucet
      */
     private function waitForFunding(string $address, float $startingBalance): float
     {
-        $accountReader = new AccountReader($this->client);
+        $accountReader = $this->client->getAccountReader();
         $balance = $startingBalance;
 
         for ($attempt = 0; $attempt < self::POLL_ATTEMPTS; $attempt++) {

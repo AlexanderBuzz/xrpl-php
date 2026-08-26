@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [2.2.0] - unreleased
+## [2.3.0] - 2026-08-26
+
+### Added
+- `JsonRpcClient` exposes its collaborators through `getAutofiller()`,
+  `getSubmitter()`, `getAccountReader()`, `getOrderbookReader()`,
+  `getFeeCalculator()` and `getFaucet()`. A subclass overrides one of them to
+  substitute its own, and the replacement reaches every path that uses it -
+  including the indirect ones, where `Submitter` and `Autofiller` used to
+  construct collaborators of their own.
+
+## [2.2.0] - 2026-08-25
 
 ### Added
 - Object form of the Sugar functions: `Autofiller`, `Submitter`, `AccountReader`,
