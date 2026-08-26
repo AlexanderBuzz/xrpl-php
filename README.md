@@ -18,73 +18,6 @@ hood and getting into the nitty-gritty of XRPL development.
 5. Parsing ledger data into more convenient formats
 6. Xahau Network Compatibility (Hooks, UNLReport, GenesisMint, etc.) — see [Xahau support](#xahau-support) for the current scope
 
-## Xahau support
-
-The library ships the Xahau transaction types alongside the XRP Ledger ones, but
-the two networks have drifted apart: Xahau kept its URIToken types on the
-ordinals 45–49 and moved everything the XRP Ledger added afterwards further up.
-`MPTokenIssuanceCreate`, for instance, is 54 on the XRP Ledger and 63 on Xahau.
-A single set of definitions cannot be correct for both networks, and this
-library resolves the overlap in favour of the XRP Ledger.
-
-**Works on Xahau:**
-
-- All classic transaction types — `Payment`, `AccountSet`, `TrustSet`,
-  `OfferCreate`/`OfferCancel`, `Escrow*`, `Check*`, `PaymentChannel*`,
-  `NFToken*`, `AMM*`, `Clawback`, `TicketCreate`, `SignerListSet`,
-  `DepositPreauth`, `AccountDelete`, `SetRegularKey`. These carry the same
-  ordinal on both networks.
-- The Xahau-specific types — `SetHook`, `Invoke`, `Import`, `ClaimReward`,
-  `GenesisMint`, `UNLReport`, `URIToken*`, `TicketCancel`.
-
-**Does not work on Xahau yet:**
-
-- Every type the XRP Ledger added from ordinal 41 onwards: `XChain*`, `DID*`,
-  `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*`, `NFTokenModify`.
-  These encode with the XRP Ledger ordinal, which means a different transaction
-  type on Xahau — without an error. **Do not submit them to Xahau.**
-- Decoding is ambiguous for the five shared ordinals: a Xahau `URITokenMint`
-  decodes as `XChainAddClaimAttestation`, and the Xahau `Blob` field decodes as
-  `DIDDocument`. The bytes are correct, only the names are read through the
-  XRP Ledger definitions.
-- `hooksDefinitions.json` predates the current Xahau release and is missing
-  `Remit`, `SetRemarks`, `Cron` and `CronSet`.
-
-### Using your own definitions
-
-Since 2.1.0 the codec works against definitions handed in from outside, so a
-package for another network can supply its own `definitions.json` instead of the
-bundled one. Every entry point takes an optional `Definitions` instance and
-falls back to the XRP Ledger when it is omitted:
-
-```php
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
-use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
-use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
-use Hardcastle\XRPL_PHP\Wallet\Wallet;
-
-$definitions = Definitions::fromFile('/path/to/xahau-definitions.json');
-// or Definitions::fromArray($decodedJson);
-
-$codec  = new BinaryCodec($definitions);
-$wallet = Wallet::fromSeed($seed, $definitions);
-$client = new JsonRpcClient('https://xahau.network', null, null, 3.0, $definitions);
-```
-
-A node serves its own definitions, so they can be fetched rather than vendored:
-
-```console
-curl -X POST https://xahau.network -H 'Content-Type: application/json' \
-  -d '{"method":"server_definitions","params":[{}]}'
-```
-
-The definitions travel through the whole encode and decode, including nested
-objects and arrays. They do not touch the shared default instance, so a process
-can talk to both networks at once.
-
-A dedicated Xahau package building on this is planned; the Xahau types will then
-move out of this library.
-
 ## Installation
 
 This library is installable via [Composer](https://getcomposer.org/):
@@ -247,3 +180,70 @@ if ($result['meta']['TransactionResult'] === 'tecUNFUNDED_PAYMENT') {
     print_r("Token payment done! TxHash: {$result['hash']}" . PHP_EOL);
 }
 ```
+
+## Xahau support
+
+The library ships the Xahau transaction types alongside the XRP Ledger ones, but
+the two networks have drifted apart: Xahau kept its URIToken types on the
+ordinals 45–49 and moved everything the XRP Ledger added afterwards further up.
+`MPTokenIssuanceCreate`, for instance, is 54 on the XRP Ledger and 63 on Xahau.
+A single set of definitions cannot be correct for both networks, and this
+library resolves the overlap in favour of the XRP Ledger.
+
+**Works on Xahau:**
+
+- All classic transaction types — `Payment`, `AccountSet`, `TrustSet`,
+  `OfferCreate`/`OfferCancel`, `Escrow*`, `Check*`, `PaymentChannel*`,
+  `NFToken*`, `AMM*`, `Clawback`, `TicketCreate`, `SignerListSet`,
+  `DepositPreauth`, `AccountDelete`, `SetRegularKey`. These carry the same
+  ordinal on both networks.
+- The Xahau-specific types — `SetHook`, `Invoke`, `Import`, `ClaimReward`,
+  `GenesisMint`, `UNLReport`, `URIToken*`, `TicketCancel`.
+
+**Does not work on Xahau yet:**
+
+- Every type the XRP Ledger added from ordinal 41 onwards: `XChain*`, `DID*`,
+  `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*`, `NFTokenModify`.
+  These encode with the XRP Ledger ordinal, which means a different transaction
+  type on Xahau — without an error. **Do not submit them to Xahau.**
+- Decoding is ambiguous for the five shared ordinals: a Xahau `URITokenMint`
+  decodes as `XChainAddClaimAttestation`, and the Xahau `Blob` field decodes as
+  `DIDDocument`. The bytes are correct, only the names are read through the
+  XRP Ledger definitions.
+- `hooksDefinitions.json` predates the current Xahau release and is missing
+  `Remit`, `SetRemarks`, `Cron` and `CronSet`.
+
+### Using your own definitions
+
+Since 2.1.0 the codec works against definitions handed in from outside, so a
+package for another network can supply its own `definitions.json` instead of the
+bundled one. Every entry point takes an optional `Definitions` instance and
+falls back to the XRP Ledger when it is omitted:
+
+```php
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
+
+$definitions = Definitions::fromFile('/path/to/xahau-definitions.json');
+// or Definitions::fromArray($decodedJson);
+
+$codec  = new BinaryCodec($definitions);
+$wallet = Wallet::fromSeed($seed, $definitions);
+$client = new JsonRpcClient('https://xahau.network', null, null, 3.0, $definitions);
+```
+
+A node serves its own definitions, so they can be fetched rather than vendored:
+
+```console
+curl -X POST https://xahau.network -H 'Content-Type: application/json' \
+  -d '{"method":"server_definitions","params":[{}]}'
+```
+
+The definitions travel through the whole encode and decode, including nested
+objects and arrays. They do not touch the shared default instance, so a process
+can talk to both networks at once.
+
+A dedicated Xahau package building on this is planned; the Xahau types will then
+move out of this library.
