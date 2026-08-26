@@ -11,12 +11,12 @@ hood and getting into the nitty-gritty of XRPL development.
 
 ## Features
 
-1. Managing & creating keys and wallets
-2. Submitting transactions to the XRP Ledger
-3. Sending requests to observe the ledger
-4. Creating and signing transactions (e.g. Payments) to modify the ledger state
-5. Parsing ledger data into more convenient formats
-6. Xahau Network Compatibility (Hooks, UNLReport, GenesisMint, etc.) — see [Xahau support](#xahau-support) for the current scope
+1. XRP Ledger / rippled version 3.3.0 compatible
+2. Managing & creating keys and wallets
+3. Submitting transactions to the XRP Ledger
+4. Sending requests to observe the ledger
+5. Creating and signing transactions (e.g. Payments) to modify the ledger state
+6. Parsing ledger data into more convenient formats
 
 ## Installation
 
