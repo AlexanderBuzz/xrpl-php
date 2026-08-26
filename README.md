@@ -245,5 +245,32 @@ The definitions travel through the whole encode and decode, including nested
 objects and arrays. They do not touch the shared default instance, so a process
 can talk to both networks at once.
 
+### Replacing what the client works with
+
+The definitions decide how a transaction is encoded, but not everything a network
+does differently. Xahau prices a transaction individually, because hooks may
+fire, so the XRP Ledger's fee formula produces too low a fee there.
+
+Since 2.3.0 the client exposes the objects it works with, and a subclass can
+substitute one:
+
+```php
+use Hardcastle\XRPL_PHP\Client\Autofiller;
+use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+
+class XahauClient extends JsonRpcClient
+{
+    public function getAutofiller(): Autofiller
+    {
+        return new XahauAutofiller($this);
+    }
+}
+```
+
+The replacement is used wherever that object is reached, including
+`submitAndWait()`, which autofills through the `Submitter` rather than through
+the client. The same works for `getSubmitter()`, `getAccountReader()`,
+`getOrderbookReader()`, `getFeeCalculator()` and `getFaucet()`.
+
 A dedicated Xahau package building on this is planned; the Xahau types will then
 move out of this library.

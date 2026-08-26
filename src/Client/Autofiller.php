@@ -265,7 +265,7 @@ class Autofiller
      */
     public function calculateFeePerTransactionType(array &$tx, ?int $signersCount = 0): void
     {
-        $netFeeXrp = (new FeeCalculator($this->client))->getFeeXrp();
+        $netFeeXrp = $this->client->getFeeCalculator()->getFeeXrp();
         $netFeeDrops = xrpToDrops($netFeeXrp);
         $baseFee = BigDecimal::of($netFeeDrops);
 

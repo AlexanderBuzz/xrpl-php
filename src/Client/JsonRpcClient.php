@@ -283,6 +283,71 @@ class JsonRpcClient
      * @return string
      */
     /**
+     * The collaborator that fills in Sequence, Fee and LastLedgerSequence.
+     *
+     * Override this in a subclass to supply a different one. A network whose
+     * fee model differs from the XRP Ledger's - Xahau prices per transaction,
+     * because hooks may fire - needs its own, and overriding here puts it into
+     * every path that autofills, including submitAndWait().
+     *
+     * @return Autofiller
+     */
+    public function getAutofiller(): Autofiller
+    {
+        return new Autofiller($this);
+    }
+
+    /**
+     * The collaborator that submits transactions and polls for their outcome.
+     *
+     * @return Submitter
+     */
+    public function getSubmitter(): Submitter
+    {
+        return new Submitter($this);
+    }
+
+    /**
+     * The collaborator that reads balances and transaction history.
+     *
+     * @return AccountReader
+     */
+    public function getAccountReader(): AccountReader
+    {
+        return new AccountReader($this);
+    }
+
+    /**
+     * The collaborator that reads the order book.
+     *
+     * @return OrderbookReader
+     */
+    public function getOrderbookReader(): OrderbookReader
+    {
+        return new OrderbookReader($this);
+    }
+
+    /**
+     * The collaborator that looks up the network fee.
+     *
+     * @return FeeCalculator
+     */
+    public function getFeeCalculator(): FeeCalculator
+    {
+        return new FeeCalculator($this);
+    }
+
+    /**
+     * The collaborator that funds wallets from a faucet.
+     *
+     * @return Faucet
+     */
+    public function getFaucet(): Faucet
+    {
+        return new Faucet($this);
+    }
+
+    /**
      * The definitions transactions of this connection are encoded against.
      *
      * Defaults to the bundled XRP Ledger definitions; a client for another
@@ -323,7 +388,7 @@ class JsonRpcClient
      */
     public function getXrpBalance(string $address): string
     {
-        return (new AccountReader($this))->getXrpBalance($address);
+        return $this->getAccountReader()->getXrpBalance($address);
     }
     /**
      * Every balance an account holds: XRP and all its trust lines.
@@ -346,7 +411,7 @@ class JsonRpcClient
         ?int $limit = null
     ): array
     {
-        return (new AccountReader($this))->getBalances($address, $ledgerHash, $ledgerIndex, $peer, $limit);
+        return $this->getAccountReader()->getBalances($address, $ledgerHash, $ledgerIndex, $peer, $limit);
     }
     /**
      * The transaction history of an account, newest first unless $forward is set.
@@ -376,7 +441,7 @@ class JsonRpcClient
         mixed $marker = null
     ): array
     {
-        return (new AccountReader($this))->getTransactions($address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
+        return $this->getAccountReader()->getTransactions($address, $ledgerIndexMin, $ledgerIndexMax, $ledgerHash, $ledgerIndex, $binary, $forward, $limit, $marker);
     }
     /**
      * The offers standing in one order book of the decentralized exchange.
@@ -399,7 +464,7 @@ class JsonRpcClient
         ?string $taker = null
     ): array
     {
-        return (new OrderbookReader($this))->getOrderbook($takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
+        return $this->getOrderbookReader()->getOrderbook($takerGets, $takerPays, $ledgerHash, $ledgerIndex, $limit, $taker);
     }
 
     /**
@@ -410,7 +475,7 @@ class JsonRpcClient
      */
     public function getFeeXrp(?int $cushion = null): string
     {
-        return (new FeeCalculator($this))->getFeeXrp($cushion === null ? null : (float)$cushion);
+        return $this->getFeeCalculator()->getFeeXrp($cushion === null ? null : (float)$cushion);
     }
     /**
      * Ask a test network faucet for a funded wallet.
@@ -422,7 +487,7 @@ class JsonRpcClient
      */
     public function fundWallet(?Wallet $wallet = null, ?string $faucetHost = null): Wallet
     {
-        return (new Faucet($this))->fundWallet($wallet, $faucetHost)['wallet'];
+        return $this->getFaucet()->fundWallet($wallet, $faucetHost)['wallet'];
     }
 
     /**
@@ -440,7 +505,7 @@ class JsonRpcClient
      */
     public function autofill(Transaction|array $transaction, ?int $signersCount = null): array
     {
-        return (new Autofiller($this))->autofill($transaction, $signersCount);
+        return $this->getAutofiller()->autofill($transaction, $signersCount);
     }
     /**
      * Submit a transaction and return the server's preliminary opinion.
@@ -460,7 +525,7 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): SubmitResponse
     {
-        return (new Submitter($this))->submit($transaction, $autofill, $failHard, $wallet);
+        return $this->getSubmitter()->submit($transaction, $autofill, $failHard, $wallet);
     }
     /**
      * Submit a transaction and wait until its outcome is final.
@@ -481,7 +546,7 @@ class JsonRpcClient
         ?Wallet                  $wallet = null
     ): TxResponse
     {
-        return (new Submitter($this))->submitAndWait($transaction, $autofill, $failHard, $wallet);
+        return $this->getSubmitter()->submitAndWait($transaction, $autofill, $failHard, $wallet);
     }
 
     /**
