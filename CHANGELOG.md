@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Fixed
+- The binary codec dropped the `ObjectEndMarker` of a nested object unless that
+  object happened to be the last field of its parent. `StObject::fromJson()`
+  wrote the marker once, after its loop, guarded by whichever field instance the
+  loop had left behind. Fields are serialized in canonical order, so a nested
+  object is last only as long as no field of a higher numbered type follows it -
+  and where one does, the parser reads that field back as part of the nested
+  object. Transaction metadata is the case on the XRP Ledger: every
+  `ModifiedNode` carrying both `PreviousFields` and `FinalFields` encoded the
+  second inside the first. `fromParser()` already wrote the marker per field,
+  and `fromJson()` now does the same. Encodings that were correct before are
+  unchanged, byte for byte.
+
 ## [2.3.0] - 2026-08-26
 
 ### Added
