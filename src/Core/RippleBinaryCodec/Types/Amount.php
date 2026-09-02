@@ -153,7 +153,7 @@ class Amount extends SerializedType
         $currency = Currency::fromJson($rawCurrency)->toBytes();
         $issuer = AccountId::fromJson($rawIssuer)->toBytes();
 
-        return new Amount(Buffer::from(array_merge($amount->toArray(), $currency->toArray(), $issuer->toArray())));
+        return new Amount(Buffer::concat([$amount, $currency, $issuer]));
     }
 
     /**

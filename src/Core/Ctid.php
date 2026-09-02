@@ -20,6 +20,8 @@ class Ctid
 {
     private const FILLER = 0xc0000000;
 
+    private const LENGTH_IN_BYTES = 8;
+
     private readonly Buffer $internal;
 
     /**
@@ -29,7 +31,13 @@ class Ctid
      */
     public function __construct(string $ctidAsHex)
     {
-        $this->internal = Buffer::from($ctidAsHex, 'hex');
+        $buffer = Buffer::from($ctidAsHex, 'hex');
+
+        if ($buffer->getLength() !== self::LENGTH_IN_BYTES) {
+            throw new Exception('Invalid CTID: expected 16 hexadecimal characters');
+        }
+
+        $this->internal = $buffer;
     }
     /**
      * Build a CTID from a ledger sequence, the index of the transaction in it and
