@@ -59,7 +59,7 @@
     "php-ds/php-ds": "^1.4",
     "simplito/elliptic-php": "^1.0.12",
     "simplito/bn-php": "^1.1.4",
-    "hardcastle/buffer": "^1.0.1",
+    "hardcastle/buffer": "^2.0",
     "vlucas/phpdotenv": "^5.6"
   },
   "require-dev": {

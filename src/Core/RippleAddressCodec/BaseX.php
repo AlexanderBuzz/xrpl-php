@@ -84,7 +84,7 @@ class BaseX
             $i = 0;
             for ($it1 = $size - 1; ($carry !== 0 || $i < $length) && ($it1 !== -1); $it1--, $i++) {
                 $carry += $this->unsignedRightShift((int)abs(256 * $b58[$it1]), 0);
-                $b58[$it1] = $this->unsignedRightShift((int)abs($carry % $this->base), 0);
+                $b58[$it1] = $this->unsignedRightShift(abs($carry % $this->base), 0);
                 $carry = $this->unsignedRightShift((int)abs($carry / $this->base), 0);
             }
             if ($carry !== 0) {

@@ -41,6 +41,13 @@ final class CtidTest extends TestCase
 
     }
 
+    public function testShortCtidIsRejected(): void
+    {
+        $this->expectExceptionMessage('Invalid CTID');
+
+        Ctid::fromCtid('C002');
+    }
+
     public function testEncode(): void
     {
         $raw = [

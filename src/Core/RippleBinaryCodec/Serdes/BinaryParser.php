@@ -62,7 +62,7 @@ class BinaryParser
     public function peek(): int
     {
         if ($this->bytes->getLength() > 0) {
-            return $this->bytes->toArray()[0];
+            return $this->bytes[0];
         }
 
         throw new \Exception('Buffer is empty');
@@ -110,8 +110,7 @@ class BinaryParser
     public function readUIntN(int $number): Buffer //BigInteger
     {
         if ($number > 0) {
-            $stdArray = $this->read($number)->toArray();
-            return Buffer::from($stdArray);
+            return $this->read($number);
         }
 
         throw new Exception('Invalid number');
