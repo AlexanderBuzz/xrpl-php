@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
+## [2.4.0] - 2026-09-02
 
 ### Changed
 - Requires `hardcastle/buffer` `^2.0`. The one breaking change of that release,
@@ -13,9 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   behaviour fixes is reachable from this code: every `slice()` past the end of a
   buffer is guarded by a length check, no `toInt()` sees more than eight bytes,
   no `concat()` passes a total length, and Buffer's own `read*()`/`write*()`
-  accessors are never called. 2.0 holds its bytes in a string rather than an
-  `SplFixedArray`, which makes decoding a transaction roughly a third faster on
-  its own.
+  accessors are never called. Code of yours that reads `->length` on a `Buffer`
+  this library handed it needs `getLength()` instead - that method has existed
+  since Buffer 1.0, so the change is compatible with both majors. 2.0 holds its
+  bytes in a string rather than an `SplFixedArray`, which makes decoding a
+  transaction roughly a third faster on its own.
 - Serialization builds its buffers with `Buffer::concat()` instead of merging
   the byte arrays behind them. `BytesList::toBytes()`, which every serialized
   field passes through, `Amount::fromJson()` and `AddressCodec::encodeXAddress()`
@@ -25,10 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   byte.
 
 ### Fixed
-- `Ctid` accepted a hex string of any length and, since Buffer 2.0 returns an
-  empty buffer where 1.x threw, would have answered `getTransactionIndex()` with
-  `0` for an input too short to hold one. The constructor now requires the
-  sixteen hexadecimal characters a CTID has.
 - The binary codec dropped the `ObjectEndMarker` of a nested object unless that
   object happened to be the last field of its parent. `StObject::fromJson()`
   wrote the marker once, after its loop, guarded by whichever field instance the
@@ -40,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   second inside the first. `fromParser()` already wrote the marker per field,
   and `fromJson()` now does the same. Encodings that were correct before are
   unchanged, byte for byte.
+- `Ctid` accepted a hex string of any length and, since Buffer 2.0 returns an
+  empty buffer where 1.x threw, would have answered `getTransactionIndex()` with
+  `0` for an input too short to hold one. The constructor now requires the
+  sixteen hexadecimal characters a CTID has.
 
 ## [2.3.0] - 2026-08-26
 
