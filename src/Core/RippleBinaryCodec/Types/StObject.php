@@ -121,10 +121,18 @@ class StObject extends SerializedType
             }
 
             $binarySerializer->writeFieldAndValue($fieldInstance, $fieldValue);
-        }
 
-        if (isset($fieldInstance) && $fieldInstance->getType() === self::ST_OBJECT) {
-            $binarySerializer->put(self::OBJECT_END_MARKER_HEX);
+            // A nested object is terminated where it ends, not where its
+            // parent does. Written after the loop instead, the marker would
+            // close only the last field, and fields are ordered canonically -
+            // so a nested object is the last one only as long as no field of a
+            // higher numbered type follows it. Metadata carrying both
+            // PreviousFields and FinalFields loses the boundary between them
+            // that way, and the parser reads the second as part of the first.
+            // fromParser() writes the marker in the same place.
+            if ($fieldInstance->getType() === self::ST_OBJECT) {
+                $binarySerializer->put(self::OBJECT_END_MARKER_HEX);
+            }
         }
 
         return new StObject($binarySerializer->getBytes());

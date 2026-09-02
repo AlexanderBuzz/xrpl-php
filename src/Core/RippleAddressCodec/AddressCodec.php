@@ -53,20 +53,20 @@ class AddressCodec extends CodecWithXrpAlphabet
             $tag = 0;
         }
 
-        $bytes = array_merge($test ? self::PREFIX_BYTES['test'] : self::PREFIX_BYTES['main']);
-        $bytes = array_merge($bytes, $accountId->toArray());
-        $bytes = array_merge($bytes, [
-            $flag,
-            $tag & 0xff,
-            ($tag >> 8) & 0xff,
-            ($tag >> 16) & 0xff,
-            ($tag >> 24) & 0xff,
-            0, 0, 0, 0
+        $bytes = Buffer::concat([
+            Buffer::from($test ? self::PREFIX_BYTES['test'] : self::PREFIX_BYTES['main']),
+            $accountId,
+            Buffer::from([
+                $flag,
+                $tag & 0xff,
+                ($tag >> 8) & 0xff,
+                ($tag >> 16) & 0xff,
+                ($tag >> 24) & 0xff,
+                0, 0, 0, 0
+            ])
         ]);
 
-        $hex = array_map(fn($item) => sprintf('%02X', $item), $bytes);
-
-        return $this->encodeChecked(Buffer::from(join('', $hex), 'hex'));
+        return $this->encodeChecked($bytes);
     }
 
     /**

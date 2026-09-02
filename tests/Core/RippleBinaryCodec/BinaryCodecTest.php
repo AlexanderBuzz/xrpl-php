@@ -12,9 +12,25 @@ final class BinaryCodecTest extends TestCase
     public const SINGLE_LEVEL_OBJECT_JSON = "{\"Memo\":{\"Memo\":{\"Method\":2}}}";
     public const MULTI_LEVEL_OBJECT_JSON = "{\"Memo\":{\"Memo\":{\"CloseResolution\":1,\"Method\":2}}}";
 
+    /**
+     * A nested object with a field after it. Memo is an STObject (type 14),
+     * CloseResolution a UInt8 (type 16), and fields are written in the order
+     * of their type, so the object cannot be last.
+     */
+    public const OBJECT_THEN_FIELD_JSON = "{\"Memo\":{\"Method\":2},\"CloseResolution\":1}";
+
+    /** The shape of every ModifiedNode in transaction metadata. */
+    public const ADJACENT_OBJECTS_JSON = "{\"PreviousFields\":{\"Method\":2},\"FinalFields\":{\"CloseResolution\":1}}";
+
     public const SIMPLE_HEX = "011001021002";
     public const SINGLE_OBJECT_HEX = "EAEA021002E1E1";
     public const MULTI_LEVEL_OBJECT_HEX = "EAEA011001021002E1E1";
+
+    // EA <Memo> 021002 <Method> E1 <end of Memo> 011001 <CloseResolution>
+    public const OBJECT_THEN_FIELD_HEX = "EA021002E1011001";
+
+    // E6 <PreviousFields> 021002 E1 | E7 <FinalFields> 011001 E1
+    public const ADJACENT_OBJECTS_HEX = "E6021002E1E7011001E1";
 
     /** @psalm-suppress PropertyNotSetInConstructor */
     private array $fixtures;
@@ -43,6 +59,49 @@ final class BinaryCodecTest extends TestCase
         $this->assertEquals(
             self::SIMPLE_JSON,
             $this->binaryCodec->decode(self::SIMPLE_HEX)
+        );
+    }
+
+    /**
+     * A nested object has to be terminated where it ends, not where its parent
+     * does.
+     *
+     * Until this was fixed the ObjectEndMarker was written once, after all of
+     * the parent's fields, so an object was closed only when it happened to be
+     * the last one. Everything following it was then read back as part of it.
+     * The reference fixtures never caught it, because no transaction on the
+     * XRP Ledger carries a top level object field - metadata does, and so do
+     * the transaction types of other networks built on the same codec.
+     */
+    public function testEncodeDecodeObjectFollowedByAnotherField(): void
+    {
+        $this->assertEquals(
+            self::OBJECT_THEN_FIELD_HEX,
+            $this->binaryCodec->encode(self::OBJECT_THEN_FIELD_JSON)
+        );
+
+        $this->assertEquals(
+            json_decode(self::OBJECT_THEN_FIELD_JSON, true),
+            $this->binaryCodec->decode(self::OBJECT_THEN_FIELD_HEX)
+        );
+    }
+
+    /**
+     * Two objects side by side, the way a ModifiedNode carries PreviousFields
+     * and FinalFields. Without a marker between them the second is read as a
+     * field of the first, and the balances before and after a transaction end
+     * up nested inside one another.
+     */
+    public function testEncodeDecodeAdjacentObjects(): void
+    {
+        $this->assertEquals(
+            self::ADJACENT_OBJECTS_HEX,
+            $this->binaryCodec->encode(self::ADJACENT_OBJECTS_JSON)
+        );
+
+        $this->assertEquals(
+            json_decode(self::ADJACENT_OBJECTS_JSON, true),
+            $this->binaryCodec->decode(self::ADJACENT_OBJECTS_HEX)
         );
     }
 

@@ -140,7 +140,7 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
         $seqBN = $zeroBN->_clone();
 
         while (true) {
-            $buffer = Buffer::from($seed->toArray());
+            $buffer = Buffer::from($seed);
 
             if (is_int($discriminator)) {
                 $buffer->appendHex(str_pad(dechex($discriminator), 8, '0', STR_PAD_LEFT));

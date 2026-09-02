@@ -63,13 +63,7 @@ class BytesList
 
     public function toBytes(): Buffer
     {
-        $tempArray = [];
-
-        foreach ($this->bufferArray as $buffer) {
-            $tempArray = array_merge($tempArray, $buffer->toArray());
-        }
-
-        return Buffer::from($tempArray);
+        return Buffer::concat($this->bufferArray);
     }
 
 
