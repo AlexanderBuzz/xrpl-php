@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Changed
+- `Batch` and `DelegateSet` now say in their docblocks what they are: models
+  that decode a transaction found in the ledger and mirror `definitions.json`,
+  not support for building one. Batch V1.1 (rippled 3.3.0) requires the
+  `tfInnerBatchTxn` flag on every inner transaction, a signing payload that
+  binds the outer account and an enforced signer order, none of which
+  `Wallet::sign()` does; a Batch signed here is well formed and fails at the
+  node. The signing helper follows once the amendment is active on Mainnet.
+
 ## [2.4.0] - 2026-09-02
 
 ### Changed
