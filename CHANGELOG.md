@@ -5,23 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
+## [2.5.0] - 2026-09-22
 
 ### Added
-- Payment channel claims are signed and verified locally.
-  `Wallet::signPaymentChannelClaim($channelId, $amountDrops)` returns the
-  signature a `PaymentChannelClaim` carries, and
-  `Wallet::verifyPaymentChannelClaim($channelId, $amountDrops, $signature,
-  $publicKey)` checks one, both without a node - the only way to stream
-  claims at any rate, and the secret never leaves the process. Until now the
-  library only had the RPC wrappers `ChannelAuthorizeRequest`, which has to be
-  sent the secret, and `ChannelVerifyRequest`. Underneath,
-  `BinaryCodec::encodeForSigningClaim()` produces the signing payload (prefix
-  `CLM\0`, channel ID, amount as UInt64) and `HashPrefix` gained
-  `PAYMENT_CHANNEL_CLAIM`. Amounts are drops, as in xrpl.js'
-  `authorizeChannel()`. Verified against the xrpl.js vectors for both key
-  types and against rippled's `channel_verify`. Example:
-  `examples/payment-channel.php`.
 - Flag constants. Every `tf`, `asf` and `lsf` flag rippled 3.3.0 defines is a
   class constant under the name rippled and xrpl.js use: one class per
   transaction type in `Models\Transaction\Flags` (`PaymentFlags`,
@@ -37,12 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   through `getTransactionFlags()`, `getAccountSetFlags()` and
   `getLedgerEntryFlags()`. Definitions injected for another network may leave
   the tables out; the accessors then return an empty array.
+- Payment channel claims are signed and verified locally.
+  `Wallet::signPaymentChannelClaim($channelId, $amountDrops)` returns the
+  signature a `PaymentChannelClaim` carries, and
+  `Wallet::verifyPaymentChannelClaim($channelId, $amountDrops, $signature,
+  $publicKey)` checks one, both without a node - the only way to stream
+  claims at any rate, and the secret never leaves the process. Until now the
+  library only had the RPC wrappers `ChannelAuthorizeRequest`, which has to be
+  sent the secret, and `ChannelVerifyRequest`. Underneath,
+  `BinaryCodec::encodeForSigningClaim()` produces the signing payload (prefix
+  `CLM\0`, channel ID, amount as UInt64) and `HashPrefix` gained
+  `PAYMENT_CHANNEL_CLAIM`. Amounts are drops, as in xrpl.js'
+  `authorizeChannel()`. Verified against the xrpl.js vectors for both key
+  types and against rippled's `channel_verify`. Example:
+  `examples/payment-channel.php`.
 
 ### Changed
-- The default branch is `main`. GitHub redirects the old `master` links; the
-  two in the documentation now point at `main` directly, and the documentation
-  index names the MIT license the project has carried since 2.2.0, not ISC.
-- The examples use the flag constants instead of defining their own.
 - `definitions.json` matches rippled 3.3.0. It gains the `Sponsorship` ledger
   entry, the seven transaction types of Sponsorship (`SponsorshipSet`,
   `SponsorshipTransfer`) and Confidential MPT (`ConfidentialMPTConvert`,
@@ -67,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   binds the outer account and an enforced signer order, none of which
   `Wallet::sign()` does; a Batch signed here is well formed and fails at the
   node. The signing helper follows once the amendment is active on Mainnet.
+- The examples use the flag constants instead of defining their own.
+- The default branch is `main`. GitHub redirects the old `master` links; the
+  two in the documentation now point at `main` directly, and the documentation
+  index names the MIT license the project has carried since 2.2.0, not ISC.
 
 ## [2.4.0] - 2026-09-02
 
