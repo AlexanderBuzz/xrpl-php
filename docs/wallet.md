@@ -76,3 +76,36 @@ $signedTx = $wallet->sign($tx);
 The result will be an array comprised of two fields:
 1. `$signedTx['tx_blob']`, representing the signed, serialized `Transaction`
 2. `$signedTx['hash']`, the hashed `tx_blob`
+
+### Signing a Payment Channel Claim
+
+A [payment channel](https://xrpl.org/docs/concepts/payment-types/payment-channels)
+moves XRP off the ledger: the payer signs *claims*, each authorizing a
+cumulative amount in drops, and the payee verifies them as they arrive and
+redeems the last one with a `PaymentChannelClaim` transaction. A claim is not a
+transaction, so it does not go through `sign()`; both sides work locally,
+without a node, and the payer's secret never leaves the process:
+
+```php
+// Payer, offline
+$signature = $payerWallet->signPaymentChannelClaim($channelId, '1000000');
+
+// Payee, offline - the payer's public key is stored in the channel
+$valid = Wallet::verifyPaymentChannelClaim($channelId, '1000000', $signature, $payerPublicKey);
+
+// Payee, once: redeem the latest claim
+$tx = [
+    'TransactionType' => 'PaymentChannelClaim',
+    'Account' => $payeeWallet->getAddress(),
+    'Channel' => $channelId,
+    'Balance' => '1000000',
+    'Amount' => '1000000',
+    'Signature' => $signature,
+    'PublicKey' => $payerPublicKey,
+];
+```
+
+Amounts are drops, as in `authorizeChannel()` of xrpl.js. `channel_authorize`
+and `channel_verify` remain available as RPC methods (`ChannelAuthorizeRequest`,
+`ChannelVerifyRequest`), but the former has to be sent the secret and both cost
+a round trip per claim. See `examples/payment-channel.php` for the whole flow.

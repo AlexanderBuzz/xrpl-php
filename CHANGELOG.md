@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Payment channel claims are signed and verified locally.
+  `Wallet::signPaymentChannelClaim($channelId, $amountDrops)` returns the
+  signature a `PaymentChannelClaim` carries, and
+  `Wallet::verifyPaymentChannelClaim($channelId, $amountDrops, $signature,
+  $publicKey)` checks one, both without a node - the only way to stream
+  claims at any rate, and the secret never leaves the process. Until now the
+  library only had the RPC wrappers `ChannelAuthorizeRequest`, which has to be
+  sent the secret, and `ChannelVerifyRequest`. Underneath,
+  `BinaryCodec::encodeForSigningClaim()` produces the signing payload (prefix
+  `CLM\0`, channel ID, amount as UInt64) and `HashPrefix` gained
+  `PAYMENT_CHANNEL_CLAIM`. Amounts are drops, as in xrpl.js'
+  `authorizeChannel()`. Verified against the xrpl.js vectors for both key
+  types and against rippled's `channel_verify`. Example:
+  `examples/payment-channel.php`.
 - Flag constants. Every `tf`, `asf` and `lsf` flag rippled 3.3.0 defines is a
   class constant under the name rippled and xrpl.js use: one class per
   transaction type in `Models\Transaction\Flags` (`PaymentFlags`,

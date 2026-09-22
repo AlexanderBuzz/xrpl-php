@@ -51,14 +51,7 @@ class Wallet
         // network has to be built with that network's definitions.
         $this->binaryCodec = new BinaryCodec($definitions);
 
-        if (str_starts_with($publicKey, 'ED')) {
-            $this->keyPairService = Ed25519KeyPairService::getInstance();
-        } else if (str_starts_with($publicKey, '0')) {
-            $this->keyPairService = Secp256k1KeyPairService::getInstance();
-        } else {
-            throw new Exception('Key Type not recognized');
-        }
-
+        $this->keyPairService = self::keyPairServiceFor($publicKey);
         $this->publicKey = $publicKey;
 
         if (is_string($masterAddress)) {
@@ -188,6 +181,76 @@ class Wallet
         $signature = $tx['TxnSignature'];
 
         return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
+    }
+
+    /**
+     * Sign a payment channel claim, locally.
+     *
+     * A claim authorizes the channel's destination to take $amountDrops out
+     * of the channel; it goes into the Signature field of a
+     * PaymentChannelClaim, together with this wallet's public key. Claims are
+     * not transactions, so this does not go through sign(), and unlike the
+     * channel_authorize RPC method the secret never leaves the process.
+     * Mirrors authorizeChannel in xrpl.js, which also takes drops.
+     *
+     * @param string $channelId the channel ID, 64 hex characters
+     * @param string $amountDrops the cumulative amount in drops
+     * @return string the signature as upper case hex
+     * @throws Exception on a malformed channel ID or amount
+     */
+    public function signPaymentChannelClaim(string $channelId, string $amountDrops): string
+    {
+        $claimData = $this->binaryCodec->encodeForSigningClaim([
+            'channel' => $channelId,
+            'amount' => $amountDrops,
+        ]);
+
+        return $this->keyPairService->sign($claimData, $this->privateKey);
+    }
+
+    /**
+     * Verify a payment channel claim, locally.
+     *
+     * The counterpart of signPaymentChannelClaim() for the channel's
+     * destination, which holds the payer's public key (it is stored in the
+     * channel) but not a wallet of theirs. The same check the channel_verify
+     * RPC method makes, without the round trip.
+     *
+     * @param string $channelId the channel ID, 64 hex characters
+     * @param string $amountDrops the cumulative amount in drops
+     * @param string $signature the signature, hex
+     * @param string $publicKey the public key of the channel's source, hex
+     * @return bool
+     * @throws Exception on a malformed channel ID, amount or public key
+     */
+    public static function verifyPaymentChannelClaim(
+        string $channelId,
+        string $amountDrops,
+        string $signature,
+        string $publicKey
+    ): bool {
+        $claimData = (new BinaryCodec())->encodeForSigningClaim([
+            'channel' => $channelId,
+            'amount' => $amountDrops,
+        ]);
+
+        return self::keyPairServiceFor($publicKey)->verify($claimData, $signature, $publicKey);
+    }
+
+    /**
+     * The key pair service a public key belongs to: Ed25519 keys carry the
+     * ED prefix, secp256k1 keys start with 02 or 03.
+     */
+    private static function keyPairServiceFor(string $publicKey): KeyPairServiceInterface
+    {
+        if (str_starts_with($publicKey, 'ED')) {
+            return Ed25519KeyPairService::getInstance();
+        }
+        if (str_starts_with($publicKey, '0')) {
+            return Secp256k1KeyPairService::getInstance();
+        }
+
+        throw new Exception('Key Type not recognized');
     }
 
     /**

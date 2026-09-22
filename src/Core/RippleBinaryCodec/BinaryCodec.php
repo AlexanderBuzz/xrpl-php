@@ -12,6 +12,7 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec;
 
 use Exception;
 use Hardcastle\XRPL_PHP\Core\HashPrefix;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
@@ -74,15 +75,36 @@ class BinaryCodec extends Binary
         return self::TRANSACTION_SIGN . $this->encode($filtered);
     }
 
-    /*
-    public function encodeForSigningClaim(array $object): string
+    /**
+     * The bytes a payment channel claim is signed over.
+     *
+     * A claim is not a transaction. It is the prefix 'CLM\0', the 32 byte
+     * channel ID and the amount in drops as a big-endian UInt64, and the
+     * signature over exactly that is what PaymentChannelClaim carries in its
+     * Signature field. Mirrors encodeForSigningClaim in ripple-binary-codec.
+     *
+     * @param array{channel: string, amount: string|int} $claim the channel ID
+     *   as 64 hex characters and the amount in drops
+     * @return string upper case hex
+     * @throws Exception on a malformed channel ID or amount
+     */
+    public function encodeForSigningClaim(array $claim): string
     {
-        assert.ok(typeof json === 'object')
-  return signingClaimData(json as ClaimObject)
-    .toString('hex')
-    .toUpperCase()
+        $channel = $claim['channel'];
+        $amount = (string) $claim['amount'];
+
+        if (!preg_match('/^[0-9A-Fa-f]{64}$/', $channel)) {
+            throw new Exception("Channel ID has to be 64 hex characters, got: {$channel}");
+        }
+        if (!preg_match('/^[0-9]+$/', $amount)) {
+            throw new Exception("Claim amount has to be a number of drops, got: {$amount}");
+        }
+
+        $prefix = dechex(HashPrefix::PAYMENT_CHANNEL_CLAIM);
+        $drops = UnsignedInt64::fromBase10($amount)->toBytes()->toString('hex');
+
+        return strtoupper($prefix . $channel . $drops);
     }
-    */
 
     /**
      * Encode a transaction and prepare it for multi-signing
