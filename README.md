@@ -63,6 +63,7 @@ php examples/nftoken-modify.php // Mint a mutable NFT and change its URI
 php examples/rlusd.php // Trust line and payment in Ripple USD
 php examples/custom-currency-codes.php // Currency codes beyond the three character form
 php examples/payment-with-destination-tag.php
+php examples/payment-channel.php // Open a channel, sign and verify claims offline, redeem and close
 php examples/xrp-balance.php
 php examples/provoke-error.php // What an error response looks like
 ```

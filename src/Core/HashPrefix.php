@@ -39,4 +39,7 @@ class HashPrefix
 
     // ledger 'LWR'
     const LEDGER = 0x4c575200;
+
+    // payment channel claim 'CLM'
+    const PAYMENT_CHANNEL_CLAIM = 0x434c4d00;
 }
