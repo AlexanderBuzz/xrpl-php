@@ -29,7 +29,7 @@ of all the available building blocks and how to make them interact with each oth
 
 ### License
 
-PHP-XRPL is released under the ISC license.
+XRPL_PHP is released under the MIT license.
 
-This documentation is also embedded in [XRPL_PHP's git repository](https://github.com/AlexanderBuzz/XRPL_PHP/tree/master/docs)
+This documentation is also embedded in [XRPL_PHP's git repository](https://github.com/AlexanderBuzz/xrpl-php/tree/main/docs)
 so you can read it offline (in the `docs/` folder).
