@@ -29,6 +29,6 @@ class MPTokenIssuanceCreate extends BaseTransaction
         'MaximumAmount' => UnsignedInt64::class,
         'MPTokenMetadata' => Blob::class,
         'DomainID' => Hash256::class,
-        'MutableFlags' => UnsignedInt32::class,
+        'ImmutableFlags' => UnsignedInt32::class,
     ];
 }

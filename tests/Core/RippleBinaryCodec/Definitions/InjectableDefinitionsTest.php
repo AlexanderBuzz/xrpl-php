@@ -192,8 +192,10 @@ final class InjectableDefinitionsTest extends TestCase
     private static function definitionsWithExtraField(): Definitions
     {
         $raw = json_decode(file_get_contents(self::DEFINITIONS_PATH), true);
+        // An ordinal no XRP Ledger Blob field uses; rippled 3.3.0 took 32 to 46
+        // for Confidential MPT.
         $raw['FIELDS'][] = ['NetworkSpecificBlob', [
-            'nth' => 32,
+            'nth' => 200,
             'isVLEncoded' => true,
             'isSerialized' => true,
             'isSigningField' => true,

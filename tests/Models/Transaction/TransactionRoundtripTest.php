@@ -48,6 +48,7 @@ final class TransactionRoundtripTest extends TestCase
                 'TransferFee' => 314,
                 'MaximumAmount' => '100000000',
                 'MPTokenMetadata' => '4D65746164617461',
+                'ImmutableFlags' => 96,
             ],
             'MPTokenIssuanceDestroy' => ['MPTokenIssuanceID' => self::MPT_ISSUANCE_ID],
             'MPTokenIssuanceSet' => [

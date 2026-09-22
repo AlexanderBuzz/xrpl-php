@@ -691,7 +691,7 @@
       }
     ],
     [
-      "MutableFlags",
+      "ImmutableFlags",
       {
         "isSerialized": true,
         "isSigningField": true,
@@ -847,6 +847,126 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 68,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "ConfidentialBalanceVersion",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 69,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SponsoredOwnerCount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 70,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SponsoringOwnerCount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 71,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SponsoringAccountCount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 72,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "RemainingOwnerCount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 73,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SponsorFlags",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 74,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SubscriptionDate",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 75,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "RedemptionDate",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 76,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "IssuerKeyEpoch",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 77,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "AuditorKeyEpoch",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 78,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "IssuerKeyMirrorEpoch",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 79,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "AuditorKeyMirrorEpoch",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 80,
         "type": "UInt32"
       }
     ],
@@ -1137,6 +1257,26 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 31,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "ConfidentialOutstandingAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 32,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "SponseeNode",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 33,
         "type": "UInt64"
       }
     ],
@@ -1521,6 +1661,26 @@
       }
     ],
     [
+      "BlindingFactor",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 40,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "ObjectID",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 41,
+        "type": "Hash256"
+      }
+    ],
+    [
       "hash",
       {
         "isSerialized": false,
@@ -1807,6 +1967,36 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 31,
+        "type": "Amount"
+      }
+    ],
+    [
+      "FeeAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 32,
+        "type": "Amount"
+      }
+    ],
+    [
+      "MaxFee",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 33,
+        "type": "Amount"
+      }
+    ],
+    [
+      "FeeAmountDelta",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 34,
         "type": "Amount"
       }
     ],
@@ -2111,6 +2301,156 @@
       }
     ],
     [
+      "ConfidentialBalanceInbox",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 32,
+        "type": "Blob"
+      }
+    ],
+    [
+      "ConfidentialBalanceSpending",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 33,
+        "type": "Blob"
+      }
+    ],
+    [
+      "IssuerEncryptedBalance",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 34,
+        "type": "Blob"
+      }
+    ],
+    [
+      "IssuerEncryptionKey",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 35,
+        "type": "Blob"
+      }
+    ],
+    [
+      "HolderEncryptionKey",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 36,
+        "type": "Blob"
+      }
+    ],
+    [
+      "ZKProof",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 37,
+        "type": "Blob"
+      }
+    ],
+    [
+      "HolderEncryptedAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 38,
+        "type": "Blob"
+      }
+    ],
+    [
+      "IssuerEncryptedAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 39,
+        "type": "Blob"
+      }
+    ],
+    [
+      "SenderEncryptedAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 40,
+        "type": "Blob"
+      }
+    ],
+    [
+      "DestinationEncryptedAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 41,
+        "type": "Blob"
+      }
+    ],
+    [
+      "AuditorEncryptedBalance",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 42,
+        "type": "Blob"
+      }
+    ],
+    [
+      "AuditorEncryptedAmount",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 43,
+        "type": "Blob"
+      }
+    ],
+    [
+      "AuditorEncryptionKey",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 44,
+        "type": "Blob"
+      }
+    ],
+    [
+      "AmountCommitment",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 45,
+        "type": "Blob"
+      }
+    ],
+    [
+      "BalanceCommitment",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 46,
+        "type": "Blob"
+      }
+    ],
+    [
       "Account",
       {
         "isSerialized": true,
@@ -2321,6 +2661,56 @@
       }
     ],
     [
+      "Sponsor",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 27,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "HighSponsor",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 28,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "LowSponsor",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 29,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "CounterpartySponsor",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 30,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "Sponsee",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": true,
+        "nth": 31,
+        "type": "AccountID"
+      }
+    ],
+    [
       "Number",
       {
         "isSerialized": true,
@@ -2497,6 +2887,16 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 1,
+        "type": "Int32"
+      }
+    ],
+    [
+      "RemainingOwnerCountDelta",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 2,
         "type": "Int32"
       }
     ],
@@ -2851,6 +3251,16 @@
       }
     ],
     [
+      "SponsorSignature",
+      {
+        "isSerialized": true,
+        "isSigningField": false,
+        "isVLEncoded": false,
+        "nth": 38,
+        "type": "STObject"
+      }
+    ],
+    [
       "Signers",
       {
         "isSerialized": true,
@@ -3161,6 +3571,16 @@
       }
     ],
     [
+      "LEVersion",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 6,
+        "type": "UInt8"
+      }
+    ],
+    [
       "TickSize",
       {
         "isSerialized": true,
@@ -3207,6 +3627,26 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 20,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "ContractResult",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 21,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "VaultKind",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 22,
         "type": "UInt8"
       }
     ],
@@ -3489,6 +3929,7 @@
     "PermissionedDomain": 130,
     "RippleState": 114,
     "SignerList": 83,
+    "Sponsorship": 144,
     "Ticket": 84,
     "Vault": 132,
     "XChainOwnedClaimID": 113,
@@ -3563,6 +4004,7 @@
     "temBAD_TRANSFER_FEE": -251,
     "temINVALID_INNER_BATCH": -250,
     "temBAD_MPT": -249,
+    "temBAD_CIPHERTEXT": -248,
     "tefFAILURE": -199,
     "tefALREADY": -198,
     "tefBAD_ADD_AUTH": -197,
@@ -3585,6 +4027,8 @@
     "tefNO_TICKET": -180,
     "tefNFTOKEN_IS_NOT_TRANSFERABLE": -179,
     "tefINVALID_LEDGER_FIX_TYPE": -178,
+    "tefNO_DST_PARTIAL": -177,
+    "tefBAD_PATH_COUNT": -176,
     "terRETRY": -99,
     "terFUNDS_SPENT": -98,
     "terINSUF_FEE_B": -97,
@@ -3601,6 +4045,7 @@
     "terADDRESS_COLLISION": -86,
     "terNO_DELEGATE_PERMISSION": -85,
     "terLOCKED": -84,
+    "terNO_PERMISSION": -83,
     "tesSUCCESS": 0,
     "tecCLAIM": 100,
     "tecPATH_PARTIAL": 101,
@@ -3685,7 +4130,9 @@
     "tecLIMIT_EXCEEDED": 195,
     "tecPSEUDO_ACCOUNT": 196,
     "tecPRECISION_LOSS": 197,
-    "tecNO_DELEGATE_PERMISSION": 198
+    "tecNO_DELEGATE_PERMISSION": 198,
+    "tecBAD_PROOF": 199,
+    "tecNO_SPONSOR_PERMISSION": 200
   },
   "TRANSACTION_TYPES": {
     "AMMBid": 39,
@@ -3702,6 +4149,11 @@
     "CheckCash": 17,
     "CheckCreate": 16,
     "Clawback": 30,
+    "ConfidentialMPTClawback": 89,
+    "ConfidentialMPTConvert": 85,
+    "ConfidentialMPTConvertBack": 87,
+    "ConfidentialMPTMergeInbox": 86,
+    "ConfidentialMPTSend": 88,
     "CredentialAccept": 59,
     "CredentialCreate": 58,
     "CredentialDelete": 60,
@@ -3747,6 +4199,8 @@
     "SetFee": 101,
     "SetRegularKey": 5,
     "SignerListSet": 12,
+    "SponsorshipSet": 91,
+    "SponsorshipTransfer": 90,
     "TicketCreate": 10,
     "TrustSet": 20,
     "UNLModify": 102,

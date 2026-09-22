@@ -29,6 +29,6 @@ class MPTokenIssuanceSet extends BaseTransaction
         'DomainID' => Hash256::class,
         'MPTokenMetadata' => Blob::class,
         'TransferFee' => UnsignedInt16::class,
-        'MutableFlags' => UnsignedInt32::class,
+        'ImmutableFlags' => UnsignedInt32::class,
     ];
 }
