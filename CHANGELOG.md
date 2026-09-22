@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Fixed
+- `definitions.json` is rippled 3.3.0 and nothing more. Nine of the 45 fields
+  2.5.0 added (`VaultKind`, `SubscriptionDate`, `RedemptionDate`, `LEVersion`,
+  `ContractResult`, `IssuerKeyEpoch`, `AuditorKeyEpoch`,
+  `IssuerKeyMirrorEpoch`, `AuditorKeyMirrorEpoch`) came from the rippled
+  development branch by way of ripple-binary-codec's main branch and are not
+  in 3.3.0; their ordinals could still move before they ship. They are removed,
+  and the parity test now fails if one of them comes back. Nothing a 3.3.0
+  node sends carries them, and the SDK used none of them.
+
 ## [2.5.0] - 2026-09-22
 
 ### Added

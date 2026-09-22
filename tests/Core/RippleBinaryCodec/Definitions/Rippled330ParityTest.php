@@ -45,13 +45,20 @@ final class Rippled330ParityTest extends TestCase
         // rippled 3.3.0 defines. The 197 result codes are the 195 of
         // ripple-binary-codec plus tecNO_DELEGATE_PERMISSION, which rippled
         // 3.3.0 keeps as deprecated, and tecHOOK_REJECTED, whose value rippled
-        // reserves for Xahau. The 390 fields are the 361 of 3.3.0 plus the 29
-        // Hook fields the file has always carried for Xahau.
+        // reserves for Xahau. The 381 fields are the 352 of 3.3.0's
+        // sfields.macro that ripple-binary-codec ships (it names the pseudo
+        // fields differently and leaves out the never used SigningAccounts)
+        // plus the 29 Hook fields the file has always carried for Xahau.
+        // ripple-binary-codec's main branch carries nine more fields from the
+        // rippled development branch (VaultKind, SubscriptionDate,
+        // RedemptionDate, LEVersion, ContractResult and four *KeyEpoch); they
+        // are not in 3.3.0 and their ordinals may still move, so they are
+        // left out on purpose. See testNoFieldBeyond330().
         $this->assertCount(31, $raw['TYPES']);
         $this->assertCount(32, $raw['LEDGER_ENTRY_TYPES']);
         $this->assertCount(83, $raw['TRANSACTION_TYPES']);
         $this->assertCount(197, $raw['TRANSACTION_RESULTS']);
-        $this->assertCount(390, $raw['FIELDS']);
+        $this->assertCount(381, $raw['FIELDS']);
     }
 
     /**
@@ -101,7 +108,6 @@ final class Rippled330ParityTest extends TestCase
             'Sponsor' => ['Sponsor', 'AccountID', 27],
             'RemainingOwnerCountDelta' => ['RemainingOwnerCountDelta', 'Int32', 2],
             'SponsorSignature' => ['SponsorSignature', 'STObject', 38],
-            'VaultKind' => ['VaultKind', 'UInt8', 22],
         ];
     }
 
@@ -116,6 +122,35 @@ final class Rippled330ParityTest extends TestCase
             $definitions->getFieldHeaderFromName($name)
         );
         $this->assertEquals($name, $definitions->getFieldNameFromHeader(new FieldHeader($typeCode, $nth)));
+    }
+
+    /**
+     * The fields ripple-binary-codec's main branch has beyond rippled 3.3.0.
+     * A field that exists only on the rippled development branch can still be
+     * renumbered before it ships, and nothing a 3.3.0 node sends carries it.
+     */
+    public static function beyond330Provider(): array
+    {
+        return [
+            'VaultKind' => ['VaultKind'],
+            'SubscriptionDate' => ['SubscriptionDate'],
+            'RedemptionDate' => ['RedemptionDate'],
+            'LEVersion' => ['LEVersion'],
+            'ContractResult' => ['ContractResult'],
+            'IssuerKeyEpoch' => ['IssuerKeyEpoch'],
+            'AuditorKeyEpoch' => ['AuditorKeyEpoch'],
+            'IssuerKeyMirrorEpoch' => ['IssuerKeyMirrorEpoch'],
+            'AuditorKeyMirrorEpoch' => ['AuditorKeyMirrorEpoch'],
+        ];
+    }
+
+    #[DataProvider('beyond330Provider')]
+    public function testNoFieldBeyond330(string $name): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Field {$name} not found");
+
+        Definitions::getInstance()->getFieldHeaderFromName($name);
     }
 
     /**
