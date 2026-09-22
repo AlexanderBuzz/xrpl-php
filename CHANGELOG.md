@@ -7,7 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Flag constants. Every `tf`, `asf` and `lsf` flag rippled 3.3.0 defines is a
+  class constant under the name rippled and xrpl.js use: one class per
+  transaction type in `Models\Transaction\Flags` (`PaymentFlags`,
+  `OfferCreateFlags`, `TrustSetFlags`, `NFTokenMintFlags`, ...), `GlobalFlags`
+  for the two flags every type accepts, `AccountSetAsfFlags` for `SetFlag` and
+  `ClearFlag`, and one class per ledger entry type in `Models\Ledger\Flags`
+  (`AccountRootFlags`, `RippleStateFlags`, `OfferFlags`, ...). Each class also
+  answers `has($flags, $flag)`, `parse($flags)` (the names set in a value read
+  from the ledger) and `all()`. See `docs/flags.md`.
+- `definitions.json` carries the flag tables of rippled 3.3.0
+  (`TRANSACTION_FLAGS`, `ACCOUNT_SET_FLAGS`, `LEDGER_ENTRY_FLAGS`), verified
+  against `TxFlags.h` and `LedgerFormats.h`, and `Definitions` exposes them
+  through `getTransactionFlags()`, `getAccountSetFlags()` and
+  `getLedgerEntryFlags()`. Definitions injected for another network may leave
+  the tables out; the accessors then return an empty array.
+
 ### Changed
+- The examples use the flag constants instead of defining their own.
 - `definitions.json` matches rippled 3.3.0. It gains the `Sponsorship` ledger
   entry, the seven transaction types of Sponsorship (`SponsorshipSet`,
   `SponsorshipTransfer`) and Confidential MPT (`ConfidentialMPTConvert`,

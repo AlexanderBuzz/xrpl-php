@@ -4,6 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\AccountSetAsfFlags;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 /**
@@ -46,11 +47,6 @@ print_r(PHP_EOL . Color::RESET);
 const NETWORK = 'testnet';
 const CURRENCY = 'USD';
 
-// AccountSet flags
-const ASF_DEFAULT_RIPPLE = 8;
-// Clawback has to be enabled before any trust line to the issuer exists
-const ASF_ALLOW_TRUSTLINE_CLAWBACK = 16;
-
 $client = new JsonRpcClient(NETWORK);
 
 print_r(Color::YELLOW . "Funding issuer wallet, please wait..." . PHP_EOL);
@@ -72,7 +68,7 @@ print_r(Color::YELLOW . "Enabling clawback on the issuer, please wait..." . PHP_
 $result = submit($client, $issuer, [
     "TransactionType" => "AccountSet",
     "Account" => $issuer->getAddress(),
-    "SetFlag" => ASF_ALLOW_TRUSTLINE_CLAWBACK,
+    "SetFlag" => AccountSetAsfFlags::asfAllowTrustLineClawback,
 ]);
 print_r(Color::GREEN . "Clawback enabled! TxHash: " . Color::WHITE . "{$result['hash']}" . PHP_EOL);
 
@@ -80,7 +76,7 @@ print_r(Color::YELLOW . "Enabling default ripple on the issuer, please wait..." 
 $result = submit($client, $issuer, [
     "TransactionType" => "AccountSet",
     "Account" => $issuer->getAddress(),
-    "SetFlag" => ASF_DEFAULT_RIPPLE,
+    "SetFlag" => AccountSetAsfFlags::asfDefaultRipple,
 ]);
 print_r(Color::GREEN . "Default ripple enabled! TxHash: " . Color::WHITE . "{$result['hash']}" . PHP_EOL . PHP_EOL);
 

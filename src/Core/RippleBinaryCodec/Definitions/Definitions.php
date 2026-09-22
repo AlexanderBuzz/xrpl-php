@@ -199,6 +199,44 @@ class Definitions
         return $definitions;
     }
 
+    /**
+     * The flags a transaction type accepts, name => value. The key
+     * "universal" holds the flags every type accepts. Empty when the
+     * definitions carry no TRANSACTION_FLAGS section or the type has none.
+     *
+     * @param string $transactionType
+     * @return array<string, int>
+     */
+    public function getTransactionFlags(string $transactionType): array
+    {
+        /** @var array<string, int> */
+        return $this->definitions['TRANSACTION_FLAGS'][$transactionType] ?? [];
+    }
+
+    /**
+     * The values AccountSet accepts in SetFlag and ClearFlag, name => value.
+     *
+     * @return array<string, int>
+     */
+    public function getAccountSetFlags(): array
+    {
+        /** @var array<string, int> */
+        return $this->definitions['ACCOUNT_SET_FLAGS'] ?? [];
+    }
+
+    /**
+     * The flags a ledger entry type carries, name => value. Empty when the
+     * definitions carry no LEDGER_ENTRY_FLAGS section or the type has none.
+     *
+     * @param string $ledgerEntryType
+     * @return array<string, int>
+     */
+    public function getLedgerEntryFlags(string $ledgerEntryType): array
+    {
+        /** @var array<string, int> */
+        return $this->definitions['LEDGER_ENTRY_FLAGS'][$ledgerEntryType] ?? [];
+    }
+
     public static function getInstance(): Definitions
     {
         if (static::$instance === null) {

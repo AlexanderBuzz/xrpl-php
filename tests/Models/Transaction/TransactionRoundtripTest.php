@@ -5,6 +5,8 @@ namespace Hardcastle\XRPL_PHP\Test\Models\Transaction;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\BatchFlags;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\GlobalFlags;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 /**
@@ -111,7 +113,7 @@ final class TransactionRoundtripTest extends TestCase
             ],
 
             'Batch' => [
-                'Flags' => 65536,
+                'Flags' => BatchFlags::tfAllOrNothing,
                 'RawTransactions' => [
                     ['RawTransaction' => [
                         'TransactionType' => 'Payment',
@@ -121,7 +123,7 @@ final class TransactionRoundtripTest extends TestCase
                         'Fee' => '0',
                         'Sequence' => 2,
                         'SigningPubKey' => '',
-                        'Flags' => 1073741824,
+                        'Flags' => GlobalFlags::tfInnerBatchTxn,
                     ]]
                 ],
             ],

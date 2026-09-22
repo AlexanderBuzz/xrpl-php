@@ -4,6 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\NFTokenMintFlags;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 /**
@@ -45,10 +46,6 @@ print_r(PHP_EOL . Color::RESET);
 
 const NETWORK = 'testnet';
 
-// NFTokenMint flags
-const TF_TRANSFERABLE = 0x00000008;
-const TF_MUTABLE = 0x00000010;
-
 $client = new JsonRpcClient(NETWORK);
 
 print_r(Color::YELLOW . "Funding minter wallet, please wait..." . PHP_EOL);
@@ -65,7 +62,7 @@ $mintTx = [
     "Account" => $minter->getAddress(),
     "NFTokenTaxon" => 0,
     "URI" => bin2hex('https://example.com/nft/before.json'),
-    "Flags" => TF_TRANSFERABLE | TF_MUTABLE,
+    "Flags" => NFTokenMintFlags::tfTransferable | NFTokenMintFlags::tfMutable,
 ];
 $result = submit($client, $minter, $mintTx);
 

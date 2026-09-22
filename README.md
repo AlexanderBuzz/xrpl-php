@@ -17,6 +17,7 @@ hood and getting into the nitty-gritty of XRPL development.
 4. Sending requests to observe the ledger
 5. Creating and signing transactions (e.g. Payments) to modify the ledger state
 6. Parsing ledger data into more convenient formats
+7. Every transaction and ledger entry flag as a named constant
 
 ## Installation
 

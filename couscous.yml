@@ -20,6 +20,9 @@ menu:
         methods:
           text: Client Methods
           url: methods.html
+        flags:
+          text: Flags
+          url: flags.html
     core:
       section: Core
       items:

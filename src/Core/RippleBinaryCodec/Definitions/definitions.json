@@ -1,4 +1,22 @@
 {
+  "ACCOUNT_SET_FLAGS": {
+    "asfAccountTxnID": 5,
+    "asfAllowTrustLineClawback": 16,
+    "asfAllowTrustLineLocking": 17,
+    "asfAuthorizedNFTokenMinter": 10,
+    "asfDefaultRipple": 8,
+    "asfDepositAuth": 9,
+    "asfDisableMaster": 4,
+    "asfDisallowIncomingCheck": 13,
+    "asfDisallowIncomingNFTokenOffer": 12,
+    "asfDisallowIncomingPayChan": 14,
+    "asfDisallowIncomingTrustline": 15,
+    "asfDisallowXRP": 3,
+    "asfGlobalFreeze": 7,
+    "asfNoFreeze": 6,
+    "asfRequireAuth": 2,
+    "asfRequireDest": 1
+  },
   "FIELDS": [
     [
       "Generic",
@@ -3901,6 +3919,83 @@
       }
     ]
   ],
+  "LEDGER_ENTRY_FLAGS": {
+    "AccountRoot": {
+      "lsfAllowTrustLineClawback": 2147483648,
+      "lsfAllowTrustLineLocking": 1073741824,
+      "lsfDefaultRipple": 8388608,
+      "lsfDepositAuth": 16777216,
+      "lsfDisableMaster": 1048576,
+      "lsfDisallowIncomingCheck": 134217728,
+      "lsfDisallowIncomingNFTokenOffer": 67108864,
+      "lsfDisallowIncomingPayChan": 268435456,
+      "lsfDisallowIncomingTrustline": 536870912,
+      "lsfDisallowXRP": 524288,
+      "lsfGlobalFreeze": 4194304,
+      "lsfNoFreeze": 2097152,
+      "lsfPasswordSpent": 65536,
+      "lsfRequireAuth": 262144,
+      "lsfRequireDestTag": 131072
+    },
+    "Credential": {
+      "lsfAccepted": 65536
+    },
+    "DirNode": {
+      "lsfNFTokenBuyOffers": 1,
+      "lsfNFTokenSellOffers": 2
+    },
+    "Loan": {
+      "lsfLoanDefault": 65536,
+      "lsfLoanImpaired": 131072,
+      "lsfLoanOverpayment": 262144
+    },
+    "MPToken": {
+      "lsfMPTAMM": 4,
+      "lsfMPTAuthorized": 2,
+      "lsfMPTLocked": 1
+    },
+    "MPTokenIssuance": {
+      "lsfMPTCanClawback": 64,
+      "lsfMPTCanEscrow": 8,
+      "lsfMPTCanHoldConfidentialBalance": 128,
+      "lsfMPTCanLock": 2,
+      "lsfMPTCanTrade": 16,
+      "lsfMPTCanTransfer": 32,
+      "lsfMPTLocked": 1,
+      "lsfMPTRequireAuth": 4
+    },
+    "NFTokenOffer": {
+      "lsfSellNFToken": 1
+    },
+    "Offer": {
+      "lsfHybrid": 262144,
+      "lsfPassive": 65536,
+      "lsfSell": 131072
+    },
+    "RippleState": {
+      "lsfAMMNode": 16777216,
+      "lsfHighAuth": 524288,
+      "lsfHighDeepFreeze": 67108864,
+      "lsfHighFreeze": 8388608,
+      "lsfHighNoRipple": 2097152,
+      "lsfHighReserve": 131072,
+      "lsfLowAuth": 262144,
+      "lsfLowDeepFreeze": 33554432,
+      "lsfLowFreeze": 4194304,
+      "lsfLowNoRipple": 1048576,
+      "lsfLowReserve": 65536
+    },
+    "SignerList": {
+      "lsfOneOwnerCount": 65536
+    },
+    "Sponsorship": {
+      "lsfSponsorshipRequireSignForFee": 65536,
+      "lsfSponsorshipRequireSignForReserve": 131072
+    },
+    "Vault": {
+      "lsfVaultPrivate": 65536
+    }
+  },
   "LEDGER_ENTRY_TYPES": {
     "AMM": 121,
     "AccountRoot": 97,
@@ -3934,6 +4029,140 @@
     "Vault": 132,
     "XChainOwnedClaimID": 113,
     "XChainOwnedCreateAccountClaimID": 116
+  },
+  "TRANSACTION_FLAGS": {
+    "AMMClawback": {
+      "tfClawTwoAssets": 1
+    },
+    "AMMDeposit": {
+      "tfLPToken": 65536,
+      "tfLimitLPToken": 4194304,
+      "tfOneAssetLPToken": 2097152,
+      "tfSingleAsset": 524288,
+      "tfTwoAsset": 1048576,
+      "tfTwoAssetIfEmpty": 8388608
+    },
+    "AMMWithdraw": {
+      "tfLPToken": 65536,
+      "tfLimitLPToken": 4194304,
+      "tfOneAssetLPToken": 2097152,
+      "tfOneAssetWithdrawAll": 262144,
+      "tfSingleAsset": 524288,
+      "tfTwoAsset": 1048576,
+      "tfWithdrawAll": 131072
+    },
+    "AccountSet": {
+      "tfAllowXRP": 2097152,
+      "tfDisallowXRP": 1048576,
+      "tfOptionalAuth": 524288,
+      "tfOptionalDestTag": 131072,
+      "tfRequireAuth": 262144,
+      "tfRequireDestTag": 65536
+    },
+    "Batch": {
+      "tfAllOrNothing": 65536,
+      "tfIndependent": 524288,
+      "tfOnlyOne": 131072,
+      "tfUntilFailure": 262144
+    },
+    "EnableAmendment": {
+      "tfGotMajority": 65536,
+      "tfLostMajority": 131072
+    },
+    "LoanManage": {
+      "tfLoanDefault": 65536,
+      "tfLoanImpair": 131072,
+      "tfLoanUnimpair": 262144
+    },
+    "LoanPay": {
+      "tfLoanFullPayment": 131072,
+      "tfLoanLatePayment": 262144,
+      "tfLoanOverpayment": 65536
+    },
+    "LoanSet": {
+      "tfLoanOverpayment": 65536
+    },
+    "MPTokenAuthorize": {
+      "tfMPTUnauthorize": 1
+    },
+    "MPTokenIssuanceCreate": {
+      "tfMPTCanClawback": 64,
+      "tfMPTCanEscrow": 8,
+      "tfMPTCanHoldConfidentialBalance": 128,
+      "tfMPTCanLock": 2,
+      "tfMPTCanTrade": 16,
+      "tfMPTCanTransfer": 32,
+      "tfMPTRequireAuth": 4
+    },
+    "MPTokenIssuanceSet": {
+      "tfMPTLock": 1,
+      "tfMPTSetCanClawback": 128,
+      "tfMPTSetCanEscrow": 16,
+      "tfMPTSetCanHoldConfidentialBalance": 256,
+      "tfMPTSetCanLock": 4,
+      "tfMPTSetCanTrade": 32,
+      "tfMPTSetCanTransfer": 64,
+      "tfMPTSetRequireAuth": 8,
+      "tfMPTUnlock": 2
+    },
+    "NFTokenCreateOffer": {
+      "tfSellNFToken": 1
+    },
+    "NFTokenMint": {
+      "tfBurnable": 1,
+      "tfMutable": 16,
+      "tfOnlyXRP": 2,
+      "tfTransferable": 8
+    },
+    "OfferCreate": {
+      "tfFillOrKill": 262144,
+      "tfHybrid": 1048576,
+      "tfImmediateOrCancel": 131072,
+      "tfPassive": 65536,
+      "tfSell": 524288
+    },
+    "Payment": {
+      "tfLimitQuality": 262144,
+      "tfNoRippleDirect": 65536,
+      "tfPartialPayment": 131072,
+      "tfSponsorCreatedAccount": 524288
+    },
+    "PaymentChannelClaim": {
+      "tfClose": 131072,
+      "tfRenew": 65536
+    },
+    "SponsorshipSet": {
+      "tfDeleteObject": 1048576,
+      "tfSponsorshipClearRequireSignForFee": 131072,
+      "tfSponsorshipClearRequireSignForReserve": 524288,
+      "tfSponsorshipSetRequireSignForFee": 65536,
+      "tfSponsorshipSetRequireSignForReserve": 262144
+    },
+    "SponsorshipTransfer": {
+      "tfSponsorshipCreate": 131072,
+      "tfSponsorshipEnd": 65536,
+      "tfSponsorshipReassign": 262144
+    },
+    "TrustSet": {
+      "tfClearDeepFreeze": 8388608,
+      "tfClearFreeze": 2097152,
+      "tfClearNoRipple": 262144,
+      "tfSetDeepFreeze": 4194304,
+      "tfSetFreeze": 1048576,
+      "tfSetNoRipple": 131072,
+      "tfSetfAuth": 65536
+    },
+    "VaultCreate": {
+      "tfVaultPrivate": 65536,
+      "tfVaultShareNonTransferable": 131072
+    },
+    "XChainModifyBridge": {
+      "tfClearAccountCreateAmount": 65536
+    },
+    "universal": {
+      "tfFullyCanonicalSig": 2147483648,
+      "tfInnerBatchTxn": 1073741824
+    }
   },
   "TRANSACTION_RESULTS": {
     "telLOCAL_ERROR": -399,

@@ -21,9 +21,11 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
  * decodes and so that the field list mirrors definitions.json. Building one
  * with this library is possible but not supported yet:
  *
- * - each Permission entry carries a bare PermissionValue (UInt32), and the
- *   library has no constants for the transaction type and granular permission
- *   numbers behind it, so the caller has to look them up in rippled;
+ * - each Permission entry carries a PermissionValue. The codec accepts the
+ *   names rippled uses - a transaction type ("Payment") or a granular
+ *   permission ("TrustlineAuthorize", see Definitions::GRANULAR_PERMISSIONS)
+ *   - and maps them to their numbers, but nothing checks that the delegating
+ *   account may grant them;
  * - sending a transaction on behalf of the delegating account (the Delegate
  *   field on the delegated transaction) is not handled by Wallet::sign().
  *

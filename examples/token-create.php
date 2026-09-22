@@ -5,6 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use Codedungeon\PHPCliColors\Color;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Core\Networks;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\AccountSetAsfFlags;
 
 $howToRunExample = "php token-create.php --tokenName LOP --issuerBalance 100000 --customerBalance 1000";
 
@@ -57,7 +58,7 @@ print_r(Color::GREEN . "Created bank wallet - address: " . Color::WHITE . "{$ban
 $bankWalletConfigTx = [
     "TransactionType" => "AccountSet",
     "Account" => $bankWallet->getAddress(),
-    "SetFlag" => 8
+    "SetFlag" => AccountSetAsfFlags::asfDefaultRipple
 ];
 $bankWalletConfigTxPrepared = $client->autofill($bankWalletConfigTx);
 $bankWalletConfigTxSigned = $bankWallet->sign($bankWalletConfigTxPrepared);

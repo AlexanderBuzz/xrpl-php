@@ -21,6 +21,7 @@ For in-depth documentation, you can refer to the following pages:
 * [Wallet](wallet.md)
 * [JSON RPC Client](client.md)
 * [Client Methods](methods.md)
+* [Flags](flags.md)
 * [Recipes & Patterns](recipes-patterns.md)
 
 The documentation is structured in a consecutive way. By just skimming each page in order, you will get a birds eye view 
