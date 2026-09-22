@@ -34,7 +34,7 @@ final class Rippled330ParityTest extends TestCase
      */
     private static function bundled(): array
     {
-        return json_decode(file_get_contents(self::DEFINITIONS_PATH), true);
+        return json_decode((string) file_get_contents(self::DEFINITIONS_PATH), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function testInventoryMatchesRippled330(): void
@@ -185,7 +185,7 @@ final class Rippled330ParityTest extends TestCase
     {
         $codec = new BinaryCodec();
 
-        $decoded = $codec->decode($codec->encode(json_encode($object)));
+        $decoded = $codec->decode($codec->encode(json_encode($object, JSON_THROW_ON_ERROR)));
 
         ksort($object);
         ksort($decoded);
