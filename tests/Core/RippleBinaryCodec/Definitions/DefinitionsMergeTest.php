@@ -62,6 +62,30 @@ final class DefinitionsMergeTest extends TestCase
     }
 
     /**
+     * Result codes rippled 3.3.0 assigned to values Xahau already uses.
+     */
+    public static function collidingResultCodeProvider(): array
+    {
+        return [
+            'tefBAD_PATH_COUNT vs tefNONDIR_EMIT' => ['tefBAD_PATH_COUNT', -176],
+            'tefNO_DST_PARTIAL vs tefPAST_IMPORT_VL_SEQ' => ['tefNO_DST_PARTIAL', -177],
+        ];
+    }
+
+    #[DataProvider('collidingResultCodeProvider')]
+    public function testMainlineResultCodeWins(string $code, int $value): void
+    {
+        $definitions = Definitions::getInstance();
+
+        $this->assertEquals($value, $definitions->mapSpecificFieldFromValue('TransactionResult', $code));
+        $this->assertEquals(
+            $code,
+            $definitions->mapValueToSpecificField('TransactionResult', $value),
+            "value {$value} has to decode to {$code}, not to the Xahau code"
+        );
+    }
+
+    /**
      * The field ordinals both networks use.
      */
     public static function collidingFieldProvider(): array

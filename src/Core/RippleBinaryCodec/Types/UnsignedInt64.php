@@ -34,6 +34,7 @@ class UnsignedInt64 extends UnsignedInt
         'OutstandingAmount',
         'MPTAmount',
         'LockedAmount',
+        'ConfidentialOutstandingAmount',
     ];
 
     public static function fromParser(BinaryParser $parser, ?int $lengthHint = null): UnsignedInt64

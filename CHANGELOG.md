@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- `definitions.json` matches rippled 3.3.0. It gains the `Sponsorship` ledger
+  entry, the seven transaction types of Sponsorship (`SponsorshipSet`,
+  `SponsorshipTransfer`) and Confidential MPT (`ConfidentialMPTConvert`,
+  `ConfidentialMPTConvertBack`, `ConfidentialMPTMergeInbox`,
+  `ConfidentialMPTSend`, `ConfidentialMPTClawback`), six result codes and 45
+  fields. The codec encodes and decodes all of them; model classes follow once
+  the amendments are active on Mainnet, as for Vault and Loan.
+  `ConfidentialOutstandingAmount` is rendered in base 10 like the other MPT
+  amounts. Two of the new result codes, `tefBAD_PATH_COUNT` and
+  `tefNO_DST_PARTIAL`, share their value with a Xahau code; the XRP Ledger name
+  wins, as for every other collision.
+- **`MutableFlags` is now `ImmutableFlags`.** rippled 3.3.0 renamed the field
+  (same ordinal, so the encoding is unchanged), and `MPTokenIssuanceCreate` and
+  `MPTokenIssuanceSet` follow. A transaction still carrying `MutableFlags` is
+  rejected with "Field MutableFlags not found in definitions" instead of being
+  encoded under a name no node accepts. DynamicMPT is not active on Mainnet, so
+  no submitted transaction can have depended on the old name.
 - `Batch` and `DelegateSet` now say in their docblocks what they are: models
   that decode a transaction found in the ledger and mirror `definitions.json`,
   not support for building one. Batch V1.1 (rippled 3.3.0) requires the
