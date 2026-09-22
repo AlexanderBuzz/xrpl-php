@@ -4,6 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Codedungeon\PHPCliColors\Color;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\MPTokenIssuanceCreateFlags;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
 
 /**
@@ -62,9 +63,6 @@ print_r(Color::GREEN . "Holder: " . Color::WHITE . "{$holder->getAddress()}" . P
  * given in units of 1/1000 of a percent. The flags make the token
  * transferable and clawback enabled.
  */
-const TF_MPT_CAN_TRANSFER = 0x00000020;
-const TF_MPT_CAN_CLAWBACK = 0x00000040;
-
 print_r(Color::YELLOW . "Creating MPToken issuance, please wait..." . PHP_EOL);
 $issuanceTx = [
     "TransactionType" => "MPTokenIssuanceCreate",
@@ -73,7 +71,7 @@ $issuanceTx = [
     "TransferFee" => 314,
     "MaximumAmount" => "100000000",
     "MPTokenMetadata" => bin2hex('{"name":"Example MPT"}'),
-    "Flags" => TF_MPT_CAN_TRANSFER | TF_MPT_CAN_CLAWBACK,
+    "Flags" => MPTokenIssuanceCreateFlags::tfMPTCanTransfer | MPTokenIssuanceCreateFlags::tfMPTCanClawback,
 ];
 $result = submit($client, $issuer, $issuanceTx);
 
