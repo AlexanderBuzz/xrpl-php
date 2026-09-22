@@ -95,6 +95,6 @@ The steps are as follows:
 
 ## Further Reading
 In those two examples we've touched most of the basic needs for most use cases. To get a better understanding, you can take a look at 
-more [examples](https://github.com/AlexanderBuzz/xrpl-php/tree/master/examples) or explore this documentation. Tip: This documentation is
+more [examples](https://github.com/AlexanderBuzz/xrpl-php/tree/main/examples) or explore this documentation. Tip: This documentation is
 structured in a conceptually successive order. So just skimming it in order will give you a birds eye view on how all the 
 parts fit into the big picture. 

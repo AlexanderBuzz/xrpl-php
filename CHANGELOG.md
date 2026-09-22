@@ -39,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the tables out; the accessors then return an empty array.
 
 ### Changed
+- The default branch is `main`. GitHub redirects the old `master` links; the
+  two in the documentation now point at `main` directly, and the documentation
+  index names the MIT license the project has carried since 2.2.0, not ISC.
 - The examples use the flag constants instead of defining their own.
 - `definitions.json` matches rippled 3.3.0. It gains the `Sponsorship` ledger
   entry, the seven transaction types of Sponsorship (`SponsorshipSet`,
