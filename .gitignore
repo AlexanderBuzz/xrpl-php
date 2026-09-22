@@ -18,4 +18,6 @@
 /website/bower_components/
 /website/css/all.min.css
 
+# Handover documents
+/Handover-*.md
 /CLAUDE.md
