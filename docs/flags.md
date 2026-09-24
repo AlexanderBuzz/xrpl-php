@@ -7,7 +7,7 @@ current_menu: flags
 # Flags
 
 Transactions and ledger entries carry a `Flags` field, a 32 bit integer whose
-bits mean different things per type. The SDK provides every flag rippled 3.3.0
+bits mean different things per type. The SDK provides every flag rippled 3.4.0
 knows as a constant, under the names rippled and xrpl.js use, so you never
 have to look a number up.
 
@@ -85,7 +85,7 @@ AccountRootFlags::all();                        // ['lsfPasswordSpent' => 65536,
 
 ### Where the values come from
 
-`definitions.json` carries the flag tables of rippled 3.3.0
+`definitions.json` carries the flag tables of rippled 3.4.0
 (`TRANSACTION_FLAGS`, `ACCOUNT_SET_FLAGS`, `LEDGER_ENTRY_FLAGS`), verified
 against `TxFlags.h` and `LedgerFormats.h`. The constants are checked against
 those tables in the test suite, and `Definitions` exposes them at runtime

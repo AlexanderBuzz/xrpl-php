@@ -15,7 +15,7 @@ use Hardcastle\XRPL_PHP\Models\Common\FlagSet;
 /**
  * Values of the SetFlag and ClearFlag fields of AccountSet.
  *
- * Values are those of rippled 3.3.0 (TxFlags.h); one per transaction, they are not bit flags.
+ * Values are those of rippled 3.4.0 (TxFlags.h); one per transaction, they are not bit flags.
  * https://xrpl.org/accountset.html
  */
 final class AccountSetAsfFlags

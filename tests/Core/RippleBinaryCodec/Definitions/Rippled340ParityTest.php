@@ -10,15 +10,16 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
 
 /**
- * The bundled definitions.json has to match rippled 3.3.0.
+ * The bundled definitions.json has to be rippled 3.4.0.
  *
- * The inventory below was taken from the protocol macros of the rippled 3.3.0
- * tag (ledger_entries.macro, transactions.macro, sfields.macro, TER.h) and
- * cross-checked against the definitions.json of ripple-binary-codec, which
- * agrees with them. The counts pin the whole inventory; the named entries are
- * the ones 3.3.0 added or renamed, so a regression names the culprit.
+ * The file is what a 3.4.0 node reports through server_definitions, taken
+ * verbatim, with the node's digest in "hash". The counts and the digest pin
+ * the whole inventory; the named entries are the ones recent releases added,
+ * renamed or dropped, so a regression names the culprit. Where a check has
+ * to see the bundled file alone, without the Xahau entries getInstance()
+ * merges in, it reads the file.
  */
-final class Rippled330ParityTest extends TestCase
+final class Rippled340ParityTest extends TestCase
 {
     private const ACCOUNT = 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe';
 
@@ -30,32 +31,32 @@ final class Rippled330ParityTest extends TestCase
         . '/../../../../src/Core/RippleBinaryCodec/Definitions/definitions.json';
 
     /**
-     * The bundled file alone, without the Xahau entries getInstance() merges in.
+     * The digest s1.ripple.com reported for its definitions on 2026-09-24,
+     * running rippled 3.4.0.
      */
+    private const RIPPLED_3_4_0_HASH = '1EA05B0FC11101F7C500BD0DAC794A8BC746A7FBA6250B75489603EB820E0FF5';
+
     private static function bundled(): array
     {
         return json_decode((string) file_get_contents(self::DEFINITIONS_PATH), true, 512, JSON_THROW_ON_ERROR);
     }
 
-    public function testInventoryMatchesRippled330(): void
+    public function testInventoryMatchesRippled340(): void
     {
         $raw = self::bundled();
 
-        // 31 types, 32 ledger entries and 83 transaction types are exactly what
-        // rippled 3.3.0 defines. The 197 result codes are the 195 of
-        // ripple-binary-codec plus tecNO_DELEGATE_PERMISSION, which rippled
-        // 3.3.0 keeps as deprecated, and tecHOOK_REJECTED, whose value rippled
-        // reserves for Xahau. The 390 fields are the 361 of 3.3.0 plus the 29
-        // Hook fields the file has always carried for Xahau.
+        $this->assertSame(self::RIPPLED_3_4_0_HASH, $raw['hash']);
         $this->assertCount(31, $raw['TYPES']);
         $this->assertCount(32, $raw['LEDGER_ENTRY_TYPES']);
         $this->assertCount(83, $raw['TRANSACTION_TYPES']);
-        $this->assertCount(197, $raw['TRANSACTION_RESULTS']);
-        $this->assertCount(390, $raw['FIELDS']);
+        $this->assertCount(195, $raw['TRANSACTION_RESULTS']);
+        $this->assertCount(357, $raw['FIELDS']);
+        $this->assertCount(83, $raw['TRANSACTION_FORMATS'], 'the 82 real types plus "common"; Invalid has no format');
+        $this->assertCount(32, $raw['LEDGER_ENTRY_FORMATS']);
     }
 
     /**
-     * Ledger entries and transaction types new in 3.3.0.
+     * Ledger entries, transaction types and result codes added in 3.3.0.
      */
     public static function newOrdinalProvider(): array
     {
@@ -87,13 +88,16 @@ final class Rippled330ParityTest extends TestCase
     }
 
     /**
-     * Fields new in 3.3.0, one per type they introduce to, plus the rename.
+     * Fields added in 3.3.0 and 3.4.0, one per type they introduce to, plus
+     * the rename.
      */
     public static function newFieldProvider(): array
     {
         return [
             'ImmutableFlags (was MutableFlags)' => ['ImmutableFlags', 'UInt32', 53],
             'SponsorFlags' => ['SponsorFlags', 'UInt32', 74],
+            'SubscriptionDate (3.4.0)' => ['SubscriptionDate', 'UInt32', 75],
+            'RedemptionDate (3.4.0)' => ['RedemptionDate', 'UInt32', 76],
             'SponseeNode' => ['SponseeNode', 'UInt64', 33],
             'ObjectID' => ['ObjectID', 'Hash256', 41],
             'FeeAmount' => ['FeeAmount', 'Amount', 32],
@@ -101,7 +105,9 @@ final class Rippled330ParityTest extends TestCase
             'Sponsor' => ['Sponsor', 'AccountID', 27],
             'RemainingOwnerCountDelta' => ['RemainingOwnerCountDelta', 'Int32', 2],
             'SponsorSignature' => ['SponsorSignature', 'STObject', 38],
-            'VaultKind' => ['VaultKind', 'UInt8', 22],
+            'LEVersion (3.4.0)' => ['LEVersion', 'UInt8', 6],
+            'ContractResult (3.4.0)' => ['ContractResult', 'UInt8', 21],
+            'VaultKind (3.4.0)' => ['VaultKind', 'UInt8', 22],
         ];
     }
 
@@ -119,6 +125,30 @@ final class Rippled330ParityTest extends TestCase
     }
 
     /**
+     * The fields ripple-binary-codec's main branch has beyond rippled 3.4.0.
+     * A field that exists only on the rippled development branch can still be
+     * renumbered before it ships, and nothing a 3.4.0 node sends carries it.
+     */
+    public static function beyond340Provider(): array
+    {
+        return [
+            'IssuerKeyEpoch' => ['IssuerKeyEpoch'],
+            'AuditorKeyEpoch' => ['AuditorKeyEpoch'],
+            'IssuerKeyMirrorEpoch' => ['IssuerKeyMirrorEpoch'],
+            'AuditorKeyMirrorEpoch' => ['AuditorKeyMirrorEpoch'],
+        ];
+    }
+
+    #[DataProvider('beyond340Provider')]
+    public function testNoFieldBeyond340(string $name): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Field {$name} not found");
+
+        Definitions::getInstance()->getFieldHeaderFromName($name);
+    }
+
+    /**
      * rippled 3.3.0 renamed sfMutableFlags to sfImmutableFlags, keeping the
      * ordinal. The old name is gone, so a transaction built with it fails
      * loudly instead of encoding under a name no node accepts.
@@ -132,8 +162,45 @@ final class Rippled330ParityTest extends TestCase
     }
 
     /**
+     * The Xahau Hook fields and tecHOOK_REJECTED are not XRP Ledger
+     * definitions. They used to sit in the bundled file as a leftover of the
+     * early xrpl.js definitions; hooksDefinitions.json carries all of them, so
+     * the merged definitions still know every one. HookOn is the field where
+     * that matters: the leftover (UInt64, nth 16) shadowed Xahau's definition
+     * (Hash256, nth 20), so a SetHook encoded HookOn wrongly.
+     */
+    public function testHookDefinitionsComeFromXahauOnly(): void
+    {
+        $raw = self::bundled();
+        $names = array_column($raw['FIELDS'], 0);
+
+        $this->assertNotContains('HookOn', $names);
+        $this->assertNotContains('Hooks', $names);
+        $this->assertNotContains('EmittedTxn', $names);
+        $this->assertArrayNotHasKey('tecHOOK_REJECTED', $raw['TRANSACTION_RESULTS']);
+
+        $merged = Definitions::getInstance();
+        $this->assertEquals(
+            new FieldHeader($raw['TYPES']['Hash256'], 20),
+            $merged->getFieldHeaderFromName('HookOn'),
+            'HookOn has to be the Xahau field, not the leftover'
+        );
+        $this->assertEquals(153, $merged->mapSpecificFieldFromValue('TransactionResult', 'tecHOOK_REJECTED'));
+    }
+
+    /**
+     * rippled keeps the value 198 reserved but no 3.4.0 node reports the
+     * code; it is gone from the XRP Ledger file.
+     */
+    public function testDeprecatedDelegateCodeIsGone(): void
+    {
+        $this->assertArrayNotHasKey('tecNO_DELEGATE_PERMISSION', self::bundled()['TRANSACTION_RESULTS']);
+    }
+
+    /**
      * The types without a fixture in ripple-binary-codec, built by hand from
-     * the 3.3.0 transactions.macro and ledger_entries.macro.
+     * transactions.macro and ledger_entries.macro, plus the 3.4.0 fields on
+     * the vault.
      */
     public static function roundtripProvider(): array
     {
@@ -158,6 +225,13 @@ final class Rippled330ParityTest extends TestCase
                 'ObjectID' => self::HASH,
                 'Sponsee' => self::OTHER_ACCOUNT,
             ]],
+            'VaultCreate with the 3.4.0 fields' => [$common + [
+                'TransactionType' => 'VaultCreate',
+                'Asset' => ['currency' => 'XRP'],
+                'VaultKind' => 1,
+                'SubscriptionDate' => 800000000,
+                'RedemptionDate' => 800100000,
+            ]],
             'Sponsorship ledger entry' => [[
                 'LedgerEntryType' => 'Sponsorship',
                 'Flags' => 0,
@@ -171,11 +245,11 @@ final class Rippled330ParityTest extends TestCase
                 'OwnerNode' => '0000000000000000',
                 'SponseeNode' => '0000000000000001',
             ]],
-            'MPTokenIssuanceCreate with ImmutableFlags' => [$common + [
-                'TransactionType' => 'MPTokenIssuanceCreate',
-                'AssetScale' => 2,
-                'MaximumAmount' => '100000000',
-                'ImmutableFlags' => 96,
+            'MPTokenIssuanceSet with the Confidential MPT keys' => [$common + [
+                'TransactionType' => 'MPTokenIssuanceSet',
+                'MPTokenIssuanceID' => '000004C463C52827307480341125DA0577DEFC38405B0E3E',
+                'IssuerEncryptionKey' => '02' . self::HASH,
+                'AuditorEncryptionKey' => '03' . self::HASH,
             ]],
         ];
     }

@@ -46,7 +46,7 @@ use Hardcastle\XRPL_PHP\Models\Transaction\Flags\XChainModifyBridgeFlags;
 /**
  * The flag constants have to say what rippled says.
  *
- * definitions.json carries the flag tables of rippled 3.3.0 (TRANSACTION_FLAGS,
+ * definitions.json carries the flag tables of rippled 3.4.0 (TRANSACTION_FLAGS,
  * ACCOUNT_SET_FLAGS, LEDGER_ENTRY_FLAGS, verified against TxFlags.h and
  * LedgerFormats.h). Every table has a constants class, and every class has
  * exactly the table's names and values - so a table that gains a flag fails

@@ -15,7 +15,7 @@ use Hardcastle\XRPL_PHP\Models\Common\FlagSet;
 /**
  * Flags every transaction type accepts.
  *
- * Values are those of rippled 3.3.0 (TxFlags.h); combine them with |.
+ * Values are those of rippled 3.4.0 (TxFlags.h); combine them with |.
  * https://xrpl.org/docs/references/protocol/transactions/common-fields#flags-field
  */
 final class GlobalFlags

@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Changed
+- **`definitions.json` is rippled 3.4.0** (released 2026-09-17), taken
+  verbatim from what a 3.4.0 node reports through `server_definitions`, with
+  the node's digest in `hash`. Against 2.5.0 the types, ledger entries,
+  transaction types, flags and fixtures are unchanged; what changes is the
+  field list and two result codes:
+  - Four fields 2.5.0 took from ripple-binary-codec's main branch are not in
+    3.4.0 and are removed: `IssuerKeyEpoch`, `AuditorKeyEpoch`,
+    `IssuerKeyMirrorEpoch`, `AuditorKeyMirrorEpoch`. They come from the
+    rippled development branch and could still be renumbered. The parity test
+    fails if one returns.
+  - The 29 Xahau Hook fields and `tecHOOK_REJECTED` leave the XRP Ledger file.
+    They were a leftover of the early xrpl.js definitions, and
+    `hooksDefinitions.json` carries all of them, so the merged definitions a
+    `Wallet` or `BinaryCodec` uses by default still know every one of them.
+    One of them changes as a result: `HookOn` was shadowed by the leftover
+    (UInt64, nth 16) and now resolves to Xahau's definition (Hash256, nth 20),
+    which is what a Xahau node expects in a `SetHook`.
+  - `tecNO_DELEGATE_PERMISSION` is removed; rippled reserves the value 198 for
+    historical data on non-production networks and no 3.4.0 node reports it.
+  - The file now also carries `TRANSACTION_FORMATS` and
+    `LEDGER_ENTRY_FORMATS`, the field lists per type. A new test checks every
+    transaction model against its format, so a model can no longer miss a
+    field the ledger knows.
+- `MPTokenIssuanceSet` gains `IssuerEncryptionKey` and `AuditorEncryptionKey`
+  (Confidential MPT), the one gap that check found.
+- Every flag class says rippled 3.4.0; the values are unchanged since 3.3.0.
+
 ## [2.5.0] - 2026-09-22
 
 ### Added
