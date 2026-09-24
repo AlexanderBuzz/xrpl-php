@@ -15,7 +15,7 @@ use Hardcastle\XRPL_PHP\Models\Common\FlagSet;
 /**
  * Flags of the Sponsorship ledger entry.
  *
- * Values are those of rippled 3.3.0 (LedgerFormats.h); combine them with |.
+ * Values are those of rippled 3.4.0 (LedgerFormats.h); combine them with |.
  * Sponsorship is not active on Mainnet at the time of writing.
  * https://xrpl.org/sponsorship.html
  */

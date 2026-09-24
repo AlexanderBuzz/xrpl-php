@@ -19,16 +19,6 @@
   },
   "FIELDS": [
     [
-      "Generic",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 0,
-        "type": "Unknown"
-      }
-    ],
-    [
       "Invalid",
       {
         "isSerialized": false,
@@ -76,6 +66,16 @@
         "isVLEncoded": false,
         "nth": 259,
         "type": "Amount"
+      }
+    ],
+    [
+      "Generic",
+      {
+        "isSerialized": true,
+        "isSigningField": true,
+        "isVLEncoded": false,
+        "nth": 0,
+        "type": "Unknown"
       }
     ],
     [
@@ -145,46 +145,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 16,
-        "type": "UInt16"
-      }
-    ],
-    [
-      "HookStateChangeCount",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 17,
-        "type": "UInt16"
-      }
-    ],
-    [
-      "HookEmitCount",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 18,
-        "type": "UInt16"
-      }
-    ],
-    [
-      "HookExecutionIndex",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 19,
-        "type": "UInt16"
-      }
-    ],
-    [
-      "HookApiVersion",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 20,
         "type": "UInt16"
       }
     ],
@@ -649,26 +609,6 @@
       }
     ],
     [
-      "HookStateCount",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 45,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "EmitGeneration",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 46,
-        "type": "UInt32"
-      }
-    ],
-    [
       "VoteWeight",
       {
         "isSerialized": true,
@@ -949,46 +889,6 @@
       }
     ],
     [
-      "IssuerKeyEpoch",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 77,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "AuditorKeyEpoch",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 78,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "IssuerKeyMirrorEpoch",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 79,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "AuditorKeyMirrorEpoch",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 80,
-        "type": "UInt32"
-      }
-    ],
-    [
       "IndexNext",
       {
         "isSerialized": true,
@@ -1115,36 +1015,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 13,
-        "type": "UInt64"
-      }
-    ],
-    [
-      "HookOn",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 16,
-        "type": "UInt64"
-      }
-    ],
-    [
-      "HookInstructionCount",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 17,
-        "type": "UInt64"
-      }
-    ],
-    [
-      "HookReturnCode",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 18,
         "type": "UInt64"
       }
     ],
@@ -1575,46 +1445,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 29,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "HookStateKey",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 30,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "HookHash",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 31,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "HookNamespace",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 32,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "HookSetTxnID",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 33,
         "type": "Hash256"
       }
     ],
@@ -2219,46 +2049,6 @@
       }
     ],
     [
-      "HookStateData",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": true,
-        "nth": 22,
-        "type": "Blob"
-      }
-    ],
-    [
-      "HookReturnString",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": true,
-        "nth": 23,
-        "type": "Blob"
-      }
-    ],
-    [
-      "HookParameterName",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": true,
-        "nth": 24,
-        "type": "Blob"
-      }
-    ],
-    [
-      "HookParameterValue",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": true,
-        "nth": 25,
-        "type": "Blob"
-      }
-    ],
-    [
       "DIDDocument",
       {
         "isSerialized": true,
@@ -2575,16 +2365,6 @@
         "isSigningField": true,
         "isVLEncoded": true,
         "nth": 12,
-        "type": "AccountID"
-      }
-    ],
-    [
-      "HookAccount",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": true,
-        "nth": 16,
         "type": "AccountID"
       }
     ],
@@ -3039,16 +2819,6 @@
       }
     ],
     [
-      "Hook",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 14,
-        "type": "STObject"
-      }
-    ],
-    [
       "Permission",
       {
         "isSerialized": true,
@@ -3085,56 +2855,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 19,
-        "type": "STObject"
-      }
-    ],
-    [
-      "EmittedTxn",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 20,
-        "type": "STObject"
-      }
-    ],
-    [
-      "HookExecution",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 21,
-        "type": "STObject"
-      }
-    ],
-    [
-      "HookDefinition",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 22,
-        "type": "STObject"
-      }
-    ],
-    [
-      "HookParameter",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 23,
-        "type": "STObject"
-      }
-    ],
-    [
-      "HookGrant",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 24,
         "type": "STObject"
       }
     ],
@@ -3359,16 +3079,6 @@
       }
     ],
     [
-      "Hooks",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 11,
-        "type": "STArray"
-      }
-    ],
-    [
       "VoteSlots",
       {
         "isSerialized": true,
@@ -3405,36 +3115,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 17,
-        "type": "STArray"
-      }
-    ],
-    [
-      "HookExecutions",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 18,
-        "type": "STArray"
-      }
-    ],
-    [
-      "HookParameters",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 19,
-        "type": "STArray"
-      }
-    ],
-    [
-      "HookGrants",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 20,
         "type": "STArray"
       }
     ],
@@ -3615,16 +3295,6 @@
         "isSigningField": true,
         "isVLEncoded": false,
         "nth": 17,
-        "type": "UInt8"
-      }
-    ],
-    [
-      "HookResult",
-      {
-        "isSerialized": true,
-        "isSigningField": true,
-        "isVLEncoded": false,
-        "nth": 18,
         "type": "UInt8"
       }
     ],
@@ -3996,6 +3666,1444 @@
       "lsfVaultPrivate": 65536
     }
   },
+  "LEDGER_ENTRY_FORMATS": {
+    "AMM": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "TradingFee",
+        "optionality": 2
+      },
+      {
+        "name": "VoteSlots",
+        "optionality": 1
+      },
+      {
+        "name": "AuctionSlot",
+        "optionality": 1
+      },
+      {
+        "name": "LPTokenBalance",
+        "optionality": 0
+      },
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 1
+      }
+    ],
+    "AccountRoot": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "Balance",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerCount",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "AccountTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "RegularKey",
+        "optionality": 1
+      },
+      {
+        "name": "EmailHash",
+        "optionality": 1
+      },
+      {
+        "name": "WalletLocator",
+        "optionality": 1
+      },
+      {
+        "name": "WalletSize",
+        "optionality": 1
+      },
+      {
+        "name": "MessageKey",
+        "optionality": 1
+      },
+      {
+        "name": "TransferRate",
+        "optionality": 1
+      },
+      {
+        "name": "Domain",
+        "optionality": 1
+      },
+      {
+        "name": "TickSize",
+        "optionality": 1
+      },
+      {
+        "name": "TicketCount",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokenMinter",
+        "optionality": 1
+      },
+      {
+        "name": "MintedNFTokens",
+        "optionality": 2
+      },
+      {
+        "name": "BurnedNFTokens",
+        "optionality": 2
+      },
+      {
+        "name": "FirstNFTokenSequence",
+        "optionality": 1
+      },
+      {
+        "name": "SponsoredOwnerCount",
+        "optionality": 2
+      },
+      {
+        "name": "SponsoringOwnerCount",
+        "optionality": 2
+      },
+      {
+        "name": "SponsoringAccountCount",
+        "optionality": 2
+      },
+      {
+        "name": "AMMID",
+        "optionality": 1
+      },
+      {
+        "name": "VaultID",
+        "optionality": 1
+      },
+      {
+        "name": "LoanBrokerID",
+        "optionality": 1
+      }
+    ],
+    "Amendments": [
+      {
+        "name": "Amendments",
+        "optionality": 1
+      },
+      {
+        "name": "Majorities",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 1
+      }
+    ],
+    "Bridge": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      },
+      {
+        "name": "MinAccountCreateAmount",
+        "optionality": 1
+      },
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimID",
+        "optionality": 0
+      },
+      {
+        "name": "XChainAccountCreateCount",
+        "optionality": 0
+      },
+      {
+        "name": "XChainAccountClaimCount",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "Check": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "SendMax",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationNode",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "InvoiceID",
+        "optionality": 1
+      },
+      {
+        "name": "SourceTag",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "Credential": [
+      {
+        "name": "Subject",
+        "optionality": 0
+      },
+      {
+        "name": "Issuer",
+        "optionality": 0
+      },
+      {
+        "name": "CredentialType",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "IssuerNode",
+        "optionality": 0
+      },
+      {
+        "name": "SubjectNode",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "DID": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "DIDDocument",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "Delegate": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Authorize",
+        "optionality": 0
+      },
+      {
+        "name": "Permissions",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationNode",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "DepositPreauth": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Authorize",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "AuthorizeCredentials",
+        "optionality": 1
+      }
+    ],
+    "DirectoryNode": [
+      {
+        "name": "Owner",
+        "optionality": 1
+      },
+      {
+        "name": "TakerPaysCurrency",
+        "optionality": 1
+      },
+      {
+        "name": "TakerPaysIssuer",
+        "optionality": 1
+      },
+      {
+        "name": "TakerPaysMPT",
+        "optionality": 1
+      },
+      {
+        "name": "TakerGetsCurrency",
+        "optionality": 1
+      },
+      {
+        "name": "TakerGetsIssuer",
+        "optionality": 1
+      },
+      {
+        "name": "TakerGetsMPT",
+        "optionality": 1
+      },
+      {
+        "name": "ExchangeRate",
+        "optionality": 1
+      },
+      {
+        "name": "Indexes",
+        "optionality": 0
+      },
+      {
+        "name": "RootIndex",
+        "optionality": 0
+      },
+      {
+        "name": "IndexNext",
+        "optionality": 1
+      },
+      {
+        "name": "IndexPrevious",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokenID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      }
+    ],
+    "Escrow": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 1
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Condition",
+        "optionality": 1
+      },
+      {
+        "name": "CancelAfter",
+        "optionality": 1
+      },
+      {
+        "name": "FinishAfter",
+        "optionality": 1
+      },
+      {
+        "name": "SourceTag",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationNode",
+        "optionality": 1
+      },
+      {
+        "name": "TransferRate",
+        "optionality": 1
+      },
+      {
+        "name": "IssuerNode",
+        "optionality": 1
+      }
+    ],
+    "FeeSettings": [
+      {
+        "name": "BaseFee",
+        "optionality": 1
+      },
+      {
+        "name": "ReferenceFeeUnits",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveBase",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveIncrement",
+        "optionality": 1
+      },
+      {
+        "name": "BaseFeeDrops",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveBaseDrops",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveIncrementDrops",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 1
+      }
+    ],
+    "LedgerHashes": [
+      {
+        "name": "FirstLedgerSequence",
+        "optionality": 1
+      },
+      {
+        "name": "LastLedgerSequence",
+        "optionality": 1
+      },
+      {
+        "name": "Hashes",
+        "optionality": 0
+      }
+    ],
+    "Loan": [
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "LoanBrokerNode",
+        "optionality": 0
+      },
+      {
+        "name": "LoanBrokerID",
+        "optionality": 0
+      },
+      {
+        "name": "LoanSequence",
+        "optionality": 0
+      },
+      {
+        "name": "Borrower",
+        "optionality": 0
+      },
+      {
+        "name": "LoanOriginationFee",
+        "optionality": 2
+      },
+      {
+        "name": "LoanServiceFee",
+        "optionality": 2
+      },
+      {
+        "name": "LatePaymentFee",
+        "optionality": 2
+      },
+      {
+        "name": "ClosePaymentFee",
+        "optionality": 2
+      },
+      {
+        "name": "OverpaymentFee",
+        "optionality": 2
+      },
+      {
+        "name": "InterestRate",
+        "optionality": 2
+      },
+      {
+        "name": "LateInterestRate",
+        "optionality": 2
+      },
+      {
+        "name": "CloseInterestRate",
+        "optionality": 2
+      },
+      {
+        "name": "OverpaymentInterestRate",
+        "optionality": 2
+      },
+      {
+        "name": "StartDate",
+        "optionality": 0
+      },
+      {
+        "name": "PaymentInterval",
+        "optionality": 0
+      },
+      {
+        "name": "GracePeriod",
+        "optionality": 2
+      },
+      {
+        "name": "PreviousPaymentDueDate",
+        "optionality": 2
+      },
+      {
+        "name": "NextPaymentDueDate",
+        "optionality": 2
+      },
+      {
+        "name": "PaymentRemaining",
+        "optionality": 2
+      },
+      {
+        "name": "PeriodicPayment",
+        "optionality": 0
+      },
+      {
+        "name": "PrincipalOutstanding",
+        "optionality": 2
+      },
+      {
+        "name": "TotalValueOutstanding",
+        "optionality": 2
+      },
+      {
+        "name": "ManagementFeeOutstanding",
+        "optionality": 2
+      },
+      {
+        "name": "LoanScale",
+        "optionality": 2
+      }
+    ],
+    "LoanBroker": [
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "VaultNode",
+        "optionality": 0
+      },
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "LoanSequence",
+        "optionality": 0
+      },
+      {
+        "name": "Data",
+        "optionality": 2
+      },
+      {
+        "name": "ManagementFeeRate",
+        "optionality": 2
+      },
+      {
+        "name": "OwnerCount",
+        "optionality": 2
+      },
+      {
+        "name": "DebtTotal",
+        "optionality": 2
+      },
+      {
+        "name": "DebtMaximum",
+        "optionality": 2
+      },
+      {
+        "name": "CoverAvailable",
+        "optionality": 2
+      },
+      {
+        "name": "CoverRateMinimum",
+        "optionality": 2
+      },
+      {
+        "name": "CoverRateLiquidation",
+        "optionality": 2
+      }
+    ],
+    "MPToken": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "MPTAmount",
+        "optionality": 2
+      },
+      {
+        "name": "LockedAmount",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "ConfidentialBalanceInbox",
+        "optionality": 1
+      },
+      {
+        "name": "ConfidentialBalanceSpending",
+        "optionality": 1
+      },
+      {
+        "name": "ConfidentialBalanceVersion",
+        "optionality": 2
+      },
+      {
+        "name": "IssuerEncryptedBalance",
+        "optionality": 1
+      },
+      {
+        "name": "AuditorEncryptedBalance",
+        "optionality": 1
+      },
+      {
+        "name": "HolderEncryptionKey",
+        "optionality": 1
+      }
+    ],
+    "MPTokenIssuance": [
+      {
+        "name": "Issuer",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "TransferFee",
+        "optionality": 2
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "AssetScale",
+        "optionality": 2
+      },
+      {
+        "name": "MaximumAmount",
+        "optionality": 1
+      },
+      {
+        "name": "OutstandingAmount",
+        "optionality": 0
+      },
+      {
+        "name": "LockedAmount",
+        "optionality": 1
+      },
+      {
+        "name": "MPTokenMetadata",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "ImmutableFlags",
+        "optionality": 2
+      },
+      {
+        "name": "ReferenceHolding",
+        "optionality": 1
+      },
+      {
+        "name": "IssuerEncryptionKey",
+        "optionality": 1
+      },
+      {
+        "name": "AuditorEncryptionKey",
+        "optionality": 1
+      },
+      {
+        "name": "ConfidentialOutstandingAmount",
+        "optionality": 2
+      }
+    ],
+    "NFTokenOffer": [
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "NFTokenID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "NFTokenOfferNode",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "NFTokenPage": [
+      {
+        "name": "PreviousPageMin",
+        "optionality": 1
+      },
+      {
+        "name": "NextPageMin",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokens",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "NegativeUNL": [
+      {
+        "name": "DisabledValidators",
+        "optionality": 1
+      },
+      {
+        "name": "ValidatorToDisable",
+        "optionality": 1
+      },
+      {
+        "name": "ValidatorToReEnable",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 1
+      }
+    ],
+    "Offer": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "TakerPays",
+        "optionality": 0
+      },
+      {
+        "name": "TakerGets",
+        "optionality": 0
+      },
+      {
+        "name": "BookDirectory",
+        "optionality": 0
+      },
+      {
+        "name": "BookNode",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "AdditionalBooks",
+        "optionality": 1
+      }
+    ],
+    "Oracle": [
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "OracleDocumentID",
+        "optionality": 1
+      },
+      {
+        "name": "Provider",
+        "optionality": 0
+      },
+      {
+        "name": "PriceDataSeries",
+        "optionality": 0
+      },
+      {
+        "name": "AssetClass",
+        "optionality": 0
+      },
+      {
+        "name": "LastUpdateTime",
+        "optionality": 0
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "PayChannel": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 1
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Balance",
+        "optionality": 0
+      },
+      {
+        "name": "PublicKey",
+        "optionality": 0
+      },
+      {
+        "name": "SettleDelay",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "CancelAfter",
+        "optionality": 1
+      },
+      {
+        "name": "SourceTag",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationNode",
+        "optionality": 1
+      }
+    ],
+    "PermissionedDomain": [
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "AcceptedCredentials",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "RippleState": [
+      {
+        "name": "Balance",
+        "optionality": 0
+      },
+      {
+        "name": "LowLimit",
+        "optionality": 0
+      },
+      {
+        "name": "HighLimit",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "LowNode",
+        "optionality": 1
+      },
+      {
+        "name": "LowQualityIn",
+        "optionality": 1
+      },
+      {
+        "name": "LowQualityOut",
+        "optionality": 1
+      },
+      {
+        "name": "HighNode",
+        "optionality": 1
+      },
+      {
+        "name": "HighQualityIn",
+        "optionality": 1
+      },
+      {
+        "name": "HighQualityOut",
+        "optionality": 1
+      },
+      {
+        "name": "HighSponsor",
+        "optionality": 1
+      },
+      {
+        "name": "LowSponsor",
+        "optionality": 1
+      }
+    ],
+    "SignerList": [
+      {
+        "name": "Owner",
+        "optionality": 1
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "SignerQuorum",
+        "optionality": 0
+      },
+      {
+        "name": "SignerEntries",
+        "optionality": 0
+      },
+      {
+        "name": "SignerListID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "Sponsorship": [
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "Sponsee",
+        "optionality": 0
+      },
+      {
+        "name": "FeeAmount",
+        "optionality": 1
+      },
+      {
+        "name": "MaxFee",
+        "optionality": 1
+      },
+      {
+        "name": "RemainingOwnerCount",
+        "optionality": 2
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "SponseeNode",
+        "optionality": 0
+      }
+    ],
+    "Ticket": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "TicketSequence",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "Vault": [
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      },
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "AssetsTotal",
+        "optionality": 2
+      },
+      {
+        "name": "AssetsAvailable",
+        "optionality": 2
+      },
+      {
+        "name": "AssetsMaximum",
+        "optionality": 2
+      },
+      {
+        "name": "LossUnrealized",
+        "optionality": 2
+      },
+      {
+        "name": "ShareMPTID",
+        "optionality": 0
+      },
+      {
+        "name": "WithdrawalPolicy",
+        "optionality": 0
+      },
+      {
+        "name": "Scale",
+        "optionality": 2
+      },
+      {
+        "name": "LEVersion",
+        "optionality": 2
+      },
+      {
+        "name": "VaultKind",
+        "optionality": 2
+      },
+      {
+        "name": "SubscriptionDate",
+        "optionality": 1
+      },
+      {
+        "name": "RedemptionDate",
+        "optionality": 1
+      }
+    ],
+    "XChainOwnedClaimID": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimID",
+        "optionality": 0
+      },
+      {
+        "name": "OtherChainSource",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimAttestations",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "XChainOwnedCreateAccountClaimID": [
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "XChainAccountCreateCount",
+        "optionality": 0
+      },
+      {
+        "name": "XChainCreateAccountAttestations",
+        "optionality": 0
+      },
+      {
+        "name": "OwnerNode",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnLgrSeq",
+        "optionality": 0
+      }
+    ],
+    "common": [
+      {
+        "name": "LedgerIndex",
+        "optionality": 1
+      },
+      {
+        "name": "LedgerEntryType",
+        "optionality": 0
+      },
+      {
+        "name": "Flags",
+        "optionality": 0
+      },
+      {
+        "name": "Sponsor",
+        "optionality": 1
+      }
+    ]
+  },
   "LEDGER_ENTRY_TYPES": {
     "AMM": 121,
     "AccountRoot": 97,
@@ -4164,34 +5272,1731 @@
       "tfInnerBatchTxn": 1073741824
     }
   },
+  "TRANSACTION_FORMATS": {
+    "AMMBid": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "BidMin",
+        "optionality": 1
+      },
+      {
+        "name": "BidMax",
+        "optionality": 1
+      },
+      {
+        "name": "AuthAccounts",
+        "optionality": 1
+      }
+    ],
+    "AMMClawback": [
+      {
+        "name": "Holder",
+        "optionality": 0
+      },
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      }
+    ],
+    "AMMCreate": [
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Amount2",
+        "optionality": 0
+      },
+      {
+        "name": "TradingFee",
+        "optionality": 0
+      }
+    ],
+    "AMMDelete": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      }
+    ],
+    "AMMDeposit": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      },
+      {
+        "name": "Amount2",
+        "optionality": 1
+      },
+      {
+        "name": "EPrice",
+        "optionality": 1
+      },
+      {
+        "name": "LPTokenOut",
+        "optionality": 1
+      },
+      {
+        "name": "TradingFee",
+        "optionality": 1
+      }
+    ],
+    "AMMVote": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "TradingFee",
+        "optionality": 0
+      }
+    ],
+    "AMMWithdraw": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "Asset2",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      },
+      {
+        "name": "Amount2",
+        "optionality": 1
+      },
+      {
+        "name": "EPrice",
+        "optionality": 1
+      },
+      {
+        "name": "LPTokenIn",
+        "optionality": 1
+      }
+    ],
+    "AccountDelete": [
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "AccountSet": [
+      {
+        "name": "EmailHash",
+        "optionality": 1
+      },
+      {
+        "name": "WalletLocator",
+        "optionality": 1
+      },
+      {
+        "name": "WalletSize",
+        "optionality": 1
+      },
+      {
+        "name": "MessageKey",
+        "optionality": 1
+      },
+      {
+        "name": "Domain",
+        "optionality": 1
+      },
+      {
+        "name": "TransferRate",
+        "optionality": 1
+      },
+      {
+        "name": "SetFlag",
+        "optionality": 1
+      },
+      {
+        "name": "ClearFlag",
+        "optionality": 1
+      },
+      {
+        "name": "TickSize",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokenMinter",
+        "optionality": 1
+      }
+    ],
+    "Batch": [
+      {
+        "name": "RawTransactions",
+        "optionality": 0
+      },
+      {
+        "name": "BatchSigners",
+        "optionality": 1
+      }
+    ],
+    "CheckCancel": [
+      {
+        "name": "CheckID",
+        "optionality": 0
+      }
+    ],
+    "CheckCash": [
+      {
+        "name": "CheckID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      },
+      {
+        "name": "DeliverMin",
+        "optionality": 1
+      }
+    ],
+    "CheckCreate": [
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "SendMax",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "InvoiceID",
+        "optionality": 1
+      }
+    ],
+    "Clawback": [
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Holder",
+        "optionality": 1
+      }
+    ],
+    "ConfidentialMPTClawback": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "Holder",
+        "optionality": 0
+      },
+      {
+        "name": "MPTAmount",
+        "optionality": 0
+      },
+      {
+        "name": "ZKProof",
+        "optionality": 0
+      }
+    ],
+    "ConfidentialMPTConvert": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "MPTAmount",
+        "optionality": 0
+      },
+      {
+        "name": "HolderEncryptionKey",
+        "optionality": 1
+      },
+      {
+        "name": "HolderEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "IssuerEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "AuditorEncryptedAmount",
+        "optionality": 1
+      },
+      {
+        "name": "BlindingFactor",
+        "optionality": 0
+      },
+      {
+        "name": "ZKProof",
+        "optionality": 1
+      }
+    ],
+    "ConfidentialMPTConvertBack": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "MPTAmount",
+        "optionality": 0
+      },
+      {
+        "name": "HolderEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "IssuerEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "AuditorEncryptedAmount",
+        "optionality": 1
+      },
+      {
+        "name": "BlindingFactor",
+        "optionality": 0
+      },
+      {
+        "name": "ZKProof",
+        "optionality": 0
+      },
+      {
+        "name": "BalanceCommitment",
+        "optionality": 0
+      }
+    ],
+    "ConfidentialMPTMergeInbox": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      }
+    ],
+    "ConfidentialMPTSend": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "SenderEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "IssuerEncryptedAmount",
+        "optionality": 0
+      },
+      {
+        "name": "AuditorEncryptedAmount",
+        "optionality": 1
+      },
+      {
+        "name": "ZKProof",
+        "optionality": 0
+      },
+      {
+        "name": "AmountCommitment",
+        "optionality": 0
+      },
+      {
+        "name": "BalanceCommitment",
+        "optionality": 0
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "CredentialAccept": [
+      {
+        "name": "Issuer",
+        "optionality": 0
+      },
+      {
+        "name": "CredentialType",
+        "optionality": 0
+      }
+    ],
+    "CredentialCreate": [
+      {
+        "name": "Subject",
+        "optionality": 0
+      },
+      {
+        "name": "CredentialType",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      }
+    ],
+    "CredentialDelete": [
+      {
+        "name": "Subject",
+        "optionality": 1
+      },
+      {
+        "name": "Issuer",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialType",
+        "optionality": 0
+      }
+    ],
+    "DIDDelete": [],
+    "DIDSet": [
+      {
+        "name": "DIDDocument",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      }
+    ],
+    "DelegateSet": [
+      {
+        "name": "Authorize",
+        "optionality": 0
+      },
+      {
+        "name": "Permissions",
+        "optionality": 0
+      }
+    ],
+    "DepositPreauth": [
+      {
+        "name": "Authorize",
+        "optionality": 1
+      },
+      {
+        "name": "Unauthorize",
+        "optionality": 1
+      },
+      {
+        "name": "AuthorizeCredentials",
+        "optionality": 1
+      },
+      {
+        "name": "UnauthorizeCredentials",
+        "optionality": 1
+      }
+    ],
+    "EnableAmendment": [
+      {
+        "name": "LedgerSequence",
+        "optionality": 0
+      },
+      {
+        "name": "Amendment",
+        "optionality": 0
+      }
+    ],
+    "EscrowCancel": [
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "OfferSequence",
+        "optionality": 0
+      }
+    ],
+    "EscrowCreate": [
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Condition",
+        "optionality": 1
+      },
+      {
+        "name": "CancelAfter",
+        "optionality": 1
+      },
+      {
+        "name": "FinishAfter",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      }
+    ],
+    "EscrowFinish": [
+      {
+        "name": "Owner",
+        "optionality": 0
+      },
+      {
+        "name": "OfferSequence",
+        "optionality": 0
+      },
+      {
+        "name": "Fulfillment",
+        "optionality": 1
+      },
+      {
+        "name": "Condition",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "LedgerStateFix": [
+      {
+        "name": "LedgerFixType",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 1
+      },
+      {
+        "name": "BookDirectory",
+        "optionality": 1
+      }
+    ],
+    "LoanBrokerCoverClawback": [
+      {
+        "name": "LoanBrokerID",
+        "optionality": 1
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      }
+    ],
+    "LoanBrokerCoverDeposit": [
+      {
+        "name": "LoanBrokerID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      }
+    ],
+    "LoanBrokerCoverWithdraw": [
+      {
+        "name": "LoanBrokerID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "LoanBrokerDelete": [
+      {
+        "name": "LoanBrokerID",
+        "optionality": 0
+      }
+    ],
+    "LoanBrokerSet": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "LoanBrokerID",
+        "optionality": 1
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      },
+      {
+        "name": "ManagementFeeRate",
+        "optionality": 1
+      },
+      {
+        "name": "DebtMaximum",
+        "optionality": 1
+      },
+      {
+        "name": "CoverRateMinimum",
+        "optionality": 1
+      },
+      {
+        "name": "CoverRateLiquidation",
+        "optionality": 1
+      }
+    ],
+    "LoanDelete": [
+      {
+        "name": "LoanID",
+        "optionality": 0
+      }
+    ],
+    "LoanManage": [
+      {
+        "name": "LoanID",
+        "optionality": 0
+      }
+    ],
+    "LoanPay": [
+      {
+        "name": "LoanID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      }
+    ],
+    "LoanSet": [
+      {
+        "name": "LoanBrokerID",
+        "optionality": 0
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      },
+      {
+        "name": "Counterparty",
+        "optionality": 1
+      },
+      {
+        "name": "CounterpartySignature",
+        "optionality": 1
+      },
+      {
+        "name": "LoanOriginationFee",
+        "optionality": 1
+      },
+      {
+        "name": "LoanServiceFee",
+        "optionality": 1
+      },
+      {
+        "name": "LatePaymentFee",
+        "optionality": 1
+      },
+      {
+        "name": "ClosePaymentFee",
+        "optionality": 1
+      },
+      {
+        "name": "OverpaymentFee",
+        "optionality": 1
+      },
+      {
+        "name": "InterestRate",
+        "optionality": 1
+      },
+      {
+        "name": "LateInterestRate",
+        "optionality": 1
+      },
+      {
+        "name": "CloseInterestRate",
+        "optionality": 1
+      },
+      {
+        "name": "OverpaymentInterestRate",
+        "optionality": 1
+      },
+      {
+        "name": "PrincipalRequested",
+        "optionality": 0
+      },
+      {
+        "name": "PaymentTotal",
+        "optionality": 1
+      },
+      {
+        "name": "PaymentInterval",
+        "optionality": 1
+      },
+      {
+        "name": "GracePeriod",
+        "optionality": 1
+      }
+    ],
+    "MPTokenAuthorize": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "Holder",
+        "optionality": 1
+      }
+    ],
+    "MPTokenIssuanceCreate": [
+      {
+        "name": "AssetScale",
+        "optionality": 1
+      },
+      {
+        "name": "TransferFee",
+        "optionality": 1
+      },
+      {
+        "name": "MaximumAmount",
+        "optionality": 1
+      },
+      {
+        "name": "MPTokenMetadata",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "ImmutableFlags",
+        "optionality": 1
+      }
+    ],
+    "MPTokenIssuanceDestroy": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      }
+    ],
+    "MPTokenIssuanceSet": [
+      {
+        "name": "MPTokenIssuanceID",
+        "optionality": 0
+      },
+      {
+        "name": "Holder",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "MPTokenMetadata",
+        "optionality": 1
+      },
+      {
+        "name": "TransferFee",
+        "optionality": 1
+      },
+      {
+        "name": "ImmutableFlags",
+        "optionality": 1
+      },
+      {
+        "name": "IssuerEncryptionKey",
+        "optionality": 1
+      },
+      {
+        "name": "AuditorEncryptionKey",
+        "optionality": 1
+      }
+    ],
+    "NFTokenAcceptOffer": [
+      {
+        "name": "NFTokenBuyOffer",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokenSellOffer",
+        "optionality": 1
+      },
+      {
+        "name": "NFTokenBrokerFee",
+        "optionality": 1
+      }
+    ],
+    "NFTokenBurn": [
+      {
+        "name": "NFTokenID",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 1
+      }
+    ],
+    "NFTokenCancelOffer": [
+      {
+        "name": "NFTokenOffers",
+        "optionality": 0
+      }
+    ],
+    "NFTokenCreateOffer": [
+      {
+        "name": "NFTokenID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      },
+      {
+        "name": "Owner",
+        "optionality": 1
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      }
+    ],
+    "NFTokenMint": [
+      {
+        "name": "NFTokenTaxon",
+        "optionality": 0
+      },
+      {
+        "name": "TransferFee",
+        "optionality": 1
+      },
+      {
+        "name": "Issuer",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      }
+    ],
+    "NFTokenModify": [
+      {
+        "name": "NFTokenID",
+        "optionality": 0
+      },
+      {
+        "name": "Owner",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      }
+    ],
+    "OfferCancel": [
+      {
+        "name": "OfferSequence",
+        "optionality": 0
+      }
+    ],
+    "OfferCreate": [
+      {
+        "name": "TakerPays",
+        "optionality": 0
+      },
+      {
+        "name": "TakerGets",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      },
+      {
+        "name": "OfferSequence",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      }
+    ],
+    "OracleDelete": [
+      {
+        "name": "OracleDocumentID",
+        "optionality": 0
+      }
+    ],
+    "OracleSet": [
+      {
+        "name": "OracleDocumentID",
+        "optionality": 0
+      },
+      {
+        "name": "Provider",
+        "optionality": 1
+      },
+      {
+        "name": "URI",
+        "optionality": 1
+      },
+      {
+        "name": "AssetClass",
+        "optionality": 1
+      },
+      {
+        "name": "LastUpdateTime",
+        "optionality": 0
+      },
+      {
+        "name": "PriceDataSeries",
+        "optionality": 0
+      }
+    ],
+    "Payment": [
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "SendMax",
+        "optionality": 1
+      },
+      {
+        "name": "Paths",
+        "optionality": 2
+      },
+      {
+        "name": "InvoiceID",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "DeliverMin",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      }
+    ],
+    "PaymentChannelClaim": [
+      {
+        "name": "Channel",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      },
+      {
+        "name": "Balance",
+        "optionality": 1
+      },
+      {
+        "name": "Signature",
+        "optionality": 1
+      },
+      {
+        "name": "PublicKey",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "PaymentChannelCreate": [
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "SettleDelay",
+        "optionality": 0
+      },
+      {
+        "name": "PublicKey",
+        "optionality": 0
+      },
+      {
+        "name": "CancelAfter",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      }
+    ],
+    "PaymentChannelFund": [
+      {
+        "name": "Channel",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Expiration",
+        "optionality": 1
+      }
+    ],
+    "PermissionedDomainDelete": [
+      {
+        "name": "DomainID",
+        "optionality": 0
+      }
+    ],
+    "PermissionedDomainSet": [
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "AcceptedCredentials",
+        "optionality": 0
+      }
+    ],
+    "SetFee": [
+      {
+        "name": "LedgerSequence",
+        "optionality": 1
+      },
+      {
+        "name": "BaseFee",
+        "optionality": 1
+      },
+      {
+        "name": "ReferenceFeeUnits",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveBase",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveIncrement",
+        "optionality": 1
+      },
+      {
+        "name": "BaseFeeDrops",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveBaseDrops",
+        "optionality": 1
+      },
+      {
+        "name": "ReserveIncrementDrops",
+        "optionality": 1
+      }
+    ],
+    "SetRegularKey": [
+      {
+        "name": "RegularKey",
+        "optionality": 1
+      }
+    ],
+    "SignerListSet": [
+      {
+        "name": "SignerQuorum",
+        "optionality": 0
+      },
+      {
+        "name": "SignerEntries",
+        "optionality": 1
+      }
+    ],
+    "SponsorshipSet": [
+      {
+        "name": "CounterpartySponsor",
+        "optionality": 1
+      },
+      {
+        "name": "Sponsee",
+        "optionality": 1
+      },
+      {
+        "name": "FeeAmountDelta",
+        "optionality": 1
+      },
+      {
+        "name": "MaxFee",
+        "optionality": 1
+      },
+      {
+        "name": "RemainingOwnerCountDelta",
+        "optionality": 1
+      }
+    ],
+    "SponsorshipTransfer": [
+      {
+        "name": "ObjectID",
+        "optionality": 1
+      },
+      {
+        "name": "Sponsee",
+        "optionality": 1
+      }
+    ],
+    "TicketCreate": [
+      {
+        "name": "TicketCount",
+        "optionality": 0
+      }
+    ],
+    "TrustSet": [
+      {
+        "name": "LimitAmount",
+        "optionality": 1
+      },
+      {
+        "name": "QualityIn",
+        "optionality": 1
+      },
+      {
+        "name": "QualityOut",
+        "optionality": 1
+      }
+    ],
+    "UNLModify": [
+      {
+        "name": "UNLModifyDisabling",
+        "optionality": 0
+      },
+      {
+        "name": "LedgerSequence",
+        "optionality": 0
+      },
+      {
+        "name": "UNLModifyValidator",
+        "optionality": 0
+      }
+    ],
+    "VaultClawback": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "Holder",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 1
+      }
+    ],
+    "VaultCreate": [
+      {
+        "name": "Asset",
+        "optionality": 0
+      },
+      {
+        "name": "AssetsMaximum",
+        "optionality": 1
+      },
+      {
+        "name": "MPTokenMetadata",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "WithdrawalPolicy",
+        "optionality": 1
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      },
+      {
+        "name": "Scale",
+        "optionality": 1
+      },
+      {
+        "name": "VaultKind",
+        "optionality": 1
+      },
+      {
+        "name": "SubscriptionDate",
+        "optionality": 1
+      },
+      {
+        "name": "RedemptionDate",
+        "optionality": 1
+      }
+    ],
+    "VaultDelete": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "MemoData",
+        "optionality": 1
+      }
+    ],
+    "VaultDeposit": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      }
+    ],
+    "VaultSet": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "AssetsMaximum",
+        "optionality": 1
+      },
+      {
+        "name": "DomainID",
+        "optionality": 1
+      },
+      {
+        "name": "Data",
+        "optionality": 1
+      }
+    ],
+    "VaultWithdraw": [
+      {
+        "name": "VaultID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "CredentialIDs",
+        "optionality": 1
+      }
+    ],
+    "XChainAccountCreateCommit": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      }
+    ],
+    "XChainAddAccountCreateAttestation": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "AttestationSignerAccount",
+        "optionality": 0
+      },
+      {
+        "name": "PublicKey",
+        "optionality": 0
+      },
+      {
+        "name": "Signature",
+        "optionality": 0
+      },
+      {
+        "name": "OtherChainSource",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "AttestationRewardAccount",
+        "optionality": 0
+      },
+      {
+        "name": "WasLockingChainSend",
+        "optionality": 0
+      },
+      {
+        "name": "XChainAccountCreateCount",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      }
+    ],
+    "XChainAddClaimAttestation": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "AttestationSignerAccount",
+        "optionality": 0
+      },
+      {
+        "name": "PublicKey",
+        "optionality": 0
+      },
+      {
+        "name": "Signature",
+        "optionality": 0
+      },
+      {
+        "name": "OtherChainSource",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "AttestationRewardAccount",
+        "optionality": 0
+      },
+      {
+        "name": "WasLockingChainSend",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimID",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 1
+      }
+    ],
+    "XChainClaim": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimID",
+        "optionality": 0
+      },
+      {
+        "name": "Destination",
+        "optionality": 0
+      },
+      {
+        "name": "DestinationTag",
+        "optionality": 1
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      }
+    ],
+    "XChainCommit": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "XChainClaimID",
+        "optionality": 0
+      },
+      {
+        "name": "Amount",
+        "optionality": 0
+      },
+      {
+        "name": "OtherChainDestination",
+        "optionality": 1
+      }
+    ],
+    "XChainCreateBridge": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      },
+      {
+        "name": "MinAccountCreateAmount",
+        "optionality": 1
+      }
+    ],
+    "XChainCreateClaimID": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 0
+      },
+      {
+        "name": "OtherChainSource",
+        "optionality": 0
+      }
+    ],
+    "XChainModifyBridge": [
+      {
+        "name": "XChainBridge",
+        "optionality": 0
+      },
+      {
+        "name": "SignatureReward",
+        "optionality": 1
+      },
+      {
+        "name": "MinAccountCreateAmount",
+        "optionality": 1
+      }
+    ],
+    "common": [
+      {
+        "name": "TransactionType",
+        "optionality": 0
+      },
+      {
+        "name": "Flags",
+        "optionality": 1
+      },
+      {
+        "name": "SourceTag",
+        "optionality": 1
+      },
+      {
+        "name": "Account",
+        "optionality": 0
+      },
+      {
+        "name": "Sequence",
+        "optionality": 0
+      },
+      {
+        "name": "PreviousTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "LastLedgerSequence",
+        "optionality": 1
+      },
+      {
+        "name": "AccountTxnID",
+        "optionality": 1
+      },
+      {
+        "name": "Fee",
+        "optionality": 0
+      },
+      {
+        "name": "OperationLimit",
+        "optionality": 1
+      },
+      {
+        "name": "Memos",
+        "optionality": 1
+      },
+      {
+        "name": "SigningPubKey",
+        "optionality": 0
+      },
+      {
+        "name": "TicketSequence",
+        "optionality": 1
+      },
+      {
+        "name": "TxnSignature",
+        "optionality": 1
+      },
+      {
+        "name": "Signers",
+        "optionality": 1
+      },
+      {
+        "name": "NetworkID",
+        "optionality": 1
+      },
+      {
+        "name": "Delegate",
+        "optionality": 1
+      },
+      {
+        "name": "Sponsor",
+        "optionality": 1
+      },
+      {
+        "name": "SponsorFlags",
+        "optionality": 1
+      },
+      {
+        "name": "SponsorSignature",
+        "optionality": 1
+      }
+    ]
+  },
   "TRANSACTION_RESULTS": {
-    "telLOCAL_ERROR": -399,
+    "tecAMM_ACCOUNT": 168,
+    "tecAMM_BALANCE": 163,
+    "tecAMM_EMPTY": 166,
+    "tecAMM_FAILED": 164,
+    "tecAMM_INVALID_TOKENS": 165,
+    "tecAMM_NOT_EMPTY": 167,
+    "tecARRAY_EMPTY": 190,
+    "tecARRAY_TOO_LARGE": 191,
+    "tecBAD_CREDENTIALS": 193,
+    "tecBAD_PROOF": 199,
+    "tecCANT_ACCEPT_OWN_NFTOKEN_OFFER": 158,
+    "tecCLAIM": 100,
+    "tecCRYPTOCONDITION_ERROR": 146,
+    "tecDIR_FULL": 121,
+    "tecDST_TAG_NEEDED": 143,
+    "tecDUPLICATE": 149,
+    "tecEMPTY_DID": 187,
+    "tecEXPIRED": 148,
+    "tecFAILED_PROCESSING": 105,
+    "tecFROZEN": 137,
+    "tecHAS_OBLIGATIONS": 151,
+    "tecINCOMPLETE": 169,
+    "tecINSUFFICIENT_FUNDS": 159,
+    "tecINSUFFICIENT_PAYMENT": 161,
+    "tecINSUFFICIENT_RESERVE": 141,
+    "tecINSUFF_FEE": 136,
+    "tecINSUF_RESERVE_LINE": 122,
+    "tecINSUF_RESERVE_OFFER": 123,
+    "tecINTERNAL": 144,
+    "tecINVALID_UPDATE_TIME": 188,
+    "tecINVARIANT_FAILED": 147,
+    "tecKILLED": 150,
+    "tecLIMIT_EXCEEDED": 195,
+    "tecLOCKED": 192,
+    "tecMAX_SEQUENCE_REACHED": 154,
+    "tecNEED_MASTER_KEY": 142,
+    "tecNFTOKEN_BUY_SELL_MISMATCH": 156,
+    "tecNFTOKEN_OFFER_TYPE_MISMATCH": 157,
+    "tecNO_ALTERNATIVE_KEY": 130,
+    "tecNO_AUTH": 134,
+    "tecNO_DST": 124,
+    "tecNO_DST_INSUF_XRP": 125,
+    "tecNO_ENTRY": 140,
+    "tecNO_ISSUER": 133,
+    "tecNO_LINE": 135,
+    "tecNO_LINE_INSUF_RESERVE": 126,
+    "tecNO_LINE_REDUNDANT": 127,
+    "tecNO_PERMISSION": 139,
+    "tecNO_REGULAR_KEY": 131,
+    "tecNO_SPONSOR_PERMISSION": 200,
+    "tecNO_SUITABLE_NFTOKEN_PAGE": 155,
+    "tecNO_TARGET": 138,
+    "tecOBJECT_NOT_FOUND": 160,
+    "tecOVERSIZE": 145,
+    "tecOWNERS": 132,
+    "tecPATH_DRY": 128,
+    "tecPATH_PARTIAL": 101,
+    "tecPRECISION_LOSS": 197,
+    "tecPSEUDO_ACCOUNT": 196,
+    "tecTOKEN_PAIR_NOT_FOUND": 189,
+    "tecTOO_SOON": 152,
+    "tecUNFUNDED": 129,
+    "tecUNFUNDED_ADD": 102,
+    "tecUNFUNDED_AMM": 162,
+    "tecUNFUNDED_OFFER": 103,
+    "tecUNFUNDED_PAYMENT": 104,
+    "tecWRONG_ASSET": 194,
+    "tecXCHAIN_ACCOUNT_CREATE_PAST": 181,
+    "tecXCHAIN_ACCOUNT_CREATE_TOO_MANY": 182,
+    "tecXCHAIN_BAD_CLAIM_ID": 172,
+    "tecXCHAIN_BAD_PUBLIC_KEY_ACCOUNT_PAIR": 185,
+    "tecXCHAIN_BAD_TRANSFER_ISSUE": 170,
+    "tecXCHAIN_CLAIM_NO_QUORUM": 173,
+    "tecXCHAIN_CREATE_ACCOUNT_DISABLED": 186,
+    "tecXCHAIN_CREATE_ACCOUNT_NONXRP_ISSUE": 175,
+    "tecXCHAIN_INSUFF_CREATE_AMOUNT": 180,
+    "tecXCHAIN_NO_CLAIM_ID": 171,
+    "tecXCHAIN_NO_SIGNERS_LIST": 178,
+    "tecXCHAIN_PAYMENT_FAILED": 183,
+    "tecXCHAIN_PROOF_UNKNOWN_KEY": 174,
+    "tecXCHAIN_REWARD_MISMATCH": 177,
+    "tecXCHAIN_SELF_COMMIT": 184,
+    "tecXCHAIN_SENDING_ACCOUNT_MISMATCH": 179,
+    "tecXCHAIN_WRONG_CHAIN": 176,
+    "tefALREADY": -198,
+    "tefBAD_ADD_AUTH": -197,
+    "tefBAD_AUTH": -196,
+    "tefBAD_AUTH_MASTER": -183,
+    "tefBAD_LEDGER": -195,
+    "tefBAD_PATH_COUNT": -176,
+    "tefBAD_QUORUM": -185,
+    "tefBAD_SIGNATURE": -186,
+    "tefCREATED": -194,
+    "tefEXCEPTION": -193,
+    "tefFAILURE": -199,
+    "tefINTERNAL": -192,
+    "tefINVALID_LEDGER_FIX_TYPE": -178,
+    "tefINVARIANT_FAILED": -182,
+    "tefMASTER_DISABLED": -188,
+    "tefMAX_LEDGER": -187,
+    "tefNFTOKEN_IS_NOT_TRANSFERABLE": -179,
+    "tefNOT_MULTI_SIGNING": -184,
+    "tefNO_AUTH_REQUIRED": -191,
+    "tefNO_DST_PARTIAL": -177,
+    "tefNO_TICKET": -180,
+    "tefPAST_SEQ": -190,
+    "tefTOO_BIG": -181,
+    "tefWRONG_PRIOR": -189,
     "telBAD_DOMAIN": -398,
     "telBAD_PATH_COUNT": -397,
     "telBAD_PUBLIC_KEY": -396,
-    "telFAILED_PROCESSING": -395,
-    "telINSUF_FEE_P": -394,
-    "telNO_DST_PARTIAL": -393,
     "telCAN_NOT_QUEUE": -392,
     "telCAN_NOT_QUEUE_BALANCE": -391,
-    "telCAN_NOT_QUEUE_BLOCKS": -390,
     "telCAN_NOT_QUEUE_BLOCKED": -389,
+    "telCAN_NOT_QUEUE_BLOCKS": -390,
     "telCAN_NOT_QUEUE_FEE": -388,
     "telCAN_NOT_QUEUE_FULL": -387,
-    "telWRONG_NETWORK": -386,
-    "telREQUIRES_NETWORK_ID": -385,
-    "telNETWORK_ID_MAKES_TX_NON_CANONICAL": -384,
     "telENV_RPC_FAILED": -383,
-    "temMALFORMED": -299,
+    "telFAILED_PROCESSING": -395,
+    "telINSUF_FEE_P": -394,
+    "telLOCAL_ERROR": -399,
+    "telNETWORK_ID_MAKES_TX_NON_CANONICAL": -384,
+    "telNO_DST_PARTIAL": -393,
+    "telREQUIRES_NETWORK_ID": -385,
+    "telWRONG_NETWORK": -386,
+    "temARRAY_EMPTY": -253,
+    "temARRAY_TOO_LARGE": -252,
+    "temBAD_AMM_TOKENS": -261,
     "temBAD_AMOUNT": -298,
+    "temBAD_CIPHERTEXT": -248,
     "temBAD_CURRENCY": -297,
     "temBAD_EXPIRATION": -296,
     "temBAD_FEE": -295,
     "temBAD_ISSUER": -294,
     "temBAD_LIMIT": -293,
+    "temBAD_MPT": -249,
+    "temBAD_NFTOKEN_TRANSFER_FEE": -262,
     "temBAD_OFFER": -292,
     "temBAD_PATH": -291,
     "temBAD_PATH_LOOP": -290,
+    "temBAD_QUORUM": -271,
     "temBAD_REGKEY": -289,
     "temBAD_SEND_XRP_LIMIT": -288,
     "temBAD_SEND_XRP_MAX": -287,
@@ -4200,168 +7005,52 @@
     "temBAD_SEND_XRP_PATHS": -284,
     "temBAD_SEQUENCE": -283,
     "temBAD_SIGNATURE": -282,
+    "temBAD_SIGNER": -272,
     "temBAD_SRC_ACCOUNT": -281,
+    "temBAD_TICK_SIZE": -269,
+    "temBAD_TRANSFER_FEE": -251,
     "temBAD_TRANSFER_RATE": -280,
+    "temBAD_WEIGHT": -270,
+    "temCANNOT_PREAUTH_SELF": -267,
+    "temDISABLED": -273,
     "temDST_IS_SRC": -279,
     "temDST_NEEDED": -278,
+    "temEMPTY_DID": -254,
     "temINVALID": -277,
+    "temINVALID_ACCOUNT_ID": -268,
+    "temINVALID_COUNT": -266,
     "temINVALID_FLAG": -276,
+    "temINVALID_INNER_BATCH": -250,
+    "temMALFORMED": -299,
     "temREDUNDANT": -275,
     "temRIPPLE_EMPTY": -274,
-    "temDISABLED": -273,
-    "temBAD_SIGNER": -272,
-    "temBAD_QUORUM": -271,
-    "temBAD_WEIGHT": -270,
-    "temBAD_TICK_SIZE": -269,
-    "temINVALID_ACCOUNT_ID": -268,
-    "temCANNOT_PREAUTH_SELF": -267,
-    "temINVALID_COUNT": -266,
+    "temSEQ_AND_TICKET": -263,
     "temUNCERTAIN": -265,
     "temUNKNOWN": -264,
-    "temSEQ_AND_TICKET": -263,
-    "temBAD_NFTOKEN_TRANSFER_FEE": -262,
-    "temBAD_AMM_TOKENS": -261,
-    "temXCHAIN_EQUAL_DOOR_ACCOUNTS": -260,
     "temXCHAIN_BAD_PROOF": -259,
     "temXCHAIN_BRIDGE_BAD_ISSUES": -258,
-    "temXCHAIN_BRIDGE_NONDOOR_OWNER": -257,
     "temXCHAIN_BRIDGE_BAD_MIN_ACCOUNT_CREATE_AMOUNT": -256,
     "temXCHAIN_BRIDGE_BAD_REWARD_AMOUNT": -255,
-    "temEMPTY_DID": -254,
-    "temARRAY_EMPTY": -253,
-    "temARRAY_TOO_LARGE": -252,
-    "temBAD_TRANSFER_FEE": -251,
-    "temINVALID_INNER_BATCH": -250,
-    "temBAD_MPT": -249,
-    "temBAD_CIPHERTEXT": -248,
-    "tefFAILURE": -199,
-    "tefALREADY": -198,
-    "tefBAD_ADD_AUTH": -197,
-    "tefBAD_AUTH": -196,
-    "tefBAD_LEDGER": -195,
-    "tefCREATED": -194,
-    "tefEXCEPTION": -193,
-    "tefINTERNAL": -192,
-    "tefNO_AUTH_REQUIRED": -191,
-    "tefPAST_SEQ": -190,
-    "tefWRONG_PRIOR": -189,
-    "tefMASTER_DISABLED": -188,
-    "tefMAX_LEDGER": -187,
-    "tefBAD_SIGNATURE": -186,
-    "tefBAD_QUORUM": -185,
-    "tefNOT_MULTI_SIGNING": -184,
-    "tefBAD_AUTH_MASTER": -183,
-    "tefINVARIANT_FAILED": -182,
-    "tefTOO_BIG": -181,
-    "tefNO_TICKET": -180,
-    "tefNFTOKEN_IS_NOT_TRANSFERABLE": -179,
-    "tefINVALID_LEDGER_FIX_TYPE": -178,
-    "tefNO_DST_PARTIAL": -177,
-    "tefBAD_PATH_COUNT": -176,
-    "terRETRY": -99,
+    "temXCHAIN_BRIDGE_NONDOOR_OWNER": -257,
+    "temXCHAIN_EQUAL_DOOR_ACCOUNTS": -260,
+    "terADDRESS_COLLISION": -86,
     "terFUNDS_SPENT": -98,
     "terINSUF_FEE_B": -97,
+    "terLAST": -91,
+    "terLOCKED": -84,
     "terNO_ACCOUNT": -96,
+    "terNO_AMM": -87,
     "terNO_AUTH": -95,
+    "terNO_DELEGATE_PERMISSION": -85,
     "terNO_LINE": -94,
+    "terNO_PERMISSION": -83,
+    "terNO_RIPPLE": -90,
     "terOWNERS": -93,
     "terPRE_SEQ": -92,
-    "terLAST": -91,
-    "terNO_RIPPLE": -90,
-    "terQUEUED": -89,
     "terPRE_TICKET": -88,
-    "terNO_AMM": -87,
-    "terADDRESS_COLLISION": -86,
-    "terNO_DELEGATE_PERMISSION": -85,
-    "terLOCKED": -84,
-    "terNO_PERMISSION": -83,
-    "tesSUCCESS": 0,
-    "tecCLAIM": 100,
-    "tecPATH_PARTIAL": 101,
-    "tecUNFUNDED_ADD": 102,
-    "tecUNFUNDED_OFFER": 103,
-    "tecUNFUNDED_PAYMENT": 104,
-    "tecFAILED_PROCESSING": 105,
-    "tecDIR_FULL": 121,
-    "tecINSUF_RESERVE_LINE": 122,
-    "tecINSUF_RESERVE_OFFER": 123,
-    "tecNO_DST": 124,
-    "tecNO_DST_INSUF_XRP": 125,
-    "tecNO_LINE_INSUF_RESERVE": 126,
-    "tecNO_LINE_REDUNDANT": 127,
-    "tecPATH_DRY": 128,
-    "tecUNFUNDED": 129,
-    "tecNO_ALTERNATIVE_KEY": 130,
-    "tecNO_REGULAR_KEY": 131,
-    "tecOWNERS": 132,
-    "tecNO_ISSUER": 133,
-    "tecNO_AUTH": 134,
-    "tecNO_LINE": 135,
-    "tecINSUFF_FEE": 136,
-    "tecFROZEN": 137,
-    "tecNO_TARGET": 138,
-    "tecNO_PERMISSION": 139,
-    "tecNO_ENTRY": 140,
-    "tecINSUFFICIENT_RESERVE": 141,
-    "tecNEED_MASTER_KEY": 142,
-    "tecDST_TAG_NEEDED": 143,
-    "tecINTERNAL": 144,
-    "tecOVERSIZE": 145,
-    "tecCRYPTOCONDITION_ERROR": 146,
-    "tecINVARIANT_FAILED": 147,
-    "tecEXPIRED": 148,
-    "tecDUPLICATE": 149,
-    "tecKILLED": 150,
-    "tecHAS_OBLIGATIONS": 151,
-    "tecTOO_SOON": 152,
-    "tecHOOK_REJECTED": 153,
-    "tecMAX_SEQUENCE_REACHED": 154,
-    "tecNO_SUITABLE_NFTOKEN_PAGE": 155,
-    "tecNFTOKEN_BUY_SELL_MISMATCH": 156,
-    "tecNFTOKEN_OFFER_TYPE_MISMATCH": 157,
-    "tecCANT_ACCEPT_OWN_NFTOKEN_OFFER": 158,
-    "tecINSUFFICIENT_FUNDS": 159,
-    "tecOBJECT_NOT_FOUND": 160,
-    "tecINSUFFICIENT_PAYMENT": 161,
-    "tecUNFUNDED_AMM": 162,
-    "tecAMM_BALANCE": 163,
-    "tecAMM_FAILED": 164,
-    "tecAMM_INVALID_TOKENS": 165,
-    "tecAMM_EMPTY": 166,
-    "tecAMM_NOT_EMPTY": 167,
-    "tecAMM_ACCOUNT": 168,
-    "tecINCOMPLETE": 169,
-    "tecXCHAIN_BAD_TRANSFER_ISSUE": 170,
-    "tecXCHAIN_NO_CLAIM_ID": 171,
-    "tecXCHAIN_BAD_CLAIM_ID": 172,
-    "tecXCHAIN_CLAIM_NO_QUORUM": 173,
-    "tecXCHAIN_PROOF_UNKNOWN_KEY": 174,
-    "tecXCHAIN_CREATE_ACCOUNT_NONXRP_ISSUE": 175,
-    "tecXCHAIN_WRONG_CHAIN": 176,
-    "tecXCHAIN_REWARD_MISMATCH": 177,
-    "tecXCHAIN_NO_SIGNERS_LIST": 178,
-    "tecXCHAIN_SENDING_ACCOUNT_MISMATCH": 179,
-    "tecXCHAIN_INSUFF_CREATE_AMOUNT": 180,
-    "tecXCHAIN_ACCOUNT_CREATE_PAST": 181,
-    "tecXCHAIN_ACCOUNT_CREATE_TOO_MANY": 182,
-    "tecXCHAIN_PAYMENT_FAILED": 183,
-    "tecXCHAIN_SELF_COMMIT": 184,
-    "tecXCHAIN_BAD_PUBLIC_KEY_ACCOUNT_PAIR": 185,
-    "tecXCHAIN_CREATE_ACCOUNT_DISABLED": 186,
-    "tecEMPTY_DID": 187,
-    "tecINVALID_UPDATE_TIME": 188,
-    "tecTOKEN_PAIR_NOT_FOUND": 189,
-    "tecARRAY_EMPTY": 190,
-    "tecARRAY_TOO_LARGE": 191,
-    "tecLOCKED": 192,
-    "tecBAD_CREDENTIALS": 193,
-    "tecWRONG_ASSET": 194,
-    "tecLIMIT_EXCEEDED": 195,
-    "tecPSEUDO_ACCOUNT": 196,
-    "tecPRECISION_LOSS": 197,
-    "tecNO_DELEGATE_PERMISSION": 198,
-    "tecBAD_PROOF": 199,
-    "tecNO_SPONSOR_PERMISSION": 200
+    "terQUEUED": -89,
+    "terRETRY": -99,
+    "tesSUCCESS": 0
   },
   "TRANSACTION_TYPES": {
     "AMMBid": 39,
@@ -4480,5 +7169,6 @@
     "Validation": 10003,
     "Vector256": 19,
     "XChainBridge": 25
-  }
+  },
+  "hash": "1EA05B0FC11101F7C500BD0DAC794A8BC746A7FBA6250B75489603EB820E0FF5"
 }

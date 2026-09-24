@@ -30,5 +30,7 @@ class MPTokenIssuanceSet extends BaseTransaction
         'MPTokenMetadata' => Blob::class,
         'TransferFee' => UnsignedInt16::class,
         'ImmutableFlags' => UnsignedInt32::class,
+        'IssuerEncryptionKey' => Blob::class,
+        'AuditorEncryptionKey' => Blob::class,
     ];
 }

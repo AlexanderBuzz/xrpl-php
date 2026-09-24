@@ -11,7 +11,7 @@ hood and getting into the nitty-gritty of XRPL development.
 
 ## Features
 
-1. XRP Ledger / rippled version 3.3.0 compatible
+1. XRP Ledger / rippled version 3.4.0 compatible
 2. Managing & creating keys and wallets
 3. Submitting transactions to the XRP Ledger
 4. Sending requests to observe the ledger
