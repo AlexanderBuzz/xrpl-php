@@ -80,6 +80,19 @@ php examples/internal/binary-codec.php
 etc...
 ```
 
+## Agent Skill
+
+This repository includes an [Agent Skill](https://agentskills.io) that teaches
+AI coding agents (Claude Code, Codex CLI, Cursor and others) how to use this
+SDK: the real API instead of a guess from xrpl.js, every transaction model and
+flag, the request class for every API method, and the errors to expect. See
+[skills/](skills/) for installation; with Claude Code it is two commands:
+
+```console
+/plugin marketplace add AlexanderBuzz/xrpl-php
+/plugin install xrpl-php@hardcastle-xrpl-php
+```
+
 ## Try it yourself
 
 ### Issuing an [account_objects request](https://xrpl.org/account_objects.html)

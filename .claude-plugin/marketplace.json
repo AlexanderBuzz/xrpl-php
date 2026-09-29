@@ -1,0 +1,23 @@
+{
+  "name": "hardcastle-xrpl-php",
+  "owner": {
+    "name": "Alexander Busse"
+  },
+  "metadata": {
+    "description": "Agent skill for the XRPL PHP SDK"
+  },
+  "plugins": [
+    {
+      "name": "xrpl-php",
+      "source": "./",
+      "description": "Teaches AI coding agents how to build XRP Ledger applications with hardcastle/xrpl_php: wallets, transactions, flags, tokens, NFTs, AMM, payment channels, API methods.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Alexander Busse"
+      },
+      "homepage": "https://github.com/AlexanderBuzz/xrpl-php",
+      "license": "MIT",
+      "keywords": ["xrpl", "xrp", "ripple", "blockchain", "php", "sdk", "agent-skill"]
+    }
+  ]
+}
