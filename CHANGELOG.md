@@ -29,9 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `/sync-definitions` skill for Claude Code walks through the rest: verifying
   new entries against the rippled tag, regenerating the references, updating
   the parity test and the changelog.
-- `scripts/install-xrpl-standards.sh` installs Peersyst's `xrpl-standards`
-  agent skill, every XLS specification as a reference file, into
-  `.claude/skills/` from the xrpl-go repository. The directory is gitignored.
+- The `xrpl-standards` agent skill under `.claude/skills/`: every XLS
+  specification as a reference file, verbatim from XRPLF/XRPL-Standards, with
+  Peersyst's index by transaction and ledger object name and its sync script.
+  Committed rather than fetched, so nothing runs at install time; a weekly
+  workflow opens a pull request when a specification changes upstream. The
+  directory, `skills/` and `scripts/` are excluded from the Composer package.
 
 ## [2.6.0] - 2026-09-24
 

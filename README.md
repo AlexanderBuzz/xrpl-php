@@ -327,13 +327,19 @@ parity test tells you what else the new version touches. In Claude Code the
 
 ### Working with an agent
 
-`.claude/skills/` holds the skills Claude Code loads in this repository. The
-`xrpl-standards` skill, every XLS specification as a reference file, is not
-committed; install it once per checkout:
+`.claude/skills/` holds the skills Claude Code loads in this repository:
+`sync-definitions` (see above) and `xrpl-standards`, every XLS specification as
+a reference file with an index by transaction and ledger object name. The
+specifications are a verbatim copy from
+[XRPLF/XRPL-Standards](https://github.com/XRPLF/XRPL-Standards), committed so
+that nothing has to be fetched at install time; a weekly workflow opens a pull
+request when upstream changes. To check by hand:
 
 ```console
-scripts/install-xrpl-standards.sh
+python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
 ```
+
+None of this is in the Composer package.
 
 ### Running the tests
 

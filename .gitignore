@@ -22,6 +22,5 @@
 /Handover-*.md
 /CLAUDE.md
 
-# Agent skills installed by scripts/install-xrpl-standards.sh
-/.claude/skills/xrpl-standards/
+# Written by the skills CLI when a skill is installed from here
 /skills-lock.json

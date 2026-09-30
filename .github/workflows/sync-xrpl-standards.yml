@@ -1,0 +1,59 @@
+name: Sync XRPL Standards references
+
+# The XLS specifications under .claude/skills/xrpl-standards/references are a
+# verbatim copy from XRPLF/XRPL-Standards. This checks them against upstream
+# once a week and opens a pull request with the changes, so the copy stays
+# current without anything being pulled at install time.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync references from XRPLF/XRPL-Standards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py
+
+      - name: Summarize changes
+        id: changes
+        run: |
+          if [ -z "$(git status --porcelain -- .claude/skills/xrpl-standards/references)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "References are current."
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          {
+            echo "summary<<EOF"
+            git diff --stat -- .claude/skills/xrpl-standards/references
+            git status --porcelain -- .claude/skills/xrpl-standards/references | grep '^??' | sed 's/^?? /new: /' || true
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/sync-xrpl-standards
+          commit-message: "docs: sync the XRPL Standards references"
+          title: "docs: sync the XRPL Standards references"
+          body: |
+            Weekly check of `.claude/skills/xrpl-standards/references` against
+            https://github.com/XRPLF/XRPL-Standards found changes. Review the diff
+            for what changed in the specifications the SDK implements.
+
+            ${{ steps.changes.outputs.summary }}
+          add-paths: .claude/skills/xrpl-standards/references
+          labels: documentation
