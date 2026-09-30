@@ -214,6 +214,24 @@ $wallet = Wallet::fromSeed($seed, $definitions);
 
 `JsonRpcClient` is a facade. `Autofiller`, `Submitter`, `AccountReader`, `OrderbookReader`, `FeeCalculator` and `Faucet` (all in `Hardcastle\XRPL_PHP\Client`) do the work and can be used or replaced on their own: a subclass overriding `getAutofiller()` etc. changes what every path uses. The functions in `Hardcastle\XRPL_PHP\Sugar` (`autofill`, `submit`, `submitAndWait`, `fundWallet`, `getBalances`, ...) are deprecated since 2.2.0 and delegate to these classes; `xrpToDrops` and `dropsToXrp` stay.
 
+## Reviewing code that uses this SDK
+
+When asked to review application code built on `hardcastle/xrpl_php`, check these before anything stylistic. Each is a defect that runs without an error and fails on the ledger or with money.
+
+1. **Success is read from the result, not from the return.** `submitAndWait()` returns for any result that reached a validated ledger, `tec*` included; the code must test `getResult()['meta']['TransactionResult'] === 'tesSUCCESS'`. `submit()` alone is not confirmation; its `engine_result` is preliminary.
+2. **Amounts are strings.** Drops as an integer string (`xrpToDrops('2.5')`), issued values as `['currency','issuer','value']` with `value` a string, MPT as `['mpt_issuance_id','value']`. A `float` or `int` anywhere in an amount, or arithmetic on amounts without `brick/math`, is a defect.
+3. **Fees and sequences come from `autofill()`.** A hand-set `Fee`, `Sequence` or missing `LastLedgerSequence` means stale sequences, overpaid fees or a transaction that can never expire.
+4. **Flags through the constants.** A literal like `131072` or `0x00020000` is a defect; `asf*` values go into `SetFlag`/`ClearFlag`, one per transaction, never into `Flags`.
+5. **Responses are checked.** `syncRequest()` may return `ErrorResponse`; `getResult()` on it does not exist. Look for `instanceof ErrorResponse` or an equivalent guard before reading a result.
+6. **Hex fields are hex.** `URI`, `MemoData`, `MemoType`, `Domain`, `MPTokenMetadata`, `CredentialType`, `PublicKey`, `Signature` carry hex (`Utilities::convertStringToHex()` or `bin2hex()`), never the raw string.
+7. **No secret leaves the process.** A seed or private key in a log, an exception message, a response, a fixture committed to the repository, or a `channel_authorize` call is a defect; `signPaymentChannelClaim()` exists so the secret stays local. Seeds come from configuration (`getenv()`), never from a literal.
+8. **The right network for the type.** `SetHook`, `Invoke`, `URIToken*` and the other `Hardcastle\XRPL_PHP\Hooks` types are Xahau only; `XChain*`, `DID*`, `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*` must not be sent to Xahau through this package. `Batch` cannot be signed by this library; code that builds one is broken.
+9. **Multisign order.** `Signers` sorted by the numeric value of `Account`, `SigningPubKey` empty, fee autofilled with `signersCount`.
+10. **Units.** `TransferFee` is 1/1000 of a percent on MPT issuances and 1/100,000 on NFTs; `TradingFee` is 1/100,000; time fields are ripple epoch seconds (Unix time minus 946684800), not Unix time.
+11. **Testnet assumptions in production code.** A hard-coded Testnet URL or faucet call, or a seed from a tutorial, in code meant for Mainnet.
+
+Report each finding with file and line, what goes wrong on the ledger, and the fix in terms of this SDK's API. Do not flag style, and do not demand tests for code that has none; flag a test that asserts success without checking `TransactionResult`.
+
 ## Reference documentation
 
 - `references/transactions.md`: every transaction model and its fields, with required/optional per rippled's format (generated).
