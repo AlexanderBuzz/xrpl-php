@@ -311,6 +311,36 @@ port 9090 via `host.docker.internal`, which works on Linux as well because the
 compose file maps it to the host gateway. For anything else that is specific to
 your machine, add a `docker-compose.override.yml`; it is gitignored.
 
+### Keeping the definitions current
+
+`definitions.json` is a verbatim snapshot of a rippled node's `server_definitions`,
+never a copy of another SDK's file. To refresh it:
+
+```console
+php scripts/sync-definitions.php            # from s1.ripple.com
+php scripts/sync-definitions.php --check    # report only; exits 1 when the file is behind
+```
+
+Then `php skills/build.php` regenerates the agent skill's references, and the
+parity test tells you what else the new version touches. In Claude Code the
+`/sync-definitions` skill walks through the whole procedure.
+
+### Working with an agent
+
+`.claude/skills/` holds the skills Claude Code loads in this repository:
+`sync-definitions` (see above) and `xrpl-standards`, every XLS specification as
+a reference file with an index by transaction and ledger object name. The
+specifications are a verbatim copy from
+[XRPLF/XRPL-Standards](https://github.com/XRPLF/XRPL-Standards), committed so
+that nothing has to be fetched at install time; a weekly workflow opens a pull
+request when upstream changes. To check by hand:
+
+```console
+python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
+```
+
+None of this is in the Composer package.
+
 ### Running the tests
 
 You can run the tests with the following command:

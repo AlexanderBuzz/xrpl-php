@@ -18,6 +18,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the code does not have, or when the skill claims another SDK version than
   the changelog.
 
+## [Unreleased]
+
+### Added
+- `scripts/sync-definitions.php` refreshes `definitions.json` from a node's
+  `server_definitions` (`--node` for another node, `--check` to only report),
+  prints the node version, the digests and what each section gained or lost,
+  and never edits entries. A test holds its formatting to the committed file,
+  so a run without a change in substance leaves the tree clean. The
+  `/sync-definitions` skill for Claude Code walks through the rest: verifying
+  new entries against the rippled tag, regenerating the references, updating
+  the parity test and the changelog.
+- The `xrpl-standards` agent skill under `.claude/skills/`: every XLS
+  specification as a reference file, verbatim from XRPLF/XRPL-Standards, with
+  Peersyst's index by transaction and ledger object name and its sync script.
+  Committed rather than fetched, so nothing runs at install time; a weekly
+  workflow opens a pull request when a specification changes upstream. The
+  directory, `skills/` and `scripts/` are excluded from the Composer package.
+
 ## [2.6.0] - 2026-09-24
 
 ### Changed

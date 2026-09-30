@@ -21,3 +21,6 @@
 # Handover documents
 /Handover-*.md
 /CLAUDE.md
+
+# Written by the skills CLI when a skill is installed from here
+/skills-lock.json
