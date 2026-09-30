@@ -21,3 +21,7 @@
 # Handover documents
 /Handover-*.md
 /CLAUDE.md
+
+# Agent skills installed by scripts/install-xrpl-standards.sh
+/.claude/skills/xrpl-standards/
+/skills-lock.json

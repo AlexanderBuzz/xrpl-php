@@ -18,6 +18,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the code does not have, or when the skill claims another SDK version than
   the changelog.
 
+## [Unreleased]
+
+### Added
+- `scripts/sync-definitions.php` refreshes `definitions.json` from a node's
+  `server_definitions` (`--node` for another node, `--check` to only report),
+  prints the node version, the digests and what each section gained or lost,
+  and never edits entries. A test holds its formatting to the committed file,
+  so a run without a change in substance leaves the tree clean. The
+  `/sync-definitions` skill for Claude Code walks through the rest: verifying
+  new entries against the rippled tag, regenerating the references, updating
+  the parity test and the changelog.
+- `scripts/install-xrpl-standards.sh` installs Peersyst's `xrpl-standards`
+  agent skill, every XLS specification as a reference file, into
+  `.claude/skills/` from the xrpl-go repository. The directory is gitignored.
+
 ## [2.6.0] - 2026-09-24
 
 ### Changed
