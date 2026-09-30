@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Added
+- An Agent Skill under `skills/xrpl-php/`, installable into Claude Code, Codex
+  CLI, Cursor and other agents that follow the Agent Skills standard, and as a
+  Claude Code plugin from this repository. `SKILL.md` carries the core
+  patterns; the references list every transaction model with its fields,
+  every flag constant and every request class, generated from the code by
+  `skills/build.php`, plus recipes and troubleshooting. A test fails when a
+  generated file is out of date, when the hand-written files name something
+  the code does not have, or when the skill claims another SDK version than
+  the changelog.
+
 ## [2.6.0] - 2026-09-24
 
 ### Changed
