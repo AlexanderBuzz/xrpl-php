@@ -12,11 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   against a protocol checklist (definitions provenance and ordinals, codec
   round trips and amount encoding, signing prefixes and key handling, models
   against their formats, flags in their three places, another network's
-  definitions kept apart from the XRP Ledger's, with Xahau as the case in the
-  tree) and
-  the repository's conventions, running the guard tests first and reporting
-  findings without fixing anything. The checklist draws on the review
-  guidelines of xrpl.js and xrpl-go, adapted to this code.
+  definitions kept apart from the XRP Ledger's with Xahau as the case in the
+  tree) and the repository's conventions, running the guard tests first and
+  reporting findings without fixing anything. The checklist draws on the
+  review guidelines of xrpl.js and xrpl-go, adapted to this code.
 - The `/release` skill for Claude Code prepares a release the way 2.5.0 and
   2.6.0 were made: changelog heading, the versions the agent skill and the
   plugin manifests carry, regenerated references, the checks, a release branch
