@@ -15,7 +15,7 @@ Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{
 **Definitions** (`src/Core/RippleBinaryCodec/Definitions/definitions.json`)
 - Verbatim from a node's `server_definitions`, produced by `scripts/sync-definitions.php`; a hand edit or a copy from ripple-binary-codec `main` is a blocker (that branch carries development-branch fields no release has).
 - Fields serialize in `(type, nth)` order; a renumbered or retyped field changes the wire format. `isSigningField` decides what a signature covers: mis-marking silently invalidates signatures.
-- Hook fields, `tecHOOK_REJECTED` and every Xahau entry live only in `src/Hooks/hooksDefinitions.json`. The merge in `Definitions::loadDefaultDefinitions()` lets the XRP Ledger entry win on a collision (first definition wins in the reverse lookups); `DefinitionsMergeTest` pins the known collisions and needs a case for a new one.
+- The bundled file holds XRP Ledger entries only. Another network's entries never go into it; see "Other networks" below.
 
 **Codec** (`src/Core/RippleBinaryCodec/**`)
 - `encode(decode(x))` must be byte-identical and `decode(encode(json))` must equal the canonical JSON: the codec canonicalizes (`123.4000` → `123.4`), so compare after canonicalization. `CodecFixturesTest` runs ripple-binary-codec's fixtures; a new type needs a fixture or a hand-built roundtrip in the parity test.
@@ -40,8 +40,12 @@ Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{
 - `autofill()` fees: base fee times cushion, capped by `maxFeeXrp`; the owner reserve for `AccountDelete` and `AMMCreate`; the fulfillment surcharge for `EscrowFinish`; one extra base fee per signer. A new fee rule needs rippled's `Transactor::calculateBaseFee` as evidence.
 - `submitAndWait()` returns for any result in a validated ledger, `tec` included; a change that makes it throw on `tec` or return on `ter`/`tef` is a behaviour change to call out.
 
-**Xahau overlap** (`src/Hooks/**`)
-- The Xahau types share ordinals 45–49 with XRP Ledger types and `MPTokenIssuanceCreate` is 54 here, 63 there. Anything that changes which side wins, or lets a Xahau field shadow an XRP Ledger one (HookOn did until 2.6.0), is a blocker. These types leave the package in 3.0.0; do not extend them.
+**Other networks and injected definitions** (`src/Core/RippleBinaryCodec/Definitions/**`, `src/Hooks/**`)
+The codec, `Wallet`, `HashLedger` and `JsonRpcClient` take a `Definitions` instance; a network that is not the XRP Ledger supplies its own through `Definitions::fromFile()` or `fromArray()`. The rules, whatever the network:
+- Entries of another network never enter the bundled `definitions.json`, and a merged set may only add what the XRP Ledger has no entry of that name for. Where two networks share an ordinal, the XRP Ledger name wins in the shared default instance; the reverse lookups are built first-definition-wins for exactly that reason.
+- An injected set has to travel through the whole path: nested objects and arrays, `encodeForSigning`, multisigning, `HashLedger::hashSignedTx()`, the client's autofill and submit. A code path that falls back to `Definitions::getInstance()` where an instance was handed in encodes with the wrong network, silently. `InjectableDefinitionsTest` covers the known paths; a new path that takes or produces bytes needs a case.
+- An injected set must never mutate the shared default instance; one process talks to two networks at once.
+- Concrete case, and the one that has bitten this code: Xahau. Its entries live in `src/Hooks/hooksDefinitions.json`, merged by `Definitions::loadDefaultDefinitions()`; it reuses ordinals 45–49 for `URIToken*` where the XRP Ledger has `XChain*` and `DIDSet`, and puts `MPTokenIssuanceCreate` at 63 where the XRP Ledger has 54. A leftover `HookOn` in the bundled file shadowed Xahau's definition until 2.6.0. `DefinitionsMergeTest` pins the known collisions and needs a case for a new one. The Xahau types leave this package in 3.0.0 and become an injected set from `hardcastle/xahau_php`; the general rules above are what then covers them. Do not extend them here.
 
 **Intentional, do not flag**
 - `tecNO_DELEGATE_PERMISSION` absent, `MutableFlags` absent, the four `*KeyEpoch` fields absent: all on purpose, guarded by `Rippled340ParityTest`.
@@ -52,4 +56,4 @@ Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{
 
 ## Output
 
-Reasoning first, then one ```json block per the schema in `SKILL.md`, `source` values `xrpl-domain/definitions`, `xrpl-domain/codec`, `xrpl-domain/amount-encoding`, `xrpl-domain/signing`, `xrpl-domain/models`, `xrpl-domain/client`, `xrpl-domain/xahau`, `xrpl-domain/XLS-NN` when citing a spec section. Return `[]` when nothing protocol-relevant changed. Hard cap 15 findings, blockers first.
+Reasoning first, then one ```json block per the schema in `SKILL.md`, `source` values `xrpl-domain/definitions`, `xrpl-domain/codec`, `xrpl-domain/amount-encoding`, `xrpl-domain/signing`, `xrpl-domain/models`, `xrpl-domain/client`, `xrpl-domain/networks`, `xrpl-domain/XLS-NN` when citing a spec section. Return `[]` when nothing protocol-relevant changed. Hard cap 15 findings, blockers first.

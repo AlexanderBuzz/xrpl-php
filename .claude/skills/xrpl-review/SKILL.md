@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # XRPL review
 
-A rule-based audit of what this branch changes, keyed to how this library breaks: a field with the wrong ordinal, a signing payload with the wrong prefix, an amount that lost precision, a model out of step with the definitions, a Xahau entry shadowing an XRP Ledger one. Findings are reported, never auto-fixed.
+A rule-based audit of what this branch changes, keyed to how this library breaks: a field with the wrong ordinal, a signing payload with the wrong prefix, an amount that lost precision, a model out of step with the definitions, another network's definitions leaking into or shadowing the XRP Ledger's. Findings are reported, never auto-fixed.
 
 ## 1. Scope
 
@@ -28,7 +28,7 @@ Ask (`AskUserQuestion`) only when it is ambiguous: a dirty tree (committed only,
 | `signing` | `src/Wallet/**`, `src/Core/RippleKeyPairs/**`, `src/Utils/Hashes/**` |
 | `models` | `src/Models/Transaction/**`, `src/Models/Ledger/Flags/**`, `src/Models/Common/**` |
 | `client` | `src/Client/**`, `src/Sugar/**`, `src/Models/**` (request/response classes) |
-| `xahau` | `src/Hooks/**` |
+| `networks` | `src/Hooks/**`, `src/Core/RippleBinaryCodec/Definitions/Definitions.php` (another network's definitions, injected or merged; Xahau is the case in the tree today) |
 | `skill` | `skills/**`, `.claude/**`, `.claude-plugin/**` |
 | `tests`, `docs`, `other` | the rest |
 
@@ -45,8 +45,8 @@ A failure here is a `blocker` finding with the test's message; do not reason abo
 
 ## 4. Single pass or fan-out
 
-- **Single pass** when the diff is under 200 changed lines and touches one area: apply `prompts/xrpl-domain.md` (if the area is `codec`, `signing`, `models` or `xahau`) and `prompts/php-conventions.md` yourself.
-- **Fan-out** otherwise: one `general-purpose` subagent per touched area with `prompts/php-conventions.md`, plus **one** XRPL-domain subagent with `prompts/xrpl-domain.md` over the union of `codec`, `signing`, `models` and `xahau` files, if any. Launch them in a single message. Substitute `{{AREA}}`, `{{CHANGED_FILES}}`, `{{BASE}}` in the prompts.
+- **Single pass** when the diff is under 200 changed lines and touches one area: apply `prompts/xrpl-domain.md` (if the area is `codec`, `signing`, `models` or `networks`) and `prompts/php-conventions.md` yourself.
+- **Fan-out** otherwise: one `general-purpose` subagent per touched area with `prompts/php-conventions.md`, plus **one** XRPL-domain subagent with `prompts/xrpl-domain.md` over the union of `codec`, `signing`, `models` and `networks` files, if any. Launch them in a single message. Substitute `{{AREA}}`, `{{CHANGED_FILES}}`, `{{BASE}}` in the prompts.
 
 Each reviewer returns prose and then one ```json block with the findings (schema below). Take the last block; on a parse failure ask once for JSON only; if that fails too, keep the text as a single `concern` from `<reviewer>/unparseable`.
 
@@ -72,7 +72,7 @@ Severity filter if the user asked for one; per file at most 5 nits per reviewer,
     "file": "src/Core/RippleBinaryCodec/Types/Amount.php",
     "line": 132,
     "severity": "blocker | concern | nit",
-    "source": "xrpl-domain/amount-encoding | xrpl-domain/signing | xrpl-domain/definitions | xrpl-domain/models | xrpl-domain/xahau | php/conventions | php/tests | cross-cutting/<check>",
+    "source": "xrpl-domain/amount-encoding | xrpl-domain/signing | xrpl-domain/definitions | xrpl-domain/models | xrpl-domain/networks | php/conventions | php/tests | cross-cutting/<check>",
     "message": "one sentence naming the defect and its effect",
     "evidence": "the line or fact that shows it; a spec section or test name where one applies"
   }
