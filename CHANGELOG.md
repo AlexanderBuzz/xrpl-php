@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The `/release` skill for Claude Code prepares a release the way 2.5.0 and
+  2.6.0 were made: changelog heading, the versions the agent skill and the
+  plugin manifests carry, regenerated references, the checks, a release branch
+  with its pull request, and the release notes in the house style. It never
+  merges or tags. A test now holds the plugin manifests to the skill's version.
 - An Agent Skill under `skills/xrpl-php/`, installable into Claude Code, Codex
   CLI, Cursor and other agents that follow the Agent Skills standard, and as a
   Claude Code plugin from this repository. `SKILL.md` carries the core

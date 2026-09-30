@@ -137,6 +137,23 @@ final class SkillReferencesTest extends TestCase
     }
 
     /**
+     * The plugin manifests advertise the skill's version; they have to say
+     * what the skill's own frontmatter says.
+     */
+    public function testPluginManifestsCarryTheSkillVersion(): void
+    {
+        $skill = (string) file_get_contents(self::SKILL_DIR . '/SKILL.md');
+        $this->assertSame(1, preg_match('/^\s+version: "([^"]+)"/m', $skill, $version));
+
+        $root = __DIR__ . '/../../.claude-plugin';
+        $plugin = json_decode((string) file_get_contents($root . '/plugin.json'), true, 512, JSON_THROW_ON_ERROR);
+        $marketplace = json_decode((string) file_get_contents($root . '/marketplace.json'), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame($version[1], $plugin['version'], 'plugin.json');
+        $this->assertSame($version[1], $marketplace['plugins'][0]['version'], 'marketplace.json');
+    }
+
+    /**
      * The frontmatter names the SDK version the skill describes; that has to
      * be the version the changelog is at, so a release does not ship a skill
      * that claims an older one.
