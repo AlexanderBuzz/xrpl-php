@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `/xrpl-review` skill for Claude Code audits a branch's own changes
   against a protocol checklist (definitions provenance and ordinals, codec
   round trips and amount encoding, signing prefixes and key handling, models
-  against their formats, flags in their three places, the Xahau overlap) and
+  against their formats, flags in their three places, another network's
+  definitions kept apart from the XRP Ledger's, with Xahau as the case in the
+  tree) and
   the repository's conventions, running the guard tests first and reporting
   findings without fixing anything. The checklist draws on the review
   guidelines of xrpl.js and xrpl-go, adapted to this code.
