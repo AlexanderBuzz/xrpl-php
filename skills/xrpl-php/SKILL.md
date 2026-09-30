@@ -111,6 +111,8 @@ use function Hardcastle\XRPL_PHP\Sugar\dropsToXrp;
 dropsToXrp('1500000');                                            // '1.5'
 ```
 
+Rules the ledger enforces, which the SDK checks where it can: drops are integers up to 10^17; `xrpToDrops()` throws on more than six decimals rather than rounding; an issued value has at most 16 significant digits and an exponent between -96 and 80; `'XRP'` is never a `currency` in the array form. The codec canonicalizes issued values (`'123.4000'` becomes `'123.4'` in the signed blob), so compare amounts after a round trip through `BinaryCodec::decode()`, not against the input string.
+
 Currency codes longer than three characters are 40 hex characters: `CoreUtilities::encodeCustomCurrency('MyToken')` and `decodeCustomCurrency()`. `Hardcastle\XRPL_PHP\Core\Stablecoin\RLUSD::getAmount('mainnet', '10')` and `USDC::getAmount(...)` build the IOU array for those stablecoins with the right issuer per network.
 
 ## 5. Flags
@@ -168,7 +170,8 @@ $json = json_decode((string) $raw->getBody(), true);
 
 - `sign()` refuses a transaction that already carries `TxnSignature` or `Signers` (`ValidationException`).
 - `verifyTransaction($txBlob)` checks a blob against the wallet's own key.
-- Multisign: `$signer->sign($tx, true)` signs as one of the account's signers and returns a blob whose transaction carries that signer's entry in `Signers` and an empty `SigningPubKey`; autofill with `signersCount` so the fee covers every signature. Collect the `Signers` entries of all signers into one transaction and send it through `SubmitMultisignedRequest`.
+- Multisign: `$signer->sign($tx, true)` signs as one of the account's signers and returns a blob whose transaction carries that signer's entry in `Signers` and an empty `SigningPubKey`; autofill with `signersCount` so the fee covers every signature. Collect the `Signers` entries of all signers into one transaction, **sorted by the numeric value of their `Account`** (rippled rejects other orders and the SDK does not sort them), and send it through `SubmitMultisignedRequest`.
+- Never put a seed or private key into a log line, an exception message or a response; show the public key or address instead.
 - Payment channel claims are signed and verified without a node: `$wallet->signPaymentChannelClaim($channelId, $amountDrops)` and `Wallet::verifyPaymentChannelClaim($channelId, $amountDrops, $signature, $publicKey)`. Amounts in drops. See `references/recipes.md`.
 - `Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger::hashSignedTx($txBlob)` gives the hash of a signed blob.
 
@@ -230,4 +233,5 @@ $wallet = Wallet::fromSeed($seed, $definitions);
 - **Reusing a Testnet seed from a tutorial.** The Testnet is reset periodically; fund a fresh wallet instead.
 - **`Batch` and `DelegateSet`.** The models decode but the library cannot sign a Batch (V1.1 rules); do not build one with it.
 - **`syncRequest()` may return `ErrorResponse`.** Check `instanceof` before `getResult()`.
+- **Stripping fields the SDK does not know.** rippled adds fields and result variants over time; pass responses through as arrays and read what you need rather than validating them against a fixed shape.
 - **Xahau types on the XRP Ledger.** `SetHook`, `Invoke`, `URIToken*` etc. are Xahau; and `XChain*`, `DID*`, `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*` must not be sent to Xahau through this package.

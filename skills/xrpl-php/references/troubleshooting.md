@@ -53,3 +53,6 @@ Frequent codes and what to change:
 - `TransferFee` units differ: 1/1000 of a percent on MPT issuances, 1/100,000 on NFTs; `TradingFee` on AMMs is 1/100,000.
 - Time fields (`Expiration`, `FinishAfter`, `CancelAfter`) are seconds since the ripple epoch (2000-01-01), not Unix time.
 - `Flags` values are 32-bit; ledger objects return them as an integer, decode with the matching `*Flags::parse()`.
+- `xrpToDrops('0.0000001')` throws ("too many decimal places"): XRP has six decimals, the SDK does not round for you.
+- An issued value with more than 16 significant digits, or outside the exponent range -96 to 80, fails in the codec; round to 15 digits before building the amount.
+- `Signers` in a multisigned transaction must be sorted by the numeric value of each `Account`; `tefBAD_SIGNATURE` or `temINVALID` with a correct signature usually means the order is wrong.
