@@ -15,6 +15,14 @@ Once installed, the agent knows the SDK's actual API instead of guessing it from
 /plugin install xrpl-php@hardcastle-xrpl-php
 ```
 
+### Any agent (via the skills CLI)
+
+[`skills`](https://github.com/vercel-labs/skills) installs into Claude Code, Codex, Cursor, OpenCode and others, and records the install in `skills-lock.json` so `npx skills update` can refresh it:
+
+```bash
+npx skills add AlexanderBuzz/xrpl-php
+```
+
 ### Manual
 
 Copy `skills/xrpl-php/` into your agent's skill directory:

@@ -86,9 +86,12 @@ This repository includes an [Agent Skill](https://agentskills.io) that teaches
 AI coding agents (Claude Code, Codex CLI, Cursor and others) how to use this
 SDK: the real API instead of a guess from xrpl.js, every transaction model and
 flag, the request class for every API method, and the errors to expect. See
-[skills/](skills/) for installation; with Claude Code it is two commands:
+[skills/](skills/) for installation; with the `skills` CLI it is one command,
+with Claude Code's plugin manager two:
 
 ```console
+npx skills add AlexanderBuzz/xrpl-php
+
 /plugin marketplace add AlexanderBuzz/xrpl-php
 /plugin install xrpl-php@hardcastle-xrpl-php
 ```
