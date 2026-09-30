@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tree) and the repository's conventions, running the guard tests first and
   reporting findings without fixing anything. The checklist draws on the
   review guidelines of xrpl.js and xrpl-go, adapted to this code.
+- The agent skill has a section for reviewing application code built on this
+  SDK: eleven checks that run without an error and fail on the ledger or with
+  money, from reading success off `TransactionResult` to amounts as strings,
+  flags through the constants, hex fields, secrets, the right network per type
+  and multisign order, with the fix stated in terms of this API.
 - The `/release` skill for Claude Code prepares a release the way 2.5.0 and
   2.6.0 were made: changelog heading, the versions the agent skill and the
   plugin manifests carry, regenerated references, the checks, a release branch
