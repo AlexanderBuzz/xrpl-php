@@ -329,8 +329,9 @@ parity test tells you what else the new version touches. In Claude Code the
 
 `.claude/skills/` holds the skills Claude Code loads in this repository:
 `sync-definitions` (see above), `release` (prepares a release branch, pull
-request and release notes; merging and tagging stay with the maintainer) and
-`xrpl-standards`, every XLS specification as
+request and release notes; merging and tagging stay with the maintainer),
+`xrpl-review` (audits a branch against the XRPL protocol checklist and the
+repository's conventions, findings only) and `xrpl-standards`, every XLS specification as
 a reference file with an index by transaction and ledger object name. The
 specifications are a verbatim copy from
 [XRPLF/XRPL-Standards](https://github.com/XRPLF/XRPL-Standards), committed so
