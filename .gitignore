@@ -24,3 +24,4 @@
 
 # Written by the skills CLI when a skill is installed from here
 /skills-lock.json
+/release-notes-*.md

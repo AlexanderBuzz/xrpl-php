@@ -55,4 +55,5 @@ Frequent codes and what to change:
 - `Flags` values are 32-bit; ledger objects return them as an integer, decode with the matching `*Flags::parse()`.
 - `xrpToDrops('0.0000001')` throws ("too many decimal places"): XRP has six decimals, the SDK does not round for you.
 - An issued value with more than 16 significant digits, or outside the exponent range -96 to 80, fails in the codec; round to 15 digits before building the amount.
+- `DelegateSet`: until the `fixCleanup3_4_0` amendment is active, do not delegate the granular permission `PaymentBurn`; a delegate holding it can, in some cases, also mint tokens (XLS-75, note of 2026-09-25). Check the amendment's status on livenet.xrpl.org/amendments.
 - `Signers` in a multisigned transaction must be sorted by the numeric value of each `Account`; `tefBAD_SIGNATURE` or `temINVALID` with a correct signature usually means the order is wrong.
