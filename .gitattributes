@@ -19,3 +19,4 @@ docker-compose.mac.yml export-ignore
 .claude/ export-ignore
 skills/ export-ignore
 scripts/ export-ignore
+.claude-plugin/ export-ignore
