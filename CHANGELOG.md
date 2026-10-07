@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A Testnet integration workflow: the tests in the `integration` and
+  `integration-slow` groups run after every push to `main` and on request,
+  one run at a time, never on pull requests. `BasicIntegrationTest` and
+  `FundWalletTest` join the `integration` group; they used to run in every
+  CI job and fund a wallet from the faucet each time.
+- A backward-compatibility check on every pull request:
+  `roave/backward-compatibility-check` at a pinned version, installed into a
+  directory of its own, compares the public API with the last release tag.
+  Before 3.0.0 every pull request has to pass it.
+- A pull request template asking for the changelog entry, the checks and the
+  test plan, and a `.claude/settings.json` that keeps an agent in this
+  repository from force-pushing, pushing to `main`, hard-resetting, deleting
+  branches, tagging, creating releases, merging pull requests, staging
+  everything at once instead of named files, or reading credential files.
 - The `/xrpl-review` skill for Claude Code audits a branch's own changes
   against a protocol checklist (definitions provenance and ordinals, codec
   round trips and amount encoding, signing prefixes and key handling, models

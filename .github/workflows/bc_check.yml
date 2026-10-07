@@ -1,0 +1,40 @@
+name: Backward compatibility
+
+# Compares the public API of the pull request with the last release tag,
+# using roave/backward-compatibility-check. A break fails the check; before
+# 3.0.0, which removes the Xahau types on purpose, every pull request has to
+# be clean. The tool is installed at a pinned version into a directory of its
+# own, so its dependencies never touch this package's. The tool itself needs
+# PHP 8.4 and ext-intl; the code it compares still declares PHP 8.2.
+
+on:
+  pull_request:
+
+jobs:
+  bc-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+          extensions: gmp, bcmath, sockets, intl
+          coverage: none
+
+      - name: Install roave/backward-compatibility-check
+        run: |
+          mkdir -p /tmp/bc-check
+          composer require --working-dir=/tmp/bc-check --no-interaction --no-progress roave/backward-compatibility-check:8.23.0
+
+      - name: Compare the public API with the last release
+        run: |
+          FROM="$(git describe --tags --abbrev=0 origin/main)"
+          echo "Comparing ${FROM} with ${GITHUB_HEAD_REF}"
+          /tmp/bc-check/vendor/bin/roave-backward-compatibility-check --from="${FROM}" --to="${GITHUB_SHA}" --format=github-actions

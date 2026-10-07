@@ -346,10 +346,17 @@ None of this is in the Composer package.
 
 ### Running the tests
 
-You can run the tests with the following command:
+The unit tests, which CI runs on every push:
 
 ```console
-./vendor/bin/phpunit tests
+./vendor/bin/phpunit tests --exclude-group integration --exclude-group integration-slow
+```
+
+The integration tests talk to the public Testnet and its faucet. CI runs them
+after a push to `main`; locally:
+
+```console
+./vendor/bin/phpunit tests --group integration --group integration-slow
 ```
 
 You can perform static code analysis with psalm with the following command:
