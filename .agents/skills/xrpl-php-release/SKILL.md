@@ -1,6 +1,6 @@
 ---
 name: xrpl-php-release
-description: Prepare a release of hardcastle/xrpl_php - changelog heading, skill version, regenerated references, checks, release branch, pull request and the release notes - without merging or tagging. Use as /xrpl-php-release <version>, e.g. /release 2.7.0.
+description: Prepare a release of hardcastle/xrpl_php - changelog heading, skill version, regenerated references, checks, release branch, pull request and the release notes - without merging or tagging. Use as /xrpl-php-release <version>, e.g. /xrpl-php-release 2.7.0.
 disable-model-invocation: true
 ---
 
@@ -20,6 +20,7 @@ grep -n '^## \[' CHANGELOG.md | head -3
 ```
 
 - `CHANGELOG.md` must start its entries with `## [Unreleased]` and that block must not be empty. If there is nothing to release, say so and stop.
+- `grep -c '^## \[Unreleased\]' CHANGELOG.md` must print 1. Two blocks happen when pull requests merged in parallel each added one (2.7.0 found that); fold the second into the first before renaming, and read every entry for a path or name that a later merge renamed.
 - The version must be greater than the latest heading and follow SemVer for what the block contains: any `Breaking` section or `feat!` commit since the last tag (`git log <last>..main --format=%s | grep '!:'`) calls for a major unless the changelog entry itself argues why it is a minor (2.6.0 did, for a fix nobody could have relied on). Say what you found; the maintainer decides.
 - `3.0.0` is reserved for removing the Xahau types once `hardcastle/xahau_php` is published. Do not propose it for anything else.
 

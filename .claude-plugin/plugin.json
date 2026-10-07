@@ -1,7 +1,7 @@
 {
   "name": "xrpl-php",
   "description": "Teaches AI coding agents how to build XRP Ledger applications with hardcastle/xrpl_php: wallets, transactions, flags, tokens, NFTs, AMM, payment channels, API methods.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Alexander Busse"
   },
