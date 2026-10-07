@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "ask": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)"
+    ],
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(curl *|bash*)",
+      "Bash(curl *| bash*)",
+      "Bash(wget *|bash*)",
+      "Bash(wget *| bash*)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push * --force)",
+      "Bash(git push * --force *)",
+      "Bash(git push * -f)",
+      "Bash(git push * -f *)",
+      "Bash(git push * --delete *)",
+      "Bash(git push * :*)",
+      "Bash(git reset --hard*)",
+      "Bash(git branch -D *)",
+      "Bash(git branch * -D)",
+      "Bash(git branch * -D *)",
+      "Bash(git tag *)",
+      "Bash(gh release create *)",
+      "Bash(gh pr merge *)",
+      "Bash(composer global *)",
+      "Edit(~/.bashrc)",
+      "Edit(~/.zshrc)",
+      "Edit(~/.profile)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gh/**)",
+      "Read(~/.git-credentials)",
+      "Read(~/.composer/auth.json)",
+      "Read(~/.config/composer/auth.json)",
+      "Read(~/.npmrc)",
+      "Read(~/Library/Keychains/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CMD=$(jq -r '.tool_input.command'); if echo \"$CMD\" | grep -qE 'git[[:space:]]+push[[:space:]]+[^[:space:]]+[[:space:]]+(main|master)([[:space:]:]|$)'; then echo 'BLOCKED: main is updated by merging pull requests, never by a push.' >&2; exit 2; fi"
+          },
+          {
+            "type": "command",
+            "command": "CMD=$(jq -r '.tool_input.command'); if echo \"$CMD\" | grep -qE 'git[[:space:]]+add[[:space:]]+(--all([[:space:]]|$)|-A([[:space:]]|$)|\\.([[:space:]]|$)|\\*([[:space:]]|$))'; then echo 'BLOCKED: stage files by name; a bare git add -A or git add . can pick up secrets and scratch files.' >&2; exit 2; fi; if echo \"$CMD\" | grep -qE 'git[[:space:]]+add[[:space:]].*\\.env([[:space:]]|\\.|$)'; then echo 'BLOCKED: .env files are never committed.' >&2; exit 2; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

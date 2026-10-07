@@ -2,6 +2,7 @@
 
 namespace Hardcastle\XRPL_PHP\Test\Integration;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Models\Utility\PingRequest;
@@ -15,6 +16,7 @@ use Hardcastle\XRPL_PHP\Models\Utility\PingRequest;
  *
  * docker run -p 5005:5005 -p 6006:6006 -it natenichols/rippled-standalone:latest
  */
+#[Group('integration')]
 final class BasicIntegrationTest extends TestCase
 {
     private const TESTNET_URL = "https://s.altnet.rippletest.net:51234";

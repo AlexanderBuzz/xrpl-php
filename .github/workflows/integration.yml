@@ -1,0 +1,37 @@
+name: Integration (Testnet)
+
+# The tests in the integration and integration-slow groups talk to the public
+# Testnet and its faucet. They run after a push to main and on request, one
+# run at a time so two runs never race for the faucet, and never on pull
+# requests, where a Testnet outage would block unrelated work.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: testnet-integration
+  cancel-in-progress: false
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+          extensions: gmp, bcmath, sockets
+          coverage: none
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Run the integration tests against the Testnet
+        run: vendor/bin/phpunit ./tests --group integration --group integration-slow
