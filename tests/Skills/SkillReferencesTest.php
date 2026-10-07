@@ -137,6 +137,63 @@ final class SkillReferencesTest extends TestCase
     }
 
     /**
+     * The internal skills under .claude/skills name files, directories and
+     * test classes of this repository; every one of them has to exist, or the
+     * procedure sends an agent to a place that is not there.
+     */
+    public function testInternalSkillsNameExistingPaths(): void
+    {
+        $root = realpath(__DIR__ . '/../..');
+        $this->assertNotFalse($root);
+        $files = glob($root . '/.claude/skills/{sync-definitions,release,xrpl-review}/{SKILL.md,prompts/*.md}', GLOB_BRACE);
+        $this->assertNotFalse($files);
+        $this->assertNotSame([], $files);
+
+        $checked = 0;
+        foreach ($files as $file) {
+            $text = (string) file_get_contents($file);
+            preg_match_all('/`((?:src|tests|skills|scripts|examples|docs|\.claude|\.claude-plugin)\/[A-Za-z0-9_.\/-]+?)(?:\*\*|\*)?`/', $text, $paths);
+            foreach (array_unique($paths[1]) as $path) {
+                $path = rtrim($path, '/');
+                $this->assertTrue(
+                    file_exists($root . '/' . $path),
+                    basename(dirname($file)) . '/' . basename($file) . " names {$path}, which does not exist"
+                );
+                $checked++;
+            }
+            // A placeholder like Rippled<version>ParityTest is not a class name
+            preg_match_all('/(?<![>\w])([A-Z][A-Za-z0-9]+Test)\b/', $text, $tests);
+            foreach (array_unique($tests[1]) as $testClass) {
+                $this->assertContains(
+                    $testClass,
+                    self::testClasses($root . '/tests'),
+                    basename(dirname($file)) . " names {$testClass}, which does not exist"
+                );
+                $checked++;
+            }
+        }
+        $this->assertGreaterThan(0, $checked);
+    }
+
+    /**
+     * The short names of every test class under a directory.
+     *
+     * @return list<string>
+     */
+    private static function testClasses(string $directory): array
+    {
+        $names = [];
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+        foreach ($iterator as $entry) {
+            if ($entry instanceof \SplFileInfo && str_ends_with($entry->getFilename(), 'Test.php')) {
+                $names[] = $entry->getBasename('.php');
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * The plugin manifests advertise the skill's version; they have to say
      * what the skill's own frontmatter says.
      */
