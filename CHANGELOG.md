@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The repository's own skills live under `.agents/skills/`, the directory
   Codex, Cursor, Gemini CLI, GitHub Copilot and most other agents read, with
   `.claude/skills/` symlinking to them for Claude Code. One copy, every agent.
+  They carry the package's name as a prefix, `xrpl-php-release`,
+  `xrpl-php-sync-definitions` and `xrpl-php-review`, so they cannot collide
+  with a built-in command, a user's own skill or another project's.
 
 ### Added
 - A Testnet integration workflow: the tests in the `integration` and
@@ -27,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   repository from force-pushing, pushing to `main`, hard-resetting, deleting
   branches, tagging, creating releases, merging pull requests, staging
   everything at once instead of named files, or reading credential files.
-- The `/xrpl-review` skill for Claude Code audits a branch's own changes
+- The `/xrpl-php-review` skill for Claude Code audits a branch's own changes
   against a protocol checklist (definitions provenance and ordinals, codec
   round trips and amount encoding, signing prefixes and key handling, models
   against their formats, flags in their three places, another network's
@@ -40,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   money, from reading success off `TransactionResult` to amounts as strings,
   flags through the constants, hex fields, secrets, the right network per type
   and multisign order, with the fix stated in terms of this API.
-- The `/release` skill for Claude Code prepares a release the way 2.5.0 and
+- The `/xrpl-php-release` skill for Claude Code prepares a release the way 2.5.0 and
   2.6.0 were made: changelog heading, the versions the agent skill and the
   plugin manifests carry, regenerated references, the checks, a release branch
   with its pull request, and the release notes in the house style. It never
@@ -63,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   prints the node version, the digests and what each section gained or lost,
   and never edits entries. A test holds its formatting to the committed file,
   so a run without a change in substance leaves the tree clean. The
-  `/sync-definitions` skill for Claude Code walks through the rest: verifying
+  `/xrpl-php-sync-definitions` skill for Claude Code walks through the rest: verifying
   new entries against the rippled tag, regenerating the references, updating
   the parity test and the changelog.
 - The `xrpl-standards` agent skill under `.claude/skills/`: every XLS

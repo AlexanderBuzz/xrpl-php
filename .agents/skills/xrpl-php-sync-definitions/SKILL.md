@@ -1,5 +1,5 @@
 ---
-name: sync-definitions
+name: xrpl-php-sync-definitions
 description: Refresh the bundled definitions.json from a rippled node's server_definitions, then bring the generated references, the parity test and the changelog in line. Use when rippled releases a new version or the user asks to sync, update or check the definitions.
 disable-model-invocation: true
 ---

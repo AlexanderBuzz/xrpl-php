@@ -145,7 +145,7 @@ final class SkillReferencesTest extends TestCase
     {
         $root = realpath(__DIR__ . '/../..');
         $this->assertNotFalse($root);
-        $files = glob($root . '/.agents/skills/{sync-definitions,release,xrpl-review}/{SKILL.md,prompts/*.md}', GLOB_BRACE);
+        $files = glob($root . '/.agents/skills/{xrpl-php-sync-definitions,xrpl-php-release,xrpl-php-review}/{SKILL.md,prompts/*.md}', GLOB_BRACE);
         $this->assertNotFalse($files);
         $this->assertNotSame([], $files);
 

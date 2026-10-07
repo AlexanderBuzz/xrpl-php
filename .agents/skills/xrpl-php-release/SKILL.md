@@ -1,12 +1,12 @@
 ---
-name: release
-description: Prepare a release of hardcastle/xrpl_php - changelog heading, skill version, regenerated references, checks, release branch, pull request and the release notes - without merging or tagging. Use as /release <version>, e.g. /release 2.7.0.
+name: xrpl-php-release
+description: Prepare a release of hardcastle/xrpl_php - changelog heading, skill version, regenerated references, checks, release branch, pull request and the release notes - without merging or tagging. Use as /xrpl-php-release <version>, e.g. /release 2.7.0.
 disable-model-invocation: true
 ---
 
 # Prepare a release
 
-`/release <version>` turns the `[Unreleased]` block into the release and gets everything that carries the version in line. It commits on a release branch, pushes it and opens the pull request for review. **It never merges, tags or pushes to `main`**; the maintainer merges the PR and creates the GitHub release with the notes this skill writes.
+`/xrpl-php-release <version>` turns the `[Unreleased]` block into the release and gets everything that carries the version in line. It commits on a release branch, pushes it and opens the pull request for review. **It never merges, tags or pushes to `main`**; the maintainer merges the PR and creates the GitHub release with the notes this skill writes.
 
 The argument is the version, `MAJOR.MINOR.PATCH`. Without one, stop and ask.
 
