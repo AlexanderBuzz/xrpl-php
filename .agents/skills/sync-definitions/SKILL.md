@@ -33,7 +33,7 @@ https://raw.githubusercontent.com/XRPLF/rippled/<tag>/include/xrpl/protocol/TxFl
 https://raw.githubusercontent.com/XRPLF/rippled/<tag>/include/xrpl/protocol/LedgerFormats.h
 ```
 
-For the specification behind a new transaction or ledger entry, load the `xrpl-standards` skill (`.claude/skills/xrpl-standards/SKILL.md`) and read the XLS file its `references/INDEX.md` names.
+For the specification behind a new transaction or ledger entry, load the `xrpl-standards` skill (`.agents/skills/xrpl-standards/SKILL.md`) and read the XLS file its `references/INDEX.md` names.
 
 Hook fields (`Hook*`, `EmitGeneration`, `EmittedTxn`) and `tecHOOK_REJECTED` belong to Xahau and live only in `src/Hooks/hooksDefinitions.json`; if the node ever reports one, that is a Xahau node, not the XRP Ledger.
 

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- The repository's own skills live under `.agents/skills/`, the directory
+  Codex, Cursor, Gemini CLI, GitHub Copilot and most other agents read, with
+  `.claude/skills/` symlinking to them for Claude Code. One copy, every agent.
+
 ### Added
 - A Testnet integration workflow: the tests in the `integration` and
   `integration-slow` groups run after every push to `main` and on request,
