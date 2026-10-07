@@ -208,7 +208,7 @@ $client = new JsonRpcClient('https://xahau.network', null, null, 3.0, $definitio
 $wallet = Wallet::fromSeed($seed, $definitions);
 ```
 
-`Definitions::getInstance()` is the default; it exposes `getTransactionFlags($type)`, `getAccountSetFlags()` and `getLedgerEntryFlags($type)`. The Xahau transaction types shipped under `Hardcastle\XRPL_PHP\Hooks\...` are for Xahau only; they move to `hardcastle/xahau_php` in 3.0.0.
+`Definitions::getInstance()` is the default; it exposes `getTransactionFlags($type)`, `getAccountSetFlags()` and `getLedgerEntryFlags($type)`. Xahau is served by `hardcastle/xahau_php`, which injects its definitions this way and adds the Xahau-only types and a client; this library carries nothing of Xahau since 3.0.0.
 
 ## 10. The objects behind the client
 
@@ -225,7 +225,7 @@ When asked to review application code built on `hardcastle/xrpl_php`, check thes
 5. **Responses are checked.** `syncRequest()` may return `ErrorResponse`; `getResult()` on it does not exist. Look for `instanceof ErrorResponse` or an equivalent guard before reading a result.
 6. **Hex fields are hex.** `URI`, `MemoData`, `MemoType`, `Domain`, `MPTokenMetadata`, `CredentialType`, `PublicKey`, `Signature` carry hex (`Utilities::convertStringToHex()` or `bin2hex()`), never the raw string.
 7. **No secret leaves the process.** A seed or private key in a log, an exception message, a response, a fixture committed to the repository, or a `channel_authorize` call is a defect; `signPaymentChannelClaim()` exists so the secret stays local. Seeds come from configuration (`getenv()`), never from a literal.
-8. **The right network for the type.** `SetHook`, `Invoke`, `URIToken*` and the other `Hardcastle\XRPL_PHP\Hooks` types are Xahau only; `XChain*`, `DID*`, `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*` must not be sent to Xahau through this package. `Batch` cannot be signed by this library; code that builds one is broken.
+8. **The right network for the type.** This package is the XRP Ledger's; Xahau transactions (`SetHook`, `Invoke`, `URIToken*`, `Remit`) need `hardcastle/xahau_php`, and code that sends an XRP Ledger-only type such as `XChain*`, `DID*`, `Oracle*`, `MPToken*`, `Credential*` or `PermissionedDomain*` to a Xahau node through this package encodes it under another type's ordinal, without an error. `Batch` cannot be signed by this library; code that builds one is broken.
 9. **Multisign order.** `Signers` sorted by the numeric value of `Account`, `SigningPubKey` empty, fee autofilled with `signersCount`.
 10. **Units.** `TransferFee` is 1/1000 of a percent on MPT issuances and 1/100,000 on NFTs; `TradingFee` is 1/100,000; time fields are ripple epoch seconds (Unix time minus 946684800), not Unix time.
 11. **Testnet assumptions in production code.** A hard-coded Testnet URL or faucet call, or a seed from a tutorial, in code meant for Mainnet.
@@ -252,4 +252,4 @@ Report each finding with file and line, what goes wrong on the ledger, and the f
 - **`Batch` and `DelegateSet`.** The models decode but the library cannot sign a Batch (V1.1 rules); do not build one with it.
 - **`syncRequest()` may return `ErrorResponse`.** Check `instanceof` before `getResult()`.
 - **Stripping fields the SDK does not know.** rippled adds fields and result variants over time; pass responses through as arrays and read what you need rather than validating them against a fixed shape.
-- **Xahau types on the XRP Ledger.** `SetHook`, `Invoke`, `URIToken*` etc. are Xahau; and `XChain*`, `DID*`, `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*` must not be sent to Xahau through this package.
+- **Xahau through this package.** Since 3.0.0 it has no Xahau types and no Xahau definitions; use `hardcastle/xahau_php`. Sending an XRP Ledger-only type to a Xahau node through this package encodes it under another type's ordinal, without an error.

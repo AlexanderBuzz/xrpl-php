@@ -1,6 +1,6 @@
 # PHP XRPL
 
-PHP SDK / Client Library to interact with the XRP Ledger and the Xahau Network. It offers all the functionality available in the JavaScript 
+PHP SDK / Client Library to interact with the XRP Ledger. It offers all the functionality available in the JavaScript 
 and Java Versions emphasizing robustness and code readability for those interested in looking under the 
 hood and getting into the nitty-gritty of XRPL development.
 
@@ -188,37 +188,17 @@ $balances = $client->getBalances($address);
 The functions in the `Hardcastle\XRPL_PHP\Sugar` namespace do the same and keep
 working, but they are deprecated as of 2.2.0 and delegate to these classes.
 
-## Xahau support
+## Xahau
 
-The library ships the Xahau transaction types alongside the XRP Ledger ones, but
-the two networks have drifted apart: Xahau kept its URIToken types on the
-ordinals 45–49 and moved everything the XRP Ledger added afterwards further up.
-`MPTokenIssuanceCreate`, for instance, is 54 on the XRP Ledger and 63 on Xahau.
-A single set of definitions cannot be correct for both networks, and this
-library resolves the overlap in favour of the XRP Ledger.
+Xahau is served by its own package, [`hardcastle/xahau_php`](https://github.com/AlexanderBuzz/xahau-php),
+which builds on this one: it brings Xahau's definitions, the fifteen Xahau-only
+transaction types and a client that fills in `NetworkID` and asks the node what
+a transaction costs. Until 3.0.0 this library carried the Xahau types itself and
+merged a Xahau definitions file into its own; the two networks reuse ordinals
+for different things, so one shared set was wrong for one of them. See
+`MIGRATION.md` if you used them from here.
 
-**Works on Xahau:**
-
-- All classic transaction types — `Payment`, `AccountSet`, `TrustSet`,
-  `OfferCreate`/`OfferCancel`, `Escrow*`, `Check*`, `PaymentChannel*`,
-  `NFToken*`, `AMM*`, `Clawback`, `TicketCreate`, `SignerListSet`,
-  `DepositPreauth`, `AccountDelete`, `SetRegularKey`. These carry the same
-  ordinal on both networks.
-- The Xahau-specific types — `SetHook`, `Invoke`, `Import`, `ClaimReward`,
-  `GenesisMint`, `UNLReport`, `URIToken*`, `TicketCancel`.
-
-**Does not work on Xahau yet:**
-
-- Every type the XRP Ledger added from ordinal 41 onwards: `XChain*`, `DID*`,
-  `Oracle*`, `MPToken*`, `Credential*`, `PermissionedDomain*`, `NFTokenModify`.
-  These encode with the XRP Ledger ordinal, which means a different transaction
-  type on Xahau — without an error. **Do not submit them to Xahau.**
-- Decoding is ambiguous for the five shared ordinals: a Xahau `URITokenMint`
-  decodes as `XChainAddClaimAttestation`, and the Xahau `Blob` field decodes as
-  `DIDDocument`. The bytes are correct, only the names are read through the
-  XRP Ledger definitions.
-- `hooksDefinitions.json` predates the current Xahau release and is missing
-  `Remit`, `SetRemarks`, `Cron` and `CronSet`.
+## Other networks
 
 ### Using your own definitions
 
@@ -279,8 +259,7 @@ The replacement is used wherever that object is reached, including
 the client. The same works for `getSubmitter()`, `getAccountReader()`,
 `getOrderbookReader()`, `getFeeCalculator()` and `getFaucet()`.
 
-A dedicated Xahau package building on this is planned; the Xahau types will then
-move out of this library.
+`hardcastle/xahau_php` is built exactly this way.
 
 ## Development
 
