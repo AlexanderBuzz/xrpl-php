@@ -35,6 +35,6 @@ and the XRP Ledger developers.
 This directory is not part of the Composer package (`.gitattributes`); it is here
 for agents working on this repository. Check it against upstream with
 
-    python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
+    python3 .agents/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
 
 and refresh it by running the same command without `--dry-run`.

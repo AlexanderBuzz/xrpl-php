@@ -323,14 +323,16 @@ php scripts/sync-definitions.php --check    # report only; exits 1 when the file
 
 Then `php skills/build.php` regenerates the agent skill's references, and the
 parity test tells you what else the new version touches. In Claude Code the
-`/sync-definitions` skill walks through the whole procedure.
+`/xrpl-php-sync-definitions` skill walks through the whole procedure.
 
 ### Working with an agent
 
-`.claude/skills/` holds the skills Claude Code loads in this repository:
-`sync-definitions` (see above), `release` (prepares a release branch, pull
+`.agents/skills/` holds the skills for working on this repository, in the
+directory Codex, Cursor, Gemini CLI, Copilot and most other agents read;
+`.claude/skills/` symlinks to it for Claude Code. They are:
+`xrpl-php-sync-definitions` (see above), `xrpl-php-release` (prepares a release branch, pull
 request and release notes; merging and tagging stay with the maintainer),
-`xrpl-review` (audits a branch against the XRPL protocol checklist and the
+`xrpl-php-review` (audits a branch against the XRPL protocol checklist and the
 repository's conventions, findings only) and `xrpl-standards`, every XLS specification as
 a reference file with an index by transaction and ledger object name. The
 specifications are a verbatim copy from
@@ -339,7 +341,7 @@ that nothing has to be fetched at install time; a weekly workflow opens a pull
 request when upstream changes. To check by hand:
 
 ```console
-python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
+python3 .agents/skills/xrpl-standards/scripts/sync-xls-standards.py --dry-run
 ```
 
 None of this is in the Composer package.

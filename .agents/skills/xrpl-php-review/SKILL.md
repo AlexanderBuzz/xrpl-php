@@ -1,6 +1,6 @@
 ---
-name: xrpl-review
-description: Review the current branch's changes to hardcastle/xrpl_php against the XRPL protocol checklist (definitions, codec, signing, models, flags, Xahau overlap) and the repository's conventions. Use as /xrpl-review before opening a pull request, after fetching a branch to audit it, or when the user asks for a protocol-level review. Not a replacement for the built-in /code-review; it is the rule-based audit for this library.
+name: xrpl-php-review
+description: Review the current branch's changes to hardcastle/xrpl_php against the XRPL protocol checklist (definitions, codec, signing, models, flags, Xahau overlap) and the repository's conventions. Use as /xrpl-php-review before opening a pull request, after fetching a branch to audit it, or when the user asks for a protocol-level review. Not a replacement for the built-in /code-review; it is the rule-based audit for this library.
 disable-model-invocation: true
 ---
 
@@ -29,7 +29,7 @@ Ask (`AskUserQuestion`) only when it is ambiguous: a dirty tree (committed only,
 | `models` | `src/Models/Transaction/**`, `src/Models/Ledger/Flags/**`, `src/Models/Common/**` |
 | `client` | `src/Client/**`, `src/Sugar/**`, `src/Models/**` (request/response classes) |
 | `networks` | `src/Hooks/**`, `src/Core/RippleBinaryCodec/Definitions/Definitions.php` (another network's definitions, injected or merged; Xahau is the case in the tree today) |
-| `skill` | `skills/**`, `.claude/**`, `.claude-plugin/**` |
+| `skill` | `skills/**`, `.agents/**`, `.claude/**`, `.claude-plugin/**` |
 | `tests`, `docs`, `other` | the rest |
 
 ## 3. Run the guards first

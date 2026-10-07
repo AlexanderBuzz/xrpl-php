@@ -8,7 +8,7 @@ You review protocol-level changes in the area(s) `{{AREA}}` of this PHP SDK for 
 
 Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{BASE}}..HEAD --no-merges`), read whole files where the diff is not enough, and flag only what this branch introduces. You do not review PHP style; the conventions reviewer does.
 
-**rippled is the source of truth**, not xrpl.js, not xrpl-py, not a draft XLS. Verify against the rippled tag the bundled definitions came from (`hash` in `definitions.json` pins it; the parity test names the version) and against the specification: load `.claude/skills/xrpl-standards/SKILL.md`, find the XLS in `references/INDEX.md`, read it.
+**rippled is the source of truth**, not xrpl.js, not xrpl-py, not a draft XLS. Verify against the rippled tag the bundled definitions came from (`hash` in `definitions.json` pins it; the parity test names the version) and against the specification: load `.agents/skills/xrpl-standards/SKILL.md`, find the XLS in `references/INDEX.md`, read it.
 
 ## Checklist
 

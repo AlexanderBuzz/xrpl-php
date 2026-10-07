@@ -137,7 +137,7 @@ final class SkillReferencesTest extends TestCase
     }
 
     /**
-     * The internal skills under .claude/skills name files, directories and
+     * The internal skills under .agents/skills name files, directories and
      * test classes of this repository; every one of them has to exist, or the
      * procedure sends an agent to a place that is not there.
      */
@@ -145,14 +145,14 @@ final class SkillReferencesTest extends TestCase
     {
         $root = realpath(__DIR__ . '/../..');
         $this->assertNotFalse($root);
-        $files = glob($root . '/.claude/skills/{sync-definitions,release,xrpl-review}/{SKILL.md,prompts/*.md}', GLOB_BRACE);
+        $files = glob($root . '/.agents/skills/{xrpl-php-sync-definitions,xrpl-php-release,xrpl-php-review}/{SKILL.md,prompts/*.md}', GLOB_BRACE);
         $this->assertNotFalse($files);
         $this->assertNotSame([], $files);
 
         $checked = 0;
         foreach ($files as $file) {
             $text = (string) file_get_contents($file);
-            preg_match_all('/`((?:src|tests|skills|scripts|examples|docs|\.claude|\.claude-plugin)\/[A-Za-z0-9_.\/-]+?)(?:\*\*|\*)?`/', $text, $paths);
+            preg_match_all('/`((?:src|tests|skills|scripts|examples|docs|\\.agents|\.claude|\.claude-plugin)\/[A-Za-z0-9_.\/-]+?)(?:\*\*|\*)?`/', $text, $paths);
             foreach (array_unique($paths[1]) as $path) {
                 $path = rtrim($path, '/');
                 $this->assertTrue(

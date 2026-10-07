@@ -16,6 +16,7 @@ docker-compose.linux.yml export-ignore
 docker-compose.mac.yml export-ignore
 
 # Maintainer tooling and agent skills: installed from git or a marketplace, not from the Composer package
+.agents/ export-ignore
 .claude/ export-ignore
 skills/ export-ignore
 scripts/ export-ignore

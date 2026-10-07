@@ -1,6 +1,6 @@
 name: Sync XRPL Standards references
 
-# The XLS specifications under .claude/skills/xrpl-standards/references are a
+# The XLS specifications under .agents/skills/xrpl-standards/references are a
 # verbatim copy from XRPLF/XRPL-Standards. This checks them against upstream
 # once a week and opens a pull request with the changes, so the copy stays
 # current without anything being pulled at install time.
@@ -23,12 +23,12 @@ jobs:
       - name: Sync references from XRPLF/XRPL-Standards
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 .claude/skills/xrpl-standards/scripts/sync-xls-standards.py
+        run: python3 .agents/skills/xrpl-standards/scripts/sync-xls-standards.py
 
       - name: Summarize changes
         id: changes
         run: |
-          if [ -z "$(git status --porcelain -- .claude/skills/xrpl-standards/references)" ]; then
+          if [ -z "$(git status --porcelain -- .agents/skills/xrpl-standards/references)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "References are current."
             exit 0
@@ -36,8 +36,8 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
           {
             echo "summary<<EOF"
-            git diff --stat -- .claude/skills/xrpl-standards/references
-            git status --porcelain -- .claude/skills/xrpl-standards/references | grep '^??' | sed 's/^?? /new: /' || true
+            git diff --stat -- .agents/skills/xrpl-standards/references
+            git status --porcelain -- .agents/skills/xrpl-standards/references | grep '^??' | sed 's/^?? /new: /' || true
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -50,10 +50,10 @@ jobs:
           commit-message: "docs: sync the XRPL Standards references"
           title: "docs: sync the XRPL Standards references"
           body: |
-            Weekly check of `.claude/skills/xrpl-standards/references` against
+            Weekly check of `.agents/skills/xrpl-standards/references` against
             https://github.com/XRPLF/XRPL-Standards found changes. Review the diff
             for what changed in the specifications the SDK implements.
 
             ${{ steps.changes.outputs.summary }}
-          add-paths: .claude/skills/xrpl-standards/references
+          add-paths: .agents/skills/xrpl-standards/references
           labels: documentation
