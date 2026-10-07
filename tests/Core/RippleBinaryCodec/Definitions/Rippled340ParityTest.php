@@ -15,9 +15,9 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader;
  * The file is what a 3.4.0 node reports through server_definitions, taken
  * verbatim, with the node's digest in "hash". The counts and the digest pin
  * the whole inventory; the named entries are the ones recent releases added,
- * renamed or dropped, so a regression names the culprit. Where a check has
- * to see the bundled file alone, without the Xahau entries getInstance()
- * merges in, it reads the file.
+ * renamed or dropped, so a regression names the culprit. The default instance
+ * is the bundled file and nothing else; one check reads the file directly to
+ * say so.
  */
 final class Rippled340ParityTest extends TestCase
 {
@@ -162,30 +162,27 @@ final class Rippled340ParityTest extends TestCase
     }
 
     /**
-     * The Xahau Hook fields and tecHOOK_REJECTED are not XRP Ledger
-     * definitions. They used to sit in the bundled file as a leftover of the
-     * early xrpl.js definitions; hooksDefinitions.json carries all of them, so
-     * the merged definitions still know every one. HookOn is the field where
-     * that matters: the leftover (UInt64, nth 16) shadowed Xahau's definition
-     * (Hash256, nth 20), so a SetHook encoded HookOn wrongly.
+     * Nothing of another network is in the bundled file or in the default
+     * instance. Until 3.0.0 the Xahau definitions were merged in and the
+     * Hook fields had once sat in the file itself; both are gone, Xahau is a
+     * set a caller injects (hardcastle/xahau_php ships it), and the default
+     * instance is the file and nothing else.
      */
-    public function testHookDefinitionsComeFromXahauOnly(): void
+    public function testTheDefaultInstanceIsTheBundledFileAlone(): void
     {
         $raw = self::bundled();
         $names = array_column($raw['FIELDS'], 0);
 
-        $this->assertNotContains('HookOn', $names);
-        $this->assertNotContains('Hooks', $names);
-        $this->assertNotContains('EmittedTxn', $names);
+        foreach (['HookOn', 'Hooks', 'EmittedTxn', 'HookParameters'] as $hookField) {
+            $this->assertNotContains($hookField, $names);
+        }
         $this->assertArrayNotHasKey('tecHOOK_REJECTED', $raw['TRANSACTION_RESULTS']);
+        $this->assertArrayNotHasKey('URITokenMint', $raw['TRANSACTION_TYPES']);
 
-        $merged = Definitions::getInstance();
-        $this->assertEquals(
-            new FieldHeader($raw['TYPES']['Hash256'], 20),
-            $merged->getFieldHeaderFromName('HookOn'),
-            'HookOn has to be the Xahau field, not the leftover'
-        );
-        $this->assertEquals(153, $merged->mapSpecificFieldFromValue('TransactionResult', 'tecHOOK_REJECTED'));
+        $default = Definitions::getInstance();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Field HookOn not found');
+        $default->getFieldHeaderFromName('HookOn');
     }
 
     /**
