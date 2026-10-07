@@ -5,17 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
-
-### Changed
-- The repository's own skills live under `.agents/skills/`, the directory
-  Codex, Cursor, Gemini CLI, GitHub Copilot and most other agents read, with
-  `.claude/skills/` symlinking to them for Claude Code. One copy, every agent.
-  They carry the package's name as a prefix, `xrpl-php-release`,
-  `xrpl-php-sync-definitions` and `xrpl-php-review`, so they cannot collide
-  with a built-in command, a user's own skill or another project's.
+## [2.7.0] - 2026-10-07
 
 ### Added
+- An Agent Skill under `skills/xrpl-php/`, installable into Claude Code, Codex
+  CLI, Cursor and other agents that follow the Agent Skills standard, and as a
+  Claude Code plugin from this repository. `SKILL.md` carries the core
+  patterns; the references list every transaction model with its fields,
+  every flag constant and every request class, generated from the code by
+  `skills/build.php`, plus recipes and troubleshooting. A test fails when a
+  generated file is out of date, when the hand-written files name something
+  the code does not have, or when the skill claims another SDK version than
+  the changelog.
+- The agent skill has a section for reviewing application code built on this
+  SDK: eleven checks that run without an error and fail on the ledger or with
+  money, from reading success off `TransactionResult` to amounts as strings,
+  flags through the constants, hex fields, secrets, the right network per type
+  and multisign order, with the fix stated in terms of this API.
+- `scripts/sync-definitions.php` refreshes `definitions.json` from a node's
+  `server_definitions` (`--node` for another node, `--check` to only report),
+  prints the node version, the digests and what each section gained or lost,
+  and never edits entries. A test holds its formatting to the committed file,
+  so a run without a change in substance leaves the tree clean. The
+  `/xrpl-php-sync-definitions` skill for Claude Code walks through the rest: verifying
+  new entries against the rippled tag, regenerating the references, updating
+  the parity test and the changelog.
+- The `xrpl-standards` agent skill under `.agents/skills/`: every XLS
+  specification as a reference file, verbatim from XRPLF/XRPL-Standards, with
+  Peersyst's index by transaction and ledger object name and its sync script.
+  Committed rather than fetched, so nothing runs at install time; a weekly
+  workflow opens a pull request when a specification changes upstream. The
+  directory, `skills/` and `scripts/` are excluded from the Composer package.
+- The `/xrpl-php-review` skill for Claude Code audits a branch's own changes
+  against a protocol checklist (definitions provenance and ordinals, codec
+  round trips and amount encoding, signing prefixes and key handling, models
+  against their formats, flags in their three places, another network's
+  definitions kept apart from the XRP Ledger's with Xahau as the case in the
+  tree) and the repository's conventions, running the guard tests first and
+  reporting findings without fixing anything. The checklist draws on the
+  review guidelines of xrpl.js and xrpl-go, adapted to this code.
+- The `/xrpl-php-release` skill for Claude Code prepares a release the way 2.5.0 and
+  2.6.0 were made: changelog heading, the versions the agent skill and the
+  plugin manifests carry, regenerated references, the checks, a release branch
+  with its pull request, and the release notes in the house style. It never
+  merges or tags. A test now holds the plugin manifests to the skill's version.
 - A Testnet integration workflow: the tests in the `integration` and
   `integration-slow` groups run after every push to `main` and on request,
   one run at a time, never on pull requests. `BasicIntegrationTest` and
@@ -30,51 +63,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   repository from force-pushing, pushing to `main`, hard-resetting, deleting
   branches, tagging, creating releases, merging pull requests, staging
   everything at once instead of named files, or reading credential files.
-- The `/xrpl-php-review` skill for Claude Code audits a branch's own changes
-  against a protocol checklist (definitions provenance and ordinals, codec
-  round trips and amount encoding, signing prefixes and key handling, models
-  against their formats, flags in their three places, another network's
-  definitions kept apart from the XRP Ledger's with Xahau as the case in the
-  tree) and the repository's conventions, running the guard tests first and
-  reporting findings without fixing anything. The checklist draws on the
-  review guidelines of xrpl.js and xrpl-go, adapted to this code.
-- The agent skill has a section for reviewing application code built on this
-  SDK: eleven checks that run without an error and fail on the ledger or with
-  money, from reading success off `TransactionResult` to amounts as strings,
-  flags through the constants, hex fields, secrets, the right network per type
-  and multisign order, with the fix stated in terms of this API.
-- The `/xrpl-php-release` skill for Claude Code prepares a release the way 2.5.0 and
-  2.6.0 were made: changelog heading, the versions the agent skill and the
-  plugin manifests carry, regenerated references, the checks, a release branch
-  with its pull request, and the release notes in the house style. It never
-  merges or tags. A test now holds the plugin manifests to the skill's version.
-- An Agent Skill under `skills/xrpl-php/`, installable into Claude Code, Codex
-  CLI, Cursor and other agents that follow the Agent Skills standard, and as a
-  Claude Code plugin from this repository. `SKILL.md` carries the core
-  patterns; the references list every transaction model with its fields,
-  every flag constant and every request class, generated from the code by
-  `skills/build.php`, plus recipes and troubleshooting. A test fails when a
-  generated file is out of date, when the hand-written files name something
-  the code does not have, or when the skill claims another SDK version than
-  the changelog.
 
-## [Unreleased]
-
-### Added
-- `scripts/sync-definitions.php` refreshes `definitions.json` from a node's
-  `server_definitions` (`--node` for another node, `--check` to only report),
-  prints the node version, the digests and what each section gained or lost,
-  and never edits entries. A test holds its formatting to the committed file,
-  so a run without a change in substance leaves the tree clean. The
-  `/xrpl-php-sync-definitions` skill for Claude Code walks through the rest: verifying
-  new entries against the rippled tag, regenerating the references, updating
-  the parity test and the changelog.
-- The `xrpl-standards` agent skill under `.claude/skills/`: every XLS
-  specification as a reference file, verbatim from XRPLF/XRPL-Standards, with
-  Peersyst's index by transaction and ledger object name and its sync script.
-  Committed rather than fetched, so nothing runs at install time; a weekly
-  workflow opens a pull request when a specification changes upstream. The
-  directory, `skills/` and `scripts/` are excluded from the Composer package.
+### Changed
+- The repository's own skills live under `.agents/skills/`, the directory
+  Codex, Cursor, Gemini CLI, GitHub Copilot and most other agents read, with
+  `.claude/skills/` symlinking to them for Claude Code. One copy, every agent.
+  They carry the package's name as a prefix, `xrpl-php-release`,
+  `xrpl-php-sync-definitions` and `xrpl-php-review`, so they cannot collide
+  with a built-in command, a user's own skill or another project's.
 
 ## [2.6.0] - 2026-09-24
 
