@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Removed (breaking)
+- **The Xahau transaction types and definitions.** `src/Hooks/`, with the
+  twelve model classes under `Hardcastle\XRPL_PHP\Hooks\...` and
+  `hooksDefinitions.json`, is gone, and `Definitions::getInstance()` no longer
+  merges a Xahau set into the XRP Ledger's: the default instance is the
+  bundled `definitions.json` and nothing else. The two networks reuse
+  ordinals for different things, so one shared set was wrong for one of
+  them; the resolution in favour of the XRP Ledger made every Xahau-only
+  ordinal decode under an XRP Ledger name. Xahau is served by
+  `hardcastle/xahau_php`, which injects its own definitions through the
+  seam this library kept (`Definitions::fromFile()`, the `Definitions`
+  parameter on `BinaryCodec`, `Wallet` and `JsonRpcClient`, the
+  replaceable collaborators) and carries all fifteen Xahau-only types, the
+  eleven from here plus four that had no model anywhere. See `MIGRATION.md`.
+- The `xahau_mainnet` and `xahau_testnet` entries of `Networks`, and the
+  retired `hooks-testnet-v2` faucet of `DefaultFaucets`. `XahauClient` in
+  `hardcastle/xahau_php` resolves the Xahau short names itself.
+
+This removal is the whole reason for the major. Everything else that was
+public in 2.7.0 is unchanged; the backward-compatibility check on this
+release's pull request lists exactly the removed classes and entries.
+
 ## [2.7.0] - 2026-10-07
 
 ### Added

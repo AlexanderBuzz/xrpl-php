@@ -28,7 +28,7 @@ Ask (`AskUserQuestion`) only when it is ambiguous: a dirty tree (committed only,
 | `signing` | `src/Wallet/**`, `src/Core/RippleKeyPairs/**`, `src/Utils/Hashes/**` |
 | `models` | `src/Models/Transaction/**`, `src/Models/Ledger/Flags/**`, `src/Models/Common/**` |
 | `client` | `src/Client/**`, `src/Sugar/**`, `src/Models/**` (request/response classes) |
-| `networks` | `src/Hooks/**`, `src/Core/RippleBinaryCodec/Definitions/Definitions.php` (another network's definitions, injected or merged; Xahau is the case in the tree today) |
+| `networks` | `src/Core/RippleBinaryCodec/Definitions/Definitions.php`, `tests/Core/RippleBinaryCodec/Definitions/InjectableDefinitionsTest.php` (another network's definitions, injected; Xahau's come from `hardcastle/xahau_php`) |
 | `skill` | `skills/**`, `.agents/**`, `.claude/**`, `.claude-plugin/**` |
 | `tests`, `docs`, `other` | the rest |
 
@@ -37,7 +37,7 @@ Ask (`AskUserQuestion`) only when it is ambiguous: a dirty tree (committed only,
 They are cheap, authoritative, and catch most cross-file drift before any reading:
 
 ```bash
-vendor/bin/phpunit --exclude-group integration --filter 'Rippled340ParityTest|TransactionFormatsTest|FlagConstantsTest|DefinitionsMergeTest|SkillReferencesTest|SyncDefinitionsTest|CodecFixturesTest|TransactionRoundtripTest'
+vendor/bin/phpunit --exclude-group integration --filter 'Rippled340ParityTest|TransactionFormatsTest|FlagConstantsTest|InjectableDefinitionsTest|SkillReferencesTest|SyncDefinitionsTest|CodecFixturesTest|TransactionRoundtripTest'
 vendor/bin/psalm --config=psalm.xml --no-cache
 ```
 

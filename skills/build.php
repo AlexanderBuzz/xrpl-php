@@ -174,11 +174,9 @@ function transactions(): string
         . "pseudo-transaction only validators send. Use a plain array if you need one.\n\n"
         . implode(', ', array_map(fn(string $t): string => "`{$t}`", $withoutModel)) . "\n";
 
-    $hooks = classesIn(SRC . '/Hooks/Models/Transaction/TransactionTypes', 'Hardcastle\\XRPL_PHP\\Hooks\\Models\\Transaction\\TransactionTypes');
-    $out .= "\n## Xahau types\n\nShipped under `Hardcastle\\XRPL_PHP\\Hooks\\Models\\Transaction\\TransactionTypes` "
-        . "for the Xahau network, not the XRP Ledger. Do not submit them to the XRP Ledger. "
-        . "They move to the `hardcastle/xahau_php` package in 3.0.0.\n\n"
-        . implode(', ', array_map(fn(string $c): string => '`' . shortName($c) . '`', $hooks)) . "\n";
+    $out .= "\n## Xahau\n\nThe Xahau transaction types (`SetHook`, `Invoke`, `URIToken*`, `Remit`, ...) "
+        . "are in the `hardcastle/xahau_php` package, together with Xahau's own definitions; "
+        . "this library has none of them since 3.0.0.\n";
 
     return $out;
 }

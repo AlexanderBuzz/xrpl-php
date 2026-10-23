@@ -648,8 +648,6 @@ The codec encodes and decodes these (the definitions know them), but no model cl
 
 `ConfidentialMPTClawback`, `ConfidentialMPTConvert`, `ConfidentialMPTConvertBack`, `ConfidentialMPTMergeInbox`, `ConfidentialMPTSend`, `EnableAmendment`, `LedgerStateFix`, `LoanBrokerCoverClawback`, `LoanBrokerCoverDeposit`, `LoanBrokerCoverWithdraw`, `LoanBrokerDelete`, `LoanBrokerSet`, `LoanDelete`, `LoanManage`, `LoanPay`, `LoanSet`, `SetFee`, `SponsorshipSet`, `SponsorshipTransfer`, `UNLModify`, `VaultClawback`, `VaultCreate`, `VaultDelete`, `VaultDeposit`, `VaultSet`, `VaultWithdraw`
 
-## Xahau types
+## Xahau
 
-Shipped under `Hardcastle\XRPL_PHP\Hooks\Models\Transaction\TransactionTypes` for the Xahau network, not the XRP Ledger. Do not submit them to the XRP Ledger. They move to the `hardcastle/xahau_php` package in 3.0.0.
-
-`ClaimReward`, `GenesisMint`, `Import`, `Invoke`, `SetHook`, `TicketCancel`, `UNLReport`, `URITokenBurn`, `URITokenBuy`, `URITokenCancelSellOffer`, `URITokenCreateSellOffer`, `URITokenMint`
+The Xahau transaction types (`SetHook`, `Invoke`, `URIToken*`, `Remit`, ...) are in the `hardcastle/xahau_php` package, together with Xahau's own definitions; this library has none of them since 3.0.0.
