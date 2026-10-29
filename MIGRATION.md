@@ -1,8 +1,14 @@
 # Migrating to 3.0.0
 
 3.0.0 removes one thing: Xahau. Nothing else that was public in 2.7.0 changed,
-so for an application that talks to the XRP Ledger the migration is
-`composer update`.
+so for an application that talks to the XRP Ledger the migration is the
+version constraint: a `^2.x` constraint does not admit a major, so
+
+```console
+composer require hardcastle/xrpl_php:^3.0
+```
+
+and nothing in the code.
 
 ## If you used the Xahau types from this library
 
@@ -40,6 +46,8 @@ it sets off; and the testnet faucet, whose host this library could not infer.
 
 Nothing changes. `Definitions::fromFile()`, `fromArray()` and the
 `Definitions` parameter on `BinaryCodec`, `Wallet` and `JsonRpcClient` are the
-seam the Xahau package uses, and they stay. The only behaviour that moved is
-the default: `Definitions::getInstance()` is the bundled XRP Ledger file and
-nothing else, where it used to carry the Xahau entries on top.
+seam the Xahau package uses, and they stay, as does the environment variable
+`XRPL_PHP_DEFINITIONS_FILE_PATH`, which points the default instance at another
+file. The only behaviour that moved is the default: `Definitions::getInstance()`
+is the bundled XRP Ledger file (or the file the variable names) and nothing
+else, where it used to carry the Xahau entries on top.
