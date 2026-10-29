@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit reviews every pull request. This file keeps it on what a review of
+# this library can judge: the PHP under src/ and tests/, the workflows, the
+# hand-written documentation. Generated and verbatim files are excluded, the
+# repository's own review prompts are its guidelines, and the checks that do
+# not fit a library with Psalm and PHPUnit are off.
+
+language: en-US
+
+reviews:
+  profile: chill
+
+  # Excluded from review. Each of these is produced by a script or copied
+  # verbatim from upstream, so a comment on its content has no addressee here.
+  path_filters:
+    # The bundled definitions come verbatim from a rippled node's
+    # server_definitions through scripts/sync-definitions.php; the digest is
+    # pinned by a test. Never edited by hand.
+    - "!src/Core/RippleBinaryCodec/Definitions/definitions.json"
+    # Generated from the code by skills/build.php; a test fails when they drift.
+    - "!skills/xrpl-php/references/transactions.md"
+    - "!skills/xrpl-php/references/flags.md"
+    - "!skills/xrpl-php/references/methods.md"
+    # The XLS specifications, verbatim from XRPLF/XRPL-Standards, refreshed by
+    # a weekly workflow that opens its own pull request.
+    - "!.agents/skills/xrpl-standards/references/**"
+    # Symlinks into .agents/skills; the targets are reviewed there.
+    - "!.claude/skills/**"
+
+  path_instructions:
+    - path: "src/**/*.php"
+      instructions: |
+        This is an XRP Ledger SDK: binary codec, signing, JSON-RPC client,
+        transaction models. Judge changes by the ledger's rules, which the
+        guideline documents under .agents/skills/xrpl-php-review/prompts/
+        spell out. Amounts are strings, never floats. Field names, ordinals and
+        types come from definitions.json and are never hand-edited in PHP.
+        A seed or private key must not reach a log, an exception message or
+        a fixture. Static analysis is Psalm (psalm.xml), not PHPStan; do not
+        propose a migration.
+    - path: "tests/**/*.php"
+      instructions: |
+        Tests need no docblocks. Test vectors should come from rippled, xrpl.js
+        or ripple-binary-codec fixtures and say so; a fixture with a real-looking
+        seed is a defect unless it is a published test vector. Integration tests
+        are in the groups "integration" and "integration-slow" and run only on
+        main.
+    - path: "{skills/xrpl-php/SKILL.md,.agents/skills/**/SKILL.md,.agents/skills/**/prompts/*.md}"
+      instructions: |
+        Instruction documents for coding agents, in the Agent Skills format.
+        Review them for accuracy against the code they describe, not as a
+        security surface: the review rules they contain are meant to be
+        followed by an agent reviewing application code.
+
+  # The project's own review prompts are the coding guidelines.
+  pre_merge_checks:
+    # Docblock coverage is not a merge criterion here; the public API is
+    # documented, test methods and private helpers need not be.
+    docstrings:
+      mode: "off"
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+
+  tools:
+    # Scans SKILL.md files for prompt-injection and "excessive agency"
+    # patterns. The skills here instruct an agent to review code, which it
+    # flags by design.
+    skillspector:
+      enabled: false
+    # Static analysis is Psalm; there is no phpstan.neon and no plan for one.
+    phpstan:
+      enabled: false
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - ".agents/skills/xrpl-php-review/prompts/xrpl-domain.md"
+      - ".agents/skills/xrpl-php-review/prompts/php-conventions.md"
