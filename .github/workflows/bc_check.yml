@@ -1,11 +1,13 @@
 name: Backward compatibility
 
 # Compares the public API of the pull request with the last release tag,
-# using roave/backward-compatibility-check. A break fails the check; before
-# 3.0.0, which removes the Xahau types on purpose, every pull request has to
-# be clean. The tool is installed at a pinned version into a directory of its
-# own, so its dependencies never touch this package's. The tool itself needs
-# PHP 8.4 and ext-intl; the code it compares still declares PHP 8.2.
+# using roave/backward-compatibility-check. A break fails the check, unless
+# the pull request declares a major on purpose: a title with the Conventional
+# Commits marker "!:" (feat!: ..., refactor!: ...) still runs the comparison,
+# so the breaks are listed in the log, but it cannot fail the check. The tool
+# is installed at a pinned version into a directory of its own, so its
+# dependencies never touch this package's. The tool itself needs PHP 8.4 and
+# ext-intl; the code it compares still declares PHP 8.2.
 
 on:
   pull_request:
@@ -34,6 +36,7 @@ jobs:
           composer require --working-dir=/tmp/bc-check --no-interaction --no-progress roave/backward-compatibility-check:8.23.0
 
       - name: Compare the public API with the last release
+        continue-on-error: ${{ contains(github.event.pull_request.title, '!:') }}
         run: |
           FROM="$(git describe --tags --abbrev=0 origin/main)"
           echo "Comparing ${FROM} with ${GITHUB_HEAD_REF}"
