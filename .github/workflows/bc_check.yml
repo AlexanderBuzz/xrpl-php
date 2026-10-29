@@ -4,17 +4,23 @@ name: Backward compatibility
 # using roave/backward-compatibility-check. A break fails the check, unless
 # the pull request declares a major on purpose: a title with the Conventional
 # Commits marker "!:" (feat!: ..., refactor!: ...) still runs the comparison,
-# so the breaks are listed in the log, but it cannot fail the check. The tool
-# is installed at a pinned version into a directory of its own, so its
-# dependencies never touch this package's. The tool itself needs PHP 8.4 and
-# ext-intl; the code it compares still declares PHP 8.2.
+# so the breaks are listed in the log, but detected breaks cannot fail the
+# check. Only that outcome is tolerated (the tool exits with 3 for it); a tool
+# that crashes or cannot find a reference fails the check for every title.
+# The check also reruns when the title is edited, since the title is part of
+# the verdict. The tool is installed at a pinned version into a directory of
+# its own, so its dependencies never touch this package's. The tool itself
+# needs PHP 8.4 and ext-intl; the code it compares still declares PHP 8.2.
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   bc-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
 
     steps:
@@ -36,8 +42,17 @@ jobs:
           composer require --working-dir=/tmp/bc-check --no-interaction --no-progress roave/backward-compatibility-check:8.23.0
 
       - name: Compare the public API with the last release
-        continue-on-error: ${{ contains(github.event.pull_request.title, '!:') }}
+        env:
+          DECLARED_MAJOR: ${{ contains(github.event.pull_request.title, '!:') }}
         run: |
           FROM="$(git describe --tags --abbrev=0 origin/main)"
           echo "Comparing ${FROM} with ${GITHUB_HEAD_REF}"
+          set +e
           /tmp/bc-check/vendor/bin/roave-backward-compatibility-check --from="${FROM}" --to="${GITHUB_SHA}" --format=github-actions
+          STATUS=$?
+          set -e
+          if [ "${STATUS}" -eq 3 ] && [ "${DECLARED_MAJOR}" = "true" ]; then
+            echo "::notice::Breaks detected and expected: the title declares a major."
+            exit 0
+          fi
+          exit "${STATUS}"
