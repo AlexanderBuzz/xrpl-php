@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/XRPLF/rippled/<tag>/include/xrpl/protocol/Ledg
 
 For the specification behind a new transaction or ledger entry, load the `xrpl-standards` skill (`.agents/skills/xrpl-standards/SKILL.md`) and read the XLS file its `references/INDEX.md` names.
 
-Hook fields (`Hook*`, `EmitGeneration`, `EmittedTxn`) and `tecHOOK_REJECTED` belong to Xahau and live only in `src/Hooks/hooksDefinitions.json`; if the node ever reports one, that is a Xahau node, not the XRP Ledger.
+Hook fields (`Hook*`, `EmitGeneration`, `EmittedTxn`) and `tecHOOK_REJECTED` belong to Xahau and have no place in this package since 3.0.0; if the node reports one, that is a Xahau node, not the XRP Ledger, and the sync has to be run against an XRP Ledger node instead.
 
 ## 3. Regenerate and test
 
@@ -49,7 +49,7 @@ Expected fallout and what to do with it:
 
 - `Rippled<version>ParityTest` fails on the digest and the counts. Rename the class and file to the new rippled version if it changed, set the digest and counts, add cases for the new types, fields and result codes (one per family), and keep the guards for entries that must stay out (development-branch fields, Hook fields, `MutableFlags`, `tecNO_DELEGATE_PERMISSION`).
 - `TransactionFormatsTest` fails for a model whose format gained a field: add the field to the model with the codec class its type calls for.
-- `FlagConstantsTest` fails when a flag table gained an entry: add the constant to the flag class with a one-line docblock, and a class for a new type. `DefinitionsMergeTest` fails when a new XRP Ledger ordinal collides with a Xahau one: add the case; the XRP Ledger name wins.
+- `FlagConstantsTest` fails when a flag table gained an entry: add the constant to the flag class with a one-line docblock, and a class for a new type. `InjectableDefinitionsTest` fails when a new field or type breaks the path an injected definitions set travels; the fix is in the codec, not in the test.
 - `SkillReferencesTest` fails until `php skills/build.php` has run.
 
 Also add the base-10 UInt64 fields, if the release renders a new amount field in base 10 (see `UnsignedInt64::BASE_10_FIELDS`), and check `codec-fixtures.json` against the ripple-binary-codec release that matches the rippled version.

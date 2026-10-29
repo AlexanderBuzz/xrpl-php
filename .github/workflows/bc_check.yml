@@ -1,18 +1,30 @@
 name: Backward compatibility
 
-# Compares the public API of the pull request with the last release tag,
-# using roave/backward-compatibility-check. A break fails the check; before
-# 3.0.0, which removes the Xahau types on purpose, every pull request has to
-# be clean. The tool is installed at a pinned version into a directory of its
+# Compares the public API of the pull request with its merge base on main,
+# using roave/backward-compatibility-check: what this pull request itself
+# breaks. (Comparing with the last release tag instead would make every pull
+# request fail between a merged major and its tag, the release pull request
+# included; the release skill compares the last tag with main when it
+# decides between major and minor.) A break fails the check, unless the pull
+# request declares a major on purpose: a title with the Conventional Commits
+# marker "!:" (feat!: ..., refactor!: ...) still runs the comparison, so the
+# breaks are listed in the log, but detected breaks cannot fail the check.
+# Only that outcome is tolerated (the tool exits with 3 for it); a tool that
+# crashes or cannot find a reference fails the check for every title. The
+# check also reruns when the title is edited, since the title is part of the
+# verdict. The tool is installed at a pinned version into a directory of its
 # own, so its dependencies never touch this package's. The tool itself needs
 # PHP 8.4 and ext-intl; the code it compares still declares PHP 8.2.
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   bc-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
 
     steps:
@@ -33,8 +45,18 @@ jobs:
           mkdir -p /tmp/bc-check
           composer require --working-dir=/tmp/bc-check --no-interaction --no-progress roave/backward-compatibility-check:8.23.0
 
-      - name: Compare the public API with the last release
+      - name: Compare the public API with the merge base on main
+        env:
+          DECLARED_MAJOR: ${{ contains(github.event.pull_request.title, '!:') }}
         run: |
-          FROM="$(git describe --tags --abbrev=0 origin/main)"
-          echo "Comparing ${FROM} with ${GITHUB_HEAD_REF}"
+          FROM="$(git merge-base origin/main "${GITHUB_SHA}")"
+          echo "Comparing main at ${FROM} with ${GITHUB_HEAD_REF}"
+          set +e
           /tmp/bc-check/vendor/bin/roave-backward-compatibility-check --from="${FROM}" --to="${GITHUB_SHA}" --format=github-actions
+          STATUS=$?
+          set -e
+          if [ "${STATUS}" -eq 3 ] && [ "${DECLARED_MAJOR}" = "true" ]; then
+            echo "::notice::Breaks detected and expected: the title declares a major."
+            exit 0
+          fi
+          exit "${STATUS}"

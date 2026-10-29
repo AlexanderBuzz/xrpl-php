@@ -16,7 +16,6 @@ class DefaultFaucets
         'Devnet' => 'https://faucet.devnet.rippletest.net:443',
         'AMMDevnet' => 'https://ammfaucet.devnet.rippletest.net:443',
         'NFTDevnet' => 'https://faucet-nft.ripple.com:443',
-        'HooksV2Testnet' => 'https://hooks-testnet-v2.xrpl-labs.com:443',
     ];
 
     const FAUCET_NETWORK_PATHS = [
@@ -24,7 +23,6 @@ class DefaultFaucets
         'Devnet' => '/accounts',
         'AMMDevnet' => '/accounts',
         'NFTDevnet' => '/accounts',
-        'HooksV2Testnet' => '/accounts',
     ];
 
     /**
@@ -37,10 +35,6 @@ class DefaultFaucets
     public static function getFaucetHost(JsonRpcClient $client): string
     {
         $connectionUrl = $client->getConnectionUrl();
-
-        if (str_contains($connectionUrl, 'hooks-testnet-v2')) {
-            return self::FAUCET_NETWORK['HooksV2Testnet'];
-        }
 
         // 'altnet' for Ripple Testnet server and 'testnet' for XRPL Labs Testnet server
         if (str_contains($connectionUrl, 'altnet') || str_contains($connectionUrl, 'testnet')) {

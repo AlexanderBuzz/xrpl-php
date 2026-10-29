@@ -55,17 +55,17 @@ class Definitions
     private array $delegatablePermissions = [];
 
     /**
-     * Reverse lookups, built with "first definition wins" so that Xahau
-     * entries never shadow a mainline ordinal.
+     * Reverse lookups, built with "first definition wins": where a definitions
+     * set carries two names for one ordinal, the first one listed decodes.
      */
     private array $reverseLookups = [];
 
     /**
      * Definitions constructor.
      *
-     * Without arguments this loads the bundled XRP Ledger definitions and adds
-     * the Xahau ones on top. Pass a definitions array to build an instance for
-     * a different network - see fromArray() and fromFile().
+     * Without arguments this loads the bundled XRP Ledger definitions. Pass a
+     * definitions array to build an instance for a different network - see
+     * fromArray() and fromFile().
      *
      * @param array|null $definitions A decoded definitions.json
      * @throws Exception
@@ -113,8 +113,8 @@ class Definitions
             $this->fieldInfoMap[$fieldName] = $fieldInfo;
             $this->fieldHeaderMap[$fieldName] = $fieldHeader;
 
-            // First definition wins, so a Xahau field never shadows the
-            // mainline field that shares its ordinal (see the merge above).
+            // First definition wins, so the name listed first decodes an
+            // ordinal two fields share.
             $this->fieldIdNameMap[$fieldHeader->getTypeCode() . ":" . $fieldHeader->getFieldCode()] ??= $fieldName;
         }
     }
@@ -157,15 +157,10 @@ class Definitions
     }
 
     /**
-     * The bundled XRP Ledger definitions with the Xahau ones added on top.
-     *
-     * Xahau reuses ordinals that the XRP Ledger assigns to different
-     * transaction types and fields (e.g. URITokenMint and
-     * XChainAddClaimAttestation are both 45, Xahau's Blob and the XRPL's
-     * DIDDocument are both Blob:26). The Xahau definitions are therefore only
-     * added where the XRP Ledger has nothing of that name - they never
-     * overwrite a mainline entry. Encoding Xahau transactions keeps working;
-     * decoding an ambiguous ordinal resolves to the XRP Ledger name.
+     * The bundled XRP Ledger definitions, verbatim from a rippled node's
+     * server_definitions (see scripts/sync-definitions.php). Nothing is merged
+     * in: another network, Xahau included, brings its own set through
+     * fromFile() or fromArray().
      *
      * @return array
      * @throws Exception
@@ -177,26 +172,7 @@ class Definitions
             throw new Exception("Definitions file not found.");
         }
 
-        $definitions = json_decode(file_get_contents($path), true);
-
-        $hooksPath = __DIR__ . "/../../../Hooks/hooksDefinitions.json";
-        if (file_exists($hooksPath)) {
-            $hooksDefinitions = json_decode(file_get_contents($hooksPath), true);
-
-            $definitions['TYPES'] += $hooksDefinitions['TYPES'];
-            $definitions['LEDGER_ENTRY_TYPES'] += $hooksDefinitions['LEDGER_ENTRY_TYPES'];
-            $definitions['TRANSACTION_RESULTS'] += $hooksDefinitions['TRANSACTION_RESULTS'] ?? [];
-            $definitions['TRANSACTION_TYPES'] += $hooksDefinitions['TRANSACTION_TYPES'] ?? [];
-
-            $knownFields = array_column($definitions['FIELDS'], 0);
-            foreach ($hooksDefinitions['FIELDS'] as $field) {
-                if (!in_array($field[0], $knownFields, true)) {
-                    $definitions['FIELDS'][] = $field;
-                }
-            }
-        }
-
-        return $definitions;
+        return json_decode(file_get_contents($path), true);
     }
 
     /**

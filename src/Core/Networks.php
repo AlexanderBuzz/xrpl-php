@@ -37,18 +37,6 @@ class Networks
             'wsUrl' => 'wss://s.devnet.rippletest.net:51233',
             'networkId' => 2
         ],
-        'xahau_mainnet' => [
-            'label' => 'Xahau Mainnet',
-            'jsonRpcUrl' => 'https://xahau.network',
-            'wsUrl' => 'wss://xahau.network',
-            'networkId' => 21337
-        ],
-        'xahau_testnet' => [
-            'label' => 'Xahau Testnet',
-            'jsonRpcUrl' => 'https://xahau-test.net',
-            'wsUrl' => 'wss://xahau-test.net',
-            'networkId' => 21338
-        ],
     ];
     /**
      * Look up a network by its short name, such as 'testnet'.
