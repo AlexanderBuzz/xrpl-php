@@ -15,9 +15,10 @@ use Hardcastle\XRPL_PHP\Models\Common\FlagSet;
 /**
  * Flags of the Batch transaction.
  *
- * Values are those of rippled 3.4.0 (TxFlags.h); combine them with |.
- * Batch is not active on Mainnet at the time of writing.
- * https://xrpl.org/batch.html
+ * Values are those of rippled 3.4.0 (TxFlags.h). A Batch carries exactly
+ * one of them; autofill() refuses none or several. Batch V1.1 is enabled on
+ * Mainnet since 2026-10-09.
+ * https://xrpl.org/docs/references/protocol/transactions/types/batch
  */
 final class BatchFlags
 {

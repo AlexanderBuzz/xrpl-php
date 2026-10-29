@@ -5,6 +5,7 @@ namespace Hardcastle\XRPL_PHP\Wallet;
 use Exception;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\Ed25519KeyPairService;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPair;
 use Hardcastle\XRPL_PHP\Core\RippleKeyPairs\KeyPairServiceInterface;
@@ -166,6 +167,213 @@ class Wallet
             "tx_blob" => $serializedTx,
             "hash" => $hash,
         ];
+    }
+
+    /**
+     * Sign a Batch as one of the accounts whose inner transactions it carries.
+     *
+     * A Batch with inner transactions from more than one account needs, in
+     * BatchSigners, a signature from every account that would have had to
+     * sign an inner transaction, except the outer Account, which signs the
+     * Batch itself with sign(). This produces one such entry: it signs the
+     * payload of encodeForSigningBatch() (outer Account, sequence value,
+     * Flags and the inner transaction IDs, so the Batch must be complete and
+     * autofilled before anyone signs) and returns the Batch with BatchSigners
+     * holding this entry alone. Collect the entries of all signers with
+     * combineBatchSigners(), then let the outer Account autofill the fee,
+     * sign() and submit. Mirrors signMultiBatch in xrpl.js.
+     *
+     * The wallet signs for $batchAccount, its own address by default, which
+     * has to be the Account (or the Delegate) of an inner transaction. With
+     * $multisign the entry carries Signers instead of a signature, for a
+     * $batchAccount that has a signer list: true signs as this wallet's
+     * address, a string as that signer address.
+     *
+     * @param Transaction|array $batch the complete Batch
+     * @param string|null $batchAccount the account to sign for, this wallet's by default
+     * @param string|bool $multisign whether to sign as a signer of $batchAccount's signer list
+     * @return array the Batch with this signer's BatchSigners entry
+     * @throws ValidationException when this is not a Batch or $batchAccount has nothing to sign for
+     * @throws Exception when the Batch is not complete
+     */
+    public function signBatch(Transaction|array $batch, ?string $batchAccount = null, string|bool $multisign = false): array
+    {
+        $tx = is_array($batch) ? $batch : $batch->toArray();
+
+        if (($tx['TransactionType'] ?? null) !== 'Batch') {
+            throw new ValidationException('signBatch() needs a Batch transaction');
+        }
+
+        $batchAccount = CoreUtilities::ensureClassicAddress($batchAccount ?? $this->getClassicAddress());
+
+        if (!in_array($batchAccount, self::batchSignerAccounts($tx), true)) {
+            throw new ValidationException(
+                "{$batchAccount} has no inner transaction to sign for in this Batch"
+            );
+        }
+
+        $signerAccount = null;
+        if (is_string($multisign)) {
+            $signerAccount = CoreUtilities::ensureClassicAddress($multisign);
+        } elseif ($multisign) {
+            $signerAccount = $this->getClassicAddress();
+        }
+
+        $payload = $this->binaryCodec->encodeForSigningBatch($tx, $batchAccount, $signerAccount);
+        $signature = $this->keyPairService->sign($payload, $this->getPrivateKey());
+
+        if ($signerAccount !== null) {
+            $entry = [
+                'Account' => $batchAccount,
+                'Signers' => [[
+                    'Signer' => [
+                        'Account' => $signerAccount,
+                        'SigningPubKey' => $this->getPublicKey(),
+                        'TxnSignature' => $signature,
+                    ],
+                ]],
+            ];
+        } else {
+            $entry = [
+                'Account' => $batchAccount,
+                'SigningPubKey' => $this->getPublicKey(),
+                'TxnSignature' => $signature,
+            ];
+        }
+
+        $tx['BatchSigners'] = [['BatchSigner' => $entry]];
+
+        return $tx;
+    }
+
+    /**
+     * Merge the BatchSigners of several copies of one Batch, each signed by
+     * one party with signBatch(), into the Batch the outer Account signs.
+     *
+     * Every copy has to be the same Batch: same Account, sequence value,
+     * Flags and inner transactions, each carrying BatchSigners and none of
+     * them signed with sign() yet. The entries are sorted strictly ascending
+     * by the numeric value of Account, which rippled enforces, an entry of
+     * the outer Account is dropped (the outer signature covers it) and a
+     * duplicate account keeps its first entry. Mirrors combineBatchSigners in
+     * xrpl.js. The result still needs the outer signature: autofill the fee
+     * (it depends on the number of signatures), sign(), submit.
+     *
+     * @param array<Transaction|array|string> $batches the signed copies, as arrays, models or tx_blobs
+     * @param Definitions|null $definitions the definitions the Batch was built with
+     * @return array the Batch with every BatchSigners entry
+     * @throws ValidationException when the copies are not one and the same Batch
+     * @throws Exception
+     */
+    public static function combineBatchSigners(array $batches, ?Definitions $definitions = null): array
+    {
+        if ($batches === []) {
+            throw new ValidationException('There are no Batch transactions to combine');
+        }
+
+        $binaryCodec = new BinaryCodec($definitions);
+        $decoded = [];
+        foreach ($batches as $batch) {
+            if (is_string($batch)) {
+                $tx = $binaryCodec->decode($batch);
+            } elseif (is_array($batch)) {
+                $tx = $batch;
+            } else {
+                $tx = $batch->toArray();
+            }
+
+            if (($tx['TransactionType'] ?? null) !== 'Batch') {
+                throw new ValidationException('Every transaction to combine has to be a Batch');
+            }
+            if (empty($tx['BatchSigners']) || !is_array($tx['BatchSigners'])) {
+                throw new ValidationException('Every Batch to combine has to carry BatchSigners');
+            }
+            if (isset($tx['TxnSignature']) || isset($tx['Signers'])) {
+                throw new ValidationException('A Batch to combine must not be signed yet');
+            }
+
+            $decoded[] = $tx;
+        }
+
+        $key = static fn (array $tx): string => (string) json_encode([
+            $tx['Account'],
+            BinaryCodec::batchSequenceValue($tx),
+            (int) ($tx['Flags'] ?? 0),
+            $binaryCodec->innerTransactionIds($tx),
+        ]);
+        $expected = $key($decoded[0]);
+        foreach (array_slice($decoded, 1) as $tx) {
+            if ($key($tx) !== $expected) {
+                throw new ValidationException(
+                    'Account, sequence, Flags and inner transactions have to be the same in every Batch to combine'
+                );
+            }
+        }
+
+        $outerAccount = $decoded[0]['Account'];
+        $entries = [];
+        foreach ($decoded as $tx) {
+            foreach ($tx['BatchSigners'] as $entry) {
+                if (($entry['BatchSigner']['Account'] ?? null) !== $outerAccount) {
+                    $entries[] = $entry;
+                }
+            }
+        }
+
+        usort($entries, static fn (array $a, array $b): int => strcmp(
+            AccountId::fromJson($a['BatchSigner']['Account'])->toString(),
+            AccountId::fromJson($b['BatchSigner']['Account'])->toString()
+        ));
+
+        $combined = [];
+        $lastAccount = null;
+        foreach ($entries as $entry) {
+            if ($entry['BatchSigner']['Account'] !== $lastAccount) {
+                $combined[] = $entry;
+                $lastAccount = $entry['BatchSigner']['Account'];
+            }
+        }
+
+        $result = $decoded[0];
+        $result['BatchSigners'] = $combined;
+
+        return $result;
+    }
+
+    /**
+     * The accounts a Batch needs a BatchSigners entry from: the Account of
+     * every inner transaction, or its Delegate when it is delegated, its
+     * Counterparty when it has one, and its Sponsor when the inner transaction
+     * carries a SponsorSignature of a sponsor other than the outer Account.
+     *
+     * @param array $batch
+     * @return string[] classic addresses
+     */
+    public static function batchSignerAccounts(array $batch): array
+    {
+        $accounts = [];
+        foreach ($batch['RawTransactions'] ?? [] as $wrapper) {
+            $inner = $wrapper['RawTransaction'] ?? [];
+            if (!is_array($inner)) {
+                continue;
+            }
+            if (isset($inner['Delegate'])) {
+                $accounts[] = (string) $inner['Delegate'];
+            } elseif (isset($inner['Account'])) {
+                $accounts[] = (string) $inner['Account'];
+            }
+            if (isset($inner['Counterparty']) && is_string($inner['Counterparty'])) {
+                $accounts[] = $inner['Counterparty'];
+            }
+            if (
+                isset($inner['Sponsor'], $inner['SponsorSignature'])
+                && $inner['Sponsor'] !== ($batch['Account'] ?? null)
+            ) {
+                $accounts[] = (string) $inner['Sponsor'];
+            }
+        }
+
+        return array_values(array_unique($accounts));
     }
 
     /**

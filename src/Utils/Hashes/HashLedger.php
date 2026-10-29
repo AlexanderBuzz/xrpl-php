@@ -48,17 +48,37 @@ class HashLedger
             ? self::getInstance()->binaryCodec
             : new BinaryCodec($definitions);
 
-        if (is_string($tx)) {
-            $txBlob = $tx;
-            $txObject = $binaryCodec->decode($tx);
-        } else {
-            $txBlob = $binaryCodec->encode($tx);
-            $txObject = $tx;
-        }
+        $txObject = is_string($tx) ? $binaryCodec->decode($tx) : $tx;
 
         if (!isset($txObject['TxnSignature']) && !isset($txObject['Signers'])) {
             throw new Exception('The transaction must be signed to hash it.');
         }
+
+        return self::hashTx($tx, $definitions);
+    }
+
+    /**
+     * The transaction ID of any transaction, signed or not: SHA-512-half of
+     * the 'TXN' prefix and the full serialization.
+     *
+     * For a signed transaction this is the hash the ledger reports, the same
+     * as hashSignedTx(). The unsigned case exists for the inner transactions
+     * of a Batch (XLS-56): they carry no signature, and the ID rippled
+     * computes for them, with their empty SigningPubKey in the serialization,
+     * is what every BatchSigner signs over.
+     *
+     * @param array|string $tx a transaction array or tx_blob
+     * @param Definitions|null $definitions the definitions the transaction was built with
+     * @return string upper case hex
+     * @throws Exception
+     */
+    public static function hashTx(array|string $tx, ?Definitions $definitions = null): string
+    {
+        $binaryCodec = ($definitions === null)
+            ? self::getInstance()->binaryCodec
+            : new BinaryCodec($definitions);
+
+        $txBlob = is_string($tx) ? strtoupper($tx) : $binaryCodec->encode($tx);
 
         $prefix = strtoupper(dechex(HashPrefix::TRANSACTION_ID));
 

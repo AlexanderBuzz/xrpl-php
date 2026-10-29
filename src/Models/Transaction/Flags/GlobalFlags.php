@@ -22,7 +22,7 @@ final class GlobalFlags
 {
     use FlagSet;
 
-    /** Marks an inner transaction of a Batch. Such a transaction carries no signature of its own. Batch is not active on Mainnet. */
+    /** Marks an inner transaction of a Batch: no fee, no signature of its own, never submitted alone. autofill() sets it on a Batch's RawTransactions. */
     public const tfInnerBatchTxn = 0x40000000;
 
     /** Require a fully canonical signature. A no-op since the RequireFullyCanonicalSig amendment, kept for compatibility. */

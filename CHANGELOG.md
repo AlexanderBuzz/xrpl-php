@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Added
+- **Batch signing (XLS-56, Batch V1.1).** A Batch of one account is signed
+  with `Wallet::sign()` like any transaction; for inner transactions of
+  other accounts, `Wallet::signBatch()` produces that account's
+  `BatchSigners` entry (as the account, as the delegate of a delegated inner
+  transaction, or as a signer of its signer list) and
+  `Wallet::combineBatchSigners()` merges the signed copies, sorted by the
+  numeric account value, the outer account's entry dropped.
+  `BinaryCodec::encodeForSigningBatch()` is the payload every entry signs:
+  `BCH\0`, the outer Account, the sequence value, Flags and the inner
+  transaction IDs, then the signer suffix; `HashLedger::hashTx()` gives the
+  ID of an unsigned transaction, which the inner ones are;
+  `HashPrefix::BATCH`. Every payload and signature is verified against the
+  xrpl.js vectors, the flow against the Testnet. `examples/batch.php`.
+- **Batch autofill.** `autofill()` gives every inner transaction the
+  `tfInnerBatchTxn` flag, `Fee` "0", an empty `SigningPubKey` and its
+  sequence (the outer account's inner transactions follow the outer
+  Sequence, other accounts start at their own), sets the outer fee per
+  XLS-56 §2.2 (two base fees, one per BatchSigners signature, plus what each
+  inner transaction would cost) and refuses what the ledger would refuse:
+  no or several mode flags, fewer than two or more than eight inner
+  transactions, a nested Batch, an inner fee, signing key or signature. The
+  hint `'BatchSignatures' => n` sizes the fee before the entries exist.
+
+### Changed
+- The `Batch` model, `BatchFlags` and `GlobalFlags::tfInnerBatchTxn` no
+  longer say that Batch cannot be signed or is not active; Batch V1.1 is
+  enabled on Mainnet since 2026-10-09. The skill's review rule, pitfall and
+  troubleshooting say how a Batch is signed and what the `tem` codes of a
+  wrongly built one mean.
+
 ## [3.0.0] - 2026-10-29
 
 ### Removed (breaking)

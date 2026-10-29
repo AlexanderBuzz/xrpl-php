@@ -20,6 +20,8 @@ use Hardcastle\XRPL_PHP\Models\Account\AccountInfoRequest;
 use Hardcastle\XRPL_PHP\Models\Account\AccountObjectsRequest;
 use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\ServerInfo\ServerStateRequest;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\BatchFlags;
+use Hardcastle\XRPL_PHP\Models\Transaction\Flags\GlobalFlags;
 use Hardcastle\XRPL_PHP\Models\Transaction\TransactionTypes\BaseTransaction as Transaction;
 
 use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
@@ -43,6 +45,13 @@ class Autofiller
      * How many ledgers ahead LastLedgerSequence is placed.
      */
     public const LEDGER_OFFSET = 20;
+
+    /**
+     * How many inner transactions a Batch may carry (XLS-56).
+     */
+    public const BATCH_MIN_INNER = 2;
+
+    public const BATCH_MAX_INNER = 8;
 
     public function __construct(private readonly JsonRpcClient $client)
     {
@@ -75,6 +84,10 @@ class Autofiller
 
         if (!isset($tx['Sequence'])) {
             $this->setNextValidSequenceNumber($tx);
+        }
+
+        if (($tx['TransactionType'] ?? null) === 'Batch') {
+            $this->autofillBatch($tx);
         }
 
         if (!isset($tx['Fee'])) {
@@ -251,12 +264,143 @@ class Autofiller
     }
 
     /**
+     * Fill in what the inner transactions of a Batch need (XLS-56).
+     *
+     * Each inner transaction gets the tfInnerBatchTxn flag, Fee "0" and an
+     * empty SigningPubKey, which is what the ledger requires of it (the fee
+     * is paid by the outer transaction, the signatures are the outer one and
+     * BatchSigners). An inner transaction without Sequence and
+     * TicketSequence gets the next sequence of its account: the outer
+     * Account's inner transactions start one above the outer Sequence,
+     * every other account's at its current sequence, counting up per
+     * account in order of appearance. Mirrors autofillBatchTxn in xrpl.js.
+     *
+     * Refused, because the ledger would refuse them: fewer than two or more
+     * than eight inner transactions, a nested Batch, an inner Fee other than
+     * "0", a non-empty inner SigningPubKey, an inner TxnSignature or Signers,
+     * and outer Flags that do not name exactly one batch mode.
+     *
+     * @param array $tx the Batch, with its outer Sequence set
+     * @return void
+     * @throws Exception
+     */
+    public function autofillBatch(array &$tx): void
+    {
+        $modes = BatchFlags::tfAllOrNothing | BatchFlags::tfOnlyOne | BatchFlags::tfUntilFailure | BatchFlags::tfIndependent;
+        $mode = ((int) ($tx['Flags'] ?? 0)) & $modes;
+        if ($mode === 0 || ($mode & ($mode - 1)) !== 0) {
+            throw new Exception('A Batch needs exactly one of the BatchFlags modes in Flags');
+        }
+
+        $rawTransactions = $tx['RawTransactions'] ?? [];
+        $count = is_array($rawTransactions) ? count($rawTransactions) : 0;
+        if ($count < self::BATCH_MIN_INNER || $count > self::BATCH_MAX_INNER) {
+            throw new Exception(sprintf(
+                'A Batch carries %d to %d inner transactions, this one has %d',
+                self::BATCH_MIN_INNER,
+                self::BATCH_MAX_INNER,
+                $count
+            ));
+        }
+
+        $sequences = [];
+        foreach ($tx['RawTransactions'] as $index => &$wrapper) {
+            if (!is_array($wrapper) || !isset($wrapper['RawTransaction']) || !is_array($wrapper['RawTransaction'])) {
+                throw new Exception("RawTransactions[{$index}] is not a RawTransaction wrapper");
+            }
+            $inner = &$wrapper['RawTransaction'];
+
+            if (($inner['TransactionType'] ?? null) === 'Batch') {
+                throw new Exception("RawTransactions[{$index}] is a Batch; a Batch cannot nest");
+            }
+            if (isset($inner['TxnSignature']) || isset($inner['Signers'])) {
+                throw new Exception("RawTransactions[{$index}] must not be signed; the Batch is signed as a whole");
+            }
+            if (isset($inner['Fee']) && (string) $inner['Fee'] !== '0') {
+                throw new Exception("RawTransactions[{$index}] must have Fee \"0\"; the Batch pays the fees");
+            }
+            if (isset($inner['SigningPubKey']) && $inner['SigningPubKey'] !== '') {
+                throw new Exception("RawTransactions[{$index}] must have an empty SigningPubKey");
+            }
+
+            $this->setValidAddresses($inner);
+
+            $inner['Flags'] = ((int) ($inner['Flags'] ?? 0)) | GlobalFlags::tfInnerBatchTxn;
+            $inner['Fee'] = '0';
+            $inner['SigningPubKey'] = '';
+
+            if (!isset($inner['Sequence']) && !isset($inner['TicketSequence'])) {
+                $account = (string) $inner['Account'];
+                if (!isset($sequences[$account])) {
+                    if ($account === (string) $tx['Account']) {
+                        $sequences[$account] = (int) $tx['Sequence'] + 1;
+                    } else {
+                        $probe = ['Account' => $account];
+                        $this->setNextValidSequenceNumber($probe);
+                        $sequences[$account] = (int) $probe['Sequence'];
+                    }
+                }
+                $inner['Sequence'] = $sequences[$account]++;
+            }
+
+            unset($inner);
+        }
+        unset($wrapper);
+    }
+
+    /**
+     * The fee a Batch has to carry (XLS-56 §2.2): two base fees for the
+     * outer transaction, one more per signature in BatchSigners, plus what
+     * each inner transaction would cost on its own.
+     *
+     * Computed on copies, so the inner transactions keep their Fee "0". The
+     * signature count comes from BatchSigners when the Batch carries them
+     * already, otherwise from $batchSignatures, the number the caller will
+     * collect; a Batch of one account has none.
+     *
+     * @param array $tx the Batch
+     * @param int $batchSignatures signatures BatchSigners will carry, when not present yet
+     * @return BigDecimal drops, before the multisign and maximum fee rules
+     * @throws MathException
+     */
+    public function calculateBatchFee(array $tx, int $batchSignatures = 0): BigDecimal
+    {
+        $netFeeDrops = xrpToDrops($this->client->getFeeCalculator()->getFeeXrp());
+
+        $signatures = $batchSignatures;
+        if (!empty($tx['BatchSigners']) && is_array($tx['BatchSigners'])) {
+            $signatures = 0;
+            foreach ($tx['BatchSigners'] as $entry) {
+                $signer = $entry['BatchSigner'] ?? [];
+                $signatures += isset($signer['Signers']) && is_array($signer['Signers'])
+                    ? count($signer['Signers'])
+                    : 1;
+            }
+        }
+
+        $fee = self::scaleValue($netFeeDrops, 2 + $signatures);
+
+        foreach ($tx['RawTransactions'] ?? [] as $wrapper) {
+            $inner = $wrapper['RawTransaction'] ?? null;
+            if (!is_array($inner)) {
+                continue;
+            }
+            unset($inner['Fee']);
+            $this->calculateFeePerTransactionType($inner);
+            $fee = BigDecimal::sum($fee, BigDecimal::of($inner['Fee']));
+        }
+
+        return $fee;
+    }
+
+    /**
      * Set Fee to what this transaction type costs.
      *
      * Usually the network fee, but AccountDelete and AMMCreate burn one owner
-     * reserve instead, and EscrowFinish pays a surcharge that grows with the
-     * size of its fulfillment. Multi-signing adds one network fee per
-     * signature.
+     * reserve instead, EscrowFinish pays a surcharge that grows with the
+     * size of its fulfillment, and a Batch pays for itself, its BatchSigners
+     * and its inner transactions (calculateBatchFee()). Multi-signing adds
+     * one network fee per signature.
      *
      * @param array $tx
      * @param int|null $signersCount Number of signatures the transaction will carry
@@ -280,6 +424,13 @@ class Autofiller
         $paysOwnerReserve = in_array($tx['TransactionType'], self::OWNER_RESERVE_FEE_TYPES, true);
         if ($paysOwnerReserve) {
             $baseFee = $this->fetchOwnerReserveFee();
+        }
+
+        // A Batch pays for itself, its BatchSigners and every inner transaction.
+        // BatchSignatures is a hint for the autofill only, never a field of the transaction.
+        if ($tx['TransactionType'] === 'Batch') {
+            $baseFee = $this->calculateBatchFee($tx, (int) ($tx['BatchSignatures'] ?? 0));
+            unset($tx['BatchSignatures']);
         }
 
         /*
