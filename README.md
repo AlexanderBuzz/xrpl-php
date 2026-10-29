@@ -190,7 +190,7 @@ working, but they are deprecated as of 2.2.0 and delegate to these classes.
 
 ## Xahau
 
-Xahau is served by its own package, [`hardcastle/xahau_php`](https://github.com/AlexanderBuzz/xahau-php),
+Xahau is served by its own package, [`hardcastle/xahau-php`](https://github.com/AlexanderBuzz/xahau-php),
 which builds on this one: it brings Xahau's definitions, the fifteen Xahau-only
 transaction types and a client that fills in `NetworkID` and asks the node what
 a transaction costs. Until 3.0.0 this library carried the Xahau types itself and
@@ -259,7 +259,7 @@ The replacement is used wherever that object is reached, including
 the client. The same works for `getSubmitter()`, `getAccountReader()`,
 `getOrderbookReader()`, `getFeeCalculator()` and `getFaucet()`.
 
-`hardcastle/xahau_php` is built exactly this way.
+`hardcastle/xahau-php` is built exactly this way.
 
 ## Development
 

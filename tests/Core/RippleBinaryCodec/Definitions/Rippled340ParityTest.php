@@ -165,7 +165,7 @@ final class Rippled340ParityTest extends TestCase
      * Nothing of another network is in the bundled file or in the default
      * instance. Until 3.0.0 the Xahau definitions were merged in and the
      * Hook fields had once sat in the file itself; both are gone, Xahau is a
-     * set a caller injects (hardcastle/xahau_php ships it), and the default
+     * set a caller injects (hardcastle/xahau-php ships it), and the default
      * instance is the file and nothing else.
      */
     public function testTheDefaultInstanceIsTheBundledFileAlone(): void

@@ -175,7 +175,7 @@ function transactions(): string
         . implode(', ', array_map(fn(string $t): string => "`{$t}`", $withoutModel)) . "\n";
 
     $out .= "\n## Xahau\n\nThe Xahau transaction types (`SetHook`, `Invoke`, `URIToken*`, `Remit`, ...) "
-        . "are in the `hardcastle/xahau_php` package, together with Xahau's own definitions; "
+        . "are in the `hardcastle/xahau-php` package, together with Xahau's own definitions; "
         . "this library has none of them since 3.0.0.\n";
 
     return $out;

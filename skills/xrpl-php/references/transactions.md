@@ -650,4 +650,4 @@ The codec encodes and decodes these (the definitions know them), but no model cl
 
 ## Xahau
 
-The Xahau transaction types (`SetHook`, `Invoke`, `URIToken*`, `Remit`, ...) are in the `hardcastle/xahau_php` package, together with Xahau's own definitions; this library has none of them since 3.0.0.
+The Xahau transaction types (`SetHook`, `Invoke`, `URIToken*`, `Remit`, ...) are in the `hardcastle/xahau-php` package, together with Xahau's own definitions; this library has none of them since 3.0.0.

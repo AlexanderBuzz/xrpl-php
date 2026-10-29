@@ -18,10 +18,10 @@ everything the XRP Ledger added after Xahau forked: `MPTokenIssuanceCreate` is
 Xahau now has its own package, built on this one:
 
 ```console
-composer require hardcastle/xahau_php
+composer require hardcastle/xahau-php
 ```
 
-| 2.x | 3.0.0 with `hardcastle/xahau_php` |
+| 2.x | 3.0.0 with `hardcastle/xahau-php` |
 |---|---|
 | `new JsonRpcClient('xahau_testnet')` | `Xahau::client(Xahau::TESTNET)` or `new XahauClient('xahau_testnet')` |
 | `Wallet::fromSeed($seed)` for a Xahau account | `Xahau::wallet($seed)` |

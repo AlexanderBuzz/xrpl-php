@@ -28,7 +28,7 @@ Ask (`AskUserQuestion`) only when it is ambiguous: a dirty tree (committed only,
 | `signing` | `src/Wallet/**`, `src/Core/RippleKeyPairs/**`, `src/Utils/Hashes/**` |
 | `models` | `src/Models/Transaction/**`, `src/Models/Ledger/Flags/**`, `src/Models/Common/**` |
 | `client` | `src/Client/**`, `src/Sugar/**`, `src/Models/**` (request/response classes) |
-| `networks` | `src/Core/RippleBinaryCodec/Definitions/Definitions.php`, `tests/Core/RippleBinaryCodec/Definitions/InjectableDefinitionsTest.php` (another network's definitions, injected; Xahau's come from `hardcastle/xahau_php`) |
+| `networks` | `src/Core/RippleBinaryCodec/Definitions/Definitions.php`, `tests/Core/RippleBinaryCodec/Definitions/InjectableDefinitionsTest.php` (another network's definitions, injected; Xahau's come from `hardcastle/xahau-php`) |
 | `skill` | `skills/**`, `.agents/**`, `.claude/**`, `.claude-plugin/**` |
 | `tests`, `docs`, `other` | the rest |
 
