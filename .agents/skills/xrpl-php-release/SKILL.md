@@ -22,7 +22,14 @@ grep -n '^## \[' CHANGELOG.md | head -3
 - `CHANGELOG.md` must start its entries with `## [Unreleased]` and that block must not be empty. If there is nothing to release, say so and stop.
 - `grep -c '^## \[Unreleased\]' CHANGELOG.md` must print 1. Two blocks happen when pull requests merged in parallel each added one (2.7.0 found that); fold the second into the first before renaming, and read every entry for a path or name that a later merge renamed.
 - The version must be greater than the latest heading and follow SemVer for what the block contains: any `Breaking` section or `feat!` commit since the last tag (`git log <last>..main --format=%s | grep '!:'`) calls for a major unless the changelog entry itself argues why it is a minor (2.6.0 did, for a fix nobody could have relied on). Say what you found; the maintainer decides.
-- The authoritative list of breaks since the last release is `roave-backward-compatibility-check --from=<last tag> --to=main` (the tool as `bc_check.yml` installs it, PHP 8.4 with ext-intl; in CI it is `/tmp/bc-check/vendor/bin/roave-backward-compatibility-check`). The pull-request check compares each pull request with its merge base only, so it never shows the sum. Exit code 3 means breaks; every one of them must be in the `Removed` or `Changed` entries of the block, or the block is incomplete.
+- The authoritative list of breaks since the last release comes from roave/backward-compatibility-check at the version `bc_check.yml` pins, installed the way the workflow does it, outside this package's dependencies (the tool needs PHP 8.4 with ext-intl, which the maintainer's machine lacks; run it in the project's PHP 8.4 container or in CI through `workflow_dispatch`):
+
+  ```bash
+  composer require --working-dir=/tmp/bc-check --no-interaction roave/backward-compatibility-check:8.23.0
+  /tmp/bc-check/vendor/bin/roave-backward-compatibility-check --from=<last tag> --to=main
+  ```
+
+  The pull-request check compares each pull request with its merge base only, so it never shows the sum. Exit code 3 means breaks; every one of them must be in the `Removed` or `Changed` entries of the block, or the block is incomplete.
 - `3.0.0` is reserved for removing the Xahau types once `hardcastle/xahau-php` is published. Do not propose it for anything else.
 
 ## 2. Branch and changelog
