@@ -25,7 +25,7 @@ Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{
 - Every `SerializedType` honours `fromJson`/`fromParser`/`toJson`/`toBytes` and is mapped in `SerializedType`'s type table, or it is unreachable.
 
 **Signing** (`src/Wallet/**`, `src/Core/RippleKeyPairs/**`, `src/Core/HashPrefix.php`)
-- Prefixes: `STX\0` for a single signature, `SMT\0` plus the signer's account suffix for multisign, `CLM\0` for payment channel claims. Batch (`BCH\0`) is not implemented; a change that makes `Batch` look signable without the V1.1 rules (inner `tfInnerBatchTxn`, outer-account binding, signer order) is a blocker.
+- Prefixes: `STX\0` for a single signature, `SMT\0` plus the signer's account suffix for multisign, `CLM\0` for payment channel claims, `BCH\0` for a BatchSigner's payload (XLS-56 V1.1: outer Account, sequence value, Flags, inner transaction IDs, then the BatchSigner's Account and, for multisign, the signer's Account). `encodeForSigningBatch()` is verified against xrpl.js vectors in `BatchSignerTest`; a change to the payload order, to `hashTx()` for the inner IDs, or to the sort of `combineBatchSigners()` (numeric account, outer Account dropped) is a blocker.
 - secp256k1: SHA-512-half prehash, RFC 6979 deterministic, canonical low-S, DER, upper-case hex. Ed25519: raw message, `ED` prefix stripped from keys before the crypto call. Both deterministic, so vectors compare byte for byte (`PaymentChannelClaimTest` has xrpl.js vectors).
 - Multisign: `SigningPubKey` empty, one `Signers` entry per signer; the SDK does not sort `Signers`, callers must, by numeric account. `sign()` must refuse an already signed transaction.
 - Never a seed or private key in an exception message or log; public keys and addresses are fine.
@@ -33,7 +33,7 @@ Diff base: `{{BASE}}`. Compute the branch's own diff (`git log --first-parent {{
 **Models and flags** (`src/Models/Transaction/**`, `src/Models/Ledger/Flags/**`)
 - Every model's `transactionTypeProperties` equals its `TRANSACTION_FORMATS` entry minus the common fields (`TransactionFormatsTest`), with the codec class the field's type calls for. A type without a model is fine (amendment not active) and listed by the skill builder; a model for a type the definitions do not know is not.
 - A flag exists in exactly three places: the table in `definitions.json`, the constant in the flag class (rippled's name, hex value, one-line docblock), and by implication `FlagConstantsTest`. `asf` values are not bits.
-- Flags of inactive amendments (Batch, Vault, Loan, Sponsorship, Confidential MPT) say so in their docblocks.
+- Flags of inactive amendments (Vault, Loan, Sponsorship, Confidential MPT) say so in their docblocks; Batch and PermissionDelegation are active since October 2026 and their docblocks must not claim otherwise.
 
 **Client** (`src/Client/**`)
 - Tolerate what rippled adds: never strip or normalize unknown fields in a response; `syncRequest()` returns `ErrorResponse` for `status: error`, callers check `instanceof`. Response shapes are API-version-aware.

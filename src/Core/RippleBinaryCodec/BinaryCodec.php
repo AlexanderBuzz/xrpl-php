@@ -16,6 +16,8 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt64;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\Definitions;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StObject;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\UnsignedInt32;
+use Hardcastle\XRPL_PHP\Utils\Hashes\HashLedger;
 
 /**
  * Encodes transactions to their binary form and back.
@@ -104,6 +106,94 @@ class BinaryCodec extends Binary
         $drops = UnsignedInt64::fromBase10($amount)->toBytes()->toString('hex');
 
         return strtoupper($prefix . $channel . $drops);
+    }
+
+    /**
+     * The bytes a BatchSigner signs over (XLS-56, Batch V1.1).
+     *
+     * Not the transaction: the prefix 'BCH\0', the outer Account, the outer
+     * sequence value (Sequence, or TicketSequence when Sequence is 0), the
+     * outer Flags, the number of inner transactions and their transaction IDs
+     * in order, then the BatchSigner's Account, and for a multi-signed entry
+     * the individual signer's Account after it. Binding the outer Account and
+     * sequence is what keeps a BatchSigners entry from being replayed against
+     * another Batch. Mirrors encodeForSigningBatch in ripple-binary-codec and
+     * serializeBatch() in rippled.
+     *
+     * The inner transaction IDs are computed here from RawTransactions with
+     * these definitions, so the Batch has to be complete: every inner
+     * transaction with its Sequence or TicketSequence, Fee "0", empty
+     * SigningPubKey and the tfInnerBatchTxn flag, exactly as it will be
+     * submitted. Any later change to an inner transaction invalidates every
+     * signature.
+     *
+     * @param array $batch the Batch transaction
+     * @param string $batchAccount the BatchSigner's Account
+     * @param string|null $signerAccount the signer's Account, for a multi-signed BatchSigner
+     * @return string upper case hex
+     * @throws Exception on anything but a complete Batch
+     */
+    public function encodeForSigningBatch(array $batch, string $batchAccount, ?string $signerAccount = null): string
+    {
+        if (($batch['TransactionType'] ?? null) !== 'Batch') {
+            throw new Exception('encodeForSigningBatch needs a Batch transaction');
+        }
+        if (!isset($batch['Account']) || !isset($batch['Flags'])) {
+            throw new Exception('A Batch needs Account and Flags before it can be signed');
+        }
+        $rawTransactions = $batch['RawTransactions'] ?? [];
+        if (!is_array($rawTransactions) || $rawTransactions === []) {
+            throw new Exception('A Batch needs RawTransactions before it can be signed');
+        }
+
+        $payload = strtoupper(dechex(HashPrefix::BATCH))
+            . AccountId::fromJson((string) $batch['Account'])->toString()
+            . UnsignedInt32::fromJson(self::batchSequenceValue($batch))->toBytes()->toString('hex')
+            . UnsignedInt32::fromJson((int) $batch['Flags'])->toBytes()->toString('hex')
+            . UnsignedInt32::fromJson(count($rawTransactions))->toBytes()->toString('hex');
+
+        foreach ($this->innerTransactionIds($batch) as $transactionId) {
+            $payload .= $transactionId;
+        }
+
+        $payload .= AccountId::fromJson($batchAccount)->toString();
+        if ($signerAccount !== null) {
+            $payload .= AccountId::fromJson($signerAccount)->toString();
+        }
+
+        return strtoupper($payload);
+    }
+
+    /**
+     * The transaction IDs of a Batch's inner transactions, in order, computed
+     * with these definitions.
+     *
+     * @param array $batch
+     * @return string[] upper case hex
+     * @throws Exception when an entry is not a RawTransaction wrapper
+     */
+    public function innerTransactionIds(array $batch): array
+    {
+        $ids = [];
+        foreach ($batch['RawTransactions'] ?? [] as $index => $wrapper) {
+            if (!is_array($wrapper) || !isset($wrapper['RawTransaction']) || !is_array($wrapper['RawTransaction'])) {
+                throw new Exception("RawTransactions[{$index}] is not a RawTransaction wrapper");
+            }
+            $ids[] = HashLedger::hashTx($wrapper['RawTransaction'], $this->getDefinitions());
+        }
+
+        return $ids;
+    }
+
+    /**
+     * The sequence value a Batch's signers bind to: Sequence, or
+     * TicketSequence when Sequence is 0 or absent.
+     */
+    public static function batchSequenceValue(array $batch): int
+    {
+        $sequence = (int) ($batch['Sequence'] ?? 0);
+
+        return $sequence !== 0 ? $sequence : (int) ($batch['TicketSequence'] ?? 0);
     }
 
     /**

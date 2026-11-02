@@ -42,4 +42,7 @@ class HashPrefix
 
     // payment channel claim 'CLM'
     const PAYMENT_CHANNEL_CLAIM = 0x434c4d00;
+
+    // the payload a BatchSigner signs, XLS-56 Batch V1.1 'BCH'
+    const BATCH = 0x42434800;
 }

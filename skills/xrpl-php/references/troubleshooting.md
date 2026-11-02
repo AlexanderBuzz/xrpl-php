@@ -22,7 +22,8 @@ Frequent codes and what to change:
 - `tecNO_PERMISSION`: not allowed (e.g. clawback without `asfAllowTrustLineClawback`, or the wrong account).
 - `tecINSUFFICIENT_RESERVE`, `tecINSUF_RESERVE_LINE`: the account needs more XRP for another object.
 - `terNO_RIPPLE`: the issuer has not set `asfDefaultRipple`; needed before an AMM or third-party transfers work.
-- `temDISABLED`: the amendment is not active on this network (Batch, Vault, Loan, Sponsorship, Confidential MPT on Mainnet).
+- `temDISABLED`: the amendment is not active on this network (Vault, Loan, Sponsorship, Confidential MPT on Mainnet).
+- `temBAD_SIGNER` on a Batch: `BatchSigners` is missing an account, holds the outer account or a stranger, or is not sorted; build it with `signBatch()` and `combineBatchSigners()`. `temINVALID` on a Batch: a BatchSigners entry was made before the Batch was final (a changed inner transaction, Flags or Sequence invalidates every entry). `temBAD_FEE`, `temBAD_REGKEY`, `temINVALID_FLAG` on a Batch: an inner transaction with a fee, a signing key or without `tfInnerBatchTxn`; let `autofill()` fill the inner transactions.
 - `temREDUNDANT`: the transaction changes nothing (e.g. a Payment to oneself).
 - `tefPAST_SEQ`, `terPRE_SEQ`: `Sequence` is stale or ahead; autofill again from the current account state.
 - `tefMAX_LEDGER`: `LastLedgerSequence` already passed when the node saw it; autofill and submit again.
