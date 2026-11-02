@@ -46,7 +46,8 @@ function payment(Wallet $from, Wallet $to, string $xrp): array
  * The outer result alone says nothing about the inner transactions: a Batch
  * that applies none of them can still be tesSUCCESS. Every inner transaction
  * is a transaction of its own in the ledger; one that was not applied cannot
- * be found, so the lookup returns an ErrorResponse (txnNotFound).
+ * be found, so the lookup returns an ErrorResponse with txnNotFound. Any
+ * other error is a failed lookup, not a result.
  */
 function report(JsonRpcClient $client, array $batch, array $result): void
 {
@@ -60,7 +61,12 @@ function report(JsonRpcClient $client, array $batch, array $result): void
     foreach ((new BinaryCodec())->innerTransactionIds($batch) as $innerId) {
         $response = $client->syncRequest(new TxRequest($innerId));
         if ($response instanceof ErrorResponse) {
-            print_r(Color::RED . "  inner {$innerId}: not applied ({$response->getError()})" . Color::WHITE . PHP_EOL);
+            // Only txnNotFound means not applied; a failed request says nothing about the outcome
+            if ($response->getStatusCode() !== 200 || $response->getError() !== 'txnNotFound') {
+                print_r(Color::RED . "  inner {$innerId}: outcome unknown ({$response->getError()}), look it up again" . Color::WHITE . PHP_EOL);
+                exit(1);
+            }
+            print_r(Color::RED . "  inner {$innerId}: not applied" . Color::WHITE . PHP_EOL);
             $allApplied = false;
             continue;
         }

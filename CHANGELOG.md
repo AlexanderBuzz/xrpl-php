@@ -26,7 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Batch autofill.** `autofill()` gives every inner transaction the
   `tfInnerBatchTxn` flag, `Fee` "0", an empty `SigningPubKey` and its
   sequence (the outer account's inner transactions follow the outer
-  Sequence, other accounts start at their own), sets the outer fee per
+  Sequence, or start at the account's own when the Batch uses a ticket,
+  other accounts start at their own), sets the outer fee per
   XLS-56 §2.2 (two base fees, one per BatchSigners signature, plus what each
   inner transaction would cost) and refuses what the ledger would refuse:
   no or several mode flags, fewer than two or more than eight inner

@@ -235,6 +235,9 @@ $batch = $client->autofill([
 ]);
 $signed = $alice->sign($batch);
 $result = $client->submitAndWait($signed['tx_blob'])->getResult();
+if ($result['meta']['TransactionResult'] !== 'tesSUCCESS') {   // then check the inner transactions, as below
+    throw new RuntimeException('Batch failed: ' . $result['meta']['TransactionResult']);
+}
 
 // Two accounts, atomic swap: Alice prepares, Bob signs his part, Alice signs the outer transaction
 $batch = $client->autofill([
@@ -254,13 +257,17 @@ $result = $client->submitAndWait($signed['tx_blob'])->getResult();
 
 // The outer tesSUCCESS does not mean the inner transactions applied. Each applied one is a
 // transaction of its own whose meta names the Batch in ParentBatchID; one that was not applied
-// is not in the ledger, so its lookup is an ErrorResponse (txnNotFound).
+// is not in the ledger, so its lookup is an ErrorResponse with txnNotFound; any other error is a
+// failed lookup that says nothing about the outcome.
 if ($result['meta']['TransactionResult'] !== 'tesSUCCESS') {
     throw new RuntimeException('Batch failed: ' . $result['meta']['TransactionResult']);
 }
 foreach ((new BinaryCodec())->innerTransactionIds($combined) as $innerId) {
     $response = $client->syncRequest(new TxRequest($innerId));
     if ($response instanceof ErrorResponse) {
+        if ($response->getStatusCode() !== 200 || $response->getError() !== 'txnNotFound') {
+            throw new RuntimeException("Inner transaction {$innerId}: outcome unknown ({$response->getError()}), look it up again");
+        }
         throw new RuntimeException("Inner transaction {$innerId} was not applied");   // under tfAllOrNothing
     }
     $inner = $response->getResult();

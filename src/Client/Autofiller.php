@@ -276,8 +276,9 @@ class Autofiller
      * is paid by the outer transaction, the signatures are the outer one and
      * BatchSigners). An inner transaction without Sequence and
      * TicketSequence gets the next sequence of its account: the outer
-     * Account's inner transactions start one above the outer Sequence,
-     * every other account's at its current sequence, counting up per
+     * Account's inner transactions start one above the outer Sequence (at
+     * the account's current sequence when the Batch uses a ticket and its
+     * Sequence is 0), every other account's at its current sequence, counting up per
      * account in order of appearance. Mirrors autofillBatchTxn in xrpl.js.
      *
      * Refused, because the ledger would refuse them: fewer than two or more
@@ -337,7 +338,8 @@ class Autofiller
             if (!isset($inner['Sequence']) && !isset($inner['TicketSequence'])) {
                 $account = (string) $inner['Account'];
                 if (!isset($sequences[$account])) {
-                    if ($account === (string) $tx['Account']) {
+                    // An outer Batch on a ticket (Sequence 0) consumes no sequence of its own
+                    if ($account === (string) $tx['Account'] && (int) $tx['Sequence'] !== 0) {
                         $sequences[$account] = (int) $tx['Sequence'] + 1;
                     } else {
                         $probe = ['Account' => $account];

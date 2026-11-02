@@ -109,6 +109,20 @@ final class AutofillerBatchTest extends TestCase
         $this->assertArrayHasKey('LastLedgerSequence', $filled);
     }
 
+    public function testAnOuterBatchOnATicketLeavesTheSequenceToTheInnerTransactions(): void
+    {
+        $batch = self::batch([
+            self::payment(self::OUTER, self::OTHER, '1000'),
+            self::payment(self::OUTER, self::OTHER, '2000'),
+        ]) + ['Sequence' => 0, 'TicketSequence' => 77];
+
+        $filled = $this->client()->autofill($batch);
+
+        $this->assertSame(0, $filled['Sequence']);
+        $this->assertSame(self::SEQUENCE, $filled['RawTransactions'][0]['RawTransaction']['Sequence']);
+        $this->assertSame(self::SEQUENCE + 1, $filled['RawTransactions'][1]['RawTransaction']['Sequence']);
+    }
+
     public function testKeepsAnInnerSequenceOrTicketThatIsSet(): void
     {
         $ticketed = self::payment(self::OTHER, self::OUTER, '2000') + ['TicketSequence' => 99, 'Sequence' => 0];
