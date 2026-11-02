@@ -321,7 +321,7 @@ submit($client, $isaac, [
 ]);
 ```
 
-Anything the permissions do not cover (here a `TrustSet`, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION`, which `submit()` reports as `engine_result` and which never reaches a ledger. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
+Anything the permissions do not cover (here a `TrustSet`, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION` and never reaches a ledger, so the `submit()` helper above, which waits for a validated result, would only wait until `LastLedgerSequence` passes. Read the preliminary result instead: `$client->submit($signed['tx_blob'])->getResult()['engine_result']`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
 
 ## Escrow and checks
 

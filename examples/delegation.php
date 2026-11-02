@@ -85,7 +85,11 @@ $trustSet = $alice->sign($client->autofill([
     'LimitAmount' => ['currency' => 'USD', 'issuer' => $bob->getAddress(), 'value' => '100'],
 ]));
 $engineResult = $client->submit($trustSet['tx_blob'])->getResult()['engine_result'] ?? 'unknown';
-print_r(Color::YELLOW . "A TrustSet for Isaac, not granted: " . Color::WHITE . $engineResult . PHP_EOL);
+if ($engineResult !== 'terNO_DELEGATE_PERMISSION') {
+    print_r(Color::RED . "A TrustSet for Isaac, not granted, should be refused, got {$engineResult}" . Color::WHITE . PHP_EOL);
+    exit(1);
+}
+print_r(Color::GREEN . "A TrustSet for Isaac, not granted: " . Color::WHITE . $engineResult . PHP_EOL);
 
 // 4. An empty list revokes every permission and deletes the Delegate object
 submit($client, $isaac, [
