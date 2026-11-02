@@ -140,7 +140,7 @@ final class AutofillerBatchTest extends TestCase
         $this->assertSame(self::SEQUENCE, $inner[0]['Sequence']);
         $this->assertSame(self::SEQUENCE + 4, $inner[1]['Sequence']);
         // On a ticket it consumes no sequence, but its two tickets take two
-        $this->assertArrayNotHasKey('Sequence', $inner[2]);
+        $this->assertSame(0, $inner[2]['Sequence'], 'Sequence is required, 0 on a ticket');
         $this->assertSame(self::SEQUENCE + 1 + 2, $inner[3]['Sequence']);
     }
 

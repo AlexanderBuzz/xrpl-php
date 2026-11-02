@@ -274,8 +274,9 @@ class Autofiller
      * Each inner transaction gets the tfInnerBatchTxn flag, Fee "0" and an
      * empty SigningPubKey, which is what the ledger requires of it (the fee
      * is paid by the outer transaction, the signatures are the outer one and
-     * BatchSigners). An inner transaction without Sequence and
-     * TicketSequence gets the next sequence of its account: the outer
+     * BatchSigners). An inner transaction with TicketSequence but no
+     * Sequence gets Sequence 0, a field the ledger requires. One without
+     * Sequence and TicketSequence gets the next sequence of its account: the outer
      * Account's inner transactions start one above the outer Sequence (at
      * the account's current sequence when the Batch uses a ticket and its
      * Sequence is 0), every other account's at its current sequence, counting up per
@@ -342,6 +343,8 @@ class Autofiller
             $usesTicket = isset($inner['TicketSequence']) && (int) ($inner['Sequence'] ?? 0) === 0;
             if (!isset($inner['Sequence']) && !isset($inner['TicketSequence'])) {
                 $inner['Sequence'] = $this->nextBatchSequence($sequences, $account, $tx);
+            } elseif (!isset($inner['Sequence'])) {
+                $inner['Sequence'] = 0; // a required field; 0 on a ticket
             }
 
             // What this inner transaction leaves as the account's next sequence:
