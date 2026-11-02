@@ -5,9 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
+## [3.1.0] - 2026-11-02
 
 ### Added
+- **Batch autofill.** `autofill()` gives every inner transaction the
+  `tfInnerBatchTxn` flag, `Fee` "0", an empty `SigningPubKey` and its
+  sequence (the outer account's inner transactions follow the outer
+  Sequence, or start at the account's own when the Batch uses a ticket,
+  other accounts start at their own, and later ones count on past a
+  preset Sequence and the tickets of an inner TicketCreate; one on a
+  ticket gets Sequence 0), sets the outer fee per XLS-56 §2.2 (two base
+  fees, one per BatchSigners signature, plus what each inner transaction
+  would cost) and refuses what the ledger would refuse:
+  no or several mode flags, fewer than two or more than eight inner
+  transactions, a nested Batch, an inner fee, signing key or signature. The
+  hint `'BatchSignatures' => n` sizes the fee before the entries exist and
+  is removed by every `autofill()` of a Batch, also when `Fee` is set.
 - **Batch signing (XLS-56, Batch V1.1).** A Batch of one account is signed
   with `Wallet::sign()` like any transaction; for inner transactions of
   other accounts, `Wallet::signBatch()` produces that account's
@@ -23,18 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ID of an unsigned transaction, which the inner ones are;
   `HashPrefix::BATCH`. Every payload and signature is verified against the
   xrpl.js vectors, the flow against the Testnet. `examples/batch.php`.
-- **Batch autofill.** `autofill()` gives every inner transaction the
-  `tfInnerBatchTxn` flag, `Fee` "0", an empty `SigningPubKey` and its
-  sequence (the outer account's inner transactions follow the outer
-  Sequence, or start at the account's own when the Batch uses a ticket,
-  other accounts start at their own, and later ones count on past a
-  preset Sequence and the tickets of an inner TicketCreate), sets the outer fee per
-  XLS-56 §2.2 (two base fees, one per BatchSigners signature, plus what each
-  inner transaction would cost) and refuses what the ledger would refuse:
-  no or several mode flags, fewer than two or more than eight inner
-  transactions, a nested Batch, an inner fee, signing key or signature. The
-  hint `'BatchSignatures' => n` sizes the fee before the entries exist and
-  is removed by every `autofill()` of a Batch, also when `Fee` is set.
 
 ### Changed
 - The `Batch` model, `BatchFlags` and `GlobalFlags::tfInnerBatchTxn` no
