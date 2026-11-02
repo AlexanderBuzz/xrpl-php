@@ -279,6 +279,9 @@ class Autofiller
      * Account's inner transactions start one above the outer Sequence (at
      * the account's current sequence when the Batch uses a ticket and its
      * Sequence is 0), every other account's at its current sequence, counting up per
+     * account past every sequence an earlier inner transaction takes (one
+     * set by the caller included, and the TicketCount sequences of a
+     * TicketCreate), and
      * account in order of appearance. Mirrors autofillBatchTxn in xrpl.js.
      *
      * Refused, because the ledger would refuse them: fewer than two or more
@@ -335,24 +338,59 @@ class Autofiller
             $inner['Fee'] = '0';
             $inner['SigningPubKey'] = '';
 
+            $account = (string) $inner['Account'];
+            $usesTicket = isset($inner['TicketSequence']) && (int) ($inner['Sequence'] ?? 0) === 0;
             if (!isset($inner['Sequence']) && !isset($inner['TicketSequence'])) {
-                $account = (string) $inner['Account'];
-                if (!isset($sequences[$account])) {
-                    // An outer Batch on a ticket (Sequence 0) consumes no sequence of its own
-                    if ($account === (string) $tx['Account'] && (int) $tx['Sequence'] !== 0) {
-                        $sequences[$account] = (int) $tx['Sequence'] + 1;
-                    } else {
-                        $probe = ['Account' => $account];
-                        $this->setNextValidSequenceNumber($probe);
-                        $sequences[$account] = (int) $probe['Sequence'];
-                    }
-                }
-                $inner['Sequence'] = $sequences[$account]++;
+                $inner['Sequence'] = $this->nextBatchSequence($sequences, $account, $tx);
+            }
+
+            // What this inner transaction leaves as the account's next sequence:
+            // one above its own, and a TicketCreate reserves TicketCount more.
+            // One on a ticket consumes no sequence, but a TicketCreate on a
+            // ticket still takes TicketCount sequences for the new tickets.
+            $reserved = ($inner['TransactionType'] ?? null) === 'TicketCreate' ? (int) ($inner['TicketCount'] ?? 0) : 0;
+            if (!$usesTicket) {
+                $next = (int) ($inner['Sequence'] ?? 0) + 1 + $reserved; // always set here: filled above or preset
+            } elseif ($reserved > 0) {
+                $next = $this->nextBatchSequence($sequences, $account, $tx) + $reserved;
+            } else {
+                $next = null;
+            }
+            if ($next !== null) {
+                $sequences[$account] = max($sequences[$account] ?? 0, $next);
             }
 
             unset($inner);
         }
         unset($wrapper);
+    }
+
+    /**
+     * The next free sequence of $account inside a Batch, looked up once.
+     *
+     * The outer Account starts one above the outer Sequence, or at its
+     * current sequence when the Batch uses a ticket (Sequence 0) and so
+     * consumes none; every other account starts at its current sequence.
+     *
+     * @param array<string, int> $sequences next free sequence per account, filled as the Batch is walked
+     * @param string $account
+     * @param array $batch the outer transaction
+     * @return int
+     * @throws Exception
+     */
+    private function nextBatchSequence(array &$sequences, string $account, array $batch): int
+    {
+        if (!isset($sequences[$account])) {
+            if ($account === (string) $batch['Account'] && (int) $batch['Sequence'] !== 0) {
+                $sequences[$account] = (int) $batch['Sequence'] + 1;
+            } else {
+                $probe = ['Account' => $account];
+                $this->setNextValidSequenceNumber($probe);
+                $sequences[$account] = (int) $probe['Sequence'];
+            }
+        }
+
+        return $sequences[$account];
     }
 
     /**

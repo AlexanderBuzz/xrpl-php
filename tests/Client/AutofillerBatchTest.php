@@ -123,6 +123,42 @@ final class AutofillerBatchTest extends TestCase
         $this->assertSame(self::SEQUENCE + 1, $filled['RawTransactions'][1]['RawTransaction']['Sequence']);
     }
 
+    public function testATicketCreateReservesItsTicketsBeforeTheNextInnerSequence(): void
+    {
+        $ticketCreate = ['TransactionType' => 'TicketCreate', 'Account' => self::OTHER, 'TicketCount' => 3];
+        $onTicket = ['TransactionType' => 'TicketCreate', 'Account' => self::OUTER, 'TicketCount' => 2, 'TicketSequence' => 40];
+
+        $filled = $this->client()->autofill(self::batch([
+            $ticketCreate,
+            self::payment(self::OTHER, self::OUTER, '1000'),
+            $onTicket,
+            self::payment(self::OUTER, self::OTHER, '2000'),
+        ]));
+        $inner = array_column($filled['RawTransactions'], 'RawTransaction');
+
+        // TicketCreate at S makes the tickets S+1..S+3, the account goes on at S+4
+        $this->assertSame(self::SEQUENCE, $inner[0]['Sequence']);
+        $this->assertSame(self::SEQUENCE + 4, $inner[1]['Sequence']);
+        // On a ticket it consumes no sequence, but its two tickets take two
+        $this->assertArrayNotHasKey('Sequence', $inner[2]);
+        $this->assertSame(self::SEQUENCE + 1 + 2, $inner[3]['Sequence']);
+    }
+
+    public function testCountsOnPastASequenceThatIsSet(): void
+    {
+        $batch = self::batch([
+            self::payment(self::OUTER, self::OTHER, '1000') + ['Sequence' => self::SEQUENCE],
+            self::payment(self::OUTER, self::OTHER, '2000'),
+            self::payment(self::OTHER, self::OUTER, '3000') + ['Sequence' => 9000],
+            self::payment(self::OTHER, self::OUTER, '4000'),
+        ]) + ['Sequence' => 0, 'TicketSequence' => 77];
+
+        $inner = array_column($this->client()->autofill($batch)['RawTransactions'], 'RawTransaction');
+
+        $this->assertSame(self::SEQUENCE + 1, $inner[1]['Sequence'], 'not the preset sequence again');
+        $this->assertSame(9001, $inner[3]['Sequence']);
+    }
+
     public function testKeepsAnInnerSequenceOrTicketThatIsSet(): void
     {
         $ticketed = self::payment(self::OTHER, self::OUTER, '2000') + ['TicketSequence' => 99, 'Sequence' => 0];
