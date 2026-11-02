@@ -216,7 +216,12 @@ submit($client, $payer, [                     // payer schedules the close (Sett
 `examples/batch.php`. XLS-56; two to eight inner transactions, one mode flag. Inner transactions are never signed on their own and carry no fee; `autofill()` takes care of that and of their sequences.
 
 ```php
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\Transaction\Flags\BatchFlags;
+use Hardcastle\XRPL_PHP\Models\Transaction\TxRequest;
+use Hardcastle\XRPL_PHP\Wallet\Wallet;
+use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
 // One account: signed like any transaction
 $batch = $client->autofill([
@@ -224,12 +229,12 @@ $batch = $client->autofill([
     'Account' => $alice->getAddress(),
     'Flags' => BatchFlags::tfAllOrNothing,        // or tfOnlyOne, tfUntilFailure, tfIndependent
     'RawTransactions' => [
-        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $bob, 'Amount' => '1000000']],
-        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $carol, 'Amount' => '2000000']],
+        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $bob->getAddress(), 'Amount' => xrpToDrops('1')]],
+        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $carol->getAddress(), 'Amount' => xrpToDrops('2')]],
     ],
 ]);
 $signed = $alice->sign($batch);
-$result = $client->submitAndWait($signed['tx_blob'])->getResult();   // check TransactionResult as always
+$result = $client->submitAndWait($signed['tx_blob'])->getResult();
 
 // Two accounts, atomic swap: Alice prepares, Bob signs his part, Alice signs the outer transaction
 $batch = $client->autofill([
@@ -237,18 +242,33 @@ $batch = $client->autofill([
     'Account' => $alice->getAddress(),
     'Flags' => BatchFlags::tfAllOrNothing,
     'RawTransactions' => [
-        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $bob->getAddress(), 'Amount' => '1000000']],
-        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $bob->getAddress(), 'Destination' => $alice->getAddress(), 'Amount' => $tokenAmount]],
+        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $alice->getAddress(), 'Destination' => $bob->getAddress(), 'Amount' => xrpToDrops('1')]],
+        ['RawTransaction' => ['TransactionType' => 'Payment', 'Account' => $bob->getAddress(), 'Destination' => $alice->getAddress(), 'Amount' => xrpToDrops('2')]],
     ],
     'BatchSignatures' => 1,                       // how many BatchSigners signatures the fee covers; a hint, not a field
 ]);
 $byBob = $bob->signBatch($batch);                 // Bob's side; the Batch must not change from here on
 $combined = Wallet::combineBatchSigners([$byBob]); // Alice's side: every copy that came back
-$signed = $alice->sign($combined);
+$signed = $alice->sign($combined);                // Fee was set by the autofill above and stays
 $result = $client->submitAndWait($signed['tx_blob'])->getResult();
 
-// Each applied inner transaction is a transaction of its own; its meta names the Batch in ParentBatchID
-foreach ((new BinaryCodec())->innerTransactionIds($batch) as $innerId) { /* TxRequest($innerId) */ }
+// The outer tesSUCCESS does not mean the inner transactions applied. Each applied one is a
+// transaction of its own whose meta names the Batch in ParentBatchID; one that was not applied
+// is not in the ledger, so its lookup is an ErrorResponse (txnNotFound).
+if ($result['meta']['TransactionResult'] !== 'tesSUCCESS') {
+    throw new RuntimeException('Batch failed: ' . $result['meta']['TransactionResult']);
+}
+foreach ((new BinaryCodec())->innerTransactionIds($combined) as $innerId) {
+    $response = $client->syncRequest(new TxRequest($innerId));
+    if ($response instanceof ErrorResponse) {
+        throw new RuntimeException("Inner transaction {$innerId} was not applied");   // under tfAllOrNothing
+    }
+    $inner = $response->getResult();
+    if ($inner['meta']['TransactionResult'] !== 'tesSUCCESS' || ($inner['meta']['ParentBatchID'] ?? null) !== $result['hash']) {
+        throw new RuntimeException("Inner transaction {$innerId}: {$inner['meta']['TransactionResult']}");
+    }
+}
+// With tfOnlyOne, tfUntilFailure or tfIndependent, record which inner transactions applied instead of throwing.
 ```
 
 ## Escrow and checks

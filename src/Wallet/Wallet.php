@@ -180,11 +180,22 @@ class Wallet
      * Flags and the inner transaction IDs, so the Batch must be complete and
      * autofilled before anyone signs) and returns the Batch with BatchSigners
      * holding this entry alone. Collect the entries of all signers with
-     * combineBatchSigners(), then let the outer Account autofill the fee,
-     * sign() and submit. Mirrors signMultiBatch in xrpl.js.
+     * combineBatchSigners(), then the outer Account calls sign() and submits.
+     * Mirrors signMultiBatch in xrpl.js.
+     *
+     * The fee depends on the number of signatures in BatchSigners, and it is
+     * set by the autofill that has to run before anyone signs. Pass that
+     * number to the autofill as the BatchSignatures hint
+     * (['BatchSignatures' => 2, ...]): an autofill does not touch a Fee that
+     * is set, so a second autofill after combineBatchSigners() only
+     * recomputes it when Fee is unset first.
      *
      * The wallet signs for $batchAccount, its own address by default, which
-     * has to be the Account (or the Delegate) of an inner transaction. With
+     * has to be the Account of an inner transaction or, when that inner
+     * transaction is delegated, its Delegate: the delegate signs for itself
+     * with signBatch($batch), never for the account it acts for. That holds
+     * also when the delegated inner transaction's Account is the outer
+     * Account. With
      * $multisign the entry carries Signers instead of a signature, for a
      * $batchAccount that has a signer list: true signs as this wallet's
      * address, a string as that signer address.
@@ -253,11 +264,20 @@ class Wallet
      * Every copy has to be the same Batch: same Account, sequence value,
      * Flags and inner transactions, each carrying BatchSigners and none of
      * them signed with sign() yet. The entries are sorted strictly ascending
-     * by the numeric value of Account, which rippled enforces, an entry of
-     * the outer Account is dropped (the outer signature covers it) and a
-     * duplicate account keeps its first entry. Mirrors combineBatchSigners in
-     * xrpl.js. The result still needs the outer signature: autofill the fee
-     * (it depends on the number of signatures), sign(), submit.
+     * by the numeric value of Account, which rippled enforces, and an entry
+     * of the outer Account is dropped (the outer signature covers it). An
+     * account that comes back more than once keeps one entry: a repeated
+     * single signature is kept once, and the Signers of several signers of
+     * its signer list (signBatch() with $multisign) are merged into one
+     * entry, sorted by the numeric value of their Account, which rippled
+     * also enforces. An account with a single signature in one copy and
+     * Signers in another is refused. Follows combineBatchSigners in xrpl.js,
+     * which leaves duplicates in place.
+     *
+     * The result still needs the outer signature: sign(), submit. The Fee was
+     * set by the autofill before anyone signed and stays as it is, so that
+     * autofill has to know the number of signatures (the BatchSignatures
+     * hint); otherwise unset Fee and autofill once more before sign().
      *
      * @param array<Transaction|array|string> $batches the signed copies, as arrays, models or tx_blobs
      * @param Definitions|null $definitions the definitions the Batch was built with
@@ -320,22 +340,45 @@ class Wallet
             }
         }
 
-        usort($entries, static fn (array $a, array $b): int => strcmp(
-            AccountId::fromJson($a['BatchSigner']['Account'])->toString(),
-            AccountId::fromJson($b['BatchSigner']['Account'])->toString()
-        ));
+        $byAccount = static fn (string $field): \Closure => static fn (array $a, array $b): int => strcmp(
+            AccountId::fromJson($a[$field]['Account'])->toString(),
+            AccountId::fromJson($b[$field]['Account'])->toString()
+        );
+
+        usort($entries, $byAccount('BatchSigner'));
 
         $combined = [];
-        $lastAccount = null;
         foreach ($entries as $entry) {
-            if ($entry['BatchSigner']['Account'] !== $lastAccount) {
-                $combined[] = $entry;
-                $lastAccount = $entry['BatchSigner']['Account'];
+            $account = $entry['BatchSigner']['Account'];
+            if (!isset($combined[$account])) {
+                $combined[$account] = $entry;
+                continue;
             }
+
+            $kept = $combined[$account]['BatchSigner'];
+            $keptIsMultisigned = isset($kept['Signers']);
+            $isMultisigned = isset($entry['BatchSigner']['Signers']);
+            if ($keptIsMultisigned !== $isMultisigned) {
+                throw new ValidationException(
+                    "{$account} has both a single signature and Signers in the Batches to combine"
+                );
+            }
+            if (!$isMultisigned) {
+                continue; // the same signature twice
+            }
+
+            // Several signers of one signer list: one entry, its Signers merged
+            $signers = [];
+            foreach (array_merge($kept['Signers'], $entry['BatchSigner']['Signers']) as $signer) {
+                $signers[$signer['Signer']['Account']] ??= $signer;
+            }
+            $signers = array_values($signers);
+            usort($signers, $byAccount('Signer'));
+            $combined[$account]['BatchSigner']['Signers'] = $signers;
         }
 
         $result = $decoded[0];
-        $result['BatchSigners'] = $combined;
+        $result['BatchSigners'] = array_values($combined);
 
         return $result;
     }

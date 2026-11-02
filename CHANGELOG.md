@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `BatchSigners` entry (as the account, as the delegate of a delegated inner
   transaction, or as a signer of its signer list) and
   `Wallet::combineBatchSigners()` merges the signed copies, sorted by the
-  numeric account value, the outer account's entry dropped.
+  numeric account value, the outer account's entry dropped; several signers
+  of one signer list end up in one entry with their `Signers` merged and
+  sorted (xrpl.js leaves such duplicates in place, which the ledger refuses).
   `BinaryCodec::encodeForSigningBatch()` is the payload every entry signs:
   `BCH\0`, the outer Account, the sequence value, Flags and the inner
   transaction IDs, then the signer suffix; `HashLedger::hashTx()` gives the
@@ -29,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   inner transaction would cost) and refuses what the ledger would refuse:
   no or several mode flags, fewer than two or more than eight inner
   transactions, a nested Batch, an inner fee, signing key or signature. The
-  hint `'BatchSignatures' => n` sizes the fee before the entries exist.
+  hint `'BatchSignatures' => n` sizes the fee before the entries exist and
+  is removed by every `autofill()` of a Batch, also when `Fee` is set.
 
 ### Changed
 - The `Batch` model, `BatchFlags` and `GlobalFlags::tfInnerBatchTxn` no

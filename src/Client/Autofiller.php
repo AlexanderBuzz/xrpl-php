@@ -94,6 +94,11 @@ class Autofiller
             $this->calculateFeePerTransactionType($tx, $signersCount);
         }
 
+        // A hint for the fee only, never a field of the transaction, also when Fee was set already
+        if (($tx['TransactionType'] ?? null) === 'Batch') {
+            unset($tx['BatchSignatures']);
+        }
+
         if (!isset($tx['LastLedgerSequence'])) {
             $this->setLatestValidatedLedgerSequence($tx);
         }

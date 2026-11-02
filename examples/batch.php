@@ -5,6 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use Codedungeon\PHPCliColors\Color;
 use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
+use Hardcastle\XRPL_PHP\Models\ErrorResponse;
 use Hardcastle\XRPL_PHP\Models\Transaction\Flags\BatchFlags;
 use Hardcastle\XRPL_PHP\Models\Transaction\TxRequest;
 use Hardcastle\XRPL_PHP\Wallet\Wallet;
@@ -41,6 +42,12 @@ function payment(Wallet $from, Wallet $to, string $xrp): array
     ];
 }
 
+/**
+ * The outer result alone says nothing about the inner transactions: a Batch
+ * that applies none of them can still be tesSUCCESS. Every inner transaction
+ * is a transaction of its own in the ledger; one that was not applied cannot
+ * be found, so the lookup returns an ErrorResponse (txnNotFound).
+ */
 function report(JsonRpcClient $client, array $batch, array $result): void
 {
     $resultCode = $result['meta']['TransactionResult'];
@@ -49,13 +56,31 @@ function report(JsonRpcClient $client, array $batch, array $result): void
         exit(1);
     }
 
-    print_r(Color::GREEN . "Batch applied: " . Color::WHITE . "{$result['hash']}" . PHP_EOL);
-
-    // Every inner transaction is a transaction of its own in the ledger
+    $allApplied = true;
     foreach ((new BinaryCodec())->innerTransactionIds($batch) as $innerId) {
-        $inner = $client->syncRequest(new TxRequest($innerId))->getResult();
-        print_r("  inner {$innerId}: {$inner['meta']['TransactionResult']}" . PHP_EOL);
+        $response = $client->syncRequest(new TxRequest($innerId));
+        if ($response instanceof ErrorResponse) {
+            print_r(Color::RED . "  inner {$innerId}: not applied ({$response->getError()})" . Color::WHITE . PHP_EOL);
+            $allApplied = false;
+            continue;
+        }
+
+        $inner = $response->getResult();
+        $innerCode = $inner['meta']['TransactionResult'] ?? 'unknown';
+        print_r("  inner {$innerId}: {$innerCode}" . PHP_EOL);
+        if ($innerCode !== 'tesSUCCESS' || ($inner['meta']['ParentBatchID'] ?? null) !== $result['hash']) {
+            $allApplied = false;
+        }
     }
+
+    // Both Batches here are tfAllOrNothing; with tfOnlyOne, tfUntilFailure or
+    // tfIndependent some inner transactions failing is part of the deal
+    if (!$allApplied) {
+        print_r(Color::RED . "Batch {$result['hash']} succeeded, but not every inner transaction was applied" . Color::WHITE . PHP_EOL);
+        exit(1);
+    }
+
+    print_r(Color::GREEN . "Batch applied: " . Color::WHITE . "{$result['hash']}" . PHP_EOL);
 }
 
 // 1. One account, two payments, all or nothing. autofill() sequences the inner

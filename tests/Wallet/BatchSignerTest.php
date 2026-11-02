@@ -345,6 +345,43 @@ final class BatchSignerTest extends TestCase
         $this->assertSame(array_merge($byEd['BatchSigners'], $bySecp['BatchSigners']), $combined['BatchSigners']);
     }
 
+    public function testMergesTheSignersOfOneSignerList(): void
+    {
+        $regKey = Wallet::fromSeed(self::REGKEY_SEED);
+        $asRegKey = $regKey->signBatch(self::sequencedBatch(), self::ED, true);
+        $asOuter = $regKey->signBatch(self::sequencedBatch(), self::ED, self::OUTER);
+        $bySecp = self::secpWallet()->signBatch(self::sequencedBatch());
+
+        $combined = Wallet::combineBatchSigners([$asRegKey, $bySecp, $asOuter, $asRegKey]);
+
+        $this->assertCount(2, $combined['BatchSigners'], 'one entry per account');
+        $entry = $combined['BatchSigners'][0]['BatchSigner'];
+        $this->assertSame(self::ED, $entry['Account']);
+
+        // rwRNez... (674E837F...) sorts before rJCxK2... (C1D81FB3...) numerically, not alphabetically;
+        // the repeated copy of the first signature appears once
+        $this->assertSame([
+            $asRegKey['BatchSigners'][0]['BatchSigner']['Signers'][0],
+            $asOuter['BatchSigners'][0]['BatchSigner']['Signers'][0],
+        ], $entry['Signers']);
+        $this->assertSame(self::REGKEY, $entry['Signers'][0]['Signer']['Account']);
+        $this->assertSame(self::OUTER, $entry['Signers'][1]['Signer']['Account']);
+
+        $this->assertSame($bySecp['BatchSigners'][0], $combined['BatchSigners'][1]);
+        (new BinaryCodec())->encode($combined); // still a valid transaction
+    }
+
+    public function testRefusesASingleSignatureAndSignersForOneAccount(): void
+    {
+        $single = self::edWallet()->signBatch(self::sequencedBatch());
+        $multi = Wallet::fromSeed(self::REGKEY_SEED)->signBatch(self::sequencedBatch(), self::ED, true);
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('both a single signature and Signers');
+
+        Wallet::combineBatchSigners([$single, $multi]);
+    }
+
     public function testRefusesToCombineDifferentBatches(): void
     {
         $bySecp = self::secpWallet()->signBatch(self::sequencedBatch());

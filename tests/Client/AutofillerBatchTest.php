@@ -153,6 +153,39 @@ final class AutofillerBatchTest extends TestCase
         $this->assertArrayNotHasKey('BatchSignatures', $filled, 'the hint never reaches the transaction');
     }
 
+    public function testTheHintIsRemovedAlsoWhenFeeIsSet(): void
+    {
+        $batch = self::batch([
+            self::payment(self::OUTER, self::OTHER, '1000'),
+            self::payment(self::OTHER, self::OUTER, '2000'),
+        ]) + ['BatchSignatures' => 1, 'Fee' => '100'];
+
+        $filled = $this->client()->autofill($batch);
+
+        $this->assertSame('100', $filled['Fee'], 'a Fee that is set stays');
+        $this->assertArrayNotHasKey('BatchSignatures', $filled);
+
+        $again = $this->client()->autofill($filled + ['BatchSignatures' => 1]);
+        $this->assertArrayNotHasKey('BatchSignatures', $again, 'a second autofill removes it too');
+    }
+
+    public function testASecondAutofillRecomputesTheFeeOnlyWithoutFee(): void
+    {
+        $filled = $this->client()->autofill(self::batch([
+            self::payment(self::OUTER, self::OTHER, '1000'),
+            self::payment(self::OTHER, self::OUTER, '2000'),
+        ]));
+        $this->assertSame((string) (self::NET_FEE_DROPS * (2 + 2)), $filled['Fee'], 'no hint, no BatchSigners yet');
+
+        $filled['BatchSigners'] = [
+            ['BatchSigner' => ['Account' => self::OTHER, 'SigningPubKey' => '00', 'TxnSignature' => '00']],
+        ];
+        $this->assertSame($filled['Fee'], $this->client()->autofill($filled)['Fee'], 'a set Fee is not recomputed');
+
+        unset($filled['Fee']);
+        $this->assertSame((string) (self::NET_FEE_DROPS * (3 + 2)), $this->client()->autofill($filled)['Fee']);
+    }
+
     public function testTheFeeCountsTheSignaturesOfPresentBatchSigners(): void
     {
         $batch = self::batch([
