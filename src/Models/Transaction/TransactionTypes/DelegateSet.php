@@ -17,21 +17,26 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
  * public API Methods / Transaction Methods
  * https://xrpl.org/delegateset.html
  *
- * This model exists so that a DelegateSet transaction found in the ledger
- * decodes and so that the field list mirrors definitions.json. Building one
- * with this library is possible but not supported yet:
+ * Grants the account in Authorize permissions to send transactions on behalf
+ * of Account (Permission Delegation, XLS-75; PermissionDelegationV1_1 is
+ * enabled on Mainnet since 2026-10-08). At most ten Permission entries, each
+ * with a PermissionValue the codec takes by name: a transaction type
+ * ("Payment", "TrustSet"), which grants all of it, or a granular permission
+ * ("AccountDomainSet", "TrustlineAuthorize"; the names and numbers are
+ * Definitions::GRANULAR_PERMISSIONS), which grants one narrow use of one
+ * type. A new list replaces the old one; an empty list revokes everything
+ * and deletes the Delegate object. AccountSet, SetRegularKey, SignerListSet,
+ * DelegateSet, AccountDelete, Batch and the pseudo-transactions cannot be
+ * granted, nor can the not yet integrated types XLS-75 §8 lists; the ledger
+ * refuses them with temMALFORMED, this library does not check.
  *
- * - each Permission entry carries a PermissionValue. The codec accepts the
- *   names rippled uses - a transaction type ("Payment") or a granular
- *   permission ("TrustlineAuthorize", see Definitions::GRANULAR_PERMISSIONS)
- *   - and maps them to their numbers, but nothing checks that the delegating
- *   account may grant them;
- * - sending a transaction on behalf of the delegating account (the Delegate
- *   field on the delegated transaction) is not handled by Wallet::sign().
+ * The delegate then sends a transaction with Account = the delegating
+ * account and Delegate = its own address, autofilled and signed with sign()
+ * like any transaction: it uses the delegating account's Sequence, the
+ * delegate's key and pays the fee from the delegate's balance. A transaction
+ * the permissions do not cover fails with terNO_DELEGATE_PERMISSION.
  *
- * Permission Delegation (XLS-75) was rewritten alongside Batch and shipped in
- * rippled 3.3.0; it is not active on Mainnet. The permission constants and
- * the delegated signing path will follow once it is.
+ * Until fixCleanup3_4_0 is active, do not grant PaymentBurn (XLS-75 §8).
  *
  * https://github.com/XRPLF/XRPL-Standards/tree/master/XLS-0075-permission-delegation
  */

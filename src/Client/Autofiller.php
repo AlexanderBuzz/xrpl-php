@@ -141,6 +141,9 @@ class Autofiller
 
         // SetRegularKey:
         $this->convertToClassicAddress($tx, 'RegularKey');
+
+        // Any delegated transaction (XLS-75):
+        $this->convertToClassicAddress($tx, 'Delegate');
     }
 
     /**

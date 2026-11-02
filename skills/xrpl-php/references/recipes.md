@@ -278,6 +278,61 @@ foreach ((new BinaryCodec())->innerTransactionIds($combined) as $innerId) {
 // With tfOnlyOne, tfUntilFailure or tfIndependent, record which inner transactions applied instead of throwing.
 ```
 
+## Delegation: another account sends on your behalf
+
+`examples/delegation.php`. XLS-75. Isaac lets Alice send payments for him and set his domain; Alice signs with her own key and pays the fee, the transaction is Isaac's.
+
+```php
+use Hardcastle\XRPL_PHP\Utils\Utilities;
+use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
+
+// Isaac grants: whole transaction types by name, or granular permissions (Definitions::GRANULAR_PERMISSIONS)
+submit($client, $isaac, [
+    'TransactionType' => 'DelegateSet',
+    'Account' => $isaac->getAddress(),
+    'Authorize' => $alice->getAddress(),
+    'Permissions' => [                                                  // at most 10; replaces the old list
+        ['Permission' => ['PermissionValue' => 'Payment']],
+        ['Permission' => ['PermissionValue' => 'AccountDomainSet']],   // AccountSet with Domain only
+    ],
+]);
+
+// Alice sends for Isaac: Account is Isaac, Delegate is Alice, Alice signs; Isaac's Sequence, Alice's fee
+submit($client, $alice, [
+    'TransactionType' => 'Payment',
+    'Account' => $isaac->getAddress(),
+    'Delegate' => $alice->getAddress(),
+    'Destination' => $bob->getAddress(),
+    'Amount' => xrpToDrops('1'),
+]);
+submit($client, $alice, [
+    'TransactionType' => 'AccountSet',
+    'Account' => $isaac->getAddress(),
+    'Delegate' => $alice->getAddress(),
+    'Domain' => Utilities::convertStringToHex('example.com'),
+]);
+
+// Not granted: refused with terNO_DELEGATE_PERMISSION, which never reaches a ledger, so read the
+// preliminary result of submit(); the submit() helper above would wait until LastLedgerSequence passes
+$trustSet = $alice->sign($client->autofill([
+    'TransactionType' => 'TrustSet',
+    'Account' => $isaac->getAddress(),
+    'Delegate' => $alice->getAddress(),
+    'LimitAmount' => ['currency' => 'USD', 'issuer' => $bob->getAddress(), 'value' => '100'],
+]));
+$engineResult = $client->submit($trustSet['tx_blob'])->getResult()['engine_result'];   // terNO_DELEGATE_PERMISSION
+
+// Isaac revokes everything: an empty list deletes the Delegate object
+submit($client, $isaac, [
+    'TransactionType' => 'DelegateSet',
+    'Account' => $isaac->getAddress(),
+    'Authorize' => $alice->getAddress(),
+    'Permissions' => [],
+]);
+```
+
+Anything the permissions do not cover (the `TrustSet` above, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
+
 ## Escrow and checks
 
 Time-based escrow: `EscrowCreate` with `Amount`, `Destination` and `FinishAfter` (ripple epoch seconds: Unix time minus 946684800), later `EscrowFinish` with `Owner` and `OfferSequence` (the `Sequence` of the create). Tokens can be escrowed too (`Amount` as an IOU or MPT). Checks: `CheckCreate` with `SendMax`, cashed by the destination with `CheckCash` and either `Amount` or `DeliverMin`.

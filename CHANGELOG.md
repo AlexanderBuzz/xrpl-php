@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Added
+- **Delegated transactions (XLS-75, PermissionDelegationV1_1).** A delegate
+  sends a transaction with `Account` = the delegating account and
+  `Delegate` = itself and signs it with `Wallet::sign()` like any
+  transaction; `autofill()` takes the delegating account's `Sequence`, the
+  delegate pays the fee. This worked already; it is now proven on the
+  Testnet (`tests/Integration/DelegationTest.php`: a `DelegateSet` with a
+  transaction type and a granular permission, a delegated Payment and
+  AccountSet, `terNO_DELEGATE_PERMISSION` for what was not granted, revoking
+  with an empty list) and shown in `examples/delegation.php`. `autofill()`
+  turns a `Delegate` given as an X-address into the classic address.
+
+### Changed
+- The `DelegateSet` docblock no longer says that Permission Delegation is
+  not active and that `Wallet::sign()` does not handle `Delegate`; it is
+  enabled on Mainnet since 2026-10-08 and says how permissions are named,
+  replaced and revoked and which types cannot be granted. The skill has a
+  delegation recipe, a signing rule, a review item, a pitfall and the
+  `terNO_DELEGATE_PERMISSION` and `temMALFORMED` cases.
+
 ## [3.1.0] - 2026-11-02
 
 ### Added
