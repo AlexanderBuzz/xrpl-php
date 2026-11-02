@@ -312,6 +312,16 @@ submit($client, $alice, [
     'Domain' => Utilities::convertStringToHex('example.com'),
 ]);
 
+// Not granted: refused with terNO_DELEGATE_PERMISSION, which never reaches a ledger, so read the
+// preliminary result of submit(); the submit() helper above would wait until LastLedgerSequence passes
+$trustSet = $alice->sign($client->autofill([
+    'TransactionType' => 'TrustSet',
+    'Account' => $isaac->getAddress(),
+    'Delegate' => $alice->getAddress(),
+    'LimitAmount' => ['currency' => 'USD', 'issuer' => $bob->getAddress(), 'value' => '100'],
+]));
+$engineResult = $client->submit($trustSet['tx_blob'])->getResult()['engine_result'];   // terNO_DELEGATE_PERMISSION
+
 // Isaac revokes everything: an empty list deletes the Delegate object
 submit($client, $isaac, [
     'TransactionType' => 'DelegateSet',
@@ -321,7 +331,7 @@ submit($client, $isaac, [
 ]);
 ```
 
-Anything the permissions do not cover (here a `TrustSet`, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION` and never reaches a ledger, so the `submit()` helper above, which waits for a validated result, would only wait until `LastLedgerSequence` passes. Read the preliminary result instead: `$client->submit($signed['tx_blob'])->getResult()['engine_result']`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
+Anything the permissions do not cover (the `TrustSet` above, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
 
 ## Escrow and checks
 
