@@ -10,7 +10,7 @@ Diff base: `{{BASE}}`; compute the branch's own diff (`git log --first-parent {{
 
 ## What to check
 
-- **File heads.** New files under `src/`, `scripts/` and `skills/build.php` start with `<?php declare(strict_types=1);` and the copyright header (`XRPL-PHP`, `Copyright (c) Alexander Busse | Hardcastle Technologies`, the LICENSE sentence). Tests and examples carry no copyright header, none of them does; new tests still declare `strict_types`. Do not flag a missing header or `strict_types` on a file the branch did not add (the function files under `src/Sugar/` have neither).
+- **File heads.** Every file under `src/`, `scripts/` and `skills/build.php` starts with `<?php declare(strict_types=1);` followed by the copyright header (`XRPL-PHP`, `Copyright (c) Alexander Busse | Hardcastle Technologies`, the LICENSE sentence). Every test declares `strict_types` and carries no copyright header. Examples under `examples/` are exempt from both.
 - **Namespaces.** PSR-4 under `Hardcastle\XRPL_PHP\` (`src/`) and `Hardcastle\XRPL_PHP\Test\` (`tests/`).
 - **Psalm** must pass with `--no-cache`; a new `@psalm-suppress` or baseline entry needs a reason in the diff. Prefer a type fix over a suppression. Psalm is the house tool here, not PHPStan.
 - **Numbers.** No `float` for amounts, fees or ledger values; strings of drops, `BigDecimal`/`BigInteger` from `brick/math` for arithmetic. `int` only where the value fits (sequences, ledger indexes, flags).
