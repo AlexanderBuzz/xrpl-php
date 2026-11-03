@@ -12,13 +12,14 @@ language: en-US
 reviews:
   profile: chill
 
-  # A release pull request ("task: release X.Y.Z", opened by the
-  # xrpl-php-release procedure) renames the changelog block and bumps
-  # version strings; everything in it was reviewed in the pull requests it
-  # releases. `@coderabbitai review` still reviews one on request.
-  auto_review:
-    ignore_title_keywords:
-      - "task: release"
+  # No ignore_title_keywords: it matches a keyword anywhere in the title, not
+  # as a prefix, so a pull request that changes behaviour could skip its
+  # review by accident ("fix: task: release parsing"). A release pull
+  # request ("task: release X.Y.Z", opened by the xrpl-php-release
+  # procedure) only renames the changelog block and bumps version strings,
+  # all reviewed in the pull requests it releases; it opts out on its own
+  # with "@coderabbitai ignore" in its description. `@coderabbitai review`
+  # in a comment still reviews one on request.
 
   # path_filters also shape the sparse checkout the review runs on, so a
   # filter removes context, not just findings. The only exclusion is the
