@@ -65,7 +65,7 @@ git push -u origin release-<version>
 gh pr create --base main --head release-<version> --title "task: release <version>" --body-file <body>
 ```
 
-Keep the title exactly `task: release <version>`: `.coderabbit.yaml` skips automatic reviews for titles containing `task: release`, since every entry was reviewed in the pull request that brought it. Do not wait for a CodeRabbit review on the release PR; `@coderabbitai review` in a comment asks for one if the maintainer wants it.
+Keep the title exactly `task: release <version>`, and put the line `@coderabbitai ignore` at the end of the body before `gh pr create`: CodeRabbit then skips the automatic review, since every entry was reviewed in the pull request that brought it. The opt-out is in the body, not in `.coderabbit.yaml`, because `ignore_title_keywords` matches anywhere in a title and could skip a pull request that changes behaviour. Do not wait for a CodeRabbit review on the release PR; `@coderabbitai review` in a comment asks for one if the maintainer wants it.
 
 PR body, as in #54 and #57: a Summary saying the block was renamed and how entries were ordered, the SemVer reasoning, "What consumers get" as bullets, an "Upgrading" line, and the sentence "After the merge: tag `<version>` on the merge commit (I do not tag). Packagist picks it up from the webhook." Test plan: changelog only, the grep, the suite result of the last content PR.
 
