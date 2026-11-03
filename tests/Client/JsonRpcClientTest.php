@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hardcastle\XRPL_PHP\Test\Client;
 
