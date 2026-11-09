@@ -22,7 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rippled's `STAccount`: an empty field reads as `''` and `''` writes an empty
   field. A field length other than 0 or 20 is refused. The zero account
   `rrrrrrrrrrrrrrrrrrrrrhoLvTp` and accounts in fixed width positions (an
-  issuer, a path step) are unchanged.
+  issuer, a path step) are unchanged. If you passed `''` to mean the zero
+  account, pass `rrrrrrrrrrrrrrrrrrrrrhoLvTp` instead, or the bytes and the hash
+  change.
 
 ## [3.2.0] - 2026-11-02
 
