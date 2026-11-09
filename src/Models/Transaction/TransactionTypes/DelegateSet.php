@@ -36,8 +36,6 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\StArray;
  * delegate's key and pays the fee from the delegate's balance. A transaction
  * the permissions do not cover fails with terNO_DELEGATE_PERMISSION.
  *
- * Until fixCleanup3_4_0 is active, do not grant PaymentBurn (XLS-75 §8).
- *
  * https://github.com/XRPLF/XRPL-Standards/tree/master/XLS-0075-permission-delegation
  */
 class DelegateSet extends BaseTransaction

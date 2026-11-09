@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **`PaymentBurn` can be delegated.** The `DelegateSet` docblock and the agent
+  skill no longer warn against granting it: `fixCleanup3_4_0`, which stops a
+  delegate holding `PaymentBurn` from also minting tokens, is enabled on
+  Mainnet, Testnet and Devnet. On a network without that amendment the
+  warning of XLS-75 still applies.
+
 ### Fixed
 - **An unset account field.** A pseudo transaction such as Xahau's `Entropy`
   carries an empty `Account` on the wire. `AccountId` always read 20 bytes
