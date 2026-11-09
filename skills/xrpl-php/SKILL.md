@@ -235,7 +235,7 @@ When asked to review application code built on `hardcastle/xrpl_php`, check thes
 9. **Multisign order.** `Signers` sorted by the numeric value of `Account`, `SigningPubKey` empty, fee autofilled with `signersCount`.
 10. **Units.** `TransferFee` is 1/1000 of a percent on MPT issuances and 1/100,000 on NFTs; `TradingFee` is 1/100,000; time fields are ripple epoch seconds (Unix time minus 946684800), not Unix time.
 11. **Testnet assumptions in production code.** A hard-coded Testnet URL or faucet call, or a seed from a tutorial, in code meant for Mainnet.
-12. **Delegation as designed.** A delegated transaction has `Account` = the delegating account, `Delegate` = the signer, and is signed by the delegate's wallet; signing it with the delegating account's key, or putting the delegate into `Account`, is a defect. A `DelegateSet` that grants `PaymentBurn` before `fixCleanup3_4_0` is active, or that grants more than the code uses (a whole `Payment` where `PaymentMint` would do), deserves a comment. An empty `Permissions` list revokes everything.
+12. **Delegation as designed.** A delegated transaction has `Account` = the delegating account, `Delegate` = the signer, and is signed by the delegate's wallet; signing it with the delegating account's key, or putting the delegate into `Account`, is a defect. A `DelegateSet` that grants more than the code uses (a whole `Payment` where `PaymentMint` would do) deserves a comment. An empty `Permissions` list revokes everything.
 
 Report each finding with file and line, what goes wrong on the ledger, and the fix in terms of this SDK's API. Do not flag style, and do not demand tests for code that has none; flag a test that asserts success without checking `TransactionResult`.
 

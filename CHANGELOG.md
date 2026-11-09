@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Changed
+- **`PaymentBurn` can be delegated.** The `DelegateSet` docblock and the agent
+  skill no longer warn against granting it: `fixCleanup3_4_0`, which stops a
+  delegate holding `PaymentBurn` from also minting tokens, is enabled on
+  Mainnet, Testnet and Devnet. On a network without that amendment the
+  warning of XLS-75 still applies.
+
 ## [3.2.0] - 2026-11-02
 
 ### Added
