@@ -13,6 +13,7 @@ namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Serdes;
 use Hardcastle\Buffer\Buffer;
 use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldInstance;
+use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\AccountId;
 use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types\SerializedType;
 
 /**
@@ -61,7 +62,7 @@ class BinarySerializer
      */
     public function writeLengthEncoded(SerializedType $value): void
     {
-        $buffer = $value->toBytes();
+        $buffer = $value instanceof AccountId && $value->isDefault() ? Buffer::alloc(0) : $value->toBytes();
         $this->write($this->encodeVariableLength($buffer->getLength()));
         $this->write($buffer);
     }

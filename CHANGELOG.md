@@ -14,6 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Mainnet, Testnet and Devnet. On a network without that amendment the
   warning of XLS-75 still applies.
 
+### Fixed
+- **An unset account field.** A pseudo transaction such as Xahau's `Entropy`
+  carries an empty `Account` on the wire. `AccountId` always read 20 bytes
+  there, so decoding such a blob failed or read past the field; `''` in JSON was
+  encoded as the zero account, which hashes differently. Both now follow
+  rippled's `STAccount`: an empty field reads as `''` and `''` writes an empty
+  field. A field length other than 0 or 20 is refused. The zero account
+  `rrrrrrrrrrrrrrrrrrrrrhoLvTp` and accounts in fixed width positions (an
+  issuer, a path step) are unchanged. If you passed `''` to mean the zero
+  account, pass `rrrrrrrrrrrrrrrrrrrrrhoLvTp` instead, or the bytes and the hash
+  change.
+
 ## [3.2.0] - 2026-11-02
 
 ### Added
