@@ -331,7 +331,7 @@ submit($client, $isaac, [
 ]);
 ```
 
-Anything the permissions do not cover (the `TrustSet` above, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`. Until `fixCleanup3_4_0` is active, do not grant `PaymentBurn`.
+Anything the permissions do not cover (the `TrustSet` above, or any Payment after revoking) fails with `terNO_DELEGATE_PERMISSION`. `AccountSet`, `SetRegularKey`, `SignerListSet`, `DelegateSet`, `AccountDelete` and `Batch` cannot be granted as types (`temMALFORMED`); the inner transactions of a Batch can be delegated, see the Batch signing rules in `SKILL.md`.
 
 ## Escrow and checks
 
