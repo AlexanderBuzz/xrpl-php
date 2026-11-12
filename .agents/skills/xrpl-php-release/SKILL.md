@@ -44,6 +44,7 @@ In `CHANGELOG.md`, rename `## [Unreleased]` to `## [<version>] - <YYYY-MM-DD>` (
 
 - `skills/xrpl-php/SKILL.md` frontmatter: `sdk_version` = the version, `last_updated` = today. Bump `metadata.version` (patch for content edits, minor for new sections or references) only if the skill changed since the last release (`git log <last>..main -- skills/`); `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` carry the same version as the skill, and a test checks that.
 - `php skills/build.php` regenerates the references; the test suite fails if they are stale.
+- `SECURITY.md`: on a new major, the supported-versions table and the sentence below it name the new major.
 - `README.md` line "XRP Ledger / rippled version X.Y.Z compatible" and the flag docblocks say the rippled version, not the SDK version; touch them only when a definitions sync changed it.
 
 ## 4. Verify
