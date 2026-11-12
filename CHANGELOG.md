@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Fixed
+- **The `brick/math` lower bound.** Since 2.2.0 the XRP and drops conversion
+  calls `BigDecimal::dividedByExact()`, which brick/math added in 0.14.2, while
+  `composer.json` still allowed 0.11 and up. With brick/math 0.11.0 to 0.14.1
+  the conversion failed with "Call to undefined method". The constraint is now
+  `>=0.14.2 <0.15`; if Composer keeps an older brick/math in your project, run
+  `composer update brick/math`.
+
 ## [3.2.1] - 2026-11-09
 
 ### Changed
