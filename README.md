@@ -301,6 +301,12 @@ docker compose exec php bash
 composer install
 ```
 
+`composer install` takes the versions in `composer.lock`, the ones CI tests. Users of
+the package get whatever the constraints in `composer.json` allow, so CI also runs the
+unit tests with the highest and the lowest of those. Update the lock with
+`COMPOSER_POLICY_COOLDOWN_PERIOD="7 days" composer update` (Composer 2.11 or newer):
+releases younger than a week are held back, as in CI.
+
 The image is built from `docker/`. Xdebug is preconfigured to reach the host on
 port 9090 via `host.docker.internal`, which works on Linux as well because the
 compose file maps it to the host gateway. For anything else that is specific to
