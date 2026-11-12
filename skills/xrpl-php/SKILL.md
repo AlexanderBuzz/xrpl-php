@@ -5,8 +5,8 @@ license: MIT
 compatibility: Requires PHP 8.2+, ext-bcmath, ext-gmp and Composer
 metadata:
   version: "1.3.1"
-  sdk_version: "3.2.1"
-  last_updated: "2026-11-09"
+  sdk_version: "3.2.2"
+  last_updated: "2026-11-12"
 ---
 
 # XRPL PHP SDK (`hardcastle/xrpl_php`)
