@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # The actions in the workflows, pinned to commit SHAs with the version in a comment. Dependabot
+  # updates both; all action updates of a week come as one pull request.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+
+  # The package's dependencies (composer.json; there is no committed lock file).
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
