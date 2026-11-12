@@ -305,7 +305,8 @@ composer install
 the package get whatever the constraints in `composer.json` allow, so CI also runs the
 unit tests with the highest and the lowest of those. Update the lock with
 `COMPOSER_POLICY_COOLDOWN_PERIOD="7 days" composer update` (Composer 2.11 or newer):
-releases younger than a week are held back, as in CI.
+releases younger than a week are held back. The cooldown is set per command, not in
+`composer.json`, where Composer 2.11 counts it into the lock file's hash.
 
 The image is built from `docker/`. Xdebug is preconfigured to reach the host on
 port 9090 via `host.docker.internal`, which works on Linux as well because the

@@ -45,15 +45,12 @@ jobs:
   # Users never get the locked versions; they install whatever the constraints in composer.json
   # allow. So the unit tests also run without the lock, with the highest versions (on the newest
   # PHP the package is tested on, the platform pin in composer.json lifted) and with the lowest
-  # (on PHP 8.2). Releases younger than a week are held back (Composer 2.11+): the cooldown is set
-  # here, not in composer.json, where Composer 2.11 counts it into the lock file's content hash
-  # and every older Composer would report the lock as outdated. Like every job here, this one has
-  # no secrets and only reads the repository.
+  # (on PHP 8.2). No cooldown here: users get a new release at once, so this job has to see it at
+  # once too, as the early warning for an incompatible release. Like every job here, it has no
+  # secrets and only reads the repository.
   unlocked:
     name: Unlocked dependencies, ${{ matrix.dependencies }} (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
-    env:
-      COMPOSER_POLICY_COOLDOWN_PERIOD: 7 days
     strategy:
       fail-fast: false
       matrix:
