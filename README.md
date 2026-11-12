@@ -274,8 +274,8 @@ PHP project's mitigations (`session.upload_progress.enabled=0`, a low
 `post_max_size`, `memory_limit` set through `php_admin_value`) reduce the
 exposure but do not remove it.
 
-To report a security issue in this package itself, write to the address in
-`composer.json` rather than opening a public issue.
+To report a security issue in this package itself, follow [SECURITY.md](SECURITY.md)
+rather than opening a public issue.
 
 ## Development
 
