@@ -1,30 +1,60 @@
 name: Unit Test (PHPUnit)
 on: push
 
+# Nothing here writes to GitHub.
+permissions:
+  contents: read
+
 jobs:
   phpunit:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.2'
           tools: composer, phpunit
-          extensions: ds, gmp, sockets
+          extensions: ds, gmp, sockets, bcmath
           coverage: none
-#
+
       - name: Install composer dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: "8.2"
-          php_extensions: gmp sockets bcmath
-          version: latest
+        run: composer install --no-interaction --no-progress
+
+      # Known vulnerabilities in what the package pulls in: high and critical ones in the runtime
+      # dependencies fail the run; all others are listed without failing it.
+      - name: Composer audit (listed, not failing)
+        run: composer audit --abandoned=report || true
+
+      - name: No high or critical advisory in the runtime dependencies
+        run: composer audit --no-dev --abandoned=ignore --ignore-severity=low --ignore-severity=medium
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit ./tests --exclude-group integration --exclude-group integration-slow
 
       - name: Run Psalm
         run: vendor/bin/psalm --config=psalm.xml --no-progress --no-cache
+
+  # Every external action is referenced by a full commit SHA, with its version as a comment: a tag
+  # can be moved to other code, a commit cannot. Dependabot keeps the SHAs current.
+  pinned:
+    name: Actions pinned to commit SHAs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Every external action is pinned to a full commit SHA
+        run: |
+          # The key is spelled apart, so this file does not match its own pattern.
+          key=uses
+          unpinned=$(grep -rnoE "${key}:\s*[^ #]+" .github/ | grep -v "${key}: \./" | grep -vE '@[0-9a-f]{40}$' || true)
+          if [ -n "$unpinned" ]; then
+            echo "::error::Actions not pinned to a full commit SHA (owner/action@<sha> # vX.Y.Z):"
+            echo "$unpinned"
+            exit 1
+          fi

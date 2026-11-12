@@ -12,6 +12,11 @@ language: en-US
 reviews:
   profile: chill
 
+  # Dependabot's pull requests (action SHAs, dependency versions) are not reviewed.
+  auto_review:
+    ignore_usernames:
+      - dependabot[bot]
+
   # No ignore_title_keywords: it matches a keyword anywhere in the title, not
   # as a prefix, so a pull request that changes behaviour could skip its
   # review by accident ("fix: task: release parsing"). A release pull
