@@ -34,3 +34,23 @@ jobs:
 
       - name: Run Psalm
         run: vendor/bin/psalm --config=psalm.xml --no-progress --no-cache
+
+  # Every external action is referenced by a full commit SHA, with its version as a comment: a tag
+  # can be moved to other code, a commit cannot. Dependabot keeps the SHAs current.
+  pinned:
+    name: Actions pinned to commit SHAs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Every external action is pinned to a full commit SHA
+        run: |
+          # The key is spelled apart, so this file does not match its own pattern.
+          key=uses
+          unpinned=$(grep -rnoE "${key}:\s*[^ #]+" .github/ | grep -v "${key}: \./" | grep -vE '@[0-9a-f]{40}$' || true)
+          if [ -n "$unpinned" ]; then
+            echo "::error::Actions not pinned to a full commit SHA (owner/action@<sha> # vX.Y.Z):"
+            echo "$unpinned"
+            exit 1
+          fi
