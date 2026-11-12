@@ -6,12 +6,23 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # New releases wait a week before Dependabot proposes them.
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns: ['*']
 
-  # The package's dependencies (composer.json; there is no committed lock file).
+  # The package's dependencies. Updates within the constraints change composer.lock and come as
+  # one pull request a week; a new major widens the constraint in composer.json in a pull request
+  # of its own.
   - package-ecosystem: composer
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      composer:
+        patterns: ['*']
+        update-types: [minor, patch]
