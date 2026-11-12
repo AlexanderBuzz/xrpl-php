@@ -19,15 +19,19 @@ jobs:
         with:
           php-version: '8.2'
           tools: composer, phpunit
-          extensions: ds, gmp, sockets
+          extensions: ds, gmp, sockets, bcmath
           coverage: none
-#
+
       - name: Install composer dependencies
-        uses: php-actions/composer@8a65f0d3c6a1d17ca4800491a40b5756a4c164f3 # v6.1.2
-        with:
-          php_version: "8.2"
-          php_extensions: gmp sockets bcmath
-          version: latest
+        run: composer install --no-interaction --no-progress
+
+      # Known vulnerabilities in what the package pulls in: high and critical ones in the runtime
+      # dependencies fail the run; all others are listed without failing it.
+      - name: Composer audit (listed, not failing)
+        run: composer audit --abandoned=report || true
+
+      - name: No high or critical advisory in the runtime dependencies
+        run: composer audit --no-dev --abandoned=ignore --ignore-severity=low --ignore-severity=medium
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit ./tests --exclude-group integration --exclude-group integration-slow
