@@ -20,6 +20,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
 
+# Nothing here writes to GitHub.
+permissions:
+  contents: read
+
 jobs:
   bc-check:
     runs-on: ubuntu-latest

@@ -10,14 +10,18 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+# Read-only by default; only the sync job may write, to open its pull request.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
+      # create-pull-request pushes with its own token input, not with the checkout's credentials.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false

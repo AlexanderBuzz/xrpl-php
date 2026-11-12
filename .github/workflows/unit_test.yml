@@ -1,6 +1,10 @@
 name: Unit Test (PHPUnit)
 on: push
 
+# Nothing here writes to GitHub.
+permissions:
+  contents: read
+
 jobs:
   phpunit:
     runs-on: ubuntu-latest
