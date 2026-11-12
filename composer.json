@@ -52,7 +52,7 @@
   },
   "require": {
     "php": "^8.2",
-    "brick/math": ">=0.11 <0.15",
+    "brick/math": ">=0.14.2 <0.15",
     "codedungeon/php-cli-colors": "^1.12",
     "ext-bcmath": "*",
     "guzzlehttp/guzzle": "^7.15.2",
