@@ -1,7 +1,6 @@
 /.idea
 
 /.env
-/composer.lock
 /docker-compose.override.yml
 
 /_java/
