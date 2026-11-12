@@ -22,11 +22,14 @@ jobs:
           extensions: ds, gmp, sockets, bcmath
           coverage: none
 
+      # The versions in composer.lock: every run tests the same ones, and a new release reaches CI
+      # only through a reviewed update of the lock.
       - name: Install composer dependencies
         run: composer install --no-interaction --no-progress
 
-      # Known vulnerabilities in what the package pulls in: high and critical ones in the runtime
-      # dependencies fail the run; all others are listed without failing it.
+      # Known vulnerabilities in the locked versions: high and critical ones in the runtime
+      # dependencies fail the run; all others are listed without failing it. The `unlocked` job
+      # audits what a user installs.
       - name: Composer audit (listed, not failing)
         run: composer audit --abandoned=report || true
 
@@ -38,6 +41,59 @@ jobs:
 
       - name: Run Psalm
         run: vendor/bin/psalm --config=psalm.xml --no-progress --no-cache
+
+  # Users never get the locked versions; they install whatever the constraints in composer.json
+  # allow. So the unit tests also run without the lock, with the highest versions (on the newest
+  # PHP the package is tested on, the platform pin in composer.json lifted) and with the lowest
+  # (on PHP 8.2). Releases younger than a week are held back (Composer 2.11+): the cooldown is set
+  # here, not in composer.json, where Composer 2.11 counts it into the lock file's content hash
+  # and every older Composer would report the lock as outdated. Like every job here, this one has
+  # no secrets and only reads the repository.
+  unlocked:
+    name: Unlocked dependencies, ${{ matrix.dependencies }} (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_POLICY_COOLDOWN_PERIOD: 7 days
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dependencies: highest
+            php: '8.4'
+          - dependencies: lowest
+            php: '8.2'
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: ds, gmp, sockets, bcmath
+          coverage: none
+
+      - name: Resolve the ${{ matrix.dependencies }} allowed versions
+        env:
+          DEPENDENCIES: ${{ matrix.dependencies }}
+        run: |
+          composer --version
+          if [ "$DEPENDENCIES" = highest ]; then
+            composer config --unset platform.php
+            composer update --no-interaction --no-progress
+          else
+            composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+          fi
+
+      - name: No high or critical advisory in what a user installs
+        if: matrix.dependencies == 'highest'
+        run: composer audit --no-dev --abandoned=ignore --ignore-severity=low --ignore-severity=medium
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit ./tests --exclude-group integration --exclude-group integration-slow
 
   # Every external action is referenced by a full commit SHA, with its version as a comment: a tag
   # can be moved to other code, a commit cannot. Dependabot keeps the SHAs current.
