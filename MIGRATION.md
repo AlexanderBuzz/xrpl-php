@@ -1,3 +1,28 @@
+# Migrating to 4.0.0
+
+4.0.0 drops the dependency on `php-ds/php-ds`. For an application that builds,
+signs and submits transactions nothing changes but the version constraint:
+
+```console
+composer require hardcastle/xrpl_php:^4.0
+```
+
+## If you put a FieldHeader into a php-ds collection
+
+`Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions\FieldHeader` no
+longer implements `Ds\Hashable` (php-ds 2 removed that interface). Its
+`hash()` and `equals()` stay, so key by the hash instead:
+
+| 3.x | 4.0.0 |
+|---|---|
+| `$map = new \Ds\Map(); $map->put($header, $value);` | `$map[$header->hash()] = $value;` |
+| `$header->equals($other)` with a non-header failing | `$header->equals($other)` returns false |
+
+If your project uses php-ds itself, require it in your own `composer.json`; it
+no longer comes with this package.
+
+---
+
 # Migrating to 3.0.0
 
 3.0.0 removes one thing: Xahau. Nothing else that was public in 2.7.0 changed,
