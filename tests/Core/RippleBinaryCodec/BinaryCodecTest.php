@@ -33,16 +33,10 @@ final class BinaryCodecTest extends TestCase
     public const ADJACENT_OBJECTS_HEX = "E6021002E1E7011001E1";
 
     /** @psalm-suppress PropertyNotSetInConstructor */
-    private array $fixtures;
-
-    /** @psalm-suppress PropertyNotSetInConstructor */
     private BinaryCodec $binaryCodec;
 
     protected function setUp(): void
     {
-        $raw = file_get_contents(__DIR__ . "/fixtures.json");
-        $this->fixtures = json_decode($raw, true);
-
         $this->binaryCodec = new BinaryCodec();
     }
 

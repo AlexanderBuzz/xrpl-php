@@ -4,7 +4,6 @@ namespace Hardcastle\XRPL_PHP\Test\Sugar;
 
 use donatj\MockWebServer\MockWebServer;
 use PHPUnit\Framework\TestCase;
-use Hardcastle\XRPL_PHP\Client\JsonRpcClient;
 use function Hardcastle\XRPL_PHP\Sugar\dropsToXrp;
 use function Hardcastle\XRPL_PHP\Sugar\xrpToDrops;
 
@@ -16,18 +15,9 @@ class BalancesTest  extends TestCase
 {
     protected static MockWebServer $server;
 
-    /** @psalm-suppress PropertyNotSetInConstructor */
-    private JsonRpcClient $client;
-
     public static function setUpBeforeClass(): void {
         self::$server = new MockWebServer();
         self::$server->start();
-    }
-
-    public function setUp(): void
-    {
-        $mockRippledUrl = self::$server->getServerRoot();
-        $this->client = new JsonRpcClient($mockRippledUrl);
     }
 
     public function testGetXrpBalance(): void

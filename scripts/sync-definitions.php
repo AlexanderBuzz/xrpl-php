@@ -141,6 +141,33 @@ function keysOf(mixed $section, string $name): array
 }
 
 /**
+ * The node URL from --node or NODE_URL, if it is an http(s) URL with a host;
+ * null otherwise.
+ *
+ * The maintainer running the script picks the node, so any host is fine on
+ * purpose. What is refused is anything else: file_get_contents() would read a
+ * local path as readily as a URL and print the start of that file in the
+ * error message. The URL is only ever written to a terminal, never to HTML.
+ *
+ * @psalm-taint-escape ssrf
+ * @psalm-taint-escape url_component
+ * @psalm-taint-escape url_path
+ * @psalm-taint-escape file
+ * @psalm-taint-escape html
+ * @psalm-taint-escape has_quotes
+ */
+function nodeUrl(string $value): ?string
+{
+    $scheme = parse_url($value, PHP_URL_SCHEME);
+    $host = parse_url($value, PHP_URL_HOST);
+
+    return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true)
+        && is_string($host) && $host !== ''
+        ? $value
+        : null;
+}
+
+/**
  * @param list<string> $argv
  */
 function main(array $argv): int
@@ -167,6 +194,11 @@ function main(array $argv): int
     }
     if ($nodeUrl === '') {
         fwrite(STDERR, "--node needs a URL\n");
+        return 1;
+    }
+    $nodeUrl = nodeUrl($nodeUrl);
+    if ($nodeUrl === null) {
+        fwrite(STDERR, "--node and NODE_URL take an http or https URL\n");
         return 1;
     }
 

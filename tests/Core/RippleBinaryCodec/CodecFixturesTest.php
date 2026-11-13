@@ -19,16 +19,10 @@ use Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\BinaryCodec;
 final class CodecFixturesTest extends TestCase
 {
     /** @psalm-suppress PropertyNotSetInConstructor */
-    private array $fixtures;
-
-    /** @psalm-suppress PropertyNotSetInConstructor */
     private BinaryCodec $binaryCodec;
 
     protected function setUp(): void
     {
-        $raw = file_get_contents(__DIR__ . "/codec-fixtures.json");
-        $this->fixtures = json_decode($raw, true);
-
         $this->binaryCodec = new BinaryCodec();
     }
 
