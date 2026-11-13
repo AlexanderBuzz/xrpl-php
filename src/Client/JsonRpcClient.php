@@ -13,7 +13,7 @@ namespace Hardcastle\XRPL_PHP\Client;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -158,10 +158,17 @@ class JsonRpcClient
     /**
      * Issue a synchronous JSON RPC request using a method object.
      *
+     * A complete answer from the node becomes a response object, an HTTP error
+     * status included (an ErrorResponse with that status and the body). When no
+     * complete answer arrives - the connection fails or drops, a timeout hits,
+     * the body is cut off - the Guzzle exception is thrown, as the async
+     * request() rejects its promise; a partial body is never read as a result.
+     * Guzzle 7 and 8 classify those failures differently; this holds for both.
+     *
      * @param BaseRequest $request
      * @param bool|null $returnRawResponse
      * @return ResponseInterface|BaseResponse|ErrorResponse
-     * @throws GuzzleException
+     * @throws GuzzleException when no complete response arrives
      */
     public function syncRequest(BaseRequest $request, ?bool $returnRawResponse = false): ResponseInterface|BaseResponse|ErrorResponse
     {
@@ -171,7 +178,7 @@ class JsonRpcClient
                 '',
                 $request->getJson()
             );
-        } catch (RequestException $exception) {
+        } catch (BadResponseException $exception) {
             return $this->handleResponse($request, $exception->getResponse());
         }
 
@@ -186,21 +193,11 @@ class JsonRpcClient
      * Process RPC response.
      *
      * @param BaseRequest $request
-     * @param ResponseInterface|null $response
+     * @param ResponseInterface $response
      * @return BaseResponse|ErrorResponse
      */
-    private function handleResponse(BaseRequest $request, ?ResponseInterface $response): BaseResponse|ErrorResponse
+    private function handleResponse(BaseRequest $request, ResponseInterface $response): BaseResponse|ErrorResponse
     {
-        if (is_null($response)) {
-            return new ErrorResponse(
-                id: null,
-                statusCode: 500,
-                error: 'RequestException - could not get response',
-                errorCode: null,
-                errorMessage: null
-            );
-        }
-
         $statusCode = $response->getStatusCode();
 
         if ($statusCode === 200) {

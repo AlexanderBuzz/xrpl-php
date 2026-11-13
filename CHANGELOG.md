@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Added
+- **Guzzle 8.** `guzzlehttp/guzzle` may be `^7.15.2 || ^8.0`. Guzzle 8 brings
+  `guzzlehttp/psr7` 3 and `guzzlehttp/promises` 3; the promises the async
+  methods return are then Promises 3 objects (same interface name). Composer
+  picks Guzzle 8 unless your project holds Guzzle 7, psr7 2 or promises 2.
+
+### Changed
+- **`JsonRpcClient::syncRequest()` throws when no complete response arrives.**
+  An HTTP error status from the node still becomes an `ErrorResponse` with that
+  status and the body. Every transport failure - the connection fails or drops,
+  a timeout hits, the body is cut off - now throws the Guzzle exception, as
+  connection failures and timeouts already did and as the promise of
+  `request()` already rejects. Until now some of them came back as an
+  `ErrorResponse` with status 500 ("could not get response"), depending on how
+  Guzzle classified them, and under Guzzle 8 a response cut off by the timeout
+  was decoded as if it were complete (a `TypeError`). The classes Guzzle uses
+  differ between 7 and 8; the behaviour does not. **Breaking** for code that
+  checked for that status-500 `ErrorResponse`; see MIGRATION.md.
+
 ## [3.2.2] - 2026-11-12
 
 ### Fixed
