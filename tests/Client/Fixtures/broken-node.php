@@ -8,6 +8,8 @@
  *
  * Serves one connection after another until the test stops the process. A
  * connection that sends nothing (the test's readiness probe) is closed at once.
+ * Every request that arrives is reported as a line "request" on stdout, so the
+ * test can tell a failure here from a request that never got this far.
  */
 
 /** @var list<string> $argv */
@@ -28,6 +30,8 @@ while (true) {
         fclose($connection);
         continue;
     }
+    fwrite(STDOUT, "request\n");
+    fflush(STDOUT);
     if ($mode === 'cut') {
         fwrite($connection, "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 4096\r\n\r\n{\"result\":{\"info\":");
         fflush($connection);
