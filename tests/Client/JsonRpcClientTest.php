@@ -81,15 +81,15 @@ class JsonRpcClientTest extends TestCase
 
     /**
      * The connection closes before the node sends a byte. Guzzle 7 reports
-     * that as a RequestException, Guzzle 8 as a NetworkException; with both,
-     * syncRequest() throws instead of returning a made-up response.
+     * that as a ConnectException (cURL error 52), Guzzle 8 as a
+     * NetworkException; with both, syncRequest() throws instead of returning
+     * a made-up response.
      */
     public function testAConnectionClosedWithoutAnAnswerThrows(): void
     {
         $client = $this->clientOfBrokenNode(50268, 'drop');
 
-        $this->expectException(GuzzleException::class);
-        $client->syncRequest(new ServerInfoRequest());
+        $this->assertThrowsAfterReachingTheNode($client);
     }
 
     /**
@@ -101,30 +101,55 @@ class JsonRpcClientTest extends TestCase
     {
         $client = $this->clientOfBrokenNode(50269, 'cut');
 
-        $this->expectException(GuzzleException::class);
-        $client->syncRequest(new ServerInfoRequest());
+        $this->assertThrowsAfterReachingTheNode($client);
+    }
+
+    /**
+     * A refused connection is a GuzzleException too, so expecting one alone
+     * would also pass if the broken node never got the request. The exception
+     * class cannot tell the two apart (Guzzle 7 reports a timeout and an empty
+     * reply as a ConnectException), so the node reports each request it gets.
+     */
+    private function assertThrowsAfterReachingTheNode(JsonRpcClient $client): void
+    {
+        try {
+            $client->syncRequest(new ServerInfoRequest());
+            $this->fail('syncRequest() returned instead of throwing');
+        } catch (GuzzleException) {
+            $this->assertStringContainsString(
+                'request',
+                (string) file_get_contents($this->brokenNodeLog),
+                'the request never reached the broken node'
+            );
+        }
     }
 
     /** @var resource|null */
     private $brokenNode = null;
 
+    private string $brokenNodeLog = '';
+
     private function clientOfBrokenNode(int $port, string $mode): JsonRpcClient
     {
+        $this->brokenNodeLog = (string) tempnam(sys_get_temp_dir(), 'broken-node');
         $process = proc_open(
             [PHP_BINARY, __DIR__ . '/Fixtures/broken-node.php', (string) $port, $mode],
-            [1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+            [1 => ['file', $this->brokenNodeLog, 'w'], 2 => ['file', '/dev/null', 'w']],
             $pipes
         );
         $this->assertIsResource($process, 'the broken node did not start');
         $this->brokenNode = $process;
-        for ($i = 0; $i < 50; $i++) {
+        $listening = false;
+        for ($i = 0; $i < 50 && !$listening; $i++) {
             $probe = @fsockopen('127.0.0.1', $port, $errno, $errstr, 0.1);
             if ($probe !== false) {
                 fclose($probe);
-                break;
+                $listening = true;
+            } else {
+                usleep(100_000);
             }
-            usleep(100_000);
         }
+        $this->assertTrue($listening, "the broken node never listened on port {$port}");
 
         return new JsonRpcClient("http://127.0.0.1:{$port}", timeout: 1.0);
     }
@@ -134,6 +159,9 @@ class JsonRpcClientTest extends TestCase
         if (is_resource($this->brokenNode)) {
             proc_terminate($this->brokenNode);
             proc_close($this->brokenNode);
+        }
+        if ($this->brokenNodeLog !== '' && is_file($this->brokenNodeLog)) {
+            unlink($this->brokenNodeLog);
         }
         $this->server->stop();
     }
