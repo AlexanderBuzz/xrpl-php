@@ -10,16 +10,16 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Definitions;
 
-use Ds\Hashable;
 use Hardcastle\Buffer\Buffer;
 
 /**
  * The type and field ordinal that identify a field on the wire.
  *
  * Together these two numbers form the header byte or bytes that precede every
- * field value.
+ * field value. hash() gives them as one string ("typeCode:fieldCode"), usable
+ * as an array key, which is how Definitions maps a header back to its field.
  */
-class FieldHeader implements Hashable
+class FieldHeader
 {
     public function __construct(private int $typeCode, private int $fieldCode)
     {
@@ -88,16 +88,22 @@ class FieldHeader implements Hashable
         $this->fieldCode = $fieldCode;
     }
 
-    public function hash()
+    /**
+     * The header as an array key: "typeCode:fieldCode".
+     */
+    public function hash(): string
     {
         return $this->typeCode . ":" . $this->fieldCode;
     }
 
     /**
-     * Whether two headers name the same field.
+     * Whether two headers name the same field. Anything that is not a
+     * FieldHeader is not equal.
      */
-    public function equals($obj): bool
+    public function equals(mixed $obj): bool
     {
-        return ($this->typeCode === $obj->getTypeCode() && $this->fieldCode === $obj->getFieldCode());
+        return $obj instanceof self
+            && $this->typeCode === $obj->getTypeCode()
+            && $this->fieldCode === $obj->getFieldCode();
     }
 }
