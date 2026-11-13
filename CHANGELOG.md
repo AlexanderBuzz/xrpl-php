@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Removed
+- **`php-ds/php-ds`.** The package no longer depends on it. The only use was
+  `FieldHeader implements Ds\Hashable`; nothing in the library put a header
+  into a php-ds collection, `Definitions` maps headers with plain arrays keyed
+  by `FieldHeader::hash()`. php-ds 2 removed `Ds\Hashable`, so keeping the
+  dependency would have pinned every project to php-ds 1. **Breaking:**
+  `FieldHeader` is no longer a `Ds\Hashable`; see MIGRATION.md.
+
+### Changed
+- `FieldHeader::hash()` declares `string`, and `FieldHeader::equals()` takes
+  `mixed` and returns false for anything that is not a `FieldHeader` instead of
+  failing on it.
+
 ## [3.2.2] - 2026-11-12
 
 ### Fixed
