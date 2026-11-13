@@ -82,7 +82,10 @@ jobs:
             composer config --unset platform.php
             composer update --no-interaction --no-progress
           else
-            composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+            # Composer skips versions with a known advisory while resolving, so a declared
+            # minimum with an advisory would be replaced by a later version and never tested.
+            # The lowest run turns that off; the bounds in composer.json are what it checks.
+            COMPOSER_NO_SECURITY_BLOCKING=1 composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
           fi
 
       - name: No high or critical advisory in what a user installs
