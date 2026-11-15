@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
-## [Unreleased]
+## [4.0.0] - 2026-11-15
 
 ### Added
 - **brick/math 0.15 to 1.0.** `brick/math` may be `>=0.14.2 <0.21 || ^1.0`,
@@ -21,10 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   picks Guzzle 8 unless your project holds Guzzle 7, psr7 2 or promises 2.
 
 ### Changed
-- The binary codec refuses an empty hex string and a negative field width with
-  an `InvalidArgumentException` before it reaches brick/math. Both are
-  malformed input the codec never produces; brick/math threw for them too,
-  with its own exception.
 - **`JsonRpcClient::syncRequest()` throws when no complete response arrives.**
   An HTTP error status from the node still becomes an `ErrorResponse` with that
   status and the body. Every transport failure - the connection fails or drops,
@@ -39,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FieldHeader::hash()` declares `string`, and `FieldHeader::equals()` takes
   `mixed` and returns false for anything that is not a `FieldHeader` instead of
   failing on it.
+- The binary codec refuses an empty hex string and a negative field width with
+  an `InvalidArgumentException` before it reaches brick/math. Both are
+  malformed input the codec never produces; brick/math threw for them too,
+  with its own exception.
 
 ### Removed
 - **`php-ds/php-ds`.** The package no longer depends on it. The only use was

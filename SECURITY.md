@@ -8,10 +8,10 @@ them.
 
 | Version | Supported |
 |---|---|
-| 3.x | yes |
-| older than 3.0 | no |
+| 4.x | yes |
+| older than 4.0 | no |
 
-Security fixes go into the latest 3.x release. Please check that the problem still occurs there.
+Security fixes go into the latest 4.x release. Please check that the problem still occurs there.
 
 ## Reporting a vulnerability
 
