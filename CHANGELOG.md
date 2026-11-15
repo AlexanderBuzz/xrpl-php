@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Guzzle classified them, and under Guzzle 8 a response cut off by the timeout
   was decoded as if it were complete (a `TypeError`). The classes Guzzle uses
   differ between 7 and 8; the behaviour does not. **Breaking** for code that
-  checked for that status-500 `ErrorResponse`; see MIGRATION.md.
+  handled such failures through the returned `ErrorResponse`; see MIGRATION.md.
 - `FieldHeader::hash()` declares `string`, and `FieldHeader::equals()` takes
   `mixed` and returns false for anything that is not a `FieldHeader` instead of
   failing on it.

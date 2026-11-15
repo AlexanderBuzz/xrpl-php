@@ -2,25 +2,31 @@
 
 4.0.0 drops the dependency on `php-ds/php-ds`, allows Guzzle 8 and lets
 `JsonRpcClient::syncRequest()` throw when no complete response arrives. For an
-application that builds, signs and submits transactions and does not look for a
-status-500 `ErrorResponse`, nothing changes but the version constraint:
+application that builds, signs and submits transactions and does not handle
+`ErrorResponse` values or Guzzle exceptions from `syncRequest()` itself, nothing
+changes but the version constraint:
 
 ```console
 composer require hardcastle/xrpl_php:^4.0
 ```
 
-## If you checked syncRequest() for a status-500 ErrorResponse
+## If you handle errors from syncRequest()
 
 `JsonRpcClient::syncRequest()` throws a `GuzzleHttp\Exception\GuzzleException`
 whenever no complete response arrives (connection failure or drop, timeout, a
 body cut off). Until 3.x some of these came back as an `ErrorResponse` with
 status 500 and the error "RequestException - could not get response", others
 were thrown already. An HTTP error status from the node is unchanged: an
-`ErrorResponse` with that status.
+`ErrorResponse` with that status, a complete HTTP 500 included.
+
+This concerns every caller that handles failures of `syncRequest()` through the
+`ErrorResponse` it returns, not only one that checks for status 500: a failure
+that used to come back as a value now leaves the call as an exception. Review
+that error handling and catch `GuzzleException` where the call must not throw.
 
 | 3.x | 4.0.0 |
 |---|---|
-| `if ($r instanceof ErrorResponse && $r->getStatusCode() === 500) { retry(); }` | `try { $r = $client->syncRequest($req); } catch (GuzzleException) { retry(); }` |
+| `$r = $client->syncRequest($req); if ($r instanceof ErrorResponse && $r->getStatusCode() === 500) { retry(); }` | `try { $r = $client->syncRequest($req); if ($r instanceof ErrorResponse && $r->getStatusCode() === 500) { retry(); } } catch (GuzzleException) { retry(); }` |
 
 Guzzle 8 is allowed next to Guzzle 7 (`^7.15.2 \|\| ^8.0`); Composer picks it
 unless your project holds Guzzle 7 or its psr7 2 / promises 2.
