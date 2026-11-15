@@ -10,6 +10,7 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 
@@ -33,7 +34,7 @@ abstract class UnsignedInt extends SerializedType
         if ($bytes === null) {
             $this->value = BigInteger::of(0);
         } else {
-            $this->value = BigInteger::fromBase($bytes->toString(), 16);
+            $this->value = MathUtilities::bigIntegerFromHex($bytes->toString());
         }
     }
 

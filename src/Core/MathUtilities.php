@@ -11,6 +11,7 @@
 namespace Hardcastle\XRPL_PHP\Core;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 
 /**
@@ -31,6 +32,37 @@ class MathUtilities
         }
 
         return ($value >> $steps) & ~(1 << (8 * PHP_INT_SIZE - 1) >> ($steps - 1));
+    }
+
+    /**
+     * The non-negative integer a hex string encodes, as the codec reads fields.
+     *
+     * An empty string is no value at all, so it is refused instead of read.
+     *
+     * @throws \InvalidArgumentException when the string is empty
+     * @throws \Brick\Math\Exception\NumberFormatException when it is not hex
+     */
+    public static function bigIntegerFromHex(string $hex): BigInteger
+    {
+        if ($hex === '') {
+            throw new \InvalidArgumentException('An empty string is not a hex number');
+        }
+
+        return BigInteger::fromBase($hex, 16);
+    }
+
+    /**
+     * 2 to the power of $bits, the range of a field $bits wide.
+     *
+     * @throws \InvalidArgumentException when $bits is negative
+     */
+    public static function powerOfTwo(int $bits): BigInteger
+    {
+        if ($bits < 0) {
+            throw new \InvalidArgumentException("A field cannot be {$bits} bits wide");
+        }
+
+        return BigInteger::of(2)->power($bits);
     }
 
     /**

@@ -72,7 +72,7 @@ class UnsignedInt64 extends UnsignedInt
             throw new \Exception("{$value} is not a valid base 10 string");
         }
 
-        $bigInteger = BigInteger::fromBase($value, 10);
+        $bigInteger = BigInteger::of($value);
 
         return new UnsignedInt64(Buffer::from(str_pad($bigInteger->toBase(16), 16, '0', STR_PAD_LEFT), 'hex'));
     }

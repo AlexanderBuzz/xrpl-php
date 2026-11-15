@@ -10,6 +10,7 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Brick\Math\BigInteger;
 use Hardcastle\Buffer\Buffer;
 
@@ -51,10 +52,10 @@ abstract class SignedInt extends SerializedType
     protected function fromTwoComplement(Buffer $bytes): BigInteger
     {
         $hex = $bytes->toString();
-        $val = BigInteger::fromBase($hex, 16);
+        $val = MathUtilities::bigIntegerFromHex($hex);
         $bitLength = $bytes->getLength() * 8;
-        $maxVal = BigInteger::of(2)->power($bitLength);
-        $midVal = BigInteger::of(2)->power($bitLength - 1);
+        $maxVal = MathUtilities::powerOfTwo($bitLength);
+        $midVal = MathUtilities::powerOfTwo($bitLength - 1);
 
         if ($val->isGreaterThanOrEqualTo($midVal)) {
             return $val->minus($maxVal);
@@ -66,7 +67,7 @@ abstract class SignedInt extends SerializedType
     protected function toTwoComplement(BigInteger $value, int $width): Buffer
     {
         $bitLength = $width * 8;
-        $maxVal = BigInteger::of(2)->power($bitLength);
+        $maxVal = MathUtilities::powerOfTwo($bitLength);
 
         if ($value->isNegative()) {
             $value = $maxVal->plus($value);

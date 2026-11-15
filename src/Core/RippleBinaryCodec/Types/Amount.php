@@ -177,7 +177,7 @@ class Amount extends SerializedType
         } else if ($this->isMpt($rawBytes)) {
             $parser = new BinaryParser($this->toHex());
             $leadingByte = $parser->read(1);
-            $value = BigInteger::fromBase($parser->read(8)->toString(), 16);
+            $value = MathUtilities::bigIntegerFromHex($parser->read(8)->toString());
             $mptIssuanceId = Hash192::fromParser($parser);
 
             if (!($leadingByte[0] & 0x40)) {
