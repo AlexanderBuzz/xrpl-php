@@ -56,6 +56,6 @@ class FeeCalculator
 
         $fee = BigDecimal::min($fee, $this->client->getMaxFeeXrp());
 
-        return (string)$fee->toScale(6, RoundingMode::UP);
+        return (string)$fee->toScale(6, RoundingMode::Up);
     }
 }

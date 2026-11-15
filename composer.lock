@@ -4,28 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44166bc4532f46bbfeb2f093ae352dbf",
+    "content-hash": "b9b8bccd3e0bccb429bdd94d57ffde84",
     "packages": [
         {
             "name": "brick/math",
-            "version": "0.14.8",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "63422359a44b7f06cae63c3b429b59e8efcc0629"
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/63422359a44b7f06cae63c3b429b59e8efcc0629",
-                "reference": "63422359a44b7f06cae63c3b429b59e8efcc0629",
+                "url": "https://api.github.com/repos/brick/math/zipball/2effe05d2177c451b86c6a073196a4034c02f211",
+                "reference": "2effe05d2177c451b86c6a073196a4034c02f211",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.2"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "^2.2",
-                "phpstan/phpstan": "2.1.22",
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -56,7 +56,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.14.8"
+                "source": "https://github.com/brick/math/tree/1.0.0"
             },
             "funding": [
                 {
@@ -64,7 +64,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-10T14:33:43+00:00"
+            "time": "2026-09-12T10:28:18+00:00"
         },
         {
             "name": "codedungeon/php-cli-colors",
@@ -509,25 +509,25 @@
         },
         {
             "name": "hardcastle/buffer",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AlexanderBuzz/Buffer.git",
-                "reference": "2f09a89877367808447ab0f14fb784bab749b0fb"
+                "reference": "3b91742f4b7576b1f090b870893918234ecc32cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AlexanderBuzz/Buffer/zipball/2f09a89877367808447ab0f14fb784bab749b0fb",
-                "reference": "2f09a89877367808447ab0f14fb784bab749b0fb",
+                "url": "https://api.github.com/repos/AlexanderBuzz/Buffer/zipball/3b91742f4b7576b1f090b870893918234ecc32cf",
+                "reference": "3b91742f4b7576b1f090b870893918234ecc32cf",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.11|^0.12|^0.13|^0.14",
+                "brick/math": "^0.11|^0.12|^0.13|^0.14|^1.0",
                 "php": "^8.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.3.1",
-                "vimeo/psalm": "^6.0"
+                "vimeo/psalm": "^6.0 || ^7.0"
             },
             "suggest": {
                 "ext-mbstring": "Required by Buffer::transcode() for converting between character encodings"
@@ -551,9 +551,9 @@
             "description": "PHP implementation of the NodeJS Buffer class",
             "support": {
                 "issues": "https://github.com/AlexanderBuzz/Buffer/issues",
-                "source": "https://github.com/AlexanderBuzz/Buffer/tree/2.0.0"
+                "source": "https://github.com/AlexanderBuzz/Buffer/tree/2.1.0"
             },
-            "time": "2026-09-02T08:12:15+00:00"
+            "time": "2026-11-13T15:37:01+00:00"
         },
         {
             "name": "phpoption/phpoption",

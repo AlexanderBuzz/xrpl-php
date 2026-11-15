@@ -85,4 +85,24 @@ final class MathUtilitiesTest extends TestCase
         $this->assertEquals('10000', MathUtilities::trimAmountZeros(BigDecimal::of('10000.000')));
         $this->assertEquals('10000.5', MathUtilities::trimAmountZeros(BigDecimal::of('10000.500')));
     }
+
+    public function testBigIntegerFromHexReadsAFieldAndRefusesNothing(): void
+    {
+        $this->assertSame('255', (string) MathUtilities::bigIntegerFromHex('FF'));
+        $this->assertSame('18446744073709551615', (string) MathUtilities::bigIntegerFromHex('FFFFFFFFFFFFFFFF'));
+        $this->assertSame('0', (string) MathUtilities::bigIntegerFromHex('0000'));
+        $this->assertSame('255', (string) MathUtilities::bigIntegerFromHex('00000000000000ff'));
+
+        $this->expectException(\InvalidArgumentException::class);
+        MathUtilities::bigIntegerFromHex('');
+    }
+
+    public function testPowerOfTwoIsTheRangeOfAFieldAndRefusesANegativeWidth(): void
+    {
+        $this->assertSame('1', (string) MathUtilities::powerOfTwo(0));
+        $this->assertSame('18446744073709551616', (string) MathUtilities::powerOfTwo(64));
+
+        $this->expectException(\InvalidArgumentException::class);
+        MathUtilities::powerOfTwo(-1);
+    }
 }

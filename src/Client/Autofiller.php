@@ -468,7 +468,7 @@ class Autofiller
             // net fee x (33 + fulfillment size in bytes / 16)
             $fulfillmentBytesSize = ceil(strlen($tx['Fulfillment']) / 2);
             $product = self::scaleValue($netFeeDrops, 33 + $fulfillmentBytesSize / 16);
-            $baseFee = $product->toScale(0, RoundingMode::CEILING);
+            $baseFee = $product->toScale(0, RoundingMode::Ceiling);
         }
 
         // Both burn one owner reserve instead of paying the ordinary network fee
@@ -496,7 +496,7 @@ class Autofiller
         $maxFeeDrops = xrpToDrops($this->client->getMaxFeeXrp());
         $totalFee = $paysOwnerReserve ? $baseFee : BigDecimal::min($baseFee, $maxFeeDrops);
 
-        $tx['Fee'] = (string)$totalFee->toScale(0, RoundingMode::CEILING);
+        $tx['Fee'] = (string)$totalFee->toScale(0, RoundingMode::Ceiling);
     }
 
     /**

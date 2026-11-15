@@ -10,6 +10,7 @@
 
 namespace Hardcastle\XRPL_PHP\Core\RippleBinaryCodec\Types;
 
+use Hardcastle\XRPL_PHP\Core\MathUtilities;
 use Brick\Math\BigInteger;
 use Exception;
 use Hardcastle\Buffer\Buffer;
@@ -291,7 +292,7 @@ class Number extends SerializedType
     private static function packSignedInt(BigInteger $value, int $byteLength): Buffer
     {
         if ($value->isNegative()) {
-            $value = BigInteger::of(2)->power($byteLength * 8)->plus($value);
+            $value = MathUtilities::powerOfTwo($byteLength * 8)->plus($value);
         }
 
         return Buffer::from(
@@ -310,11 +311,11 @@ class Number extends SerializedType
     private static function unpackSignedInt(Buffer $bytes): BigInteger
     {
         $byteLength = $bytes->getLength();
-        $value = BigInteger::fromBase($bytes->toString(), 16);
-        $signBoundary = BigInteger::of(2)->power($byteLength * 8 - 1);
+        $value = MathUtilities::bigIntegerFromHex($bytes->toString());
+        $signBoundary = MathUtilities::powerOfTwo($byteLength * 8 - 1);
 
         if ($value->isGreaterThanOrEqualTo($signBoundary)) {
-            $value = $value->minus(BigInteger::of(2)->power($byteLength * 8));
+            $value = $value->minus(MathUtilities::powerOfTwo($byteLength * 8));
         }
 
         return $value;
