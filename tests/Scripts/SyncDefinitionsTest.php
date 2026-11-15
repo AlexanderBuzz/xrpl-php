@@ -3,6 +3,7 @@
 namespace Hardcastle\XRPL_PHP\Test\Scripts;
 
 use PHPUnit\Framework\TestCase;
+use function Hardcastle\XRPL_PHP\Scripts\SyncDefinitions\nodeUrl;
 use function Hardcastle\XRPL_PHP\Scripts\SyncDefinitions\normalize;
 use function Hardcastle\XRPL_PHP\Scripts\SyncDefinitions\summarize;
 
@@ -48,5 +49,20 @@ final class SyncDefinitionsTest extends TestCase
             summarize($old, $new)
         );
         $this->assertSame([], summarize($new, $new));
+    }
+
+    /**
+     * The node may be any http(s) host the maintainer picks; a local path or
+     * another scheme would make file_get_contents() read a file instead.
+     */
+    public function testNodeUrlTakesOnlyHttpAndHttpsUrls(): void
+    {
+        $this->assertSame('https://s1.ripple.com:51234/', nodeUrl('https://s1.ripple.com:51234/'));
+        $this->assertSame('http://localhost:5005', nodeUrl('http://localhost:5005'));
+        $this->assertSame('HTTPS://s.altnet.rippletest.net:51234', nodeUrl('HTTPS://s.altnet.rippletest.net:51234'));
+
+        foreach (['composer.json', '/etc/hosts', 'file:///etc/hosts', 'php://filter/resource=composer.json', 'ftp://example.com/', 'https://'] as $value) {
+            $this->assertNull(nodeUrl($value), $value);
+        }
     }
 }

@@ -676,6 +676,10 @@ class Wallet
     }
 
     /**
+     * The seed the wallet was derived from, or null when it was built from a
+     * key pair alone.
+     *
+     * @psalm-api
      * @return string|null
      */
     public function getSeed(): string|null

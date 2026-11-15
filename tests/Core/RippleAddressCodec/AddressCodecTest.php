@@ -18,16 +18,9 @@ class AddressCodecTest extends TestCase
     /** @psalm-suppress PropertyNotSetInConstructor */
     private AddressCodec $addressCodec;
 
-    /** @psalm-suppress PropertyNotSetInConstructor */
-    private array $fixtures;
-
     public function setUp(): void
     {
         $this->addressCodec = new AddressCodec();
-
-        //TODO: use relative file path
-        $raw = file_get_contents(__DIR__ . "/fixtures.json");
-        $this->fixtures = json_decode($raw, true);
     }
 
     public function testIsValidClassicAddress(): void

@@ -200,7 +200,7 @@ final class BatchTest extends TestCase
      * Sign the outer Batch, submit it, check the outer and every inner result,
      * and print the hashes, so a run leaves its Testnet evidence in the log.
      */
-    private function submitAndAssertEveryInnerApplied(Wallet $outer, array $batch, string $label): string
+    private function submitAndAssertEveryInnerApplied(Wallet $outer, array $batch, string $label): void
     {
         $signed = $outer->sign($batch);
         $result = $this->client->submitAndWait($signed['tx_blob'])->getResult();
@@ -212,8 +212,6 @@ final class BatchTest extends TestCase
         }
 
         fwrite(STDERR, sprintf("\n%s: %s\n  inner: %s\n", $label, $signed['hash'], implode(', ', $innerIds)));
-
-        return $signed['hash'];
     }
 
     private function payment(Wallet $from, Wallet $to, string $xrp): array
