@@ -227,7 +227,9 @@ function methods(): string
         . "\$accountData = \$response->getResult()['account_data'];\n```\n\n"
         . "`syncRequest()` returns the matching `*Response` (with `getResult()`, `getStatus()`, "
         . "`getWarnings()`) or an `ErrorResponse` (with `getError()`, `getStatusCode()`); check "
-        . "with `instanceof` before reading the result.\n";
+        . "with `instanceof` before reading the result. When no complete response arrives "
+        . "(connection failure or drop, timeout, body cut off), `syncRequest()` throws a "
+        . "`GuzzleHttp\\Exception\\GuzzleException` instead.\n";
 
     $directories = glob(SRC . '/Models/*', GLOB_ONLYDIR);
     foreach ($directories === false ? [] : $directories as $directory) {

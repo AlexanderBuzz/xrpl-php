@@ -9,7 +9,7 @@ $response = $client->syncRequest(new AccountInfoRequest(account: $address, ledge
 $accountData = $response->getResult()['account_data'];
 ```
 
-`syncRequest()` returns the matching `*Response` (with `getResult()`, `getStatus()`, `getWarnings()`) or an `ErrorResponse` (with `getError()`, `getStatusCode()`); check with `instanceof` before reading the result.
+`syncRequest()` returns the matching `*Response` (with `getResult()`, `getStatus()`, `getWarnings()`) or an `ErrorResponse` (with `getError()`, `getStatusCode()`); check with `instanceof` before reading the result. When no complete response arrives (connection failure or drop, timeout, body cut off), `syncRequest()` throws a `GuzzleHttp\Exception\GuzzleException` instead.
 
 # Account
 
