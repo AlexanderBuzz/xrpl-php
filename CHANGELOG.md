@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **brick/math 1.0.** `brick/math` may be `>=0.14.2 <0.15 || ^1.0`, and
-  `hardcastle/buffer` moves to `^2.1`, the first release that allows brick/math
-  1.0. The code uses the rounding mode names brick/math has had since 0.14.2
-  (`RoundingMode::Up`, `Ceiling`); 1.0 removed the upper-case ones. Composer
-  picks brick/math 1.0 unless your project holds an older brick/math.
+- **brick/math 0.15 to 1.0.** `brick/math` may be `>=0.14.2 <0.21 || ^1.0`,
+  and `hardcastle/buffer` moves to `^2.1`, the first release that allows
+  brick/math 1.0; 0.15 to 0.20 need buffer 2.1.1, which Composer picks when
+  your project holds one of them. The code uses the rounding mode names
+  brick/math has had since 0.14.2 (`RoundingMode::Up`, `Ceiling`); 0.15
+  removed the upper-case ones. Composer picks brick/math 1.0 unless your
+  project holds an older brick/math.
 - **Guzzle 8.** `guzzlehttp/guzzle` may be `^7.15.2 || ^8.0`. Guzzle 8 brings
   `guzzlehttp/psr7` 3 and `guzzlehttp/promises` 3; the promises the async
   methods return are then Promises 3 objects (same interface name). Composer
