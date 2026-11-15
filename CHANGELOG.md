@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)..
 
+## [Unreleased]
+
+### Changed
+- **The agent skill knows that `syncRequest()` throws without a complete
+  response.** The review checklist, the pitfalls, the troubleshooting reference
+  and the methods reference said only to check for an `ErrorResponse`. Since
+  4.0.0 a connection failure or drop, a timeout or a body cut off throws a
+  `GuzzleException` instead, and the skill now says so, together with the case
+  that is unchanged: an HTTP error status from the node is an `ErrorResponse`.
+
 ## [4.0.0] - 2026-11-15
 
 ### Added

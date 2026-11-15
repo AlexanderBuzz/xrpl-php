@@ -38,7 +38,8 @@ Frequent codes and what to change:
 - `Exception` from `submitAndWait()`: "The latest ledger sequence N is greater than the transaction's LastLedgerSequence" means the transaction was never included; the message carries the preliminary result. A "Transaction must contain a LastLedgerSequence value" means the array was not autofilled.
 - `ValidationException` from `Wallet::sign()`: the transaction already carries `TxnSignature` or `Signers`; sign the unsigned array.
 - `Exception` from the codec, "Field X not found in definitions": a misspelled field, a field of another network, or a field of a newer rippled than the bundled definitions. "Unknown TransactionType: X": misspelled type (types are case sensitive, `AMMCreate` not `AmmCreate`).
-- `ErrorResponse` from `syncRequest()` (not thrown): `getError()` is rippled's error, e.g. `actNotFound` (account does not exist on this network or ledger), `invalidParams`, `lgrNotFound`.
+- `ErrorResponse` from `syncRequest()` (not thrown): `getError()` is rippled's error, e.g. `actNotFound` (account does not exist on this network or ledger), `invalidParams`, `lgrNotFound`. An HTTP error status from the node lands here too, with that status in `getStatusCode()`.
+- `GuzzleHttp\Exception\GuzzleException` from `syncRequest()` or the promise of `request()`: no complete response arrived (connection refused or dropped, timeout, body cut off), so there is nothing to read. Retry, or check the node URL and `timeout` on the client. Before 4.0.0 some of these came back from `syncRequest()` as an `ErrorResponse` with status 500 and "could not get response".
 - `GuzzleHttp\Exception\RequestException` from `rawSyncRequest()`: HTTP-level failure; `$e->getResponse()` has the body. `examples/provoke-error.php` shows the handling.
 - `XRPLFaucetException`: the faucet refused or timed out; Testnet faucets rate-limit, wait and retry.
 
