@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`Wallet::verifySignature()` verifies a blob somebody else signed.** It
+  checks `TxnSignature` against the transaction's `SigningPubKey`, or against a
+  key passed as second argument, offline and without a wallet; the third
+  argument takes the definitions for another network. Mirrors `verifySignature`
+  in xrpl.js. `$wallet->verifyTransaction()` still checks against the wallet's
+  own key, so it is `false` for a foreign blob, and both now throw a
+  `ValidationException` for a transaction without `TxnSignature` (multi-signed
+  ones included) instead of failing on an undefined index.
+
 ### Changed
 - **The agent skill knows that `syncRequest()` throws without a complete
   response.** The review checklist, the pitfalls, the troubleshooting reference
@@ -14,6 +24,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   4.0.0 a connection failure or drop, a timeout or a body cut off throws a
   `GuzzleException` instead, and the skill now says so, together with the case
   that is unchanged: an HTTP error status from the node is an `ErrorResponse`.
+- **The agent skill on verifying blobs.** Signing details name
+  `verifySignature()` next to `verifyTransaction()`; a review item and a
+  pitfall say that a handed-over blob is recognised by `Account` and
+  `Sequence`, not by its hash, and that its `SigningPubKey` has to belong to
+  `Account`.
+
+### Fixed
+- **Signature checks accept only canonical signatures, as rippled does.** For
+  secp256k1, `verifyTransaction()`, `verifyPaymentChannelClaim()` and the key
+  pair services' `verify()` accepted a signature with s replaced by n - s and
+  one with needless padding in its DER encoding; for Ed25519, one with S
+  replaced by S + L. Each is a second blob for the same transaction with
+  another hash, which rippled refuses since RequireFullyCanonicalSig (2020)
+  and for Ed25519 always has. Code that verified a handed-over blob and then
+  kept it by its hash took such a copy for a new transaction. Signatures this
+  package produces were always canonical and still verify.
 
 ## [4.0.0] - 2026-11-15
 

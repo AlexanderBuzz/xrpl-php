@@ -428,18 +428,83 @@ class Wallet
     }
 
     /**
-     * Verifies a signed transaction.
+     * Verify that this wallet signed a transaction, offline.
      *
-     * @param string $signedTransaction A signed transaction (hex string of signTransaction result) to be verified offline.
-     * @return bool Returns true if a signedTransaction is valid.
+     * The check runs against this wallet's own public key, not the
+     * transaction's SigningPubKey; a blob somebody else signed is false here.
+     * For those, use verifySignature().
+     *
+     * @param string $signedTransaction the tx_blob of a single-signed transaction
+     * @return bool true if the signature is this wallet's and canonical
+     * @throws ValidationException if the transaction carries no TxnSignature
      */
     public function verifyTransaction(string $signedTransaction): bool
     {
-        $tx = $this->binaryCodec->decode($signedTransaction);
-        $messageHex = $this->binaryCodec->encodeForSigning($tx);
-        $signature = $tx['TxnSignature'];
+        return self::verifyWith($this->binaryCodec, $signedTransaction, $this->publicKey);
+    }
 
-        return $this->keyPairService->verify($messageHex, $signature, $this->publicKey);
+    /**
+     * Verify the signature of a signed transaction, offline.
+     *
+     * Checks TxnSignature against the transaction's SigningPubKey, or against
+     * $publicKey if one is given. Mirrors verifySignature in xrpl.js. Only a
+     * canonical signature passes, the form rippled accepts: a non-canonical
+     * one is a second blob for the same transaction with another hash, so
+     * anything that recognises payments by their hash needs this check.
+     *
+     * This proves that the holder of the key signed this transaction, not that
+     * the key may sign for its Account: whether SigningPubKey is the account's
+     * master or regular key is ledger state. Multi-signed transactions carry
+     * no TxnSignature and are not covered.
+     *
+     * @param string|array $transaction a tx_blob or the decoded transaction
+     * @param string|null $publicKey the key to check against, hex; defaults to SigningPubKey
+     * @param Definitions|null $definitions the definitions for another network, as for fromSeed()
+     * @return bool true if the signature is valid and canonical
+     * @throws ValidationException if TxnSignature is missing, or SigningPubKey
+     *   is missing and no $publicKey was given
+     */
+    public static function verifySignature(
+        string|array $transaction,
+        ?string $publicKey = null,
+        ?Definitions $definitions = null
+    ): bool {
+        return self::verifyWith(new BinaryCodec($definitions), $transaction, $publicKey);
+    }
+
+    /**
+     * The check behind verifyTransaction() and verifySignature().
+     *
+     * @throws ValidationException
+     */
+    private static function verifyWith(BinaryCodec $binaryCodec, string|array $transaction, ?string $publicKey): bool
+    {
+        $tx = is_string($transaction) ? $binaryCodec->decode($transaction) : $transaction;
+
+        $signature = $tx['TxnSignature'] ?? '';
+        if (!is_string($signature) || $signature === '') {
+            throw new ValidationException(
+                'Transaction is missing a signature, TxnSignature; multi-signed transactions are not covered'
+            );
+        }
+
+        if ($publicKey === null) {
+            $publicKey = $tx['SigningPubKey'] ?? '';
+            if (!is_string($publicKey) || $publicKey === '') {
+                throw new ValidationException('Transaction is missing a public key, SigningPubKey');
+            }
+        }
+
+        $publicKey = strtoupper($publicKey);
+        $message = $binaryCodec->encodeForSigning($tx);
+
+        // A key that is not one, of no known type or off the curve, signed
+        // nothing; elliptic-php throws for those.
+        try {
+            return self::keyPairServiceFor($publicKey)->verify($message, $signature, $publicKey);
+        } catch (Exception) {
+            return false;
+        }
     }
 
     /**
