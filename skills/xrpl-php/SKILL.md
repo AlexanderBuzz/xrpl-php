@@ -4,9 +4,9 @@ description: Guides XRP Ledger development in PHP with the hardcastle/xrpl_php p
 license: MIT
 compatibility: Requires PHP 8.2+, ext-bcmath, ext-gmp and Composer
 metadata:
-  version: "1.3.1"
-  sdk_version: "4.0.0"
-  last_updated: "2026-11-15"
+  version: "1.3.2"
+  sdk_version: "4.1.0"
+  last_updated: "2026-11-24"
 ---
 
 # XRPL PHP SDK (`hardcastle/xrpl_php`)
