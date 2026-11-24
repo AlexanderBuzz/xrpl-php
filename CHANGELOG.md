@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `verifySignature()` next to `verifyTransaction()`; a review item and a
   pitfall say that a handed-over blob is recognised by `Account` and
   `Sequence`, not by its hash, and that its `SigningPubKey` has to belong to
-  `Account`.
+  `Account`, or to `Delegate` on a delegated transaction.
 
 ### Fixed
 - **Signature checks accept only canonical signatures, as rippled does.** For

@@ -453,8 +453,9 @@ class Wallet
      * anything that recognises payments by their hash needs this check.
      *
      * This proves that the holder of the key signed this transaction, not that
-     * the key may sign for its Account: whether SigningPubKey is the account's
-     * master or regular key is ledger state. Multi-signed transactions carry
+     * the key may sign for it: whether SigningPubKey is the master or regular
+     * key of Account - or of Delegate, and whether that delegate holds the
+     * permission - is ledger state. Multi-signed transactions carry
      * no TxnSignature and are not covered.
      *
      * @param string|array $transaction a tx_blob or the decoded transaction
