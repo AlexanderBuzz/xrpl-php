@@ -22,6 +22,11 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 {
     private static ?Ed25519KeyPairService $instance = null;
 
+    /**
+     * The order L of the Ed25519 base point, as 64 upper case hex characters.
+     */
+    private const GROUP_ORDER = '1000000000000000000000000000000014DEF9DEA2F79CD65812631A5CF5D3ED';
+
     private readonly EdDSA $elliptic;
 
     public function __construct()
@@ -93,14 +98,38 @@ class Ed25519KeyPairService extends AbstractKeyPairService implements KeyPairSer
 
     /**
      * Check a signature against a message and a public key.
+     *
+     * Only a canonical signature passes, the form rippled accepts: 64 bytes
+     * with S below the group order L. elliptic-php alone also accepts S + L,
+     * which is a second signature over the same message - in a transaction, a
+     * second blob with another hash.
      */
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
+        if (!self::isCanonical($signature)) {
+            return false;
+        }
+
         if ($message instanceof Buffer) {
             $message = bin2hex($message->toUtf8());
         }
 
         return $this->elliptic->verify($message, $signature, substr($publicKey, 2));
+    }
+
+    /**
+     * Whether an Ed25519 signature is canonical, as rippled's ed25519Canonical()
+     * decides it: R and S, 32 bytes each, S read little-endian below L.
+     */
+    private static function isCanonical(string $signature): bool
+    {
+        if (strlen($signature) !== 128 || !ctype_xdigit($signature)) {
+            return false;
+        }
+
+        $s = strtoupper(bin2hex(strrev((string) hex2bin(substr($signature, 64)))));
+
+        return strcmp($s, self::GROUP_ORDER) < 0;
     }
 
     /*

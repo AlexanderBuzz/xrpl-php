@@ -115,6 +115,7 @@ final class InjectableDefinitionsTest extends TestCase
         $this->assertEquals(99, self::ordinalOf($custom->sign($tx)['tx_blob']));
 
         $this->assertTrue($custom->verifyTransaction($custom->sign($tx)['tx_blob']));
+        $this->assertTrue(Wallet::verifySignature($custom->sign($tx)['tx_blob'], null, self::alternativeDefinitions()));
     }
 
     /**

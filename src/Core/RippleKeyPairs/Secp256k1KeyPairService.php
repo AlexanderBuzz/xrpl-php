@@ -99,14 +99,83 @@ class Secp256k1KeyPairService extends AbstractKeyPairService implements KeyPairS
 
     /**
      * Check a signature against a message and a public key.
+     *
+     * Only a fully canonical signature passes, the form rippled accepts since
+     * RequireFullyCanonicalSig: strict DER and an s in the lower half of the
+     * group order. elliptic-php alone also accepts n - s and DER with padding,
+     * and each of those is a second signature over the same message - in a
+     * transaction, a second blob with another hash.
      */
     public function verify(Buffer|string $message, string $signature, string $publicKey): bool
     {
+        if (!$this->isFullyCanonical($signature)) {
+            return false;
+        }
+
         $messageBytes = ($message instanceof Buffer) ? $message->toUtf8() : $message;
 
         $hash = MathUtilities::sha512Half($messageBytes);
 
         return $this->elliptic->verify(bin2hex($hash->toUtf8()), $signature, $publicKey, 'hex');
+    }
+
+    /**
+     * Whether a DER signature is fully canonical, as rippled's
+     * ecdsaCanonicality() decides it: a sequence of exactly two positive,
+     * minimally encoded integers r and s, both nonzero and below the group
+     * order n, and s no greater than n - s.
+     */
+    private function isFullyCanonical(string $signature): bool
+    {
+        if (strlen($signature) % 2 !== 0 || !ctype_xdigit($signature)) {
+            return false;
+        }
+
+        $der = (string) hex2bin($signature);
+        $length = strlen($der);
+        if ($length < 8 || $length > 72 || ord($der[0]) !== 0x30 || ord($der[1]) !== $length - 2) {
+            return false;
+        }
+
+        $position = 2;
+        $r = self::readDerInteger($der, $position);
+        $s = self::readDerInteger($der, $position);
+        if ($r === null || $s === null || $position !== $length) {
+            return false;
+        }
+
+        $r = new BN(bin2hex($r), 16);
+        $s = new BN(bin2hex($s), 16);
+
+        return !$r->isZero() && $r->cmp($this->elliptic->n) < 0
+            && !$s->isZero() && $s->cmp($this->elliptic->nh) <= 0;
+    }
+
+    /**
+     * Read one DER INTEGER at $position and move past it; null if it is not
+     * there, longer than 33 bytes, negative or padded with a needless zero.
+     */
+    private static function readDerInteger(string $der, int &$position): ?string
+    {
+        if ($position + 2 > strlen($der) || ord($der[$position]) !== 0x02) {
+            return null;
+        }
+
+        $length = ord($der[$position + 1]);
+        $value = substr($der, $position + 2, $length);
+        if ($length < 1 || $length > 33 || strlen($value) !== $length) {
+            return null;
+        }
+        if ((ord($value[0]) & 0x80) !== 0) {
+            return null;
+        }
+        if (ord($value[0]) === 0 && ($length === 1 || (ord($value[1]) & 0x80) === 0)) {
+            return null;
+        }
+
+        $position += 2 + $length;
+
+        return $value;
     }
 
     /**

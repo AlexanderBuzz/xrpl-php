@@ -118,6 +118,21 @@ final class KeyPairTest extends TestCase
         );
     }
 
+    /**
+     * S + L verifies in elliptic-php but is a second signature for the same
+     * message; rippled refuses it, and so does verify().
+     */
+    public function testVerifyRefusesAnEd25519SAboveTheGroupOrder(): void
+    {
+        $publicKey = $this->fixtures['ed25519']['keypair']['publicKey'];
+        $message = Buffer::from($this->fixtures['ed25519']['message'], 'utf-8');
+        $malleated = 'CB199E1BFD4E3DAA105E4832EEDFA36413E1F44205E4EFB9E27E826044C21E3E'
+            . '1B5881199CF8FAED714AF02A38955225AD1B7047EF11B682E0D068F73749751E';
+
+        $this->assertFalse($this->ed25519->verify($message, $malleated, $publicKey));
+        $this->assertFalse($this->ed25519->verify($message, substr($this->fixtures['ed25519']['signature'], 2), $publicKey));
+    }
+
     /*
     public function testDeriveNodeAddress(): void
     {
@@ -198,5 +213,28 @@ final class KeyPairTest extends TestCase
         $this->assertTrue(
             $this->secp256k1->verify(Buffer::from($message, 'utf-8'), $signature, $publicKey)
         );
+    }
+
+    /**
+     * rippled accepts only fully canonical secp256k1 signatures: strict DER,
+     * s no greater than n - s. The high s and the padded r verify in
+     * elliptic-php alone; a trailing byte made it throw.
+     */
+    public function testVerifyRefusesNonCanonicalSecp256k1Signatures(): void
+    {
+        $publicKey = $this->fixtures['secp256k1']['keypair']['publicKey'];
+        $message = Buffer::from($this->fixtures['secp256k1']['message'], 'utf-8');
+        $signature = $this->fixtures['secp256k1']['signature'];
+
+        $highS = '30450220583A91C95E54E6A651C47BEC22744E0B101E2C4060E7B08F6341657DAD9BC3EE'
+            . '02210082EB7638C6A24FE772C5A956881345AA073F33AF94086EA56A20AA4A32025214';
+        $paddedR = '3045022100' . substr($signature, 8);
+        $trailingByte = '3045' . substr($signature, 4) . '00';
+
+        $this->assertTrue($this->secp256k1->verify($message, $signature, $publicKey));
+        $this->assertFalse($this->secp256k1->verify($message, $highS, $publicKey));
+        $this->assertFalse($this->secp256k1->verify($message, $paddedR, $publicKey));
+        $this->assertFalse($this->secp256k1->verify($message, $trailingByte, $publicKey));
+        $this->assertFalse($this->secp256k1->verify($message, 'not hex', $publicKey));
     }
 }
