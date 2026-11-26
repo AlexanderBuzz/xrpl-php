@@ -509,20 +509,20 @@
         },
         {
             "name": "hardcastle/buffer",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AlexanderBuzz/Buffer.git",
-                "reference": "3b91742f4b7576b1f090b870893918234ecc32cf"
+                "reference": "a342b32aeb4ba931767272d9b3682e1e29dcd578"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AlexanderBuzz/Buffer/zipball/3b91742f4b7576b1f090b870893918234ecc32cf",
-                "reference": "3b91742f4b7576b1f090b870893918234ecc32cf",
+                "url": "https://api.github.com/repos/AlexanderBuzz/Buffer/zipball/a342b32aeb4ba931767272d9b3682e1e29dcd578",
+                "reference": "a342b32aeb4ba931767272d9b3682e1e29dcd578",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.11|^0.12|^0.13|^0.14|^1.0",
+                "brick/math": "^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20|^1.0",
                 "php": "^8.2"
             },
             "require-dev": {
@@ -551,9 +551,9 @@
             "description": "PHP implementation of the NodeJS Buffer class",
             "support": {
                 "issues": "https://github.com/AlexanderBuzz/Buffer/issues",
-                "source": "https://github.com/AlexanderBuzz/Buffer/tree/2.1.0"
+                "source": "https://github.com/AlexanderBuzz/Buffer/tree/2.1.1"
             },
-            "time": "2026-11-13T15:37:01+00:00"
+            "time": "2026-11-15T19:22:57+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -2645,16 +2645,16 @@
         },
         {
             "name": "donatj/mock-webserver",
-            "version": "v2.10.0",
+            "version": "v2.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/donatj/mock-webserver.git",
-                "reference": "5074522d25f4e83953b1c5417a884c995d0dfa91"
+                "reference": "cc031c2df5aa02dc2636b811f1b82b1bde941e0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/donatj/mock-webserver/zipball/5074522d25f4e83953b1c5417a884c995d0dfa91",
-                "reference": "5074522d25f4e83953b1c5417a884c995d0dfa91",
+                "url": "https://api.github.com/repos/donatj/mock-webserver/zipball/cc031c2df5aa02dc2636b811f1b82b1bde941e0b",
+                "reference": "cc031c2df5aa02dc2636b811f1b82b1bde941e0b",
                 "shasum": ""
             },
             "require": {
@@ -2701,7 +2701,7 @@
             ],
             "support": {
                 "issues": "https://github.com/donatj/mock-webserver/issues",
-                "source": "https://github.com/donatj/mock-webserver/tree/v2.10.0"
+                "source": "https://github.com/donatj/mock-webserver/tree/v2.10.1"
             },
             "funding": [
                 {
@@ -2717,7 +2717,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2026-02-20T18:53:16+00:00"
+            "time": "2026-11-17T16:10:12+00:00"
         },
         {
             "name": "felixfbecker/language-server-protocol",
@@ -3594,11 +3594,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.3.5",
+            "version": "2.3.7",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/645a1bd6bead15fc1b8474137467961d0fa30a79",
-                "reference": "645a1bd6bead15fc1b8474137467961d0fa30a79",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/90c91c2498849ab8cc4e873864bbf1cb2bf6ea12",
+                "reference": "90c91c2498849ab8cc4e873864bbf1cb2bf6ea12",
                 "shasum": ""
             },
             "require": {
@@ -3654,7 +3654,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T12:14:22+00:00"
+            "time": "2026-11-19T10:31:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4565,16 +4565,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.8.4",
+            "version": "2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "55acbd956d7e3907f7d21aab54edd68a310609e6"
+                "reference": "bf2982e3e2b8dfbcb43e5589fa301431cb1e479e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/55acbd956d7e3907f7d21aab54edd68a310609e6",
-                "reference": "55acbd956d7e3907f7d21aab54edd68a310609e6",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/bf2982e3e2b8dfbcb43e5589fa301431cb1e479e",
+                "reference": "bf2982e3e2b8dfbcb43e5589fa301431cb1e479e",
                 "shasum": ""
             },
             "require": {
@@ -4610,7 +4610,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.8.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.8.5"
             },
             "funding": [
                 {
@@ -4618,7 +4618,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T18:48:08+00:00"
+            "time": "2026-11-14T23:24:35+00:00"
         },
         {
             "name": "revolt/event-loop",
